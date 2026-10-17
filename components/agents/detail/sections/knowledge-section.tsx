@@ -1,0 +1,121 @@
+"use client";
+
+import Link from "next/link";
+import { Controller, useFormContext } from "react-hook-form";
+import {
+  ArrowUpRightIcon,
+  BriefcaseIcon,
+  FilesIcon,
+  MessageCircleQuestionIcon,
+  PackageIcon,
+  ScrollTextIcon,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { useBusiness } from "@/components/business/business-provider";
+import { AgentSection } from "@/components/agents/detail/agent-section";
+import { useBusinessPolicies } from "@/hooks/use-business-policies";
+import { useDocuments } from "@/hooks/use-documents";
+import { useFaqs } from "@/hooks/use-faqs";
+import { useProducts } from "@/hooks/use-products";
+import { useServices } from "@/hooks/use-services";
+import type { Agent, AgentScope } from "@/lib/api/types";
+import type { AgentSettingsValues } from "@/lib/validation/agent";
+import { cn } from "@/lib/utils";
+
+interface Scoped {
+  agent_scope: AgentScope;
+  agent_ids?: string[];
+}
+
+function enabledCount(items: Scoped[] | undefined, agentId: string): number {
+  return (items ?? []).filter(
+    (item) => item.agent_scope === "all" || (item.agent_ids ?? []).includes(agentId)
+  ).length;
+}
+
+export function KnowledgeSection({ agent }: { agent: Agent }) {
+  const { business } = useBusiness();
+  const form = useFormContext<AgentSettingsValues>();
+  const { disabled } = form.formState;
+  const ragEnabled = form.watch("rag_enabled");
+
+  const documents = useDocuments(business.id);
+  const faqs = useFaqs(business.id);
+  const services = useServices(business.id);
+  const products = useProducts(business.id);
+  const policies = useBusinessPolicies(business.id);
+
+  const rows = [
+    { title: "Docs", icon: FilesIcon, segment: "docs", query: documents },
+    { title: "FAQs", icon: MessageCircleQuestionIcon, segment: "faqs", query: faqs },
+    { title: "Services", icon: BriefcaseIcon, segment: "services", query: services },
+    { title: "Products", icon: PackageIcon, segment: "products", query: products },
+    { title: "Policies", icon: ScrollTextIcon, segment: "policies", query: policies },
+  ] as const;
+
+  return (
+    <AgentSection
+      id="knowledge"
+      title="Knowledge"
+      description="What this agent knows about your business. Which entries it can use is managed per entry in your business profile."
+    >
+      <Field>
+        <div className="flex items-center gap-3">
+          <Controller
+            control={form.control}
+            name="rag_enabled"
+            render={({ field }) => (
+              <Switch
+                id="agent-rag"
+                checked={field.value}
+                onCheckedChange={field.onChange}
+                disabled={disabled}
+              />
+            )}
+          />
+          <FieldLabel htmlFor="agent-rag" className="font-normal">
+            Use the business knowledge base
+          </FieldLabel>
+        </div>
+        <FieldDescription>
+          When off, the agent answers from its instructions alone. Entry scoping below still
+          applies when you turn it back on.
+        </FieldDescription>
+      </Field>
+
+      <div className={cn("flex flex-col divide-y", !ragEnabled && "opacity-60")}>
+        {rows.map((row) => {
+          const total = row.query.data?.length;
+          const enabled = enabledCount(row.query.data, agent.id);
+          return (
+            <div key={row.segment} className="flex items-center gap-3 py-3 first:pt-0 last:pb-0">
+              <row.icon className="size-4 shrink-0 text-muted-foreground" />
+              <p className="flex-1 text-sm font-medium">{row.title}</p>
+              {row.query.isPending ? (
+                <Skeleton className="h-4 w-24" />
+              ) : row.query.isError ? (
+                <span className="text-sm text-muted-foreground">—</span>
+              ) : (
+                <span className="text-sm text-muted-foreground">
+                  {enabled} of {total} enabled for this agent
+                </span>
+              )}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="text-cta hover:text-cta"
+                render={<Link href={`/b/${business.id}/business-profile/${row.segment}`} />}
+              >
+                Manage
+                <ArrowUpRightIcon />
+              </Button>
+            </div>
+          );
+        })}
+      </div>
+    </AgentSection>
+  );
+}

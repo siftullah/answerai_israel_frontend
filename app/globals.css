@@ -1,0 +1,308 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-heading);
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --color-brand-blue: var(--brand-blue);
+  --color-brand-teal: var(--brand-teal);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-info: var(--info);
+  --color-cta: var(--cta);
+  --color-cta-foreground: var(--cta-foreground);
+  --color-event-appointment: var(--event-appointment);
+  --color-event-callback: var(--event-callback);
+  --color-event-job: var(--event-job);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --brand-blue: oklch(0.451 0.148 255.8); /* #0653a5 */
+  --brand-teal: oklch(0.674 0.116 210.4); /* #0aa9be */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.148 0.004 228.8);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.148 0.004 228.8);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.148 0.004 228.8);
+  --primary: oklch(0.5 0.134 242.749);
+  --primary-foreground: oklch(0.977 0.013 236.62);
+  --secondary: oklch(0.967 0.001 286.375);
+  --secondary-foreground: oklch(0.21 0.006 285.885);
+  --muted: oklch(0.963 0.002 197.1);
+  --muted-foreground: oklch(0.56 0.021 213.5);
+  --accent: oklch(0.963 0.002 197.1);
+  --accent-foreground: oklch(0.218 0.008 223.9);
+  --destructive: oklch(0.577 0.245 27.325);
+  --success: oklch(0.627 0.194 149.214);
+  --warning: oklch(0.666 0.179 58.318); /* amber-600 */
+  --info: oklch(0.588 0.158 241.966); /* sky-600 */
+  /* Secondary-CTA accent — the teal used on phone-numbers/extraction actions. */
+  --cta: #30aece;
+  --cta-foreground: oklch(1 0 0);
+  /* Calendar event kinds — three hue bands deliberately far from the CTA
+     blues (primary/cta) and from the semantic status colors, so the grid
+     reads at a glance. All carry white text at AA contrast. */
+  --event-appointment: oklch(0.511 0.262 276.966); /* indigo-600 */
+  --event-callback: oklch(0.518 0.253 323.949); /* fuchsia-700 */
+  --event-job: oklch(0.508 0.118 165.612); /* emerald-700 */
+  --border: oklch(0.88 0.005 214.3);
+  --input: oklch(0.925 0.005 214.3);
+  --ring: var(--brand-blue);
+  --chart-1: oklch(0.865 0.127 207.078);
+  --chart-2: oklch(0.715 0.143 215.221);
+  --chart-3: oklch(0.609 0.126 221.723);
+  --chart-4: oklch(0.52 0.105 223.128);
+  --chart-5: oklch(0.45 0.085 224.283);
+  --radius: 0.625rem;
+  /* Near-white rail, soft-black text. Hover = neutral gray pill (accent);
+     active = solid brand-blue pill with white text (primary).
+     Dark-mode sidebar tokens below are untouched. */
+  --sidebar: rgb(247, 247, 247);
+  --sidebar-foreground: rgba(0, 0, 0, 0.7);
+  --sidebar-primary: var(--brand-blue);
+  --sidebar-primary-foreground: oklch(1 0 0);
+  --sidebar-accent: rgba(0, 0, 0, 0.05);
+  --sidebar-accent-foreground: rgba(0, 0, 0, 0.85);
+  --sidebar-border: var(--border);
+  --sidebar-ring: var(--brand-blue);
+}
+
+.dark {
+  --brand-blue: oklch(0.58 0.14 250); /* lightened for contrast on dark */
+  --brand-teal: oklch(0.674 0.116 210.4);
+  --background: oklch(0.148 0.004 228.8);
+  --foreground: oklch(0.987 0.002 197.1);
+  --card: oklch(0.218 0.008 223.9);
+  --card-foreground: oklch(0.987 0.002 197.1);
+  --popover: oklch(0.218 0.008 223.9);
+  --popover-foreground: oklch(0.987 0.002 197.1);
+  --primary: oklch(0.443 0.11 240.79);
+  --primary-foreground: oklch(0.977 0.013 236.62);
+  --secondary: oklch(0.274 0.006 286.033);
+  --secondary-foreground: oklch(0.985 0 0);
+  --muted: oklch(0.275 0.011 216.9);
+  --muted-foreground: oklch(0.723 0.014 214.4);
+  --accent: oklch(0.275 0.011 216.9);
+  --accent-foreground: oklch(0.987 0.002 197.1);
+  --destructive: oklch(0.704 0.191 22.216);
+  --success: oklch(0.792 0.209 151.711);
+  --warning: oklch(0.828 0.189 84.429); /* amber-400 */
+  --info: oklch(0.746 0.16 232.661); /* sky-400 */
+  --cta: #30aece;
+  --cta-foreground: oklch(1 0 0);
+  --event-appointment: oklch(0.511 0.262 276.966);
+  --event-callback: oklch(0.518 0.253 323.949);
+  --event-job: oklch(0.508 0.118 165.612);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: var(--brand-blue);
+  --chart-1: oklch(0.865 0.127 207.078);
+  --chart-2: oklch(0.715 0.143 215.221);
+  --chart-3: oklch(0.609 0.126 221.723);
+  --chart-4: oklch(0.52 0.105 223.128);
+  --chart-5: oklch(0.45 0.085 224.283);
+  --sidebar: oklch(0.218 0.008 223.9);
+  --sidebar-foreground: oklch(0.987 0.002 197.1);
+  --sidebar-primary: oklch(0.685 0.169 237.323);
+  --sidebar-primary-foreground: oklch(0.293 0.066 243.157);
+  --sidebar-accent: oklch(0.275 0.011 216.9);
+  --sidebar-accent-foreground: oklch(0.987 0.002 197.1);
+  --sidebar-border: oklch(1 0 0 / 10%);
+  --sidebar-ring: oklch(0.56 0.021 213.5);
+}
+
+/* Auth brand-panel animation: drifting logo pixels resolving into a voice waveform. */
+@keyframes pixel-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: var(--pixel-opacity, 0.16);
+  }
+  50% {
+    transform: translate3d(8px, -18px, 0);
+    opacity: calc(var(--pixel-opacity, 0.16) * 1.7);
+  }
+}
+
+@keyframes wave-pulse {
+  0%,
+  100% {
+    transform: scaleY(0.3);
+  }
+  50% {
+    transform: scaleY(1);
+  }
+}
+
+.pixel-drift {
+  animation: pixel-drift var(--pixel-duration, 9s) ease-in-out var(--pixel-delay, 0s) infinite;
+}
+
+/* Call-conversation bubbles, one at a time in turn on an 18s shared timeline:
+   caller messages (above the waveform) appear on the left and drift right;
+   agent replies (below it) appear on the right and drift left. Percentages
+   encode each turn's window so the exchange can never drift out of sync. */
+@keyframes call-bubble-1 {
+  0% { opacity: 0; transform: translateX(0); }
+  3% { opacity: 1; }
+  19% { opacity: 1; }
+  22%, 100% { opacity: 0; transform: translateX(140px); }
+}
+@keyframes call-bubble-2 {
+  0%, 25% { opacity: 0; transform: translateX(0); }
+  28% { opacity: 1; }
+  44% { opacity: 1; }
+  47%, 100% { opacity: 0; transform: translateX(-140px); }
+}
+@keyframes call-bubble-3 {
+  0%, 50% { opacity: 0; transform: translateX(0); }
+  53% { opacity: 1; }
+  69% { opacity: 1; }
+  72%, 100% { opacity: 0; transform: translateX(140px); }
+}
+@keyframes call-bubble-4 {
+  0%, 75% { opacity: 0; transform: translateX(0); }
+  78% { opacity: 1; }
+  94% { opacity: 1; }
+  97%, 100% { opacity: 0; transform: translateX(-140px); }
+}
+
+.call-bubble-1 { animation: call-bubble-1 18s linear infinite both; }
+.call-bubble-2 { animation: call-bubble-2 18s linear infinite both; }
+.call-bubble-3 { animation: call-bubble-3 18s linear infinite both; }
+.call-bubble-4 { animation: call-bubble-4 18s linear infinite both; }
+
+.wave-pulse {
+  transform-origin: center;
+  animation: wave-pulse 1.4s ease-in-out var(--wave-delay, 0s) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pixel-drift,
+  .wave-pulse,
+  .call-bubble-1,
+  .call-bubble-2 {
+    animation: none; /* first exchange renders as a static conversation */
+  }
+  .call-bubble-3,
+  .call-bubble-4 {
+    animation: none;
+    opacity: 0; /* stacked in the same slots — only one static exchange shows */
+  }
+}
+
+/* Sidebar scrollbar, tuned to the navy rail: thin, translucent-white thumb,
+   no track. scrollbar-color is derived from the sidebar foreground so a
+   future dark-mode rail restyles it for free; the ::-webkit-* rules are the
+   fallback for engines without standard scrollbar properties. */
+[data-slot="sidebar-content"] {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--sidebar-foreground) 40%, transparent) transparent;
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar {
+  width: 8px;
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklab, var(--sidebar-foreground) 40%, transparent);
+  border-radius: 9999px;
+}
+[data-slot="sidebar-content"]::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Slim scrollbar for light in-app scroll panes (call list, transcript modal):
+   thin muted thumb that only appears on hover-capable engines, no track. */
+.scrollbar-slim {
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in oklab, var(--muted-foreground) 30%, transparent) transparent;
+}
+.scrollbar-slim::-webkit-scrollbar {
+  width: 6px;
+}
+.scrollbar-slim::-webkit-scrollbar-thumb {
+  background-color: color-mix(in oklab, var(--muted-foreground) 30%, transparent);
+  border-radius: 9999px;
+}
+.scrollbar-slim::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  /* Dashed/dotted borders (empty states, dropzones, placeholders) need more
+     contrast than the hairline default; utility border-color classes still win. */
+  .border-dashed,
+  .border-dotted {
+    border-color: color-mix(in oklab, var(--muted-foreground) 50%, transparent);
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled), [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+}
+
+/* Browser autofill paints its highlight on the <input> itself, breaking
+   fields whose border/background/radius live on a wrapper (InputGroup).
+   Cover it with an inset shadow in the field's surface color (bg-input/30
+   composited over the page background). Deliberately OUTSIDE all @layer
+   blocks: the inputs carry shadow-none/rounded-none utilities, and only
+   unlayered rules outrank the utilities layer. */
+[data-slot="input"]:autofill,
+[data-slot="input"]:-webkit-autofill,
+[data-slot="input-group-control"]:autofill,
+[data-slot="input-group-control"]:-webkit-autofill {
+  -webkit-text-fill-color: var(--foreground);
+  -webkit-box-shadow: 0 0 0 1000px
+    color-mix(in oklab, var(--input) 30%, var(--background)) inset;
+  border-radius: calc(var(--radius) * 2.6);
+}
