@@ -220,7 +220,7 @@ export function CardCaptureDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>{intent === "activate" ? "Add your card" : "Update card"}</DialogTitle>
           <DialogDescription>{description}</DialogDescription>
@@ -261,17 +261,21 @@ export function CardCaptureDialog({
 
         {(phase === "loading" || phase === "ready" || phase === "saving") && (
           <>
-            <div className="relative">
-              {/* Stripe mounts its Payment Element (an iframe per field) here. */}
-              <div ref={containerRef} className="min-h-48" />
-              {phase !== "ready" && (
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-background/80">
-                  <Spinner className="size-6" />
-                  {phase === "saving" && (
-                    <p className="text-sm text-muted-foreground">Saving your card…</p>
-                  )}
-                </div>
-              )}
+            {/* The Payment Element can outgrow a short viewport (Link sign-up,
+                extra fields per country) — the body scrolls, the footer stays. */}
+            <div className="scrollbar-slim -mr-2 min-h-0 flex-1 overflow-y-auto pr-2">
+              <div className="relative">
+                {/* Stripe mounts its Payment Element (an iframe per field) here. */}
+                <div ref={containerRef} className="min-h-48" />
+                {phase !== "ready" && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-background/80">
+                    <Spinner className="size-6" />
+                    {phase === "saving" && (
+                      <p className="text-sm text-muted-foreground">Saving your card…</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
             <DialogFooter>
               <Button
