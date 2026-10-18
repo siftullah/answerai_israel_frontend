@@ -128,7 +128,7 @@ function MetaBand({
       </Meta>
       <Meta label="Quoted value">
         {job.quote_cents !== null
-          ? formatCents(job.quote_cents, job.currency ?? "AUD")
+          ? formatCents(job.quote_cents, job.currency ?? "ILS")
           : "Not priced yet"}
       </Meta>
       <Meta label="Assignee">{job.assignee?.name ?? "Unassigned"}</Meta>
@@ -293,7 +293,7 @@ export function JobDetailPane({
                 <p className="text-sm text-muted-foreground">
                   <span className="tabular-nums">{job.reference}</span>
                   {job.quote_cents !== null
-                    ? ` · ${formatCents(job.quote_cents, job.currency ?? "AUD")}`
+                    ? ` · ${formatCents(job.quote_cents, job.currency ?? "ILS")}`
                     : ""}
                   {job.assignee ? ` · ${job.assignee.name}` : ""}
                 </p>

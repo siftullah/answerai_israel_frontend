@@ -1,6 +1,13 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import {
+  loadStripe,
+  type Stripe,
+  type StripeElements,
+  type StripePaymentElement,
+} from "@stripe/stripe-js";
+import { useTheme } from "next-themes";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -15,75 +22,21 @@ import {
 import { Spinner } from "@/components/ui/spinner";
 import { useSetupSession, useStorePaymentMethod } from "@/hooks/use-billing";
 
-/** app/globals.css --primary (oklch 0.5 0.134 242.749) as the sRGB hex PA needs. */
+/** app/globals.css --primary (oklch 0.5 0.134 242.749) as the sRGB hex Stripe's appearance API takes. */
 const BRAND_PRIMARY_HEX = "#0069a8";
 
-/** Payload of the Pay Advantage iframe's "complete" event. */
-interface PayAdvantageCompleteDetail {
-  status?: string;
-  failReason?: string;
-  customerPaymentAccount?: { code?: string } | null;
-}
-
-interface PayAdvantagePaymentIFrameInstance {
-  initialise(
-    iframe: HTMLIFrameElement,
-    url: string,
-    options: { showCard?: boolean; showSummary?: boolean; colorPrimary?: string }
-  ): void;
-  addEventListener(
-    name: "complete",
-    listener: (event: CustomEvent<PayAdvantageCompleteDetail>) => void
-  ): void;
-  dispose(): void;
-}
-
-declare global {
-  interface Window {
-    PayAdvantagePaymentIFrame?: new () => PayAdvantagePaymentIFrameInstance;
-  }
-}
-
-const loadedStylesheets = new Set<string>();
-const scriptPromises = new Map<string, Promise<void>>();
-
-function loadStylesheet(href: string): void {
-  if (loadedStylesheets.has(href)) return;
-  loadedStylesheets.add(href);
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = href;
-  document.head.appendChild(link);
-}
-
-function loadScript(src: string): Promise<void> {
-  const existing = scriptPromises.get(src);
-  if (existing) return existing;
-  const promise = new Promise<void>((resolve, reject) => {
-    const script = document.createElement("script");
-    script.src = src;
-    script.async = true;
-    script.onload = () => resolve();
-    script.onerror = () => {
-      // Drop the cached failure so a retry can create a fresh tag.
-      scriptPromises.delete(src);
-      script.remove();
-      reject(new Error("The payment form failed to load. Check your connection and try again."));
-    };
-    document.head.appendChild(script);
-  });
-  scriptPromises.set(src, promise);
-  return promise;
-}
+const LOAD_FAILED = "The payment form failed to load. Check your connection and try again.";
 
 type Phase = "loading" | "ready" | "saving" | "processing" | "error";
 
 /**
- * Pay Advantage hosted card capture: a $0 tokenization inside their
- * PCI-compliant iframe — the card number never touches our code. The captured
- * token is posted to /billing/payment-method, which resolves the display
- * fields server-side and immediately charges anything blocked on a card
- * (initial subscription charge, dunning retry).
+ * Stripe card capture: the backend opens a SetupIntent (usage off_session)
+ * and the browser confirms it with Stripe's Payment Element — the card
+ * number never touches our code, and any 3DS challenge happens here with the
+ * customer present. The resulting PaymentMethod id is posted to
+ * /billing/payment-method, which proves it belongs to this business's Stripe
+ * customer, resolves the display fields server-side and immediately charges
+ * anything blocked on a card (initial subscription charge, dunning retry).
  */
 export function CardCaptureDialog({
   businessUuid,
@@ -104,28 +57,30 @@ export function CardCaptureDialog({
 }) {
   const { mutateAsync: createSession } = useSetupSession();
   const { mutate: saveCard } = useStorePaymentMethod(businessUuid);
+  const { resolvedTheme } = useTheme();
 
   const [phase, setPhase] = useState<Phase>("loading");
   const [setupError, setSetupError] = useState<string | null>(null);
   const [attempt, setAttempt] = useState(0);
 
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const instanceRef = useRef<PayAdvantagePaymentIFrameInstance | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const stripeRef = useRef<Stripe | null>(null);
+  const elementsRef = useRef<StripeElements | null>(null);
+  const paymentElementRef = useRef<StripePaymentElement | null>(null);
   // The init effect must never re-run because a parent re-rendered with a new
-  // callback identity — that would tear down a live iframe. Refs keep it
-  // keyed on open/attempt alone.
+  // callback identity (or the theme flipped) — that would tear down a live
+  // card form. Refs keep it keyed on open/attempt alone.
   const onOpenChangeRef = useRef(onOpenChange);
   const onSuccessRef = useRef(onSuccess);
+  const themeRef = useRef(resolvedTheme);
   useEffect(() => {
     onOpenChangeRef.current = onOpenChange;
     onSuccessRef.current = onSuccess;
+    themeRef.current = resolvedTheme;
   });
 
-  useEffect(() => {
-    if (!open) return;
-    let cancelled = false;
-
-    const saveToken = (token: string) => {
+  const saveToken = useCallback(
+    (token: string) => {
       setPhase("saving");
       saveCard(
         { token },
@@ -143,33 +98,13 @@ export function CardCaptureDialog({
           },
         }
       );
-    };
+    },
+    [saveCard, intent]
+  );
 
-    const handleComplete = (event: CustomEvent<PayAdvantageCompleteDetail>) => {
-      if (cancelled) return;
-      const detail = event.detail ?? {};
-
-      // Declines keep the iframe live — the user just tries another card.
-      if (detail.status === "failed") {
-        toast.error(detail.failReason || "The card was declined. Please try another card.");
-        return;
-      }
-
-      const token = detail.customerPaymentAccount?.code;
-      if (token) {
-        saveToken(token);
-        return;
-      }
-
-      // No token and not failed: the gateway hasn't settled the attempt.
-      // The backend reconciles on its own — nothing for the user to redo.
-      if (detail.status === "undetermined") {
-        setPhase("processing");
-        return;
-      }
-
-      toast.error("The payment form returned an unexpected result. Please try again.");
-    };
+  useEffect(() => {
+    if (!open) return;
+    let cancelled = false;
 
     const start = async () => {
       setPhase("loading");
@@ -178,37 +113,46 @@ export function CardCaptureDialog({
         const session = await createSession();
         if (cancelled) return;
 
-        // The fake dev gateway has no hosted form — it expects a fabricated
+        // The fake dev gateway has no card form — it expects a fabricated
         // token straight back (resolvePaymentMethod invents display fields).
-        if (session.mode !== "iframe" || !session.script_url || !session.stylesheet_url) {
+        if (session.provider !== "stripe" || !session.client_secret || !session.publishable_key) {
           saveToken(`fake_tok_${session.session_id}`);
           return;
         }
 
-        loadStylesheet(session.stylesheet_url);
-        await loadScript(session.script_url);
-        if (cancelled || !iframeRef.current) return;
-
-        const PaymentIFrame = window.PayAdvantagePaymentIFrame;
-        if (!PaymentIFrame) {
-          throw new Error("The payment form failed to load. Please try again.");
+        // Stripe.js must come from js.stripe.com (PCI) — loadStripe injects it
+        // once and resolves null when the script is blocked.
+        const stripe = await loadStripe(session.publishable_key);
+        if (cancelled) return;
+        if (!stripe || !containerRef.current) {
+          throw new Error(LOAD_FAILED);
         }
 
-        const instance = new PaymentIFrame();
-        instanceRef.current = instance;
-        instance.addEventListener("complete", handleComplete);
-        instance.initialise(iframeRef.current, session.url, {
-          showCard: true,
-          showSummary: false,
-          colorPrimary: BRAND_PRIMARY_HEX,
+        const elements = stripe.elements({
+          clientSecret: session.client_secret,
+          appearance: {
+            theme: themeRef.current === "dark" ? "night" : "stripe",
+            variables: { colorPrimary: BRAND_PRIMARY_HEX },
+          },
         });
-        setPhase("ready");
+        const paymentElement = elements.create("payment", { layout: "tabs" });
+        stripeRef.current = stripe;
+        elementsRef.current = elements;
+        paymentElementRef.current = paymentElement;
+
+        paymentElement.on("ready", () => {
+          if (!cancelled) setPhase("ready");
+        });
+        paymentElement.on("loaderror", (event) => {
+          if (cancelled) return;
+          setPhase("error");
+          setSetupError(event.error?.message ?? LOAD_FAILED);
+        });
+        paymentElement.mount(containerRef.current);
       } catch (error) {
         if (cancelled) return;
         setPhase("error");
-        setSetupError(
-          error instanceof Error ? error.message : "The payment form failed to load."
-        );
+        setSetupError(error instanceof Error ? error.message : LOAD_FAILED);
       }
     };
 
@@ -216,17 +160,63 @@ export function CardCaptureDialog({
 
     return () => {
       cancelled = true;
-      instanceRef.current?.dispose();
-      instanceRef.current = null;
+      paymentElementRef.current?.destroy();
+      paymentElementRef.current = null;
+      elementsRef.current = null;
+      stripeRef.current = null;
     };
-  }, [open, attempt, createSession, saveCard, intent]);
+  }, [open, attempt, createSession, saveToken]);
+
+  // Elements has no submit of its own: confirm the SetupIntent in-page, then
+  // hand the PaymentMethod to the backend. Declines keep the form live.
+  const submit = async () => {
+    const stripe = stripeRef.current;
+    const elements = elementsRef.current;
+    if (!stripe || !elements || phase !== "ready") return;
+
+    setPhase("saving");
+    const { error, setupIntent } = await stripe.confirmSetup({
+      elements,
+      redirect: "if_required",
+      confirmParams: { return_url: window.location.href },
+    });
+
+    if (error) {
+      setPhase("ready");
+      // Incomplete fields are already flagged inline by the element itself.
+      if (error.type !== "validation_error") {
+        toast.error(error.message ?? "The card was declined. Please try another card.");
+      }
+      return;
+    }
+
+    if (setupIntent.status === "succeeded") {
+      const paymentMethod =
+        typeof setupIntent.payment_method === "string"
+          ? setupIntent.payment_method
+          : setupIntent.payment_method?.id;
+      // The backend also accepts the seti_ id, resolving the card through it.
+      saveToken(paymentMethod ?? setupIntent.id);
+      return;
+    }
+
+    // Confirmed but not settled: the backend reconciles on its own — nothing
+    // for the user to redo.
+    if (setupIntent.status === "processing") {
+      setPhase("processing");
+      return;
+    }
+
+    setPhase("ready");
+    toast.error("The payment form returned an unexpected result. Please try again.");
+  };
 
   const description =
     intent === "activate"
-      ? "Card details go straight to Pay Advantage's secure form — we never see the number. Saving the card starts your subscription."
+      ? "Card details go straight to Stripe's secure form — we never see the number. Saving the card starts your subscription."
       : retriesFailedCharge
         ? "Saving a new card immediately retries the failed charge — service is restored as soon as it succeeds."
-        : "Card details go straight to Pay Advantage's secure form — we never see the number. Future charges use the new card.";
+        : "Card details go straight to Stripe's secure form — we never see the number. Future charges use the new card.";
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -256,9 +246,9 @@ export function CardCaptureDialog({
             <Alert variant="info">
               <AlertTitle>Payment is processing</AlertTitle>
               <AlertDescription>
-                The payment provider is still confirming your card. Your subscription updates
-                automatically the moment it settles — this can take a minute. It&apos;s safe to
-                close this window.
+                Stripe is still confirming your card. Your subscription updates automatically
+                the moment it settles — this can take a minute. It&apos;s safe to close this
+                window.
               </AlertDescription>
             </Alert>
             <DialogFooter>
@@ -270,27 +260,33 @@ export function CardCaptureDialog({
         )}
 
         {(phase === "loading" || phase === "ready" || phase === "saving") && (
-          <div className="relative">
-            {/* Pay Advantage's script resizes the iframe to fit its content.
-                No src: an empty-string src makes the browser load the parent
-                page inside the frame; initialise() navigates it to the
-                gateway URL. */}
-            <iframe
-              id="payment_iframe"
-              allow="payment"
-              title="Secure card entry"
-              ref={iframeRef}
-              className="min-h-96 w-full rounded-md"
-            />
-            {phase !== "ready" && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-background/80">
-                <Spinner className="size-6" />
-                {phase === "saving" && (
-                  <p className="text-sm text-muted-foreground">Saving your card…</p>
-                )}
-              </div>
-            )}
-          </div>
+          <>
+            <div className="relative">
+              {/* Stripe mounts its Payment Element (an iframe per field) here. */}
+              <div ref={containerRef} className="min-h-48" />
+              {phase !== "ready" && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 rounded-md bg-background/80">
+                  <Spinner className="size-6" />
+                  {phase === "saving" && (
+                    <p className="text-sm text-muted-foreground">Saving your card…</p>
+                  )}
+                </div>
+              )}
+            </div>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => onOpenChange(false)}
+                disabled={phase === "saving"}
+              >
+                Cancel
+              </Button>
+              <Button onClick={() => void submit()} disabled={phase !== "ready"}>
+                {phase === "saving" && <Spinner data-icon="inline-start" />}
+                Save card
+              </Button>
+            </DialogFooter>
+          </>
         )}
       </DialogContent>
     </Dialog>

@@ -22,13 +22,13 @@ function displayQuantity(quantity: string): string {
 }
 
 /**
- * The job's costing rows, read-only — ex-tax amounts (GST lands on the
+ * The job's costing rows, read-only — ex-tax amounts (VAT lands on the
  * invoice). Editing happens in the items dialog against the per-item
  * endpoints.
  */
 export function JobLineItemsCard({ job, onEdit }: { job: Job; onEdit?: () => void }) {
   const items = job.line_items ?? [];
-  const currency = job.currency ?? "AUD";
+  const currency = job.currency ?? "ILS";
   const total = items.reduce((sum, item) => sum + item.amount_cents, 0);
 
   const editButton = onEdit && (

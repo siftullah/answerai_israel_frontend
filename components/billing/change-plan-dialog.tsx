@@ -19,6 +19,7 @@ import { formatCents } from "@/lib/money";
 import { formatDate } from "@/lib/datetime";
 import {
   BILLING_INTERVAL_LABELS,
+  TAX_LINE_LABEL,
   type BillingInterval,
   type Plan,
 } from "@/lib/api/types";
@@ -130,8 +131,8 @@ export function ChangePlanDialog({
               </span>
             </div>
             <div className="flex items-center justify-between gap-4 text-muted-foreground">
-              <span>GST (10%)</span>
-              <span className="tabular-nums">{formatCents(data.gst_cents, data.currency)}</span>
+              <span>{TAX_LINE_LABEL}</span>
+              <span className="tabular-nums">{formatCents(data.tax_cents, data.currency)}</span>
             </div>
             <div className="flex items-center justify-between gap-4 font-medium">
               <span>Total today</span>

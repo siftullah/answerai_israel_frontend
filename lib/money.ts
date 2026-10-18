@@ -1,11 +1,11 @@
 import { isUnitPriced, type DurationUnit, type PriceType } from "@/lib/api/types";
 
 /**
- * Money is integer cents everywhere in the API; inputs and summaries deal
- * in dollars. Lenient parse: "$1,200.50" → 120050, "" / junk → null.
+ * Money is integer agorot everywhere in the API; inputs and summaries deal
+ * in shekels. Lenient parse: "₪1,200.50" → 120050, "" / junk → null.
  */
 export function dollarsToCents(input: string): number | null {
-  const cleaned = input.replace(/[$,\s]/g, "");
+  const cleaned = input.replace(/[₪$,\s]/g, "");
   if (cleaned === "" || !/^\d+(\.\d{1,2})?$/.test(cleaned)) return null;
   return Math.round(Number(cleaned) * 100);
 }
@@ -16,8 +16,12 @@ export function centsToDollarsInput(cents: number | null): string {
   return cents % 100 === 0 ? String(cents / 100) : (cents / 100).toFixed(2);
 }
 
-export function formatCents(cents: number, currency = "AUD"): string {
-  return new Intl.NumberFormat("en-AU", {
+/**
+ * en-IL, not he-IL: the Hebrew locale wraps the symbol and digits in bidi
+ * marks, which breaks the PriceBlock's whole/decimal split and tabular columns.
+ */
+export function formatCents(cents: number, currency = "ILS"): string {
+  return new Intl.NumberFormat("en-IL", {
     style: "currency",
     currency,
     minimumFractionDigits: cents % 100 === 0 ? 0 : 2,

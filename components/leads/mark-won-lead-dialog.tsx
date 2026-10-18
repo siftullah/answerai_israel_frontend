@@ -48,7 +48,7 @@ export function MarkWonLeadDialog({
           <AlertDialogDescription>
             Closes &ldquo;{lead.title}&rdquo; as won
             {lead.value_cents !== null
-              ? ` and counts ${formatCents(lead.value_cents, lead.currency ?? "AUD")} toward the month's total`
+              ? ` and counts ${formatCents(lead.value_cents, lead.currency ?? "ILS")} toward the month's total`
               : ""}
             . You can reopen it later if things change.
           </AlertDialogDescription>

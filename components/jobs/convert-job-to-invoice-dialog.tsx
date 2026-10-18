@@ -18,7 +18,7 @@ import type { Job } from "@/lib/api/types";
 
 /**
  * Completed job → draft invoice, then straight to the invoice so the user can
- * review and send it. Line items copy across; GST applies at your default rate.
+ * review and send it. Line items copy across; VAT applies at your default rate.
  */
 export function ConvertJobToInvoiceDialog({
   businessUuid,
@@ -56,7 +56,7 @@ export function ConvertJobToInvoiceDialog({
           <AlertDialogDescription>
             Drafts an invoice
             {job.quote_cents !== null
-              ? ` for ${formatCents(job.quote_cents, job.currency ?? "AUD")} (plus tax)`
+              ? ` for ${formatCents(job.quote_cents, job.currency ?? "ILS")} (plus tax)`
               : ""}{" "}
             copying the job&apos;s line items, ready to review and send to{" "}
             {job.contact?.name ?? "the customer"}. A job is invoiced once.

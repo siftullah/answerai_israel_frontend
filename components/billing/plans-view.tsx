@@ -35,6 +35,7 @@ import {
   SETUP_FEE_PROMO_CENTS,
   currentSetupFeeCents,
   setupFeePromoActive,
+  setupFeePromoEndsAt,
   type BillingInterval,
   type Plan,
   type PlanEntitlements,
@@ -67,9 +68,9 @@ function effectiveMonthlyCents(plan: Plan, interval: BillingInterval): number {
 
 /** The pricing block never drops ".00" — always two decimals. */
 function formatCents2(cents: number): string {
-  return new Intl.NumberFormat("en-AU", {
+  return new Intl.NumberFormat("en-IL", {
     style: "currency",
-    currency: "AUD",
+    currency: "ILS",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(cents / 100);
@@ -349,10 +350,10 @@ function FeatureValue({
   );
 }
 
-/** Big price with dollars/decimals split, strikethrough monthly when annual. */
+/** Big price with shekels/agorot split, strikethrough monthly when annual. */
 function PriceBlock({ plan, interval }: { plan: Plan; interval: BillingInterval }) {
   const perMonthCents = effectiveMonthlyCents(plan, interval);
-  const dollars = Math.floor(perMonthCents / 100);
+  const shekels = Math.floor(perMonthCents / 100);
   const cents = perMonthCents % 100;
 
   return (
@@ -363,7 +364,7 @@ function PriceBlock({ plan, interval }: { plan: Plan; interval: BillingInterval 
         </div>
       )}
       <div className="font-heading text-3xl font-semibold text-foreground">
-        ${dollars.toLocaleString()}
+        ₪{shekels.toLocaleString("en-IL")}
         <span className="text-sm">.{String(cents).padStart(2, "0")}</span>
       </div>
       <div className="text-sm text-muted-foreground">/month</div>
@@ -585,6 +586,13 @@ export function PlansView() {
     />
   );
 
+  // The promo's end date, for the "ends 31 March" copy; null when no promo runs.
+  const promoEndsAt = setupFeePromoEndsAt();
+  const promoEndsLabel = promoEndsAt?.toLocaleDateString("en-IL", {
+    day: "numeric",
+    month: "long",
+  });
+
   const hasAlerts =
     status === "suspended" ||
     status === "past_due" ||
@@ -638,7 +646,7 @@ export function PlansView() {
               </button>
             ))}
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">All prices are in AUD, excluding GST.</p>
+          <p className="mt-3 text-xs text-muted-foreground">All prices are in ILS (₪), excluding VAT.</p>
           <p className="mt-1.5 text-xs text-muted-foreground">
             Annual plans pay the year up front; usage charges still bill monthly.
           </p>
@@ -652,14 +660,14 @@ export function PlansView() {
               <span>
                 One-time setup &amp; onboarding fee{" "}
                 <s className="text-muted-foreground">{formatCents(SETUP_FEE_CENTS)}</s>{" "}
-                <span className="font-semibold">{formatCents(SETUP_FEE_PROMO_CENTS)}</span> + GST
-                — ends 30 September
+                <span className="font-semibold">{formatCents(SETUP_FEE_PROMO_CENTS)}</span> + VAT
+                {promoEndsLabel && ` — ends ${promoEndsLabel}`}
               </span>
             </div>
           )}
           {setupFeeDue && (
             <p className="mt-1.5 text-xs text-muted-foreground">
-              First subscriptions include a one-time {formatCents(currentSetupFeeCents())} + GST
+              First subscriptions include a one-time {formatCents(currentSetupFeeCents())} + VAT
               setup &amp; onboarding fee — never charged again, including on plan changes.
             </p>
           )}

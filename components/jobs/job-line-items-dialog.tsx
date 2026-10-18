@@ -116,7 +116,7 @@ export function JobLineItemsDialog({
         <DialogHeader>
           <DialogTitle>Line items — {job.reference}</DialogTitle>
           <DialogDescription>
-            Labour and materials for this job. GST is applied when it&apos;s invoiced.
+            Labour and materials for this job. VAT is applied when it&apos;s invoiced.
           </DialogDescription>
         </DialogHeader>
 
@@ -274,7 +274,7 @@ export function JobLineItemsDialog({
           <dl className="flex w-56 flex-col gap-1.5 text-sm">
             <div className="flex justify-between text-base font-semibold">
               <dt>Total (ex. tax)</dt>
-              <dd className="tabular-nums">{formatCents(total, job.currency ?? "AUD")}</dd>
+              <dd className="tabular-nums">{formatCents(total, job.currency ?? "ILS")}</dd>
             </div>
           </dl>
         </div>

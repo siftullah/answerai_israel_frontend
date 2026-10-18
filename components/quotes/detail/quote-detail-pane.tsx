@@ -359,7 +359,7 @@ export function QuoteDetailPane({
                 <p className="text-sm text-muted-foreground">
                   {quote.title ? `${quote.title} · ` : ""}
                   {formatCents(quote.total_cents, quote.currency)}
-                  {quote.currency !== "AUD" && ` ${quote.currency}`}
+                  {quote.currency !== "ILS" && ` ${quote.currency}`}
                 </p>
               </div>
               {quote.contact && (

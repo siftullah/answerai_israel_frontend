@@ -11,7 +11,7 @@ import { dollarsToCents, centsToDollarsInput } from "@/lib/money";
 /**
  * Loose mirrors of Store/UpdateInvoiceRequest + ReplaceInvoiceItemsRequest.
  * Prices are edited in dollars and converted to integer cents at the payload
- * boundary; the GST switch stands in for tax_rate_bp (checked = omit, so the
+ * boundary; the VAT switch stands in for tax_rate_bp (checked = omit, so the
  * backend applies the business default rate; unchecked = 0).
  */
 const invoiceItemSchema = z.object({

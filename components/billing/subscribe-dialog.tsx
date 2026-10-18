@@ -16,17 +16,19 @@ import { useSubscribe } from "@/hooks/use-billing";
 import { formatCents } from "@/lib/money";
 import {
   BILLING_INTERVAL_LABELS,
-  GST_BP,
   SETUP_FEE_CENTS,
+  TAX_BP,
+  TAX_LINE_LABEL,
   currentSetupFeeCents,
   setupFeePromoActive,
+  setupFeePromoEndsAt,
   type BillingInterval,
   type Plan,
 } from "@/lib/api/types";
 
-/** Per-line half-up GST, matching the backend's Money::gst canon. */
-function gst(cents: number): number {
-  return Math.round((cents * GST_BP) / 10000);
+/** Per-line half-up VAT, matching the backend's Money::tax canon. */
+function tax(cents: number): number {
+  return Math.round((cents * TAX_BP) / 10000);
 }
 
 /**
@@ -59,8 +61,12 @@ export function SubscribeDialog({
         : plan.annual_price_cents;
   const setupFeePromo = setupFeeDue && setupFeePromoActive();
   const setupFee = setupFeeDue ? currentSetupFeeCents() : 0;
-  const totalGst = gst(planFee) + gst(setupFee);
-  const total = planFee + setupFee + totalGst;
+  const totalTax = tax(planFee) + tax(setupFee);
+  const total = planFee + setupFee + totalTax;
+  const promoEndsLabel = setupFeePromoEndsAt()?.toLocaleDateString("en-IL", {
+    day: "numeric",
+    month: "short",
+  });
 
   const confirm = () => {
     if (!plan) return;
@@ -101,9 +107,9 @@ export function SubscribeDialog({
               <div className="flex items-center justify-between gap-4">
                 <span>
                   One-time setup &amp; onboarding
-                  {setupFeePromo && (
+                  {setupFeePromo && promoEndsLabel && (
                     <span className="ml-1.5 text-xs font-medium text-success">
-                      discounted until 30 Sep
+                      discounted until {promoEndsLabel}
                     </span>
                   )}
                 </span>
@@ -116,8 +122,8 @@ export function SubscribeDialog({
               </div>
             )}
             <div className="flex items-center justify-between gap-4 text-muted-foreground">
-              <span>GST (10%)</span>
-              <span className="tabular-nums">{formatCents(totalGst)}</span>
+              <span>{TAX_LINE_LABEL}</span>
+              <span className="tabular-nums">{formatCents(totalTax)}</span>
             </div>
             <Separator />
             <div className="flex items-center justify-between gap-4 font-medium">

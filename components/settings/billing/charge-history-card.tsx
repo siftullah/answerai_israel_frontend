@@ -27,7 +27,7 @@ import { useBillingChargesInfinite } from "@/hooks/use-billing";
 import { cn } from "@/lib/utils";
 import { formatCents } from "@/lib/money";
 import { formatDate, formatDateTime } from "@/lib/datetime";
-import { BILLING_CHARGE_TYPE_LABELS, type BillingCharge } from "@/lib/api/types";
+import { BILLING_CHARGE_TYPE_LABELS, TAX_LINE_LABEL, type BillingCharge } from "@/lib/api/types";
 
 function ChargeDetails({ charge, timezone }: { charge: BillingCharge; timezone: string }) {
   return (
@@ -48,8 +48,8 @@ function ChargeDetails({ charge, timezone }: { charge: BillingCharge; timezone: 
         <span className="tabular-nums">{formatCents(charge.subtotal_cents, charge.currency)}</span>
       </div>
       <div className="flex items-center justify-between gap-4 text-muted-foreground">
-        <span>GST (10%)</span>
-        <span className="tabular-nums">{formatCents(charge.gst_cents, charge.currency)}</span>
+        <span>{TAX_LINE_LABEL}</span>
+        <span className="tabular-nums">{formatCents(charge.tax_cents, charge.currency)}</span>
       </div>
       <div className="flex items-center justify-between gap-4 font-medium">
         <span>Total</span>
@@ -106,7 +106,7 @@ export function ChargeHistoryCard({
       <CardHeader>
         <CardTitle>Charge history</CardTitle>
         <CardDescription>
-          Every subscription charge, with its full tax-invoice breakdown. Amounts in AUD.
+          Every subscription charge, with its full tax-invoice breakdown. Amounts in ILS (₪).
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">

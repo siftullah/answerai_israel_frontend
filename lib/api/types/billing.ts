@@ -84,22 +84,31 @@ export const PLAN_ENTITLEMENT_DEFAULTS: Required<PlanEntitlements> = {
 
 /**
  * Display-only mirror of config('billing.setup_fee_cents') — the one-time
- * setup fee (ex GST) first-time subscribers must see before committing. The
- * backend composes the real charge; this never feeds a computation it owns.
+ * setup fee (₪1,100 ex VAT) first-time subscribers must see before committing.
+ * The backend composes the real charge; this never feeds a computation it owns.
  */
-export const SETUP_FEE_CENTS = 200000;
+export const SETUP_FEE_CENTS = 110000;
 
 /**
  * Display-only mirror of config('billing.setup_fee_promo') — the limited-time
  * discounted setup fee and the instant the promo ends. Keep in lockstep with
- * the backend config, or previews will disagree with the composed charge.
+ * the backend config, or previews will disagree with the composed charge. An
+ * empty ENDS_AT means no promo runs — the backend's default.
  */
-export const SETUP_FEE_PROMO_CENTS = 99900;
-export const SETUP_FEE_PROMO_ENDS_AT = "2026-09-30T23:59:59+10:00";
+export const SETUP_FEE_PROMO_CENTS = 55000;
+export const SETUP_FEE_PROMO_ENDS_AT: string = "";
+
+/** The instant the setup fee promo ends, or null when no promo is configured. */
+export function setupFeePromoEndsAt(): Date | null {
+  if (SETUP_FEE_PROMO_ENDS_AT === "") return null;
+  const ms = Date.parse(SETUP_FEE_PROMO_ENDS_AT);
+  return Number.isNaN(ms) ? null : new Date(ms);
+}
 
 /** True while the setup fee promo runs — mirrors SetupFee::promoActive(). */
 export function setupFeePromoActive(now: Date = new Date()): boolean {
-  return now.getTime() <= Date.parse(SETUP_FEE_PROMO_ENDS_AT);
+  const endsAt = setupFeePromoEndsAt();
+  return endsAt !== null && now.getTime() <= endsAt.getTime();
 }
 
 /** The setup fee to preview right now — mirrors SetupFee::currentCents(). */
@@ -107,8 +116,11 @@ export function currentSetupFeeCents(now: Date = new Date()): number {
   return setupFeePromoActive(now) ? SETUP_FEE_PROMO_CENTS : SETUP_FEE_CENTS;
 }
 
-/** GST in basis points (10%), for preview figures the backend hasn't priced. */
-export const GST_BP = 1000;
+/** VAT in basis points (18%), for preview figures the backend hasn't priced. */
+export const TAX_BP = 1800;
+
+/** The tax line label on every breakdown — "VAT (18%)", derived from TAX_BP. */
+export const TAX_LINE_LABEL = `VAT (${TAX_BP / 100}%)`;
 
 export interface Plan {
   id: string;
@@ -178,7 +190,7 @@ export interface BillingChargeLineItem {
   unit_cents: number;
   /** Signed — proration/applied credit lines are negative. */
   amount_cents: number;
-  gst_cents: number;
+  tax_cents: number;
 }
 
 export interface BillingCharge {
@@ -189,7 +201,7 @@ export interface BillingCharge {
   period_end: string | null;
   line_items: BillingChargeLineItem[];
   subtotal_cents: number;
-  gst_cents: number;
+  tax_cents: number;
   total_cents: number;
   /** Gateway's on-charged card fee — shown as "card surcharge" when present. */
   gateway_fee_cents: number | null;
@@ -234,7 +246,7 @@ export interface ChangePlanPreviewImmediate {
   immediate: true;
   line_items: BillingChargeLineItem[];
   subtotal_cents: number;
-  gst_cents: number;
+  tax_cents: number;
   total_cents: number;
   currency: string;
   /** Unused prepaid time beyond this charge — banked, never refunded. */
@@ -249,15 +261,16 @@ export interface ChangePlanPreviewScheduled {
 export type ChangePlanPreview = ChangePlanPreviewImmediate | ChangePlanPreviewScheduled;
 
 /**
- * POST /billing/setup-session — hosted card-capture session. Pay Advantage
- * returns the full iframe shape; the fake dev gateway returns only
- * session_id + url (the frontend short-circuits with a fabricated token).
+ * POST /billing/setup-session — card-capture session. Stripe returns a
+ * SetupIntent (session_id = seti_…) whose client_secret the frontend mounts
+ * the Payment Element with; the fake dev gateway returns only session_id +
+ * url (the frontend short-circuits with a fabricated token).
  */
 export interface BillingSetupSession {
   session_id: string;
-  url: string;
-  mode?: "iframe";
-  provider?: "payadvantage";
-  script_url?: string;
-  stylesheet_url?: string;
+  url?: string;
+  provider?: "stripe";
+  mode?: "elements";
+  client_secret?: string;
+  publishable_key?: string;
 }

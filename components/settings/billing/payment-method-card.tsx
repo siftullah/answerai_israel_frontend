@@ -37,7 +37,7 @@ export function PaymentMethodCard({
       <CardHeader>
         <CardTitle>Payment method</CardTitle>
         <CardDescription>
-          Charged for renewals, usage and plan changes. Card details are held by Pay Advantage —
+          Charged for renewals, usage and plan changes. Card details are held by Stripe —
           never on our servers.
         </CardDescription>
       </CardHeader>

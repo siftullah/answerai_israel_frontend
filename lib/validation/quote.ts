@@ -12,7 +12,7 @@ import { dollarsToCents, centsToDollarsInput } from "@/lib/money";
 /**
  * Loose mirrors of Store/UpdateQuoteRequest + ReplaceQuoteItemsRequest.
  * Prices are edited in dollars and converted to integer cents at the payload
- * boundary; the GST switch stands in for tax_rate_bp (checked = omit, so the
+ * boundary; the VAT switch stands in for tax_rate_bp (checked = omit, so the
  * backend applies the business default rate; unchecked = 0). The deposit is
  * "none" | percent (whole %) | fixed (dollars → cents).
  */

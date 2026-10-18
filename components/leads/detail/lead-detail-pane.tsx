@@ -93,7 +93,7 @@ function MetaBand({
       </Meta>
       <Meta label="Estimated value">
         {lead.value_cents !== null
-          ? formatCents(lead.value_cents, lead.currency ?? "AUD")
+          ? formatCents(lead.value_cents, lead.currency ?? "ILS")
           : "Not valued yet"}
       </Meta>
       <Meta label="Expected close">
@@ -242,7 +242,7 @@ export function LeadDetailPane({
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {lead.value_cents !== null
-                    ? formatCents(lead.value_cents, lead.currency ?? "AUD")
+                    ? formatCents(lead.value_cents, lead.currency ?? "ILS")
                     : "Not valued yet"}
                   {lead.assignee ? ` · ${lead.assignee.name}` : ""}
                 </p>

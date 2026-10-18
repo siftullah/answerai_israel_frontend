@@ -162,7 +162,7 @@ export type ScheduleJobValues = z.infer<typeof scheduleJobSchema>;
 /**
  * The items editor (mirrors Store/UpdateBusinessJobLineItemRequest). Prices
  * are edited in dollars and converted to integer cents at the payload
- * boundary; job items carry no tax — GST applies when the job is invoiced.
+ * boundary; job items carry no tax — VAT applies when the job is invoiced.
  */
 const jobLineItemSchema = z.object({
   /** Present = an existing row (PATCH); absent = a new one (POST). */

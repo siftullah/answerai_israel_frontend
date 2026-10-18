@@ -41,6 +41,7 @@ import {
 import { formatE164 } from "@/lib/phone";
 
 const COUNTRIES = [
+  { value: "IL", label: "Israel" },
   { value: "AU", label: "Australia" },
   { value: "NZ", label: "New Zealand" },
   { value: "GB", label: "United Kingdom" },
@@ -48,6 +49,7 @@ const COUNTRIES = [
 ];
 
 const CURRENCIES = [
+  { value: "ILS", label: "ILS — Israeli new shekel" },
   { value: "AUD", label: "AUD — Australian dollar" },
   { value: "NZD", label: "NZD — New Zealand dollar" },
   { value: "GBP", label: "GBP — British pound" },

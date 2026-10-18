@@ -77,7 +77,7 @@ export function LeadListRow({
         </span>
         {lead.value_cents !== null && (
           <span className="shrink-0 text-[15px] font-semibold whitespace-nowrap tabular-nums">
-            {formatCents(lead.value_cents, lead.currency ?? "AUD")}
+            {formatCents(lead.value_cents, lead.currency ?? "ILS")}
           </span>
         )}
       </div>

@@ -27,7 +27,7 @@ export interface BusinessProfile {
   website: string | null;
   country: string | null;
   currency: string | null;
-  /** Basis points — 1000 = 10% GST. Shared default for invoices and quotes. */
+  /** Basis points — 1800 = 18% VAT. Shared default for invoices and quotes. */
   tax_rate_bp: number;
   tax_label: string;
   description: string | null;

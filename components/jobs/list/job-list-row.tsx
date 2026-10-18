@@ -89,7 +89,7 @@ export function JobListRow({
         </span>
         {job.quote_cents !== null && (
           <span className="shrink-0 text-[15px] font-semibold whitespace-nowrap tabular-nums">
-            {formatCents(job.quote_cents, job.currency ?? "AUD")}
+            {formatCents(job.quote_cents, job.currency ?? "ILS")}
           </span>
         )}
       </div>

@@ -149,7 +149,7 @@ function TaxDefaultsForm({
       return;
     }
     if (label.trim() === "" || label.trim().length > 20) {
-      setError("Give the tax a short name, like GST");
+      setError("Give the tax a short name, like VAT");
       return;
     }
 
@@ -181,7 +181,7 @@ function TaxDefaultsForm({
               setLabel(event.target.value);
               setError(null);
             }}
-            placeholder="GST"
+            placeholder="VAT"
           />
         </Field>
         <Field data-invalid={!!error || undefined}>
@@ -194,12 +194,12 @@ function TaxDefaultsForm({
               setPercent(event.target.value);
               setError(null);
             }}
-            placeholder="10"
+            placeholder="18"
           />
           {error ? (
             <FieldError>{error}</FieldError>
           ) : (
-            <FieldDescription>10% GST for most Australian businesses.</FieldDescription>
+            <FieldDescription>18% VAT for most Israeli businesses.</FieldDescription>
           )}
         </Field>
       </CardContent>
@@ -468,7 +468,7 @@ function QuoteSettingsForm({
             onChange={(event) => setFromDetails(event.target.value)}
             rows={2}
             maxLength={2000}
-            placeholder="ABN, trading name, address — shown on the quote footer"
+            placeholder="Company no. (ח.פ.), trading name, address — shown on the quote footer"
           />
         </Field>
       </CardContent>
@@ -578,7 +578,7 @@ function InvoiceSettingsForm({
             onChange={(event) => setFromDetails(event.target.value)}
             rows={2}
             maxLength={2000}
-            placeholder="ABN, trading name, address — shown on the invoice footer"
+            placeholder="Company no. (ח.פ.), trading name, address — shown on the invoice footer"
           />
         </Field>
       </CardContent>

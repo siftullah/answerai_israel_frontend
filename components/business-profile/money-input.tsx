@@ -43,7 +43,7 @@ export function MoneyInput({
   return (
     <div className="relative">
       <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
-        $
+        ₪
       </span>
       <Input
         id={id}

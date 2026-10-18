@@ -43,7 +43,7 @@ export interface InvoiceItem {
   quantity: string;
   description: string;
   unit_price_cents: number;
-  /** Basis points — 1000 = 10% GST. */
+  /** Basis points — 1800 = 18% VAT. */
   tax_rate_bp: number;
   amount_cents: number;
   position: number;
@@ -110,7 +110,7 @@ export interface InvoiceItemPayload {
   description: string;
   quantity: number;
   unit_price_cents: number;
-  /** Omitted = the module's default rate (GST for AU). */
+  /** Omitted = the module's default rate (VAT for IL). */
   tax_rate_bp?: number;
   kind?: LineItemKind;
 }

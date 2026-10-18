@@ -11,8 +11,8 @@ export function useTaxDefaults(businessUuid: string) {
   const profileQuery = useBusinessProfile(businessUuid);
 
   return {
-    taxRateBp: profileQuery.data?.tax_rate_bp ?? 1000,
-    taxLabel: profileQuery.data?.tax_label ?? "GST",
+    taxRateBp: profileQuery.data?.tax_rate_bp ?? 1800,
+    taxLabel: profileQuery.data?.tax_label ?? "VAT",
     isPending: profileQuery.isPending,
   };
 }

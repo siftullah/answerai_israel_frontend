@@ -301,7 +301,7 @@ export function InvoiceDetailPane({
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {formatCents(invoice.total_cents, invoice.currency)}
-                  {invoice.currency !== "AUD" && ` ${invoice.currency}`}
+                  {invoice.currency !== "ILS" && ` ${invoice.currency}`}
                 </p>
               </div>
               {invoice.contact && (

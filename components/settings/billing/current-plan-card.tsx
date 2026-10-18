@@ -52,7 +52,7 @@ export function CurrentPlanCard({
         </div>
         <CardDescription>
           {price !== null
-            ? `${formatCents(price)}/${subscription.interval === "monthly" ? "month" : "year"} + GST · ${BILLING_INTERVAL_LABELS[subscription.interval]} billing`
+            ? `${formatCents(price)}/${subscription.interval === "monthly" ? "month" : "year"} + VAT · ${BILLING_INTERVAL_LABELS[subscription.interval]} billing`
             : `${BILLING_INTERVAL_LABELS[subscription.interval]} billing`}
         </CardDescription>
       </CardHeader>
