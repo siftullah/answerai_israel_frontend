@@ -13,6 +13,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Spinner } from "@/components/ui/spinner";
 import { useSubscribe } from "@/hooks/use-billing";
+import { LOCALE } from "@/lib/datetime";
 import { formatCents } from "@/lib/money";
 import {
   BILLING_INTERVAL_LABELS,
@@ -63,7 +64,7 @@ export function SubscribeDialog({
   const setupFee = setupFeeDue ? currentSetupFeeCents() : 0;
   const totalTax = tax(planFee) + tax(setupFee);
   const total = planFee + setupFee + totalTax;
-  const promoEndsLabel = setupFeePromoEndsAt()?.toLocaleDateString("en-IL", {
+  const promoEndsLabel = setupFeePromoEndsAt()?.toLocaleDateString(LOCALE, {
     day: "numeric",
     month: "short",
   });

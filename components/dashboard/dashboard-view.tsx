@@ -17,6 +17,7 @@ import { TodayCard } from "@/components/dashboard/today-card";
 import { ErrorState } from "@/components/error-state";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { useMe } from "@/hooks/use-me";
+import { LOCALE } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 import type { DashboardHours } from "@/lib/api/types";
 
@@ -68,7 +69,7 @@ function OpenStatusChip({
 }
 
 function todayLine(timeZone: string): string {
-  return new Intl.DateTimeFormat("en-AU", {
+  return new Intl.DateTimeFormat(LOCALE, {
     weekday: "long",
     day: "numeric",
     month: "long",

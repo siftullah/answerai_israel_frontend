@@ -27,7 +27,7 @@ import { usePlans } from "@/hooks/use-plans";
 import { useBilling } from "@/hooks/use-billing";
 import { cn } from "@/lib/utils";
 import { formatCents } from "@/lib/money";
-import { formatDate } from "@/lib/datetime";
+import { LOCALE, formatDate } from "@/lib/datetime";
 import {
   BILLING_INTERVAL_LABELS,
   PLAN_ENTITLEMENT_DEFAULTS,
@@ -588,7 +588,7 @@ export function PlansView() {
 
   // The promo's end date, for the "ends 31 March" copy; null when no promo runs.
   const promoEndsAt = setupFeePromoEndsAt();
-  const promoEndsLabel = promoEndsAt?.toLocaleDateString("en-IL", {
+  const promoEndsLabel = promoEndsAt?.toLocaleDateString(LOCALE, {
     day: "numeric",
     month: "long",
   });

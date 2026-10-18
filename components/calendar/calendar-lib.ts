@@ -1,5 +1,5 @@
 import type { ConnectedCalendarEvent, SystemCalendarItem } from "@/lib/api/types";
-import { dayKey, parseDateKey, zonedMinutesOfDay } from "@/lib/datetime";
+import { LOCALE, dayKey, parseDateKey, zonedMinutesOfDay } from "@/lib/datetime";
 
 export type CalendarViewMode = "month" | "week" | "day";
 export type CalendarSource = "system" | "connected";
@@ -167,7 +167,7 @@ export function layoutOverlaps(items: TimedGridEvent[]): PositionedGridEvent[] {
 /** "July 2026" */
 export function formatMonthTitle(key: string): string {
   const date = parseDateKey(key);
-  return date ? date.toLocaleDateString("en-AU", { month: "long", year: "numeric" }) : key;
+  return date ? date.toLocaleDateString(LOCALE, { month: "long", year: "numeric" }) : key;
 }
 
 /** "27 Jul – 2 Aug 2026" */
@@ -178,10 +178,10 @@ export function formatWeekTitle(startKey: string, endKey: string): string {
   const sameMonth =
     start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
   const startLabel = start.toLocaleDateString(
-    "en-AU",
+    LOCALE,
     sameMonth ? { day: "numeric" } : { day: "numeric", month: "short" }
   );
-  const endLabel = end.toLocaleDateString("en-AU", {
+  const endLabel = end.toLocaleDateString(LOCALE, {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -189,11 +189,11 @@ export function formatWeekTitle(startKey: string, endKey: string): string {
   return `${startLabel} – ${endLabel}`;
 }
 
-/** "Monday 27 July 2026" */
+/** "Monday, 27 July 2026" */
 export function formatDayTitle(key: string): string {
   const date = parseDateKey(key);
   return date
-    ? date.toLocaleDateString("en-AU", {
+    ? date.toLocaleDateString(LOCALE, {
         weekday: "long",
         day: "numeric",
         month: "long",
@@ -205,7 +205,7 @@ export function formatDayTitle(key: string): string {
 /** "Mon" */
 export function weekdayShort(key: string): string {
   const date = parseDateKey(key);
-  return date ? date.toLocaleDateString("en-AU", { weekday: "short" }) : key;
+  return date ? date.toLocaleDateString(LOCALE, { weekday: "short" }) : key;
 }
 
 /** Day-of-month number for headers and month cells. */

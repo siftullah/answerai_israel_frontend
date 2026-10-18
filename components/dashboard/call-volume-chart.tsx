@@ -20,7 +20,7 @@ import {
 } from "@/components/ui/chart";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
-import { parseDateKey } from "@/lib/datetime";
+import { LOCALE, parseDateKey } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 import type { DashboardCalls, DashboardSeriesPoint } from "@/lib/api/types";
 
@@ -35,13 +35,13 @@ const chartConfig = {
 
 function tickLabel(key: string): string {
   const date = parseDateKey(key);
-  return date ? date.toLocaleDateString("en-AU", { day: "numeric", month: "short" }) : key;
+  return date ? date.toLocaleDateString(LOCALE, { day: "numeric", month: "short" }) : key;
 }
 
 function tooltipLabel(key: string): string {
   const date = parseDateKey(key);
   return date
-    ? date.toLocaleDateString("en-AU", { weekday: "short", day: "numeric", month: "short" })
+    ? date.toLocaleDateString(LOCALE, { weekday: "short", day: "numeric", month: "short" })
     : key;
 }
 

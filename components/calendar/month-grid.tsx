@@ -25,7 +25,7 @@ export function MonthGrid({
   onSelectEvent,
   onSelectDay,
 }: {
-  /** 42 business-zone day keys, Monday-started. */
+  /** 42 business-zone day keys, Sunday-started. */
   dayKeys: string[];
   /** First of the displayed month — days outside it render muted. */
   monthKey: string;

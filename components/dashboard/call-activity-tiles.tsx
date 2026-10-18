@@ -2,7 +2,7 @@
 
 import { BotIcon, PhoneIcon, PhoneMissedIcon, TimerIcon, type LucideIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
-import { formatDuration } from "@/lib/datetime";
+import { LOCALE, formatDuration } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 import type { DashboardCalls } from "@/lib/api/types";
 
@@ -107,7 +107,7 @@ export function CallActivityTiles({ calls }: { calls: DashboardCalls | undefined
       />
       <HeroTile
         label="Minutes this month"
-        value={calls.minutes_this_month.toLocaleString("en-AU")}
+        value={calls.minutes_this_month.toLocaleString(LOCALE)}
         detail={
           calls.avg_duration_seconds > 0
             ? `Avg ${formatDuration(calls.avg_duration_seconds)} per call`

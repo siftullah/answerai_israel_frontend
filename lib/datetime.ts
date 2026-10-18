@@ -13,36 +13,42 @@ export function formatOffset(t0Secs: number): string {
   return formatDuration(t0Secs);
 }
 
-const TIME = { hour: "numeric", minute: "2-digit" } as const;
+/**
+ * Display locale for every date and time formatter. en-IL, not he-IL: Latin
+ * digits, English month names, day-month-year order and no bidi marks (the
+ * same reasoning as lib/money.ts). en-IL defaults to a 24-hour clock, so the
+ * time formatters pass `hour12: true` to keep the am/pm display.
+ */
+export const LOCALE = "en-IL";
+
+const TIME = { hour: "numeric", minute: "2-digit", hour12: true } as const;
 
 /**
  * Timestamps arrive from the API in UTC. Every formatter takes the business
- * timezone (e.g. "Australia/Sydney") so times render in the business's local
+ * timezone (e.g. "Asia/Jerusalem") so times render in the business's local
  * time regardless of where the viewer is — pass `business.timezone`. Omitting
  * it falls back to the browser's zone.
  */
 
 /** Bare time of day: "10:32 am" — for rows already under a day heading. */
 export function formatTimeOfDay(iso: string, timeZone?: string): string {
-  return new Date(iso).toLocaleTimeString("en-AU", { ...TIME, timeZone });
+  return new Date(iso).toLocaleTimeString(LOCALE, { ...TIME, timeZone });
 }
 
-/** Compact date + time for list rows: "27/07/2026 - 03:15 PM". */
+/** Compact date + time for list rows: "27 Jul 2026 - 03:15 PM". */
 export function formatDateAndTime(iso: string, timeZone?: string): string {
   const date = new Date(iso);
-  const day = date.toLocaleDateString("en-AU", {
+  const day = date.toLocaleDateString(LOCALE, {
     timeZone,
-    day: "2-digit",
-    month: "2-digit",
+    day: "numeric",
+    month: "short",
     year: "numeric",
   });
-  // en-US gives the leading-zero hour + uppercase AM/PM the design calls for.
-  const time = date.toLocaleTimeString("en-US", {
-    timeZone,
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: true,
-  });
+  // Leading-zero hour + uppercase AM/PM is what the design calls for; the
+  // locale renders "03:15 pm", and the string is only digits, ":" and am/pm.
+  const time = date
+    .toLocaleTimeString(LOCALE, { timeZone, hour: "2-digit", minute: "2-digit", hour12: true })
+    .toUpperCase();
   return `${day} - ${time}`;
 }
 
@@ -57,7 +63,7 @@ export function dayKey(iso: string, timeZone?: string): string {
   });
 }
 
-/** Day-group heading: "Today" | "Yesterday" | "Mon 14 Jul" | "14 Jul 2025". */
+/** Day-group heading: "Today" | "Yesterday" | "Mon, 14 Jul" | "14 Jul 2025". */
 export function formatDayHeading(iso: string, timeZone?: string): string {
   const key = dayKey(iso, timeZone);
   const nowKey = dayKey(new Date().toISOString(), timeZone);
@@ -68,7 +74,7 @@ export function formatDayHeading(iso: string, timeZone?: string): string {
   if (key === dayKey(yesterday.toISOString(), timeZone)) return "Yesterday";
 
   const sameYear = key.slice(0, 4) === nowKey.slice(0, 4);
-  return new Date(iso).toLocaleDateString("en-AU", {
+  return new Date(iso).toLocaleDateString(LOCALE, {
     timeZone,
     weekday: sameYear ? "short" : undefined,
     day: "numeric",
@@ -79,7 +85,7 @@ export function formatDayHeading(iso: string, timeZone?: string): string {
 
 /** Full timestamp for detail views: "24 Jul 2026, 10:32 am". */
 export function formatDateTime(iso: string, timeZone?: string): string {
-  return new Date(iso).toLocaleString("en-AU", {
+  return new Date(iso).toLocaleString(LOCALE, {
     timeZone,
     day: "numeric",
     month: "short",
@@ -90,7 +96,7 @@ export function formatDateTime(iso: string, timeZone?: string): string {
 
 /** Date only, no time — for expiry/updated columns: "24 Jul 2026". */
 export function formatDate(iso: string, timeZone?: string): string {
-  return new Date(iso).toLocaleDateString("en-AU", {
+  return new Date(iso).toLocaleDateString(LOCALE, {
     timeZone,
     day: "numeric",
     month: "short",
@@ -124,7 +130,7 @@ function tzOffsetMs(timeZone: string, at: Date): number {
 
 /**
  * Compose a wall-clock date + time in a zone into a UTC instant:
- * ("2026-07-28", "14:30", "Australia/Sydney") → "2026-07-28T04:30:00.000Z".
+ * ("2026-07-28", "14:30", "Asia/Jerusalem") → "2026-07-28T11:30:00.000Z".
  * Two-pass so the offset is taken at the target instant, not "now" — this
  * lands DST transitions correctly (nonexistent spring-forward times resolve
  * to the shifted instant).
@@ -174,8 +180,9 @@ export function businessDayUtcRange(
  *
  * Never hand a calendar key to formatDate/dayKey/formatDateTime above: those
  * take a UTC instant, and `new Date("2026-07-28")` parses as UTC midnight,
- * which renders as 27 Jul in Australia/Sydney. dayKey() goes instant → key;
- * the three helpers below are the only safe way back.
+ * which renders as 27 Jul in any zone west of UTC (and as 2 or 3 am in
+ * Asia/Jerusalem). dayKey() goes instant → key; the three helpers below are
+ * the only safe way back.
  * ------------------------------------------------------------------------ */
 
 /** "2026-07-28" → a local-midnight Date. "" or malformed → undefined. */
@@ -196,7 +203,7 @@ export function toDateKey(date: Date): string {
 export function formatDateKey(key: string): string {
   const date = parseDateKey(key);
   return date
-    ? date.toLocaleDateString("en-AU", { day: "numeric", month: "long", year: "numeric" })
+    ? date.toLocaleDateString(LOCALE, { day: "numeric", month: "long", year: "numeric" })
     : key;
 }
 
@@ -219,11 +226,11 @@ export function addMonthsToDateKey(key: string, months: number): string {
   return date ? toDateKey(new Date(date.getFullYear(), date.getMonth() + months, 1)) : key;
 }
 
-/** The Monday starting the week that contains the key. */
+/** The Sunday starting the week that contains the key (Israeli week). */
 export function startOfWeekDateKey(key: string): string {
   const date = parseDateKey(key);
   if (!date) return key;
-  date.setDate(date.getDate() - ((date.getDay() + 6) % 7));
+  date.setDate(date.getDate() - date.getDay());
   return toDateKey(date);
 }
 
