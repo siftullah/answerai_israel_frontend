@@ -45,7 +45,7 @@ import {
 const HERO_GRADIENT =
   "radial-gradient(ellipse at top center, rgba(37, 99, 235, 0.15) 0%, rgba(59, 130, 246, 0.1) 35%, rgba(56, 189, 248, 0.05) 70%, rgba(255, 255, 255, 0.02) 100%)";
 
-const CONTACT_SALES_HREF = "mailto:info@answerai.com.au?subject=Custom%20plan%20enquiry";
+const CONTACT_SALES_HREF = "mailto:info@answerai.co.il?subject=Custom%20plan%20enquiry";
 
 const PLAN_DESCRIPTIONS: Record<string, string> = {
   starter: "Essential coverage for small businesses",

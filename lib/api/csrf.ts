@@ -5,7 +5,7 @@ let inflight: Promise<void> | null = null;
 
 /**
  * Ensures the XSRF-TOKEN cookie exists before a mutating request. Sanctum
- * sets it on `.answerai.com.au.test` (not HttpOnly), so JS on the app
+ * sets it on `.answerai.co.il.test` (not HttpOnly), so JS on the app
  * subdomain can check for it directly. Concurrent callers share a single
  * in-flight request. The fast-path can pass with an expired token — the
  * client's 419 retry (with force=true) is the designed recovery for that.

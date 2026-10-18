@@ -1,5 +1,5 @@
 /** Base URL of the Laravel backend (no trailing slash, no /api suffix). */
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://answerai.com.au.test";
+export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "https://answerai.co.il.test";
 
 /**
  * Central endpoint catalog. Paths are relative to the axios instance's

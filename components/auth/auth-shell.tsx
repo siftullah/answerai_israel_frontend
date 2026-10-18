@@ -17,7 +17,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
 
         <footer className="flex items-center justify-center gap-3 text-xs text-muted-foreground">
           <a
-            href="https://answerai.com.au/privacy"
+            href="https://answerai.co.il/privacy"
             target="_blank"
             rel="noreferrer"
             className="underline-offset-4 hover:text-foreground hover:underline"
@@ -26,7 +26,7 @@ export function AuthShell({ children }: { children: React.ReactNode }) {
           </a>
           <span aria-hidden className="h-3 w-px bg-border" />
           <a
-            href="https://answerai.com.au/terms"
+            href="https://answerai.co.il/terms"
             target="_blank"
             rel="noreferrer"
             className="underline-offset-4 hover:text-foreground hover:underline"
