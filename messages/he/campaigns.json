@@ -170,6 +170,7 @@
       "ringing": "מצלצל",
       "in_progress": "בתהליך",
       "completed": "הושלם",
+      "voicemail": "תא קולי",
       "busy": "תפוס",
       "no_answer": "אין מענה",
       "failed": "נכשל",
@@ -243,8 +244,7 @@
       "unnamedContact": "איש קשר ללא שם",
       "attemptsOf": "{attempts} מתוך {max}",
       "company": "חברה",
-      "address": "כתובת",
-      "voicemailOutcome": "תא קולי"
+      "address": "כתובת"
     },
     "retryDialog": {
       "titleSingle": "לנסות שוב את {phone}?",

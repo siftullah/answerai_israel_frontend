@@ -732,7 +732,7 @@
     "t": "مشغول"
   },
   "lib.endReason.canceled": {
-    "en": "Cancelled",
+    "en": "Canceled",
     "t": "ملغى"
   },
   "lib.endReason.failed": {
@@ -14062,5 +14062,33 @@
   "lib.voiceDescription.hope": {
     "en": "Natural, clear and calm female American voice.",
     "t": "صوت نسائي أمريكي طبيعي وواضح وهادئ."
+  },
+  "campaigns.calls.status.voicemail": {
+    "en": "Voicemail",
+    "t": "البريد الصوتي"
+  },
+  "calls.status.voicemail": {
+    "en": "Voicemail",
+    "t": "البريد الصوتي"
+  },
+  "lib.endReason.voicemail": {
+    "en": "Went to voicemail",
+    "t": "تم التحويل إلى البريد الصوتي"
+  },
+  "lib.endReason.ended_by_agent": {
+    "en": "Agent ended the call",
+    "t": "أنهى وكيل الذكاء الاصطناعي المكالمة"
+  },
+  "lib.endReason.ended_by_caller": {
+    "en": "Caller hung up",
+    "t": "أنهى المتصل المكالمة"
+  },
+  "lib.endReason.completed": {
+    "en": "Call ended",
+    "t": "انتهت المكالمة"
+  },
+  "lib.endReason.time_limit": {
+    "en": "Reached the time limit",
+    "t": "تم بلوغ الحد الزمني"
   }
 }

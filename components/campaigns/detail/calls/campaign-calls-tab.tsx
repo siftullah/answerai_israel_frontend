@@ -25,6 +25,7 @@ const CAMPAIGN_CALL_STATUSES: CallStatus[] = [
   "ringing",
   "in_progress",
   "completed",
+  "voicemail",
   "busy",
   "no_answer",
   "failed",

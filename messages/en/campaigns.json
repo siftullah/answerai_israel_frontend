@@ -170,6 +170,7 @@
       "ringing": "Ringing",
       "in_progress": "In progress",
       "completed": "Completed",
+      "voicemail": "Voicemail",
       "busy": "Busy",
       "no_answer": "No answer",
       "failed": "Failed",
@@ -243,8 +244,7 @@
       "unnamedContact": "Unnamed contact",
       "attemptsOf": "{attempts} of {max}",
       "company": "Company",
-      "address": "Address",
-      "voicemailOutcome": "Voicemail"
+      "address": "Address"
     },
     "retryDialog": {
       "titleSingle": "Retry {phone}?",

@@ -25,15 +25,16 @@
     "line": "ضريبة القيمة المضافة ({rate}%)"
   },
   "endReason": {
-    "customer_ended_call": "أنهى المتصل المكالمة",
-    "agent_ended_call": "أنهى وكيل الذكاء الاصطناعي المكالمة",
+    "voicemail": "تم التحويل إلى البريد الصوتي",
+    "ended_by_agent": "أنهى وكيل الذكاء الاصطناعي المكالمة",
+    "ended_by_caller": "أنهى المتصل المكالمة",
     "transferred": "تم التحويل",
-    "no_conversation": "لم تحدث محادثة",
     "no_answer": "لا رد",
     "busy": "مشغول",
     "canceled": "ملغى",
-    "failed": "فشل",
-    "unknown": "غير معروف"
+    "completed": "انتهت المكالمة",
+    "time_limit": "تم بلوغ الحد الزمني",
+    "failed": "فشل"
   },
   "modules": {
     "appointments": {

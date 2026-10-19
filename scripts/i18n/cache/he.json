@@ -932,7 +932,7 @@
     "t": "תפוס"
   },
   "lib.endReason.canceled": {
-    "en": "Cancelled",
+    "en": "Canceled",
     "t": "בוטל"
   },
   "lib.endReason.failed": {
@@ -14062,5 +14062,33 @@
   "lib.voiceDescription.hope": {
     "en": "Natural, clear and calm female American voice.",
     "t": "קול נשי אמריקאי טבעי, ברור ורגוע."
+  },
+  "calls.status.voicemail": {
+    "en": "Voicemail",
+    "t": "תא קולי"
+  },
+  "campaigns.calls.status.voicemail": {
+    "en": "Voicemail",
+    "t": "תא קולי"
+  },
+  "lib.endReason.voicemail": {
+    "en": "Went to voicemail",
+    "t": "השיחה הועברה לתא הקולי"
+  },
+  "lib.endReason.ended_by_agent": {
+    "en": "Agent ended the call",
+    "t": "סוכן AI סיים את השיחה"
+  },
+  "lib.endReason.ended_by_caller": {
+    "en": "Caller hung up",
+    "t": "המתקשר ניתק"
+  },
+  "lib.endReason.completed": {
+    "en": "Call ended",
+    "t": "השיחה הסתיימה"
+  },
+  "lib.endReason.time_limit": {
+    "en": "Reached the time limit",
+    "t": "מגבלת הזמן הושגה"
   }
 }

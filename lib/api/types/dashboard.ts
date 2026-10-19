@@ -6,6 +6,8 @@ export interface DashboardCallsToday {
   outbound: number;
   /** Calls that ran to completion (status = completed). */
   answered: number;
+  /** Calls a voicemail system picked up (status = voicemail). */
+  voicemail: number;
   /** busy + no_answer + failed. */
   missed: number;
   /** Calls handed to a human (warm or blind). */

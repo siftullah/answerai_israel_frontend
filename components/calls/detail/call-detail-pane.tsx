@@ -134,7 +134,7 @@ function MetaBand({
           "—"
         )}
       </Meta>
-      <Meta label={t("detail.endReason")}>{formatEndReason(call.end_reason) ?? "—"}</Meta>
+      <Meta label={t("detail.endReason")}>{formatEndReason(call.end_reason_code, call.end_reason) ?? "—"}</Meta>
     </dl>
   );
 }
@@ -211,7 +211,8 @@ export function CallDetailPane({
   const terminal = !TRANSITIONAL_CALL_STATUSES.includes(call.status);
   const cancelable =
     call.direction === "outbound" && CANCELABLE_CALL_STATUSES.includes(call.status);
-  const showTranscript = call.status === "completed";
+  // Voicemail calls were answered too (the agent spoke to the machine), so they carry a transcript.
+  const showTranscript = call.status === "completed" || call.status === "voicemail";
   const showRecordings = hasOtherRecordings(call);
 
   return (

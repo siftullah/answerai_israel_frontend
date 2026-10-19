@@ -25,15 +25,16 @@
     "line": "מע\"מ ({rate}%)"
   },
   "endReason": {
-    "customer_ended_call": "המתקשר ניתק",
-    "agent_ended_call": "סוכן AI סיים את השיחה",
+    "voicemail": "השיחה הועברה לתא הקולי",
+    "ended_by_agent": "סוכן AI סיים את השיחה",
+    "ended_by_caller": "המתקשר ניתק",
     "transferred": "השיחה הועברה",
-    "no_conversation": "לא התקיימה שיחה",
     "no_answer": "אין מענה",
     "busy": "תפוס",
     "canceled": "בוטל",
-    "failed": "נכשל",
-    "unknown": "לא ידוע"
+    "completed": "השיחה הסתיימה",
+    "time_limit": "מגבלת הזמן הושגה",
+    "failed": "נכשל"
   },
   "modules": {
     "appointments": {
