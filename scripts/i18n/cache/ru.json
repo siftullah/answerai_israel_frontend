@@ -13906,5 +13906,53 @@
   "lib.endReason.time_limit": {
     "en": "Reached the time limit",
     "t": "Достигнут лимит времени"
+  },
+  "lib.voiceDescription.tomer": {
+    "en": "Calm, resonant male Hebrew voice — measured and unhurried.",
+    "t": "Спокойный, глубокий мужской голос на иврите — размеренный и неторопливый."
+  },
+  "lib.voiceDescription.amit": {
+    "en": "Deep, thoughtful male Hebrew voice.",
+    "t": "Глубокий, вдумчивый мужской голос на иврите."
+  },
+  "lib.voiceDescription.omer": {
+    "en": "Confident, upbeat male Hebrew voice.",
+    "t": "Уверенный, жизнерадостный мужской голос на иврите."
+  },
+  "lib.voiceDescription.itai": {
+    "en": "Bright, energetic young male Hebrew voice.",
+    "t": "Яркий, энергичный молодой мужской голос на иврите."
+  },
+  "lib.voiceDescription.nimrod": {
+    "en": "Warm, confident male Hebrew voice — a native Israeli speaker.",
+    "t": "Тёплый, уверенный мужской голос израильтянина — носителя иврита."
+  },
+  "lib.voiceDescription.noa": {
+    "en": "Warm, patient female Hebrew voice.",
+    "t": "Тёплый, терпеливый женский голос на иврите."
+  },
+  "lib.voiceDescription.dana": {
+    "en": "Friendly, steady female Hebrew voice — made for support calls.",
+    "t": "Дружелюбный, ровный женский голос на иврите — создан для звонков в службу поддержки."
+  },
+  "lib.voiceDescription.michal": {
+    "en": "Plain-spoken, patient female Hebrew voice — made for support calls.",
+    "t": "Терпеливый женский голос на иврите с простой и понятной речью — создан для звонков в службу поддержки."
+  },
+  "lib.voiceDescription.yael": {
+    "en": "Soft, gently confident female Hebrew voice.",
+    "t": "Мягкий женский голос на иврите со спокойной уверенностью."
+  },
+  "lib.voiceDescription.tamar": {
+    "en": "Light, reassuring female Hebrew voice.",
+    "t": "Лёгкий, успокаивающий женский голос на иврите."
+  },
+  "lib.voiceDescription.maya": {
+    "en": "Cheerful, lively female Hebrew voice.",
+    "t": "Жизнерадостный, живой женский голос на иврите."
+  },
+  "lib.voiceDescription.shira": {
+    "en": "Bright, quick female Hebrew voice.",
+    "t": "Яркий женский голос на иврите с быстрым темпом речи."
   }
 }

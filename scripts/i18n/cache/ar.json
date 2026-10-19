@@ -13906,5 +13906,53 @@
   "businessProfile.profileForm.languages.readOnly": {
     "en": "Only owners and admins can change these.",
     "t": "بس أصحاب المصلحة والمديرين بيقدروا يغيّروا هدول."
+  },
+  "lib.voiceDescription.tomer": {
+    "en": "Calm, resonant male Hebrew voice — measured and unhurried.",
+    "t": "صوت رجالي هادي ورنّان بالعبرية — موزون ومش مستعجل."
+  },
+  "lib.voiceDescription.amit": {
+    "en": "Deep, thoughtful male Hebrew voice.",
+    "t": "صوت رجالي عميق بالعبرية، بيحكي بتروّي."
+  },
+  "lib.voiceDescription.omer": {
+    "en": "Confident, upbeat male Hebrew voice.",
+    "t": "صوت رجالي واثق ومتفائل بالعبرية."
+  },
+  "lib.voiceDescription.itai": {
+    "en": "Bright, energetic young male Hebrew voice.",
+    "t": "صوت شاب بالعبرية، مشرق ومليان طاقة."
+  },
+  "lib.voiceDescription.nimrod": {
+    "en": "Warm, confident male Hebrew voice — a native Israeli speaker.",
+    "t": "صوت رجالي دافي وواثق بالعبرية — لإسرائيلي العبرية لغته الأم."
+  },
+  "lib.voiceDescription.noa": {
+    "en": "Warm, patient female Hebrew voice.",
+    "t": "صوت نسائي دافي وصبور بالعبرية."
+  },
+  "lib.voiceDescription.dana": {
+    "en": "Friendly, steady female Hebrew voice — made for support calls.",
+    "t": "صوت نسائي ودود وثابت بالعبرية — مناسب لمكالمات الدعم."
+  },
+  "lib.voiceDescription.michal": {
+    "en": "Plain-spoken, patient female Hebrew voice — made for support calls.",
+    "t": "صوت نسائي واضح وصبور بالعبرية — مناسب لمكالمات الدعم."
+  },
+  "lib.voiceDescription.yael": {
+    "en": "Soft, gently confident female Hebrew voice.",
+    "t": "صوت نسائي ناعم بالعبرية، بثقة هادية."
+  },
+  "lib.voiceDescription.tamar": {
+    "en": "Light, reassuring female Hebrew voice.",
+    "t": "صوت نسائي خفيف ومطمّن بالعبرية."
+  },
+  "lib.voiceDescription.maya": {
+    "en": "Cheerful, lively female Hebrew voice.",
+    "t": "صوت نسائي مرح ومليان حيوية بالعبرية."
+  },
+  "lib.voiceDescription.shira": {
+    "en": "Bright, quick female Hebrew voice.",
+    "t": "صوت نسائي مشرق وسريع بالعبرية."
   }
 }
