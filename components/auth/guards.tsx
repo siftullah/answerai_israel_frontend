@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { ErrorState } from "@/components/error-state";
 import { FullPageLoader } from "@/components/full-page-loader";
+import { useAccountLocale } from "@/hooks/use-account-locale";
 import { useMe } from "@/hooks/use-me";
 
 function isLoggedOut(error: unknown): boolean {
@@ -24,6 +25,9 @@ export function RequireAuth({ children }: { children: React.ReactNode }) {
   const { data, error, isPending, refetch } = useMe();
   const router = useRouter();
   const pathname = usePathname();
+
+  // The first authenticated render opens the portal in the account's language.
+  useAccountLocale(data?.user);
 
   const loggedOut = !isPending && isLoggedOut(error);
 

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useMemo } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -121,6 +121,7 @@ function AcceptAsCurrentUser({ token, email }: { token: string; email: string })
 function AcceptAsNewUser({ token }: { token: string }) {
   const router = useRouter();
   const accept = useAcceptInvitation();
+  const locale = useLocale();
 
   const t = useTranslations("auth");
   const tv = useTranslations("validation");
@@ -162,7 +163,8 @@ function AcceptAsNewUser({ token }: { token: string }) {
 
   const onSubmit = form.handleSubmit((values) => {
     accept.mutate(
-      { token, ...values },
+      // The new account's emails are written in the language they accepted in.
+      { token, ...values, locale },
       {
         onSuccess: (data) => {
           // New users are auto-logged-in and auto-verified.

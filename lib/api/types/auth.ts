@@ -14,6 +14,8 @@ export interface RegisterPayload {
   email: string;
   password: string;
   business_name: string;
+  /** The UI language at sign-up — the account's emails come out in it from the first one. */
+  locale?: string;
 }
 
 export interface ForgotPasswordPayload {
@@ -31,6 +33,8 @@ export interface AcceptInvitationPayload {
   first_name?: string;
   last_name?: string;
   password?: string;
+  /** The UI language while accepting; stored on a newly created account, ignored for an existing one. */
+  locale?: string;
 }
 
 /** Flat responses (no `data` wrapper) — login, /me. */

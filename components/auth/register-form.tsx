@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useMemo } from "react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -20,6 +20,7 @@ import { registerSchema, type RegisterValues } from "@/lib/validation/auth";
 export function RegisterForm() {
   const router = useRouter();
   const register = useRegister();
+  const locale = useLocale();
 
   const t = useTranslations("auth");
   const tc = useTranslations("common");
@@ -38,7 +39,9 @@ export function RegisterForm() {
   const { errors } = form.formState;
 
   const onSubmit = form.handleSubmit((values) => {
-    register.mutate(values, {
+    // The language they signed up in becomes the account's: the verification
+    // email, and everything after it, is written in it.
+    register.mutate({ ...values, locale }, {
       // Backend auto-logs the user in (unverified) — straight to the gate.
       onSuccess: () => router.replace("/verify-email"),
       onError: (error) => applyServerErrors(form, error),

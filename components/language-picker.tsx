@@ -3,6 +3,7 @@
 import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
+import { useQueryClient } from "@tanstack/react-query";
 import { CheckIcon, LanguagesIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,14 +12,22 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useUpdateProfile } from "@/hooks/use-profile";
 import { setLocale } from "@/i18n/actions";
 import { localeNames, locales, type Locale } from "@/i18n/config";
+import type { MeResponse } from "@/lib/api/types";
+import { queryKeys } from "@/lib/query/keys";
 import { cn } from "@/lib/utils";
 
 /**
  * UI language switcher. Writes the locale cookie through a server action and
  * refreshes the router so the root layout re-renders with the new language
  * and direction — in-memory state (forms, query cache) survives.
+ *
+ * A signed-in user's pick is also saved on their account (PATCH /me): their
+ * emails are written in it and their other devices open the portal in it
+ * (useAccountLocale). Anonymous visitors — sign-in, the public quote page —
+ * only get the cookie.
  */
 export function LanguagePicker({
   className,
@@ -30,10 +39,17 @@ export function LanguagePicker({
   const locale = useLocale() as Locale;
   const t = useTranslations("common");
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const updateProfile = useUpdateProfile();
   const [isPending, startTransition] = useTransition();
 
   const choose = (next: Locale) => {
     if (next === locale) return;
+    // /me in the cache means a signed-in user; nothing has fetched it on the
+    // anonymous pages, and this must not start doing so.
+    if (queryClient.getQueryData<MeResponse>(queryKeys.me)) {
+      updateProfile.mutate({ locale: next });
+    }
     startTransition(async () => {
       await setLocale(next);
       router.refresh();

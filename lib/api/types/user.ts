@@ -19,6 +19,12 @@ export interface User {
   pending_email: string | null;
   email_verified: boolean;
   avatar: UserAvatar | null;
+  /**
+   * The language the account's emails are written in and the portal opens in:
+   * one of the API's locales (a superset of the UI's — `isLocale()` narrows it),
+   * or null until the user has picked one.
+   */
+  locale: string | null;
   created_at: string;
 }
 
@@ -26,7 +32,8 @@ export interface User {
  * PATCH /me body — every field optional (backend treats them as `sometimes`).
  * Name/email are account-level; phone/position are the current membership's.
  * A changed email starts the pending-confirm flow; `return_to` is the SPA URL
- * to land on after the emailed confirmation.
+ * to land on after the emailed confirmation. `locale` is the language picker's
+ * choice, kept on the account for emails and other devices.
  */
 export interface UpdateProfilePayload {
   first_name?: string;
@@ -34,6 +41,7 @@ export interface UpdateProfilePayload {
   email?: string;
   phone_e164?: string | null;
   position?: string | null;
+  locale?: string;
   return_to?: string;
 }
 
