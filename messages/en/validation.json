@@ -14,7 +14,7 @@
   },
   "phone": {
     "required": "Enter a phone number",
-    "invalid": "Enter an Australian phone number, e.g. 0412 345 678"
+    "invalid": "Enter an Israeli phone number, e.g. 052-123-4567"
   },
   "length": {
     "name": "Keep the name under {max, number} characters",
@@ -40,15 +40,14 @@
     "url": "Keep the URL under {max, number} characters",
     "address": "Keep the address under {max, number} characters",
     "street": "Keep the street under {max, number} characters",
-    "suburb": "Keep the suburb under {max, number} characters",
+    "suburb": "Keep the city under {max, number} characters",
     "state": "Keep the state under {max, number} characters",
-    "postcode": "Keep the postcode under {max, number} characters",
+    "postcode": "Keep the postal code under {max, number} characters",
     "landmark": "Keep the landmark under {max, number} characters",
     "baseLocation": "Keep the base location under {max, number} characters",
     "generic": "Keep this under {max, number} characters",
     "rule": "Keep each rule under {max, number} characters",
     "category": "Each category must be {max, number} characters or fewer",
-    "agencyId": "Agency ID must be {max, number} characters or fewer",
     "useFewer": "Use {max, number} characters or fewer"
   },
   "count": {
@@ -67,8 +66,8 @@
     "bookings": "Between {min, number} and {max, plural, one {# booking} other {# bookings}}"
   },
   "weeklyHours": {
-    "windowRequired": "Add at least one time window for {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
-    "windowOrder": "Each window must end after it starts ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
+    "windowRequired": "Add at least one time window for {day, select, monday {Monday} tuesday {Tuesday} wednesday {Wednesday} thursday {Thursday} friday {Friday} saturday {Saturday} sunday {Sunday} other {{day}}}",
+    "windowOrder": "Each window must end after it starts ({day, select, monday {Monday} tuesday {Tuesday} wednesday {Wednesday} thursday {Thursday} friday {Friday} saturday {Saturday} sunday {Sunday} other {{day}}})"
   },
   "auth": {
     "passwordRequired": "Password is required",
@@ -136,10 +135,6 @@
     "questionRequired": "Question is required",
     "answerRequired": "Answer is required"
   },
-  "integration": {
-    "agencyIdRequired": "Agency ID is required",
-    "feedsRequired": "Select at least one feed"
-  },
   "invoice": {
     "dueBeforeIssue": "The due date can't be before the issue date"
   },
@@ -147,7 +142,7 @@
     "titleRequired": "Give the job a short title",
     "estimatedMinutesRange": "Enter whole minutes between {min} and {max}",
     "streetRequired": "Add the street address",
-    "cityRequired": "Add the suburb or city"
+    "cityRequired": "Add the city"
   },
   "knowledge": {
     "agentScopeRequired": "Choose at least one agent",

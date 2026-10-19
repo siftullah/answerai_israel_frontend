@@ -14,7 +14,7 @@
   },
   "phone": {
     "required": "أدخل رقم هاتف",
-    "invalid": "أدخل رقم هاتف أستراليًا، مثل 0412 345 678"
+    "invalid": "أدخل رقم هاتف إسرائيليًا، مثل 052-123-4567"
   },
   "length": {
     "name": "اجعل طول الاسم أقل من {max, number} حرفًا",
@@ -40,15 +40,14 @@
     "url": "اجعل طول الرابط أقل من {max, number} حرفًا",
     "address": "اجعل طول العنوان أقل من {max, number} حرفًا",
     "street": "اجعل طول اسم الشارع أقل من {max, number} حرفًا",
-    "suburb": "اجعل طول اسم الضاحية أقل من {max, number} حرفًا",
+    "suburb": "أدخل اسم مدينة بأقل من {max, number} حرفًا",
     "state": "اجعل طول اسم الولاية أقل من {max, number} حرفًا",
-    "postcode": "اجعل طول الرمز البريدي أقل من {max, number} حرفًا",
+    "postcode": "أدخل رمزًا بريديًا بأقل من {max, number} حرفًا",
     "landmark": "اجعل طول اسم المَعلم أقل من {max, number} حرفًا",
     "baseLocation": "اجعل طول الموقع الأساسي أقل من {max, number} حرفًا",
     "generic": "اجعل طول هذا الحقل أقل من {max, number} حرفًا",
     "rule": "اجعل طول كل قاعدة أقل من {max, number} حرفًا",
     "category": "يجب ألا يتجاوز طول كل فئة {max, number} حرفًا",
-    "agencyId": "يجب ألا يتجاوز طول معرّف الوكالة {max, number} حرفًا",
     "useFewer": "استخدم {max, number} حرفًا أو أقل"
   },
   "count": {
@@ -67,8 +66,8 @@
     "bookings": "بين {min, number} و{max, plural, zero {{max} حجوزات} one {{max} حجز} two {حجزين ({max})} few {{max} حجوزات} many {{max} حجزًا} other {{max} حجز}}"
   },
   "weeklyHours": {
-    "windowRequired": "أضف فترة زمنية واحدة على الأقل ليوم {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
-    "windowOrder": "يجب أن تنتهي كل فترة بعد وقت بدايتها ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
+    "windowRequired": "أضف فترة زمنية واحدة على الأقل ليوم {day, select, monday {الاثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}}",
+    "windowOrder": "يجب أن تنتهي كل فترة بعد بدايتها ({day, select, monday {الاثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}})"
   },
   "auth": {
     "passwordRequired": "كلمة المرور مطلوبة",
@@ -136,10 +135,6 @@
     "questionRequired": "السؤال مطلوب",
     "answerRequired": "الإجابة مطلوبة"
   },
-  "integration": {
-    "agencyIdRequired": "معرّف الوكالة مطلوب",
-    "feedsRequired": "اختر تغذية واحدة على الأقل"
-  },
   "invoice": {
     "dueBeforeIssue": "لا يمكن أن يسبق تاريخ الاستحقاق تاريخ الإصدار"
   },
@@ -147,7 +142,7 @@
     "titleRequired": "أدخل عنوانًا قصيرًا لأمر العمل",
     "estimatedMinutesRange": "أدخل عددًا صحيحًا من الدقائق بين {min} و{max}",
     "streetRequired": "أضف عنوان الشارع",
-    "cityRequired": "أضف الضاحية أو المدينة"
+    "cityRequired": "أضف المدينة"
   },
   "knowledge": {
     "agentScopeRequired": "اختر وكيل ذكاء اصطناعي واحدًا على الأقل",

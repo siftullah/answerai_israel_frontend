@@ -4,7 +4,6 @@ import type {
   BusinessProfile,
   CalendarBusinessSettings,
   Faq,
-  IntegrationProviderInfo,
   KnowledgeDocument,
   Product,
   Service,
@@ -46,7 +45,6 @@ export interface CompletenessInput {
   members: BusinessMember[] | null;
   targets: TransferTarget[] | null;
   calendar: CalendarBusinessSettings | null;
-  providers: IntegrationProviderInfo[] | null;
 }
 
 export function buildCompleteness(input: CompletenessInput): Completeness {
@@ -68,20 +66,6 @@ export function buildCompleteness(input: CompletenessInput): Completeness {
           : servicesDone ?? productsDone;
 
   const readyDocs = input.documents?.filter((doc) => doc.status !== "error") ?? [];
-  const liveConnection = input.providers?.some(
-    (provider) => provider.connection && provider.connection.status !== "disconnected"
-  );
-  const connectedNow = input.providers?.some(
-    (provider) => provider.connection?.status === "connected"
-  );
-  const pendingSetup = input.providers?.some(
-    (provider) => provider.connection?.status === "pending_setup"
-  );
-  const integrationsLabel = connectedNow
-    ? rt("businessProfile.overview.tiles.integrations.connected")
-    : pendingSetup
-      ? rt("businessProfile.overview.tiles.integrations.connecting")
-      : rt("businessProfile.overview.tiles.integrations.optional");
 
   const tiles: SectionTile[] = [
     {
@@ -169,19 +153,10 @@ export function buildCompleteness(input: CompletenessInput): Completeness {
         : "",
       cta: rt("businessProfile.overview.tiles.calendar.cta"),
     },
-    {
-      key: "integrations",
-      title: "integrations",
-      segment: "business-profile/integrations",
-      done: input.providers ? Boolean(liveConnection) : null,
-      stat: input.providers ? integrationsLabel : null,
-      summary: integrationsLabel,
-      cta: rt("businessProfile.overview.tiles.integrations.optional"),
-    },
   ];
 
-  // Required units: everything except integrations, with services+products
-  // collapsed into the single catalog unit.
+  // Required units: every tile, with services+products collapsed into the
+  // single catalog unit.
   const requiredUnits: (boolean | null)[] = [
     basicInfoDone,
     catalogDone,

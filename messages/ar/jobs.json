@@ -106,7 +106,7 @@
     "streetAddress": "عنوان الشارع",
     "unitLabel": "الوحدة أو المبنى",
     "unitPlaceholder": "الوحدة، المبنى (اختياري)",
-    "suburb": "الضاحية",
+    "suburb": "المدينة",
     "state": "الولاية",
     "postcode": "الرمز البريدي",
     "descriptionPlaceholder": "نطاق العمل، المواد، ملاحظات الوصول… (اختياري)",
@@ -169,7 +169,7 @@
       "description": "وصف البند {line}",
       "type": "نوع البند {line}",
       "quantity": "كمية البند {line}",
-      "unitPrice": "سعر الوحدة للبند {line} بالدولار",
+      "unitPrice": "سعر الوحدة للبند {line} بالشيكل",
       "remove": "إزالة البند {line}"
     },
     "addLine": "إضافة بند",

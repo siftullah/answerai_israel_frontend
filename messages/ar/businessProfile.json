@@ -5,7 +5,6 @@
     "calendar": "التقويم",
     "docs": "المستندات",
     "faqs": "الأسئلة الشائعة",
-    "integrations": "التكاملات",
     "modules": "الوحدات الإضافية",
     "policies": "السياسات",
     "products": "المنتجات",
@@ -63,11 +62,6 @@
         "stat": "{minutes} د",
         "summary": "فترات متاحة مدتها {minutes} دقيقة",
         "cta": "مراجعة الإعدادات الافتراضية"
-      },
-      "integrations": {
-        "connected": "متصل",
-        "connecting": "جارٍ الاتصال",
-        "optional": "اختياري"
       }
     }
   },
@@ -256,11 +250,11 @@
       "title": "تفاصيل الاتصال",
       "description": "كيف يمكن للعملاء — ووكيل الذكاء الاصطناعي — التواصل مع النشاط التجاري.",
       "email": "البريد الإلكتروني العام",
-      "emailPlaceholder": "hello@yourbusiness.com.au",
+      "emailPlaceholder": "hello@yourbusiness.co.il",
       "phone": "رقم الهاتف العام",
-      "phonePlaceholder": "(02) 5550 1234",
+      "phonePlaceholder": "03-555-1234",
       "website": "الموقع الإلكتروني",
-      "websitePlaceholder": "https://yourbusiness.com.au"
+      "websitePlaceholder": "https://yourbusiness.co.il"
     },
     "about": {
       "title": "نبذة عن النشاط التجاري",
@@ -273,19 +267,10 @@
       "currency": "العملة"
     },
     "countries": {
-      "IL": "إسرائيل",
-      "AU": "أستراليا",
-      "NZ": "نيوزيلندا",
-      "GB": "المملكة المتحدة",
-      "US": "الولايات المتحدة"
+      "IL": "إسرائيل"
     },
     "currencies": {
-      "ILS": "ILS — شيكل إسرائيلي جديد",
-      "AUD": "AUD — دولار أسترالي",
-      "NZD": "NZD — دولار نيوزيلندي",
-      "GBP": "GBP — جنيه إسترليني",
-      "USD": "USD — دولار أمريكي",
-      "EUR": "EUR — يورو"
+      "ILS": "ILS — شيكل إسرائيلي جديد"
     },
     "socials": {
       "title": "حسابات التواصل الاجتماعي",
@@ -304,7 +289,7 @@
       "landmark": "معلم قريب (اختياري)",
       "landmarkPlaceholder": "بجانب مكتب البريد",
       "baseLocation": "الموقع الأساسي",
-      "baseLocationPlaceholder": "نيوكاسل، نيو ساوث ويلز",
+      "baseLocationPlaceholder": "حيفا",
       "travelRadius": "نطاق التنقل (كم)",
       "travelRadiusPlaceholder": "50"
     },
@@ -349,7 +334,7 @@
     "running": "جارٍ استخراج البيانات… قد يستغرق ذلك دقيقة أو دقيقتين. يمكنك إبقاء هذه النافذة مفتوحة أو الإلغاء.",
     "sourceUrl": "صفحة موقع إلكتروني",
     "sourceFile": "مستند (PDF، DOCX، TXT، MD — حتى 10 ميغابايت)",
-    "urlPlaceholder": "https://yourbusiness.com.au",
+    "urlPlaceholder": "https://yourbusiness.co.il",
     "chooseFile": "اختيار ملف",
     "noFile": "لم يتم اختيار ملف",
     "start": "بدء استخراج البيانات",
@@ -470,7 +455,7 @@
         "netDays": "أدخل عددًا صحيحًا من الأيام بين 0 و365"
       },
       "paymentInstructions": "تعليمات الدفع",
-      "paymentInstructionsPlaceholder": "إيداع مباشر — BSB، رقم الحساب، مرجع الدفع…",
+      "paymentInstructionsPlaceholder": "تحويل بنكي — البنك، الفرع، رقم الحساب، المرجع…",
       "paymentInstructionsHint": "تُملأ مسبقًا في كل فاتورة جديدة؛ ويمكن تعديلها لكل فاتورة.",
       "fromDetails": "بيانات المُصدِر",
       "fromDetailsPlaceholder": "رقم الشركة (ח.פ.)، الاسم التجاري، العنوان — تظهر في تذييل الفاتورة",
@@ -544,8 +529,8 @@
     "firstNamePlaceholder": "سام",
     "lastName": "اسم العائلة",
     "lastNamePlaceholder": "ريفيرا",
-    "emailPlaceholder": "sam@yourbusiness.com.au",
-    "phonePlaceholder": "0412 345 678",
+    "emailPlaceholder": "sam@yourbusiness.co.il",
+    "phonePlaceholder": "052-123-4567",
     "position": "المنصب",
     "positionPlaceholder": "مدير الموقع",
     "role": "الدور",
@@ -627,9 +612,9 @@
     "member": "عضو في الفريق",
     "alreadyTarget": "وجهة تحويل بالفعل",
     "phone": "رقم الهاتف",
-    "phonePlaceholder": "0412 345 678",
+    "phonePlaceholder": "052-123-4567",
     "memberPhoneHint": "معبّأ مسبقًا من بيانات عضو الفريق — عدّله لاستبداله، أو امسحه لاستخدام رقمه المحفوظ.",
-    "otherPhoneHint": "أرقام أسترالية فقط، مثل 0412 345 678.",
+    "otherPhoneHint": "أرقام إسرائيلية فقط، مثل 052-123-4567.",
     "postDial": "أرقام ما بعد الاتصال (اختياري)",
     "postDialPlaceholder": "w123#",
     "postDialHint": "تُرسل بعد الرد — أرقام و* و#؛ يشير w إلى انتظار نصف ثانية.",

@@ -254,7 +254,7 @@
         "startEmpty": "התחלה ללא יעדים"
       },
       "switchDialog": {
-        "title": "להעביר את כל היעדים למצב {mode, select, screened {screened} other {blind}}?",
+        "title": "להגדיר לכל היעדים {mode, select, screened {העברה עם סינון} other {העברה ישירה}}?",
         "description": "פעולה זו משנה את אופן העברת השיחות עבור {count, plural, one {# יעד} other {# יעדים}} בספר הטלפונים של סוכן AI זה.",
         "confirm": "שינוי מצב"
       },

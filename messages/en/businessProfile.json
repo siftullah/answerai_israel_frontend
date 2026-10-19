@@ -5,7 +5,6 @@
     "calendar": "Calendar",
     "docs": "Docs",
     "faqs": "FAQs",
-    "integrations": "Integrations",
     "modules": "Modules",
     "policies": "Policies",
     "products": "Products",
@@ -63,11 +62,6 @@
         "stat": "{minutes} min",
         "summary": "{minutes}-min slots",
         "cta": "Review defaults"
-      },
-      "integrations": {
-        "connected": "Connected",
-        "connecting": "Connecting",
-        "optional": "Optional"
       }
     }
   },
@@ -256,11 +250,11 @@
       "title": "Contact details",
       "description": "How customers — and your AI — can reach the business.",
       "email": "Public email",
-      "emailPlaceholder": "hello@yourbusiness.com.au",
+      "emailPlaceholder": "hello@yourbusiness.co.il",
       "phone": "Public phone",
-      "phonePlaceholder": "(02) 5550 1234",
+      "phonePlaceholder": "03-555-1234",
       "website": "Website",
-      "websitePlaceholder": "https://yourbusiness.com.au"
+      "websitePlaceholder": "https://yourbusiness.co.il"
     },
     "about": {
       "title": "About the business",
@@ -273,19 +267,10 @@
       "currency": "Currency"
     },
     "countries": {
-      "IL": "Israel",
-      "AU": "Australia",
-      "NZ": "New Zealand",
-      "GB": "United Kingdom",
-      "US": "United States"
+      "IL": "Israel"
     },
     "currencies": {
-      "ILS": "ILS — Israeli new shekel",
-      "AUD": "AUD — Australian dollar",
-      "NZD": "NZD — New Zealand dollar",
-      "GBP": "GBP — British pound",
-      "USD": "USD — US dollar",
-      "EUR": "EUR — Euro"
+      "ILS": "ILS — Israeli new shekel"
     },
     "socials": {
       "title": "Social profiles",
@@ -304,7 +289,7 @@
       "landmark": "Landmark (optional)",
       "landmarkPlaceholder": "Next to the post office",
       "baseLocation": "Base location",
-      "baseLocationPlaceholder": "Newcastle NSW",
+      "baseLocationPlaceholder": "Haifa",
       "travelRadius": "Travel radius (km)",
       "travelRadiusPlaceholder": "50"
     },
@@ -349,7 +334,7 @@
     "running": "Extracting… this can take a minute or two. You can keep this open or cancel.",
     "sourceUrl": "Website page",
     "sourceFile": "Document (PDF, DOCX, TXT, MD — up to 10 MB)",
-    "urlPlaceholder": "https://yourbusiness.com.au",
+    "urlPlaceholder": "https://yourbusiness.co.il",
     "chooseFile": "Choose file",
     "noFile": "No file chosen",
     "start": "Start extraction",
@@ -470,7 +455,7 @@
         "netDays": "Enter a whole number of days between 0 and 365"
       },
       "paymentInstructions": "Payment instructions",
-      "paymentInstructionsPlaceholder": "Direct deposit — BSB, account number, reference…",
+      "paymentInstructionsPlaceholder": "Bank transfer — bank, branch, account number, reference…",
       "paymentInstructionsHint": "Pre-filled on every new invoice; editable per invoice.",
       "fromDetails": "From details",
       "fromDetailsPlaceholder": "Company no. (ח.פ.), trading name, address — shown on the invoice footer",
@@ -544,8 +529,8 @@
     "firstNamePlaceholder": "Sam",
     "lastName": "Last name",
     "lastNamePlaceholder": "Rivera",
-    "emailPlaceholder": "sam@yourbusiness.com.au",
-    "phonePlaceholder": "0412 345 678",
+    "emailPlaceholder": "sam@yourbusiness.co.il",
+    "phonePlaceholder": "052-123-4567",
     "position": "Position",
     "positionPlaceholder": "Site manager",
     "role": "Role",
@@ -627,9 +612,9 @@
     "member": "Team member",
     "alreadyTarget": "Already a target",
     "phone": "Phone number",
-    "phonePlaceholder": "0412 345 678",
+    "phonePlaceholder": "052-123-4567",
     "memberPhoneHint": "Prefilled from the team member — edit to override, or clear to use their saved number.",
-    "otherPhoneHint": "Australian numbers only, e.g. 0412 345 678.",
+    "otherPhoneHint": "Israeli numbers only, e.g. 052-123-4567.",
     "postDial": "Post-dial digits (optional)",
     "postDialPlaceholder": "w123#",
     "postDialHint": "Sent after answer — digits, * and #; w waits half a second.",

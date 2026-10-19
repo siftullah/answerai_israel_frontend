@@ -4,7 +4,7 @@ import { useState } from "react";
 import { DirectionProvider } from "@base-ui/react/direction-provider";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { useLocale, useMessages } from "next-intl";
+import { useLocale, useMessages, useTranslations } from "next-intl";
 import { z } from "zod";
 import { Toaster } from "@/components/ui/sonner";
 import { dirFor, type Locale } from "@/i18n/config";
@@ -23,6 +23,7 @@ const ZOD_LOCALES: Record<Locale, () => { localeError: z.core.$ZodErrorMap }> = 
 export function Providers({ children }: { children: React.ReactNode }) {
   const locale = useLocale() as Locale;
   const messages = useMessages();
+  const tc = useTranslations("common");
   // Keeps the non-React translator (date/money formatters, API error copy)
   // in step with the provider — runs before any child renders.
   setRuntimeI18n(locale, messages as Messages);
@@ -53,7 +54,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
     <DirectionProvider direction={dir}>
       <QueryClientProvider client={queryClient}>
         {children}
-        <Toaster richColors dir={dir} position={dir === "rtl" ? "top-left" : "top-right"} />
+        <Toaster
+          richColors
+          dir={dir}
+          position={dir === "rtl" ? "top-left" : "top-right"}
+          containerAriaLabel={tc("toaster.label")}
+        />
         {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />}
       </QueryClientProvider>
     </DirectionProvider>

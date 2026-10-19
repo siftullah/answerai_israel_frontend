@@ -256,7 +256,7 @@ export function CallDetailPane({
           {(call.summary_title || call.summary) && (
             <DetailCard title={call.summary_title ?? t("detail.summary")} accent>
               {call.summary && (
-                <p className="text-sm whitespace-pre-wrap text-muted-foreground">
+                <p dir="auto" className="text-sm whitespace-pre-wrap text-muted-foreground">
                   {call.summary}
                 </p>
               )}

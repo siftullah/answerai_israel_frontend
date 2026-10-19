@@ -6,7 +6,7 @@ import type {
   UpdatePhoneNumberPayload,
 } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { auPhoneField, normalizeAuPhone } from "@/lib/phone";
+import { ilPhoneField, normalizeIlPhone } from "@/lib/phone";
 
 /**
  * Agents assignable to a number slot: purpose must match the slot and the
@@ -75,7 +75,7 @@ export function toUpdatePhoneNumberPayload(
  */
 export function sipNumberSchema(t: Translator) {
   return z.object({
-    e164: auPhoneField(t, t("phoneNumber.sipNumberRequired")),
+    e164: ilPhoneField(t, t("phoneNumber.sipNumberRequired")),
     friendly_name: friendlyName(t),
     inbound_agent_id: z.string(),
   });
@@ -89,7 +89,7 @@ export function defaultSipNumberValues(): SipNumberValues {
 
 export function toRegisterSipNumberPayload(values: SipNumberValues): PurchasePhoneNumberPayload {
   return {
-    e164: normalizeAuPhone(values.e164),
+    e164: normalizeIlPhone(values.e164),
     friendly_name: values.friendly_name.trim(),
     ...(values.inbound_agent_id !== "" ? { inbound_agent_id: values.inbound_agent_id } : {}),
   };

@@ -148,7 +148,7 @@
     "lineDescription": "Line {line} description",
     "lineType": "Line {line} type",
     "lineQuantity": "Line {line} quantity",
-    "lineUnitPrice": "Line {line} unit price in dollars",
+    "lineUnitPrice": "Line {line} unit price in shekels",
     "lineTax": "Line {line} attracts {tax}",
     "removeLine": "Remove line {line}",
     "deposit": {
@@ -158,7 +158,7 @@
       "percentLabel": "Deposit percentage",
       "amountLabel": "Deposit amount",
       "percentHint": "Whole percent of the quote total.",
-      "amountHint": "Dollar amount payable to commence.",
+      "amountHint": "Amount in shekels payable to commence.",
       "toCommence": "Deposit to commence"
     },
     "notesPlaceholder": "Shown to the customer on the quote (optional)",

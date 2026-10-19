@@ -48,6 +48,7 @@ import { useBusiness, useModuleEnabled } from "@/components/business/business-pr
 import { DataTableShell } from "@/components/business-profile/data-table-shell";
 import { InviteDialog } from "@/components/business-profile/team/invite-dialog";
 import { MemberDialog } from "@/components/business-profile/team/member-dialog";
+import { roleLabel } from "@/components/business-profile/team/role-label";
 import { ViewModeToggle } from "@/components/business-profile/view-mode-toggle";
 import { useViewMode } from "@/hooks/use-view-mode";
 import {
@@ -292,7 +293,7 @@ export function TeamView() {
                     </div>
                     <div className="mt-auto flex flex-wrap items-center justify-between gap-2 border-t pt-3 text-sm">
                       <span className="text-muted-foreground">
-                        {member.role?.name ?? "—"}
+                        {roleLabel(member.role) ?? "—"}
                       </span>
                       <MemberAccountStatus member={member} invitation={invitation} />
                     </div>
@@ -339,7 +340,7 @@ export function TeamView() {
                       </div>
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {member.role?.name ?? "—"}
+                      {roleLabel(member.role) ?? "—"}
                     </TableCell>
                     <TableCell>
                       <MemberAccountStatus member={member} invitation={invitation} />

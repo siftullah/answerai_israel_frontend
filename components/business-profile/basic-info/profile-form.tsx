@@ -70,22 +70,9 @@ export function ProfileForm({
   const tc = useTranslations("common");
   const update = useUpdateBusinessProfile(businessUuid);
 
-  const countries = [
-    { value: "IL", label: t("countries.IL") },
-    { value: "AU", label: t("countries.AU") },
-    { value: "NZ", label: t("countries.NZ") },
-    { value: "GB", label: t("countries.GB") },
-    { value: "US", label: t("countries.US") },
-  ];
+  const countries = [{ value: "IL", label: t("countries.IL") }];
 
-  const currencies = [
-    { value: "ILS", label: t("currencies.ILS") },
-    { value: "AUD", label: t("currencies.AUD") },
-    { value: "NZD", label: t("currencies.NZD") },
-    { value: "GBP", label: t("currencies.GBP") },
-    { value: "USD", label: t("currencies.USD") },
-    { value: "EUR", label: t("currencies.EUR") },
-  ];
+  const currencies = [{ value: "ILS", label: t("currencies.ILS") }];
 
   const tv = useTranslations("validation");
   const schema = useMemo(() => businessProfileSchema(tv), [tv]);

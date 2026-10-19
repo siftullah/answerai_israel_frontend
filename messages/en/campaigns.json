@@ -243,7 +243,8 @@
       "unnamedContact": "Unnamed contact",
       "attemptsOf": "{attempts} of {max}",
       "company": "Company",
-      "address": "Address"
+      "address": "Address",
+      "voicemailOutcome": "Voicemail"
     },
     "retryDialog": {
       "titleSingle": "Retry {phone}?",
@@ -256,8 +257,8 @@
       "openSettings": "Open settings"
     },
     "addDialog": {
-      "description": "Australian numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
-      "phonePlaceholder": "Phone, e.g. 0412 345 678",
+      "description": "Israeli numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
+      "phonePlaceholder": "Phone, e.g. 052-123-4567",
       "namePlaceholder": "Name (optional)",
       "rowPhone": "Recipient {index} phone",
       "rowName": "Recipient {index} name",

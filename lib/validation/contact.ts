@@ -2,14 +2,14 @@ import { z } from "zod";
 import type { Contact, ContactPayload } from "@/lib/api/types";
 import { PHONE_LABELS } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { auPhoneField, formatE164, normalizeAuPhone } from "@/lib/phone";
+import { ilPhoneField, formatE164, normalizeIlPhone } from "@/lib/phone";
 
 /** "none" is the unlabelled sentinel — Base UI Select can't hold null. */
 export const PHONE_LABEL_OPTIONS = ["none", ...PHONE_LABELS] as const;
 
 function phoneRow(t: Translator) {
   return z.object({
-    e164: auPhoneField(t),
+    e164: ilPhoneField(t),
     label: z.enum(PHONE_LABEL_OPTIONS),
     primary: z.boolean(),
   });
@@ -100,7 +100,7 @@ export function toContactPayload(values: ContactValues): ContactPayload {
     name: name === "" ? null : name,
     company: company === "" ? null : company,
     phones: values.phones.map((row) => ({
-      e164: normalizeAuPhone(row.e164),
+      e164: normalizeIlPhone(row.e164),
       label: row.label === "none" ? null : row.label,
       primary: row.primary,
     })),

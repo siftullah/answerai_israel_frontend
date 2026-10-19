@@ -96,5 +96,8 @@
     "showing": "Showing {from}–{to} of {total}",
     "rowsPerPage": "Rows per page",
     "selectedCount": "{count, plural, one {# selected} other {# selected}}"
+  },
+  "toaster": {
+    "label": "Notifications"
   }
 }

@@ -17,7 +17,6 @@ import { useBusinessPolicies } from "@/hooks/use-business-policies";
 import { useBusinessProfile } from "@/hooks/use-business-profile";
 import { useDocuments } from "@/hooks/use-documents";
 import { useFaqs } from "@/hooks/use-faqs";
-import { useIntegrationProviders } from "@/hooks/use-integrations";
 import { useMembers } from "@/hooks/use-members";
 import { useProducts } from "@/hooks/use-products";
 import { useServices } from "@/hooks/use-services";
@@ -104,7 +103,6 @@ export function OverviewView() {
   const members = useMembers(business.id);
   const targets = useTransferTargets(business.id);
   const calendar = useBusinessCalendarSettings(business.id);
-  const providers = useIntegrationProviders(business.id);
 
   const resolvedProfile = dataOrNull(profile);
 
@@ -118,7 +116,6 @@ export function OverviewView() {
     members: dataOrNull(members),
     targets: dataOrNull(targets),
     calendar: dataOrNull(calendar),
-    providers: dataOrNull(providers),
   });
 
   const logo = resolvedProfile?.logo ?? null;

@@ -243,7 +243,8 @@
       "unnamedContact": "جهة اتصال بلا اسم",
       "attemptsOf": "{attempts} من {max}",
       "company": "الشركة",
-      "address": "العنوان"
+      "address": "العنوان",
+      "voicemailOutcome": "البريد الصوتي"
     },
     "retryDialog": {
       "titleSingle": "إعادة محاولة الاتصال بـ {phone}؟",
@@ -256,8 +257,8 @@
       "openSettings": "فتح الإعدادات"
     },
     "addDialog": {
-      "description": "أرقام أسترالية فقط — أي رقم آخر يُعد غير صالح. تُتخطى الأرقام المدرجة في قائمة عدم الاتصال تلقائيًا.",
-      "phonePlaceholder": "الهاتف، مثل 0412 345 678",
+      "description": "أرقام إسرائيلية فقط — أي أرقام أخرى تُعدّ غير صالحة. تُتخطّى الأرقام المدرجة في قائمة عدم الاتصال لديك تلقائيًا.",
+      "phonePlaceholder": "الهاتف، مثلًا 052-123-4567",
       "namePlaceholder": "الاسم (اختياري)",
       "rowPhone": "هاتف المستلم {index}",
       "rowName": "اسم المستلم {index}",

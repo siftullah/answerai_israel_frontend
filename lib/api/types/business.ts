@@ -9,6 +9,6 @@ export interface Business {
 
 export interface UpdateBusinessPayload {
   name?: string;
-  /** IANA identifier, e.g. "Australia/Sydney". */
+  /** IANA identifier, e.g. "Asia/Jerusalem". */
   timezone?: string;
 }

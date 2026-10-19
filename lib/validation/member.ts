@@ -5,7 +5,7 @@ import type {
   UpdateMemberPayload,
 } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
+import { formatE164, normalizeIlPhone, optionalIlPhoneField } from "@/lib/phone";
 import {
   hourRowSchema,
   toApiHourRows,
@@ -27,7 +27,7 @@ export function memberSchema(t: Translator) {
         .max(100, t("length.lastName", { max: 100 })),
       email: z.email(t("common.emailInvalid")),
       // Loose AU shape gate; the backend's Phone rule stays the authority.
-      phone_e164: optionalAuPhoneField(t),
+      phone_e164: optionalIlPhoneField(t),
       position: z.string().max(150, t("length.position", { max: 150 })),
       /** "" = default member role. */
       role_id: z.string(),
@@ -71,8 +71,8 @@ export function toStoreMemberPayload(values: MemberValues): StoreMemberPayload {
     first_name: values.first_name.trim(),
     last_name: values.last_name.trim(),
     email: values.email.trim(),
-    // Pre-stripped by the schema transform; canonicalized to +61 E.164 here.
-    phone_e164: values.phone_e164 === "" ? null : normalizeAuPhone(values.phone_e164),
+    // Pre-stripped by the schema transform; canonicalized to +972 E.164 here.
+    phone_e164: values.phone_e164 === "" ? null : normalizeIlPhone(values.phone_e164),
     position: values.position.trim() === "" ? null : values.position.trim(),
     role_id: values.role_id === "" ? null : values.role_id,
     // Absent = the backend default (follows business hours) — only custom weeks travel.
@@ -87,7 +87,7 @@ export function toUpdateMemberPayload(
   opts: { accountLocked: boolean; isOwner: boolean }
 ): UpdateMemberPayload {
   return {
-    phone_e164: values.phone_e164 === "" ? null : normalizeAuPhone(values.phone_e164),
+    phone_e164: values.phone_e164 === "" ? null : normalizeIlPhone(values.phone_e164),
     position: values.position.trim() === "" ? null : values.position.trim(),
     // Account-linked identity fields belong to the member's account —
     // the backend rejects them, so they're never sent.

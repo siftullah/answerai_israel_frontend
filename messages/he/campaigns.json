@@ -243,7 +243,8 @@
       "unnamedContact": "איש קשר ללא שם",
       "attemptsOf": "{attempts} מתוך {max}",
       "company": "חברה",
-      "address": "כתובת"
+      "address": "כתובת",
+      "voicemailOutcome": "תא קולי"
     },
     "retryDialog": {
       "titleSingle": "לנסות שוב את {phone}?",
@@ -256,8 +257,8 @@
       "openSettings": "פתיחת הגדרות"
     },
     "addDialog": {
-      "description": "מספרים אוסטרליים בלבד — כל מספר אחר יסומן כלא תקין. המערכת תדלג אוטומטית על מספרים ברשימת ״אין להתקשר״ שלכם.",
-      "phonePlaceholder": "טלפון, למשל 0412 345 678",
+      "description": "מספרים ישראליים בלבד — כל מספר אחר יסומן כלא תקין. המערכת מדלגת אוטומטית על מספרים שברשימת 'אין להתקשר' שלכם.",
+      "phonePlaceholder": "טלפון, למשל 052-123-4567",
       "namePlaceholder": "שם (לא חובה)",
       "rowPhone": "טלפון של נמען {index}",
       "rowName": "שם של נמען {index}",

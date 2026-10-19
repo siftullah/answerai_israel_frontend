@@ -45,7 +45,7 @@
     },
     "review": {
       "title": "مراجعة الخدمات المستخرجة",
-      "addCount": "{count, plural, =0 {Add} zero {إضافة} one {إضافة {count} خدمة} two {إضافة خدمتين ({count})} few {إضافة {count} خدمات} many {إضافة {count} خدمة} other {إضافة {count} خدمة}}",
+      "addCount": "{count, plural, =0 {إضافة} zero {إضافة {count} خدمة} one {إضافة {count} خدمة} two {إضافة خدمتين ({count})} few {إضافة {count} خدمات} many {إضافة {count} خدمة} other {إضافة {count} خدمة}}",
       "addedCount": "{count, plural, zero {تمت إضافة {count} خدمة} one {تمت إضافة {count} خدمة} two {تمت إضافة خدمتين ({count})} few {تمت إضافة {count} خدمات} many {تمت إضافة {count} خدمة} other {تمت إضافة {count} خدمة}}"
     },
     "modal": {
@@ -80,7 +80,7 @@
     },
     "review": {
       "title": "مراجعة المنتجات المستخرجة",
-      "addCount": "{count, plural, =0 {Add} zero {إضافة {count} منتج} one {إضافة {count} منتج} two {إضافة {count} منتجين} few {إضافة {count} منتجات} many {إضافة {count} منتجًا} other {إضافة {count} منتج}}",
+      "addCount": "{count, plural, =0 {إضافة} zero {إضافة {count} منتج} one {إضافة {count} منتج} two {إضافة منتجين ({count})} few {إضافة {count} منتجات} many {إضافة {count} منتج} other {إضافة {count} منتج}}",
       "addedCount": "{count, plural, zero {تمت إضافة {count} منتج} one {تمت إضافة {count} منتج} two {تمت إضافة منتجين ({count})} few {تمت إضافة {count} منتجات} many {تمت إضافة {count} منتج} other {تمت إضافة {count} منتج}}"
     },
     "modal": {
@@ -140,7 +140,7 @@
     },
     "review": {
       "title": "مراجعة الأسئلة الشائعة المستخرجة",
-      "addCount": "{count, plural, =0 {Add} zero {إضافة {count} من الأسئلة الشائعة} one {إضافة {count} سؤال شائع} two {إضافة {count} من الأسئلة الشائعة} few {إضافة {count} أسئلة شائعة} many {إضافة {count} سؤالًا شائعًا} other {إضافة {count} سؤال شائع}}",
+      "addCount": "{count, plural, =0 {إضافة} zero {إضافة {count} سؤال شائع} one {إضافة {count} سؤال شائع} two {إضافة سؤالين شائعين ({count})} few {إضافة {count} أسئلة شائعة} many {إضافة {count} سؤالًا شائعًا} other {إضافة {count} سؤال شائع}}",
       "addedCount": "{count, plural, zero {تمت إضافة {count} سؤال شائع} one {تمت إضافة {count} سؤال شائع} two {تمت إضافة سؤالين شائعين ({count})} few {تمت إضافة {count} أسئلة شائعة} many {تمت إضافة {count} سؤالًا شائعًا} other {تمت إضافة {count} سؤال شائع}}"
     },
     "modal": {
@@ -189,7 +189,7 @@
     },
     "review": {
       "title": "مراجعة السياسات المستخرجة",
-      "addCount": "{count, plural, =0 {Add} zero {إضافة {count} سياسة} one {إضافة {count} سياسة} two {إضافة سياستين ({count})} few {إضافة {count} سياسات} many {إضافة {count} سياسة} other {إضافة {count} سياسة}}",
+      "addCount": "{count, plural, =0 {إضافة} zero {إضافة {count} سياسة} one {إضافة {count} سياسة} two {إضافة سياستين ({count})} few {إضافة {count} سياسات} many {إضافة {count} سياسة} other {إضافة {count} سياسة}}",
       "addedCount": "{count, plural, zero {تمت إضافة {count} سياسة} one {تمت إضافة {count} سياسة} two {تمت إضافة سياستين ({count})} few {تمت إضافة {count} سياسات} many {تمت إضافة {count} سياسة} other {تمت إضافة {count} سياسة}}"
     },
     "modal": {
@@ -282,48 +282,6 @@
       "saved": "تم حفظ المستند",
       "savedResyncing": "تم حفظ المستند — جارٍ إعادة المزامنة",
       "deleted": "تم حذف المستند"
-    }
-  },
-  "integrations": {
-    "title": "التكاملات",
-    "description": "اربط منصات خارجية لتزويد وكيل الذكاء الاصطناعي بالمعرفة.",
-    "loadError": "تعذّر تحميل التكاملات",
-    "providerDescriptions": {
-      "realestateComAu": "اجلب إعلانات العقارات لتزويد وكلاء الذكاء الاصطناعي بها.",
-      "fallback": "يزوّد وكيل الذكاء الاصطناعي بالإعلانات والبيانات مباشرةً من {name}."
-    },
-    "status": {
-      "notConnected": "غير متصل",
-      "connecting": "جارٍ الاتصال",
-      "connectingHint": "جارٍ إكمال المزامنة الأولى — يستغرق هذا عادةً بضع ثوانٍ.",
-      "error": "خطأ",
-      "errorHint": "راجع الإعدادات ضمن «إدارة» لإعادة المحاولة.",
-      "connected": "متصل",
-      "lastSynced": "آخر مزامنة {date}"
-    },
-    "actions": {
-      "manage": "إدارة",
-      "connect": "ربط",
-      "disconnect": "قطع الاتصال"
-    },
-    "disconnectDialog": {
-      "title": "قطع الاتصال بـ {name}؟",
-      "description": "ستُزال إعلانات العقارات الخاصة به من معرفة وكيل الذكاء الاصطناعي لديك، وسيتوقف تحديث خلاصاته."
-    },
-    "dialog": {
-      "manageTitle": "إدارة {name}",
-      "connectTitle": "ربط {name}",
-      "manageDescription": "تُعيد التغييرات تشغيل المزامنة فورًا. ستُزال إعلانات الخلاصات التي تُلغي تحديدها من معرفة وكيل الذكاء الاصطناعي لديك.",
-      "connectDescription": "أدخل معرّف وكالتك واختر خلاصات إعلانات العقارات التي تُبقي وكيل الذكاء الاصطناعي لديك على اطلاع بآخر التحديثات.",
-      "agencyId": "معرّف الوكالة",
-      "agencyIdPlaceholder": "مثلًا XNWXYZ",
-      "agencyIdHint": "معرّف وكالتك على realestate.com.au — يمكن لمدير حسابك أو مشرف الوكالة تزويدك به.",
-      "feeds": "خلاصات إعلانات العقارات",
-      "saveResync": "حفظ وإعادة المزامنة"
-    },
-    "toasts": {
-      "settingsSaved": "تم حفظ الإعدادات — جارٍ إعادة المزامنة الآن",
-      "connected": "تم ربط {name} — جارٍ مزامنة إعلانات العقارات لديك الآن"
     }
   }
 }

@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import { useTranslations } from "next-intl";
+import { roleLabel } from "@/components/business-profile/team/role-label";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -58,7 +59,7 @@ export function InviteDialog({
   // item labels — without this the trigger shows the role's uuid.
   const roleItems = assignableRoles.map((role) => ({
     value: role.id,
-    label: role.name,
+    label: roleLabel(role) ?? role.name,
   }));
   const defaultRoleId =
     member.role && member.role.slug !== "owner"

@@ -120,11 +120,11 @@
     "lineDescription": "תיאור פריט {line}",
     "lineType": "סוג פריט {line}",
     "lineQuantity": "כמות פריט {line}",
-    "lineUnitPrice": "מחיר ליחידה בדולרים לפריט {line}",
+    "lineUnitPrice": "מחיר ליחידה בשקלים בשורה {line}",
     "lineTax": "פריט {line} חייב ב-{tax}",
     "removeLine": "הסרת פריט {line}",
     "notesPlaceholder": "יוצג באימייל עם החשבונית (לא חובה)",
-    "paymentInstructionsPlaceholder": "העברה בנקאית — BSB, מספר חשבון, אסמכתה…"
+    "paymentInstructionsPlaceholder": "העברה בנקאית — בנק, סניף, מספר חשבון, אסמכתא…"
   },
   "sendDialog": {
     "title": "שליחת חשבונית {number}",

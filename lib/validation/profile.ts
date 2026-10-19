@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { Membership, UpdateProfilePayload, User } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
+import { formatE164, normalizeIlPhone, optionalIlPhoneField } from "@/lib/phone";
 
 /**
  * Form-facing schema for the signed-in user's own profile. Text inputs hold
@@ -20,7 +20,7 @@ export function profileSchema(t: Translator) {
       .max(100, t("length.lastName", { max: 100 })),
     email: z.email(t("common.emailInvalid")),
     // Loose AU shape gate; the backend's Phone rule stays the authority.
-    phone_e164: optionalAuPhoneField(t),
+    phone_e164: optionalIlPhoneField(t),
     position: z.string().max(150, t("length.position", { max: 150 })),
   });
 }
@@ -56,7 +56,7 @@ export function toProfilePayload(
     if (returnTo) payload.return_to = returnTo;
   }
   if (dirty.phone_e164) {
-    payload.phone_e164 = values.phone_e164 === "" ? null : normalizeAuPhone(values.phone_e164);
+    payload.phone_e164 = values.phone_e164 === "" ? null : normalizeIlPhone(values.phone_e164);
   }
   if (dirty.position) {
     payload.position = values.position.trim() === "" ? null : values.position.trim();

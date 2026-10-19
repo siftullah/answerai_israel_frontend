@@ -31,7 +31,7 @@
       "lastName": "اسم العائلة",
       "pendingEmail": "بانتظار التأكيد: <strong>{email}</strong> — تحقّق من صندوق الوارد لهذا البريد لإتمام التغيير.",
       "emailHint": "عند تغييره، يُرسل رابط تأكيد إلى العنوان الجديد؛ ويظل بريدك الحالي نشطًا حتى تؤكّد التغيير.",
-      "phonePlaceholder": "0412 345 678",
+      "phonePlaceholder": "052-123-4567",
       "position": "المسمّى الوظيفي",
       "positionPlaceholder": "مثلًا: مدير عيادة",
       "discardChanges": "تجاهل التغييرات",
@@ -123,7 +123,7 @@
         "rulePlaceholders": {
           "first": "تُرسل أوامر عمل السباكة إلى mick@example.com، والكهرباء إلى dave@example.com",
           "second": "يُرسل أيضًا إلى المكتب كل ما يحمل علامة عاجل",
-          "third": "تُرسل أوامر العمل في الضواحي الشمالية إلى فريق الشمال"
+          "third": "أوامر العمل في حيفا والشمال تُوجَّه إلى فريق الشمال"
         }
       },
       "newQuoteRequest": {
@@ -234,8 +234,8 @@
       },
       "planChange": {
         "title": "تغيير الباقة مجدول",
-        "body": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) في {date}. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>.",
-        "bodyNoDate": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) عند التجديد القادم. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>."
+        "body": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهرية} other {سنوية}}) في {date}. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>.",
+        "bodyNoDate": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهرية} other {سنوية}}) عند التجديد القادم. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>."
       }
     },
     "cancelDialog": {
@@ -253,7 +253,7 @@
     },
     "currentPlan": {
       "fallbackTitle": "الاشتراك",
-      "priceLine": "{price}/{interval, select, monthly {month} other {year}} + ضريبة القيمة المضافة · {interval, select, monthly {فوترة شهرية} other {فوترة سنوية}}",
+      "priceLine": "{price}/{interval, select, monthly {شهر} other {سنة}} + ضريبة القيمة المضافة · {interval, select, monthly {فوترة شهرية} other {فوترة سنوية}}",
       "billingLine": "{interval, select, monthly {فوترة شهرية} other {فوترة سنوية}}",
       "ended": "منتهٍ",
       "usagePeriod": "فترة الاستخدام الحالية",

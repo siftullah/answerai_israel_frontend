@@ -95,7 +95,7 @@
     "createQuote": "יצירת הצעת מחיר",
     "creatingQuote": "ביצירה…",
     "convertToJob": "המרה לעבודה",
-    "markedAs": "הליד סומן כ{status, select, contacted {contacted} qualified {qualified} other {{status}}}",
+    "markedAs": "הליד סומן בסטטוס {status, select, contacted {נוצר קשר} qualified {כשיר} other {{status}}}",
     "quoteDrafted": "טיוטה {number} נוצרה — הוסיפו תמחור",
     "source": "מקור",
     "capturedOn": "תאריך קליטה",

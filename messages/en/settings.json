@@ -31,7 +31,7 @@
       "lastName": "Last name",
       "pendingEmail": "Pending confirmation: <strong>{email}</strong> — check that inbox to finish the change.",
       "emailHint": "Changing this sends a confirmation link to the new address; your current email stays active until you confirm.",
-      "phonePlaceholder": "0412 345 678",
+      "phonePlaceholder": "052-123-4567",
       "position": "Position",
       "positionPlaceholder": "e.g. Practice Manager",
       "discardChanges": "Discard changes",
@@ -123,7 +123,7 @@
         "rulePlaceholders": {
           "first": "Plumbing jobs go to mick@example.com, electrical to dave@example.com",
           "second": "Anything marked urgent also goes to the office",
-          "third": "Jobs in the northern suburbs go to the north team"
+          "third": "Jobs in Haifa and the north go to the north team"
         }
       },
       "newQuoteRequest": {

@@ -106,11 +106,6 @@ export const endpoints = {
     show: (uuid: string) => `documents/${uuid}`,
     file: (uuid: string) => `documents/${uuid}/file`,
   },
-  integrations: {
-    index: "integrations",
-    providers: "integrations/providers",
-    show: (uuid: string) => `integrations/${uuid}`,
-  },
   members: {
     index: "members",
     show: (uuid: string) => `members/${uuid}`,

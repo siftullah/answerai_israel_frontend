@@ -1,4 +1,4 @@
-import { displayLocale, rt, runtimeLocale } from "@/lib/i18n/runtime";
+import { displayLocale, rt } from "@/lib/i18n/runtime";
 
 /** 187 → "3:07"; 3727 → "1:02:07". */
 export function formatDuration(totalSeconds: number): string {
@@ -18,15 +18,14 @@ export function formatOffset(t0Secs: number): string {
 /**
  * Display locale for every date and time formatter follows the UI language
  * (i18n/config intlLocales): en-IL / he-IL / ar-PS, all with Latin digits
- * and no bidi marks (the same reasoning as lib/money.ts). English keeps the
- * 12-hour am/pm clock the design calls for; Hebrew and Arabic read 24-hour.
+ * and no bidi marks (the same reasoning as lib/money.ts). Every language uses
+ * the 12-hour clock with the locale's own am/pm marker ("5:05 pm", "5:05 PM",
+ * "5:05 م"), and dates always spell the month out — never 19/10/2026.
  */
-function hour12(): boolean {
-  return runtimeLocale() === "en";
-}
+const HOUR12 = true;
 
 function timeOptions(): Intl.DateTimeFormatOptions {
-  return { hour: "numeric", minute: "2-digit", hour12: hour12() };
+  return { hour: "numeric", minute: "2-digit", hour12: HOUR12 };
 }
 
 /**
@@ -57,7 +56,7 @@ export function formatDateAndTime(iso: string, timeZone?: string): string {
       timeZone,
       hour: "2-digit",
       minute: "2-digit",
-      hour12: hour12(),
+      hour12: HOUR12,
     })
     .toUpperCase();
   return `${day} - ${time}`;

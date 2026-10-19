@@ -121,7 +121,7 @@ function NavBranch({
       >
         <item.icon />
         <span>{t(`nav.${item.title}`)}</span>
-        <ChevronRightIcon className="ms-auto transition-transform group-aria-expanded/menu-button:rotate-90" />
+        <ChevronRightIcon className="ms-auto transition-transform rtl:rotate-180 group-aria-expanded/menu-button:rotate-90" />
       </CollapsibleTrigger>
       <CollapsibleContent>
         <SidebarMenuSub>

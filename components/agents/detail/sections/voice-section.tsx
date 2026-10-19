@@ -27,6 +27,23 @@ function useGenderLabel() {
   return (gender: string) => (t.has(`gender.${gender}`) ? t(`gender.${gender}`) : gender);
 }
 
+/**
+ * The catalog's description and accent come from the API in English; the
+ * tenant-facing voices have translated copy in lib.json, keyed by voice id /
+ * accent slug, and anything newer falls back to the API text.
+ */
+function useVoiceCopy() {
+  const t = useTranslations("lib");
+  return {
+    description: (voice: Voice) =>
+      t.has(`voiceDescription.${voice.id}`) ? t(`voiceDescription.${voice.id}`) : voice.description,
+    accent: (accent: string) => {
+      const key = `voiceAccent.${accent.replace(/\s+/g, "_")}`;
+      return t.has(key) ? t(key) : accent;
+    },
+  };
+}
+
 function VoiceCard({
   voice,
   selected,
@@ -44,6 +61,7 @@ function VoiceCard({
 }) {
   const t = useTranslations("agents.sections.voice");
   const genderLabel = useGenderLabel();
+  const copy = useVoiceCopy();
   const playing = preview.playingId === voice.id;
   const loading = preview.loadingId === voice.id;
 
@@ -75,7 +93,7 @@ function VoiceCard({
           {selected && <CircleCheckIcon className="size-4 shrink-0 text-primary" />}
         </div>
         <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
-          {unknown ? t("unknownVoiceHint") : voice.description}
+          {unknown ? t("unknownVoiceHint") : copy.description(voice)}
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <Badge
@@ -85,7 +103,7 @@ function VoiceCard({
             {genderLabel(voice.gender)}
           </Badge>
           <Badge variant="ghost" className="capitalize">
-            {voice.accent}
+            {copy.accent(voice.accent)}
           </Badge>
         </div>
       </div>

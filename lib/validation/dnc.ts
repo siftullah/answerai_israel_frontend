@@ -1,16 +1,16 @@
 import { z } from "zod";
 import type { DncEntryPayload } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { auPhoneField, formatE164, normalizeAuPhone } from "@/lib/phone";
+import { ilPhoneField, formatE164, normalizeIlPhone } from "@/lib/phone";
 
 /**
- * Loose AU shape check only — the backend normalizes AU national input itself
+ * Loose IL shape check only — the backend normalizes AU national input itself
  * and its 422 lands on `e164` via applyServerErrors. `t` is a translator
  * scoped to the `validation` namespace.
  */
 export function dncEntrySchema(t: Translator) {
   return z.object({
-    e164: auPhoneField(t, t("dnc.numberRequired")),
+    e164: ilPhoneField(t, t("dnc.numberRequired")),
     reason: z.string().max(1000, t("length.reason", { max: 1000 })),
   });
 }
@@ -24,5 +24,5 @@ export function defaultDncEntryValues(e164 = ""): DncEntryValues {
 
 export function toDncEntryPayload(values: DncEntryValues): DncEntryPayload {
   const reason = values.reason.trim();
-  return { e164: normalizeAuPhone(values.e164), reason: reason === "" ? null : reason };
+  return { e164: normalizeIlPhone(values.e164), reason: reason === "" ? null : reason };
 }

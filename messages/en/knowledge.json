@@ -283,47 +283,5 @@
       "savedResyncing": "Doc saved — re-syncing now",
       "deleted": "Doc deleted"
     }
-  },
-  "integrations": {
-    "title": "Integrations",
-    "description": "Connect external platforms that feed your AI's knowledge.",
-    "loadError": "Couldn't load integrations",
-    "providerDescriptions": {
-      "realestateComAu": "Get property listings to feed your AI agents.",
-      "fallback": "Feeds your AI listings and data straight from {name}."
-    },
-    "status": {
-      "notConnected": "Not connected",
-      "connecting": "Connecting",
-      "connectingHint": "Finishing the first sync — this usually takes a few seconds.",
-      "error": "Error",
-      "errorHint": "Check the settings under Manage to retry.",
-      "connected": "Connected",
-      "lastSynced": "Last synced {date}"
-    },
-    "actions": {
-      "manage": "Manage",
-      "connect": "Connect",
-      "disconnect": "Disconnect"
-    },
-    "disconnectDialog": {
-      "title": "Disconnect {name}?",
-      "description": "Its property listings are removed from your AI's knowledge and its feeds stop updating."
-    },
-    "dialog": {
-      "manageTitle": "Manage {name}",
-      "connectTitle": "Connect {name}",
-      "manageDescription": "Changes re-run the sync straight away. Feeds you untick have their listings removed from your AI's knowledge.",
-      "connectDescription": "Enter your agency ID and choose which listing feeds keep your AI up to date.",
-      "agencyId": "Agency ID",
-      "agencyIdPlaceholder": "e.g. XNWXYZ",
-      "agencyIdHint": "Your realestate.com.au agency identifier — your account manager or Agency Admin can provide it.",
-      "feeds": "Listing feeds",
-      "saveResync": "Save & re-sync"
-    },
-    "toasts": {
-      "settingsSaved": "Settings saved — re-syncing now",
-      "connected": "{name} connected — syncing your listings now"
-    }
   }
 }

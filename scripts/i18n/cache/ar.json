@@ -1068,8 +1068,8 @@
     "t": "أضف عنوان الشارع"
   },
   "validation.job.cityRequired": {
-    "en": "Add the suburb or city",
-    "t": "أضف الضاحية أو المدينة"
+    "en": "Add the city",
+    "t": "أضف المدينة"
   },
   "validation.knowledge.agentScopeRequired": {
     "en": "Choose at least one agent",
@@ -1236,8 +1236,8 @@
     "t": "أدخل رقم هاتف"
   },
   "validation.phone.invalid": {
-    "en": "Enter an Australian phone number, e.g. 0412 345 678",
-    "t": "أدخل رقم هاتف أستراليًا، مثل 0412 345 678"
+    "en": "Enter an Israeli phone number, e.g. 052-123-4567",
+    "t": "أدخل رقم هاتف إسرائيليًا، مثل 052-123-4567"
   },
   "validation.length.name": {
     "en": "Keep the name under {max, number} characters",
@@ -1332,16 +1332,16 @@
     "t": "اجعل طول اسم الشارع أقل من {max, number} حرفًا"
   },
   "validation.length.suburb": {
-    "en": "Keep the suburb under {max, number} characters",
-    "t": "اجعل طول اسم الضاحية أقل من {max, number} حرفًا"
+    "en": "Keep the city under {max, number} characters",
+    "t": "أدخل اسم مدينة بأقل من {max, number} حرفًا"
   },
   "validation.length.state": {
     "en": "Keep the state under {max, number} characters",
     "t": "اجعل طول اسم الولاية أقل من {max, number} حرفًا"
   },
   "validation.length.postcode": {
-    "en": "Keep the postcode under {max, number} characters",
-    "t": "اجعل طول الرمز البريدي أقل من {max, number} حرفًا"
+    "en": "Keep the postal code under {max, number} characters",
+    "t": "أدخل رمزًا بريديًا بأقل من {max, number} حرفًا"
   },
   "validation.length.landmark": {
     "en": "Keep the landmark under {max, number} characters",
@@ -1574,18 +1574,6 @@
   "billing.plans.cta.upgrade": {
     "en": "Upgrade to {plan}",
     "t": "الترقية إلى {plan}"
-  },
-  "billing.plans.alerts.pending.bodyWithPlan": {
-    "en": "{plan} ({interval, select, monthly {monthly} other {annual}}) is reserved for you. Your subscription starts once a card is added.",
-    "t": "{plan} ({interval, select, monthly {monthly} other {annual}}) محجوزة لك. يبدأ اشتراكك بمجرد إضافة بطاقة."
-  },
-  "billing.plans.alerts.planChange.body": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Choosing a different plan below replaces this change.",
-    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) في {date}. اختيار باقة أخرى أدناه يحل محل هذا التغيير."
-  },
-  "billing.plans.alerts.planChange.bodyNoDate": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Choosing a different plan below replaces this change.",
-    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) عند التجديد القادم. اختيار باقة أخرى أدناه يستبدل هذا التغيير."
   },
   "publicQuote.meta.title": {
     "en": "Quote",
@@ -1879,18 +1867,6 @@
     "en": "The payment form returned an unexpected result. Please try again.",
     "t": "أعاد نموذج الدفع نتيجة غير متوقعة. حاول مجددًا."
   },
-  "billing.change.title": {
-    "en": "Change to {plan} ({interval, select, monthly {monthly} other {annual}})",
-    "t": "التغيير إلى {plan} ({interval, select, monthly {monthly} other {annual}})"
-  },
-  "billing.change.scheduledOn": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Until then everything stays on your current plan.",
-    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) في {date}. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية."
-  },
-  "billing.change.scheduledAtRenewal": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Until then everything stays on your current plan.",
-    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) عند التجديد القادم. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية."
-  },
   "appointments.detail.notes.title": {
     "en": "Notes",
     "t": "ملاحظات"
@@ -2131,14 +2107,6 @@
     "en": "Renews monthly. Usage beyond your included allowances is billed with each renewal.",
     "t": "يتجدد شهريًا. تُحتسب رسوم الاستخدام الذي يتجاوز الرصيد المشمول مع كل تجديد."
   },
-  "billing.plans.cta.switchInterval": {
-    "en": "Switch to {interval, select, monthly {monthly} other {annual}} billing",
-    "t": "التبديل إلى الفوترة {interval, select, monthly {monthly} other {annual}}"
-  },
-  "billing.subscribe.title": {
-    "en": "Subscribe to {plan} ({interval, select, monthly {monthly} other {annual}})",
-    "t": "الاشتراك في {plan} ({interval, select, monthly {monthly} other {annual}})"
-  },
   "validation.count.tags": {
     "en": "Up to {max, plural, one {# tag} other {# tags}}",
     "t": "حتى {max, plural, zero {# وسوم} one {# وسم} two {وسمين (#)} few {# وسوم} many {# وسمًا} other {# وسم}}"
@@ -2330,14 +2298,6 @@
   "validation.faq.questionRequired": {
     "en": "Question is required",
     "t": "السؤال مطلوب"
-  },
-  "validation.weeklyHours.windowRequired": {
-    "en": "Add at least one time window for {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
-    "t": "أضف فترة زمنية واحدة على الأقل ليوم {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}"
-  },
-  "validation.weeklyHours.windowOrder": {
-    "en": "Each window must end after it starts ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})",
-    "t": "يجب أن تنتهي كل فترة بعد وقت بدايتها ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
   },
   "appointments.meta.title": {
     "en": "Appointments",
@@ -4488,12 +4448,12 @@
     "t": "فتح الإعدادات"
   },
   "campaigns.recipients.addDialog.description": {
-    "en": "Australian numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
-    "t": "أرقام أسترالية فقط — أي رقم آخر يُعد غير صالح. تُتخطى الأرقام المدرجة في قائمة عدم الاتصال تلقائيًا."
+    "en": "Israeli numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
+    "t": "أرقام إسرائيلية فقط — أي أرقام أخرى تُعدّ غير صالحة. تُتخطّى الأرقام المدرجة في قائمة عدم الاتصال لديك تلقائيًا."
   },
   "campaigns.recipients.addDialog.phonePlaceholder": {
-    "en": "Phone, e.g. 0412 345 678",
-    "t": "الهاتف، مثل 0412 345 678"
+    "en": "Phone, e.g. 052-123-4567",
+    "t": "الهاتف، مثلًا 052-123-4567"
   },
   "campaigns.recipients.addDialog.namePlaceholder": {
     "en": "Name (optional)",
@@ -5172,8 +5132,8 @@
     "t": "مثلًا XNWXYZ"
   },
   "knowledge.integrations.dialog.agencyIdHint": {
-    "en": "Your realestate.com.au agency identifier — your account manager or Agency Admin can provide it.",
-    "t": "معرّف وكالتك على realestate.com.au — يمكن لمدير حسابك أو مشرف الوكالة تزويدك به."
+    "en": "Your agency identifier with the listings provider — your account manager there can provide it.",
+    "t": "معرّف وكالتك لدى مزوّد القوائم — يمكنك الحصول عليه من مدير حسابك لديه."
   },
   "knowledge.integrations.dialog.feeds": {
     "en": "Listing feeds",
@@ -5592,8 +5552,8 @@
     "t": "الرقم المراد الاتصال به"
   },
   "calls.placeDialog.numberToCallPlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "calls.placeDialog.variablesHint": {
     "en": "This agent needs a value for each variable below. Anything prefilled came from the contact record or the variable's default, so check each one for this call.",
@@ -6724,8 +6684,8 @@
     "t": "كمية البند {line}"
   },
   "invoices.form.lineUnitPrice": {
-    "en": "Line {line} unit price in dollars",
-    "t": "سعر الوحدة للبند {line} بالدولار"
+    "en": "Line {line} unit price in shekels",
+    "t": "سعر الوحدة للبند {line} بالشيكل"
   },
   "invoices.form.lineTax": {
     "en": "Line {line} attracts {tax}",
@@ -6740,8 +6700,8 @@
     "t": "تظهر في رسالة الفاتورة الإلكترونية (اختياري)"
   },
   "invoices.form.paymentInstructionsPlaceholder": {
-    "en": "Direct deposit — BSB, account number, reference…",
-    "t": "إيداع مباشر — BSB، رقم الحساب، المرجع…"
+    "en": "Bank transfer — bank, branch, account number, reference…",
+    "t": "تحويل بنكي — البنك، الفرع، رقم الحساب، المرجع…"
   },
   "invoices.sendDialog.title": {
     "en": "Send invoice {number}",
@@ -7336,8 +7296,8 @@
     "t": "كمية البند {line}"
   },
   "quotes.form.lineUnitPrice": {
-    "en": "Line {line} unit price in dollars",
-    "t": "سعر الوحدة للبند {line} بالدولار"
+    "en": "Line {line} unit price in shekels",
+    "t": "سعر الوحدة للبند {line} بالشيكل"
   },
   "quotes.form.lineTax": {
     "en": "Line {line} attracts {tax}",
@@ -7372,8 +7332,8 @@
     "t": "نسبة مئوية صحيحة من إجمالي عرض السعر."
   },
   "quotes.form.deposit.amountHint": {
-    "en": "Dollar amount payable to commence.",
-    "t": "المبلغ المستحق بالدولار لبدء العمل."
+    "en": "Amount in shekels payable to commence.",
+    "t": "المبلغ بالشيكل المستحق لبدء العمل."
   },
   "quotes.form.deposit.toCommence": {
     "en": "Deposit to commence",
@@ -7996,8 +7956,8 @@
     "t": "عند تغييره، يُرسل رابط تأكيد إلى العنوان الجديد؛ ويظل بريدك الحالي نشطًا حتى تؤكّد التغيير."
   },
   "settings.profile.details.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "settings.profile.details.position": {
     "en": "Position",
@@ -8244,8 +8204,8 @@
     "t": "يُرسل أيضًا إلى المكتب كل ما يحمل علامة عاجل"
   },
   "settings.notifications.sections.newJob.rulePlaceholders.third": {
-    "en": "Jobs in the northern suburbs go to the north team",
-    "t": "تُرسل أوامر العمل في الضواحي الشمالية إلى فريق الشمال"
+    "en": "Jobs in Haifa and the north go to the north team",
+    "t": "أوامر العمل في حيفا والشمال تُوجَّه إلى فريق الشمال"
   },
   "settings.notifications.sections.newQuoteRequest.title": {
     "en": "New quote request",
@@ -8564,8 +8524,8 @@
     "t": "كمية البند {line}"
   },
   "jobs.lineItems.aria.unitPrice": {
-    "en": "Line {line} unit price in dollars",
-    "t": "سعر الوحدة للبند {line} بالدولار"
+    "en": "Line {line} unit price in shekels",
+    "t": "سعر الوحدة للبند {line} بالشيكل"
   },
   "jobs.lineItems.aria.remove": {
     "en": "Remove line {line}",
@@ -8895,18 +8855,6 @@
     "en": "Receipt",
     "t": "إيصال"
   },
-  "settings.billing.alerts.planChange.body": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. To keep your current plan instead, pick it again on the <link>plans page</link>.",
-    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) في {date}. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>."
-  },
-  "settings.billing.alerts.planChange.bodyNoDate": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. To keep your current plan instead, pick it again on the <link>plans page</link>.",
-    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) عند التجديد القادم. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>."
-  },
-  "settings.billing.currentPlan.priceLine": {
-    "en": "{price}/{interval, select, monthly {month} other {year}} + VAT · {interval, select, monthly {Monthly billing} other {Annual billing}}",
-    "t": "{price}/{interval, select, monthly {month} other {year}} + ضريبة القيمة المضافة · {interval, select, monthly {فوترة شهرية} other {فوترة سنوية}}"
-  },
   "phoneNumbers.toasts.purchaseStarted": {
     "en": "Number purchase started — it'll be live shortly",
     "t": "بدأ شراء الرقم — سيصبح جاهزًا للاستخدام قريبًا"
@@ -8992,15 +8940,15 @@
     "t": "الوحدة، المبنى (اختياري)"
   },
   "jobs.form.suburb": {
-    "en": "Suburb",
-    "t": "الضاحية"
+    "en": "City",
+    "t": "المدينة"
   },
   "jobs.form.state": {
     "en": "State",
     "t": "الولاية"
   },
   "jobs.form.postcode": {
-    "en": "Postcode",
+    "en": "Postal code",
     "t": "الرمز البريدي"
   },
   "jobs.form.descriptionPlaceholder": {
@@ -9664,8 +9612,8 @@
     "t": "شراء رقم"
   },
   "phoneNumbers.buy.pickDescription": {
-    "en": "Pick an Australian local number for your AI to answer.",
-    "t": "اختر رقمًا محليًا أستراليًا ليردّ عليه وكيل الذكاء الاصطناعي."
+    "en": "Pick an Israeli local number for your AI to answer.",
+    "t": "اختر رقمًا محليًا إسرائيليًا ليردّ عليه وكيل الذكاء الاصطناعي."
   },
   "phoneNumbers.buy.detailsDescription": {
     "en": "Confirm the details for your new number.",
@@ -9680,8 +9628,8 @@
     "t": "البحث عن أرقام باستخدام خاناتها"
   },
   "phoneNumbers.buy.searchHint": {
-    "en": "Start with an area code to match from the beginning, e.g. 02 for Sydney or 03 for Melbourne.",
-    "t": "ابدأ برمز المنطقة للمطابقة من بداية الرقم، مثل 02 لسيدني أو 03 لملبورن."
+    "en": "Start with an area code to match from the beginning, e.g. 02 for Jerusalem or 03 for Tel Aviv.",
+    "t": "ابدأ برمز المنطقة للمطابقة من بداية الرقم، مثل 02 للقدس أو 03 لتل أبيب."
   },
   "phoneNumbers.buy.noMatches": {
     "en": "No matches — try different digits.",
@@ -9744,8 +9692,8 @@
     "t": "لا توجد مكالمات بعد"
   },
   "contacts.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "contacts.reasonOptional": {
     "en": "Reason (optional)",
@@ -9924,8 +9872,8 @@
     "t": "رقم الهاتف"
   },
   "phoneNumbers.addSip.phonePlaceholder": {
-    "en": "(02) 5550 1234",
-    "t": "(02) 5550 1234"
+    "en": "03-555-1234",
+    "t": "03-555-1234"
   },
   "phoneNumbers.addSip.phoneHint": {
     "en": "The number your trunk already carries — include the area code.",
@@ -10116,8 +10064,8 @@
     "t": "حظر المكالمات الصادرة فقط"
   },
   "contacts.dnc.infoDescription": {
-    "en": "Single calls, campaigns and scheduled callbacks all check this list before dialling; inbound calls aren't affected. Your AI agents add numbers here automatically when a caller asks. This is your business's own list — it doesn't register numbers on the national Do Not Call Register.",
-    "t": "تتحقق المكالمات الفردية والحملات ومكالمات معاودة الاتصال المجدولة من هذه القائمة قبل الاتصال؛ ولا تتأثر المكالمات الواردة. يضيف وكلاء الذكاء الاصطناعي الأرقام هنا تلقائيًا بناءً على طلب المتصل. هذه قائمة خاصة بنشاطك التجاري — ولا تُسجّل الأرقام في السجل الوطني لعدم الاتصال."
+    "en": "Single calls, campaigns and scheduled callbacks all check this list before dialling; inbound calls aren't affected. Your AI agents add numbers here automatically when a caller asks. This is your business's own list — it doesn't add numbers to the national Do Not Call Me database.",
+    "t": "تتحقق المكالمات الفردية والحملات ومكالمات معاودة الاتصال المجدولة من هذه القائمة قبل الاتصال؛ ولا تتأثر المكالمات الواردة. يضيف وكلاء الذكاء الاصطناعي لديك الأرقام هنا تلقائيًا عندما يطلب المتصل ذلك. هذه قائمة خاصة بنشاطك التجاري — ولا تضيف الأرقام إلى قاعدة بيانات «عدم الاتصال بي» الوطنية."
   },
   "contacts.dnc.searchPlaceholder": {
     "en": "Search by number or reason",
@@ -10276,11 +10224,11 @@
     "t": "تتطلب جهة الاتصال اسمًا أو شركة أو رقم هاتف على الأقل."
   },
   "contacts.editor.namePlaceholder": {
-    "en": "Jane Citizen",
-    "t": "جين سيتزن"
+    "en": "Dana Cohen",
+    "t": "دانا كوهين"
   },
   "contacts.editor.companyPlaceholder": {
-    "en": "Acme Pty Ltd",
+    "en": "Acme Ltd",
     "t": "أكمي المحدودة"
   },
   "contacts.editor.primaryPhone": {
@@ -10336,8 +10284,8 @@
     "t": "إضافة بريد إلكتروني"
   },
   "contacts.editor.addressPlaceholder": {
-    "en": "123 Example St, Sydney NSW 2000",
-    "t": "123 شارع إكزامبل، سيدني، نيو ساوث ويلز 2000"
+    "en": "12 Herzl St, Tel Aviv 6688112",
+    "t": "12 شارع هرتسل، تل أبيب 6688112"
   },
   "contacts.editor.tagsPlaceholder": {
     "en": "Type a tag and press Enter",
@@ -11040,8 +10988,8 @@
     "t": "ما يطلبه، مثل تجديد التمديدات الكهربائية للمطبخ"
   },
   "leads.form.valueHint": {
-    "en": "Rough worth of the work, in dollars.",
-    "t": "القيمة التقريبية للعمل، بالدولار."
+    "en": "Rough worth of the work, in shekels.",
+    "t": "القيمة التقريبية للعمل، بالشيكل."
   },
   "leads.form.notesPlaceholder": {
     "en": "What they asked for, budget, timing… (optional)",
@@ -11086,10 +11034,6 @@
   "leads.markLost.title": {
     "en": "Mark this lead as lost",
     "t": "تعيين هذا العميل المحتمل كمفقود"
-  },
-  "leads.detail.markedAs": {
-    "en": "Lead marked as {status, select, contacted {contacted} qualified {qualified} other {{status}}}",
-    "t": "تم تصنيف العميل المحتمل على أنه {status, select, contacted {contacted} qualified {qualified} other {{status}}}"
   },
   "agents.create.namePlaceholder": {
     "en": "e.g. Front desk",
@@ -12027,10 +11971,6 @@
     "en": "Numbers",
     "t": "الأرقام"
   },
-  "agents.sections.transfers.switchDialog.title": {
-    "en": "Switch every target to {mode, select, screened {screened} other {blind}}?",
-    "t": "تبديل جميع وجهات التحويل إلى {mode, select, screened {screened} other {blind}}؟"
-  },
   "businessProfile.logo.replace": {
     "en": "Replace",
     "t": "استبدال"
@@ -12100,24 +12040,24 @@
     "t": "البريد الإلكتروني العام"
   },
   "businessProfile.profileForm.contact.emailPlaceholder": {
-    "en": "hello@yourbusiness.com.au",
-    "t": "hello@yourbusiness.com.au"
+    "en": "hello@yourbusiness.co.il",
+    "t": "hello@yourbusiness.co.il"
   },
   "businessProfile.profileForm.contact.phone": {
     "en": "Public phone",
     "t": "رقم الهاتف العام"
   },
   "businessProfile.profileForm.contact.phonePlaceholder": {
-    "en": "(02) 5550 1234",
-    "t": "(02) 5550 1234"
+    "en": "03-555-1234",
+    "t": "03-555-1234"
   },
   "businessProfile.profileForm.contact.website": {
     "en": "Website",
     "t": "الموقع الإلكتروني"
   },
   "businessProfile.profileForm.contact.websitePlaceholder": {
-    "en": "https://yourbusiness.com.au",
-    "t": "https://yourbusiness.com.au"
+    "en": "https://yourbusiness.co.il",
+    "t": "https://yourbusiness.co.il"
   },
   "businessProfile.profileForm.about.title": {
     "en": "About the business",
@@ -12852,8 +12792,8 @@
     "t": "الموقع الأساسي"
   },
   "businessProfile.profileForm.location.baseLocationPlaceholder": {
-    "en": "Newcastle NSW",
-    "t": "نيوكاسل، نيو ساوث ويلز"
+    "en": "Haifa",
+    "t": "حيفا"
   },
   "businessProfile.profileForm.location.travelRadius": {
     "en": "Travel radius (km)",
@@ -12980,8 +12920,8 @@
     "t": "مستند (PDF، DOCX، TXT، MD — حتى 10 ميغابايت)"
   },
   "businessProfile.extraction.urlPlaceholder": {
-    "en": "https://yourbusiness.com.au",
-    "t": "https://yourbusiness.com.au"
+    "en": "https://yourbusiness.co.il",
+    "t": "https://yourbusiness.co.il"
   },
   "businessProfile.extraction.chooseFile": {
     "en": "Choose file",
@@ -13084,8 +13024,8 @@
     "t": "تعليمات الدفع"
   },
   "businessProfile.moduleSettings.invoices.paymentInstructionsPlaceholder": {
-    "en": "Direct deposit — BSB, account number, reference…",
-    "t": "إيداع مباشر — BSB، رقم الحساب، مرجع الدفع…"
+    "en": "Bank transfer — bank, branch, account number, reference…",
+    "t": "تحويل بنكي — البنك، الفرع، رقم الحساب، المرجع…"
   },
   "businessProfile.moduleSettings.invoices.paymentInstructionsHint": {
     "en": "Pre-filled on every new invoice; editable per invoice.",
@@ -13488,12 +13428,12 @@
     "t": "ريفيرا"
   },
   "businessProfile.member.emailPlaceholder": {
-    "en": "sam@yourbusiness.com.au",
-    "t": "sam@yourbusiness.com.au"
+    "en": "sam@yourbusiness.co.il",
+    "t": "sam@yourbusiness.co.il"
   },
   "businessProfile.member.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "businessProfile.member.position": {
     "en": "Position",
@@ -13716,16 +13656,16 @@
     "t": "رقم الهاتف"
   },
   "businessProfile.transferTarget.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "businessProfile.transferTarget.memberPhoneHint": {
     "en": "Prefilled from the team member — edit to override, or clear to use their saved number.",
     "t": "معبّأ مسبقًا من بيانات عضو الفريق — عدّله لاستبداله، أو امسحه لاستخدام رقمه المحفوظ."
   },
   "businessProfile.transferTarget.otherPhoneHint": {
-    "en": "Australian numbers only, e.g. 0412 345 678.",
-    "t": "أرقام أسترالية فقط، مثل 0412 345 678."
+    "en": "Israeli numbers only, e.g. 052-123-4567.",
+    "t": "أرقام إسرائيلية فقط، مثل 052-123-4567."
   },
   "businessProfile.transferTarget.postDial": {
     "en": "Post-dial digits (optional)",
@@ -13811,20 +13751,316 @@
     "en": "{count, plural, one {# policy added} other {# policies added}}",
     "t": "{count, plural, zero {تمت إضافة # سياسة} one {تمت إضافة # سياسة} two {تمت إضافة سياستين (#)} few {تمت إضافة # سياسات} many {تمت إضافة # سياسة} other {تمت إضافة # سياسة}}"
   },
+  "common.toaster.label": {
+    "en": "Notifications",
+    "t": "الإشعارات"
+  },
+  "agents.sections.transfers.switchDialog.title": {
+    "en": "Switch every target to {mode, select, screened {screened} other {blind}}?",
+    "t": "تبديل جميع وجهات التحويل إلى {mode, select, screened {التحويل مع التحقق} other {التحويل المباشر}}؟"
+  },
+  "billing.plans.alerts.pending.bodyWithPlan": {
+    "en": "{plan} ({interval, select, monthly {monthly} other {annual}}) is reserved for you. Your subscription starts once a card is added.",
+    "t": "تم حجز {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) لك. يبدأ اشتراكك بمجرد إضافة بطاقة."
+  },
+  "billing.plans.alerts.planChange.body": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Choosing a different plan below replaces this change.",
+    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) في {date}. اختيار باقة أخرى أدناه يحل محل هذا التغيير."
+  },
+  "billing.plans.alerts.planChange.bodyNoDate": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Choosing a different plan below replaces this change.",
+    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) عند التجديد القادم. اختيار باقة أخرى أدناه يحل محل هذا التغيير."
+  },
+  "billing.plans.cta.switchInterval": {
+    "en": "Switch to {interval, select, monthly {monthly} other {annual}} billing",
+    "t": "التبديل إلى الفوترة {interval, select, monthly {الشهرية} other {السنوية}}"
+  },
+  "billing.subscribe.title": {
+    "en": "Subscribe to {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "t": "الاشتراك في {plan} ({interval, select, monthly {شهريًا} other {سنويًا}})"
+  },
+  "billing.change.title": {
+    "en": "Change to {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "t": "التغيير إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}})"
+  },
+  "billing.change.scheduledOn": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Until then everything stays on your current plan.",
+    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) في {date}. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية."
+  },
+  "billing.change.scheduledAtRenewal": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Until then everything stays on your current plan.",
+    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) عند التجديد القادم. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية."
+  },
+  "lib.systemRole.owner": {
+    "en": "Owner",
+    "t": "المالك"
+  },
+  "lib.systemRole.admin": {
+    "en": "Admin",
+    "t": "المشرف"
+  },
+  "lib.systemRole.member": {
+    "en": "Member",
+    "t": "عضو"
+  },
+  "leads.detail.markedAs": {
+    "en": "Lead marked as {status, select, contacted {contacted} qualified {qualified} other {{status}}}",
+    "t": "تم تعيين حالة العميل المحتمل إلى {status, select, contacted {تم التواصل معه} qualified {مؤهل} other {{status}}}"
+  },
   "knowledge.services.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # service} other {Add # services}}",
-    "t": "{count, plural, =0 {Add} zero {إضافة} one {إضافة # خدمة} two {إضافة خدمتين (#)} few {إضافة # خدمات} many {إضافة # خدمة} other {إضافة # خدمة}}"
+    "t": "{count, plural, =0 {إضافة} zero {إضافة # خدمة} one {إضافة # خدمة} two {إضافة خدمتين (#)} few {إضافة # خدمات} many {إضافة # خدمة} other {إضافة # خدمة}}"
   },
   "knowledge.products.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # product} other {Add # products}}",
-    "t": "{count, plural, =0 {Add} zero {إضافة # منتج} one {إضافة # منتج} two {إضافة # منتجين} few {إضافة # منتجات} many {إضافة # منتجًا} other {إضافة # منتج}}"
+    "t": "{count, plural, =0 {إضافة} zero {إضافة # منتج} one {إضافة # منتج} two {إضافة منتجين (#)} few {إضافة # منتجات} many {إضافة # منتج} other {إضافة # منتج}}"
   },
   "knowledge.faqs.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # FAQ} other {Add # FAQs}}",
-    "t": "{count, plural, =0 {Add} zero {إضافة # من الأسئلة الشائعة} one {إضافة # سؤال شائع} two {إضافة # من الأسئلة الشائعة} few {إضافة # أسئلة شائعة} many {إضافة # سؤالًا شائعًا} other {إضافة # سؤال شائع}}"
+    "t": "{count, plural, =0 {إضافة} zero {إضافة # سؤال شائع} one {إضافة # سؤال شائع} two {إضافة سؤالين شائعين (#)} few {إضافة # أسئلة شائعة} many {إضافة # سؤالًا شائعًا} other {إضافة # سؤال شائع}}"
   },
   "knowledge.policies.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # policy} other {Add # policies}}",
-    "t": "{count, plural, =0 {Add} zero {إضافة # سياسة} one {إضافة # سياسة} two {إضافة سياستين (#)} few {إضافة # سياسات} many {إضافة # سياسة} other {إضافة # سياسة}}"
+    "t": "{count, plural, =0 {إضافة} zero {إضافة # سياسة} one {إضافة # سياسة} two {إضافة سياستين (#)} few {إضافة # سياسات} many {إضافة # سياسة} other {إضافة # سياسة}}"
+  },
+  "settings.billing.alerts.planChange.body": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. To keep your current plan instead, pick it again on the <link>plans page</link>.",
+    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهرية} other {سنوية}}) في {date}. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>."
+  },
+  "settings.billing.alerts.planChange.bodyNoDate": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. To keep your current plan instead, pick it again on the <link>plans page</link>.",
+    "t": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهرية} other {سنوية}}) عند التجديد القادم. للاحتفاظ بباقتك الحالية بدلًا من ذلك، اخترها مجددًا من <link>صفحة الباقات</link>."
+  },
+  "settings.billing.currentPlan.priceLine": {
+    "en": "{price}/{interval, select, monthly {month} other {year}} + VAT · {interval, select, monthly {Monthly billing} other {Annual billing}}",
+    "t": "{price}/{interval, select, monthly {شهر} other {سنة}} + ضريبة القيمة المضافة · {interval, select, monthly {فوترة شهرية} other {فوترة سنوية}}"
+  },
+  "validation.weeklyHours.windowRequired": {
+    "en": "Add at least one time window for {day, select, monday {Monday} tuesday {Tuesday} wednesday {Wednesday} thursday {Thursday} friday {Friday} saturday {Saturday} sunday {Sunday} other {{day}}}",
+    "t": "أضف فترة زمنية واحدة على الأقل ليوم {day, select, monday {الاثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}}"
+  },
+  "validation.weeklyHours.windowOrder": {
+    "en": "Each window must end after it starts ({day, select, monday {Monday} tuesday {Tuesday} wednesday {Wednesday} thursday {Thursday} friday {Friday} saturday {Saturday} sunday {Sunday} other {{day}}})",
+    "t": "يجب أن تنتهي كل فترة بعد بدايتها ({day, select, monday {الاثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}})"
+  },
+  "campaigns.recipients.table.voicemailOutcome": {
+    "en": "Voicemail",
+    "t": "البريد الصوتي"
+  },
+  "lib.voiceDescription.archer": {
+    "en": "Calm, conversational male British voice.",
+    "t": "صوت رجالي بلكنة بريطانية، هادئ وحواري."
+  },
+  "lib.voiceDescription.jenna": {
+    "en": "Warm, relatable female Canadian voice.",
+    "t": "صوت نسائي بلكنة كندية، دافئ وقريب من المستمع."
+  },
+  "lib.voiceDescription.jenna-nz": {
+    "en": "Clear, engaging and warm female New Zealand voice.",
+    "t": "صوت نسائي بلكنة نيوزيلندية، واضح وجذاب ودافئ."
+  },
+  "lib.voiceDescription.yochai": {
+    "en": "Warm, natural male Hebrew voice.",
+    "t": "صوت رجالي باللغة العبرية، دافئ وطبيعي."
+  },
+  "lib.voiceAccent.american": {
+    "en": "American",
+    "t": "أمريكية"
+  },
+  "lib.voiceAccent.australian": {
+    "en": "Australian",
+    "t": "أسترالية"
+  },
+  "lib.voiceAccent.brazilian": {
+    "en": "Brazilian",
+    "t": "برازيلية"
+  },
+  "lib.voiceAccent.british": {
+    "en": "British",
+    "t": "بريطانية"
+  },
+  "lib.voiceAccent.canadian": {
+    "en": "Canadian",
+    "t": "كندية"
+  },
+  "lib.voiceAccent.european": {
+    "en": "European",
+    "t": "أوروبية"
+  },
+  "lib.voiceAccent.gulf": {
+    "en": "Gulf",
+    "t": "خليجية"
+  },
+  "lib.voiceAccent.israeli": {
+    "en": "Israeli",
+    "t": "إسرائيلية"
+  },
+  "lib.voiceAccent.istanbul": {
+    "en": "Istanbul",
+    "t": "إسطنبول"
+  },
+  "lib.voiceAccent.lebanese": {
+    "en": "Lebanese",
+    "t": "لبنانية"
+  },
+  "lib.voiceAccent.malaysian": {
+    "en": "Malaysian",
+    "t": "ماليزية"
+  },
+  "lib.voiceAccent.mexican": {
+    "en": "Mexican",
+    "t": "مكسيكية"
+  },
+  "lib.voiceAccent.modern_standard": {
+    "en": "Modern Standard",
+    "t": "الفصحى المعاصرة"
+  },
+  "lib.voiceAccent.new_zealand": {
+    "en": "New Zealand",
+    "t": "نيوزيلندية"
+  },
+  "lib.voiceAccent.palestinian": {
+    "en": "Palestinian",
+    "t": "فلسطينية"
+  },
+  "lib.voiceAccent.peninsular": {
+    "en": "Peninsular",
+    "t": "إسبانية شبه الجزيرة الإيبيرية"
+  },
+  "lib.voiceAccent.quebec": {
+    "en": "Quebec",
+    "t": "كيبيك"
+  },
+  "lib.voiceAccent.saudi": {
+    "en": "Saudi",
+    "t": "سعودية"
+  },
+  "lib.voiceAccent.seoul": {
+    "en": "Seoul",
+    "t": "سول"
+  },
+  "lib.voiceAccent.sicilian": {
+    "en": "Sicilian",
+    "t": "صقلية"
+  },
+  "lib.voiceAccent.standard": {
+    "en": "Standard",
+    "t": "قياسية"
+  },
+  "lib.voiceAccent.stockholm": {
+    "en": "Stockholm",
+    "t": "ستوكهولم"
+  },
+  "lib.voiceDescription.liam": {
+    "en": "Natural, middle-aged male voice.",
+    "t": "صوت طبيعي لرجل في منتصف العمر."
+  },
+  "lib.voiceDescription.jack": {
+    "en": "Crisp, conversational male voice.",
+    "t": "صوت رجالي واضح وحواري."
+  },
+  "lib.voiceDescription.noah": {
+    "en": "Casual, youthful male — easy conversation.",
+    "t": "صوت شاب عفوي — لمحادثة سلسة."
+  },
+  "lib.voiceDescription.william": {
+    "en": "Calm, conversational male voice.",
+    "t": "صوت رجالي هادئ وحواري."
+  },
+  "lib.voiceDescription.oliver": {
+    "en": "Chill, easy-going male voice.",
+    "t": "صوت رجالي هادئ وبسيط."
+  },
+  "lib.voiceDescription.lachlan": {
+    "en": "Casual, conversational male voice.",
+    "t": "صوت رجالي عفوي وحواري."
+  },
+  "lib.voiceDescription.cooper": {
+    "en": "Casual, friendly male voice.",
+    "t": "صوت رجالي عفوي وودود."
+  },
+  "lib.voiceDescription.hudson": {
+    "en": "Relaxed, conversational male voice.",
+    "t": "صوت رجالي مسترخٍ وحواري."
+  },
+  "lib.voiceDescription.harrison": {
+    "en": "Confident male — strong for narration.",
+    "t": "صوت رجالي واثق — ممتاز للسرد."
+  },
+  "lib.voiceDescription.mason": {
+    "en": "Calm, measured male — suited to narration.",
+    "t": "صوت رجالي هادئ ومتأنٍ — مناسب للسرد."
+  },
+  "lib.voiceDescription.riley": {
+    "en": "Professional, polished male voice.",
+    "t": "صوت رجالي احترافي ومصقول."
+  },
+  "lib.voiceDescription.hunter": {
+    "en": "Confident, energetic young male voice.",
+    "t": "صوت شاب واثق وحيوي."
+  },
+  "lib.voiceDescription.jacob": {
+    "en": "Warm, natural male voice.",
+    "t": "صوت رجالي دافئ وطبيعي."
+  },
+  "lib.voiceDescription.olivia": {
+    "en": "Mature, warm female — natural for narration.",
+    "t": "صوت نسائي ناضج ودافئ — طبيعي في السرد."
+  },
+  "lib.voiceDescription.charlotte": {
+    "en": "Bright, charming female voice.",
+    "t": "صوت نسائي مشرق وجذاب."
+  },
+  "lib.voiceDescription.amelia": {
+    "en": "Professional, clear female — great for explainers.",
+    "t": "صوت نسائي احترافي وواضح — ممتاز للشروحات."
+  },
+  "lib.voiceDescription.isla": {
+    "en": "Confident, youthful female voice.",
+    "t": "صوت شابة واثق."
+  },
+  "lib.voiceDescription.mia": {
+    "en": "Calm, gentle young female voice.",
+    "t": "صوت شابة هادئ ولطيف."
+  },
+  "lib.voiceDescription.chloe": {
+    "en": "Confident, lively young female voice.",
+    "t": "صوت شابة واثق وحيوي."
+  },
+  "lib.voiceDescription.ruby": {
+    "en": "Confident, expressive female voice.",
+    "t": "صوت نسائي واثق ومعبّر."
+  },
+  "lib.voiceDescription.matilda": {
+    "en": "Sweet, youthful female voice.",
+    "t": "صوت شابة عذب."
+  },
+  "lib.voiceDescription.zoe": {
+    "en": "Classy, refined female voice.",
+    "t": "صوت نسائي أنيق وراقٍ."
+  },
+  "lib.voiceDescription.ella": {
+    "en": "Casual, friendly young female voice.",
+    "t": "صوت شابة عفوي وودود."
+  },
+  "lib.voiceDescription.grace": {
+    "en": "Calm, reassuring female voice.",
+    "t": "صوت نسائي هادئ ومطمئن."
+  },
+  "lib.voiceDescription.sienna": {
+    "en": "Pleasant, conversational female voice.",
+    "t": "صوت نسائي لطيف وحواري."
+  },
+  "lib.voiceDescription.harper": {
+    "en": "Casual, conversational female voice.",
+    "t": "صوت نسائي عفوي وحواري."
+  },
+  "lib.voiceDescription.evie": {
+    "en": "Easy-going, conversational female voice.",
+    "t": "صوت نسائي بسيط وحواري."
+  },
+  "lib.voiceDescription.hope": {
+    "en": "Natural, clear and calm female American voice.",
+    "t": "صوت نسائي أمريكي طبيعي وواضح وهادئ."
   }
 }

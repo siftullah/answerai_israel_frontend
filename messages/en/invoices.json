@@ -120,11 +120,11 @@
     "lineDescription": "Line {line} description",
     "lineType": "Line {line} type",
     "lineQuantity": "Line {line} quantity",
-    "lineUnitPrice": "Line {line} unit price in dollars",
+    "lineUnitPrice": "Line {line} unit price in shekels",
     "lineTax": "Line {line} attracts {tax}",
     "removeLine": "Remove line {line}",
     "notesPlaceholder": "Shown on the invoice email (optional)",
-    "paymentInstructionsPlaceholder": "Direct deposit — BSB, account number, reference…"
+    "paymentInstructionsPlaceholder": "Bank transfer — bank, branch, account number, reference…"
   },
   "sendDialog": {
     "title": "Send invoice {number}",

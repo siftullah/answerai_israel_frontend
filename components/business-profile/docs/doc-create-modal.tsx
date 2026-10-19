@@ -225,7 +225,7 @@ export function DocCreateModal({
                     <Input
                       id="doc-url"
                       type="url"
-                      placeholder="https://yourbusiness.com.au/pricing"
+                      placeholder="https://yourbusiness.co.il/pricing"
                       autoComplete="off"
                       aria-invalid={!!errors.source_url}
                       {...form.register("source_url")}

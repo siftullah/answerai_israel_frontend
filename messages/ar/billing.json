@@ -37,7 +37,7 @@
       },
       "pending": {
         "title": "أوشكت على الانتهاء — أضف بطاقة للتفعيل",
-        "bodyWithPlan": "{plan} ({interval, select, monthly {monthly} other {annual}}) محجوزة لك. يبدأ اشتراكك بمجرد إضافة بطاقة.",
+        "bodyWithPlan": "تم حجز {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) لك. يبدأ اشتراكك بمجرد إضافة بطاقة.",
         "body": "يبدأ اشتراكك بمجرد إضافة بطاقة.",
         "action": "إضافة بطاقة"
       },
@@ -48,8 +48,8 @@
       },
       "planChange": {
         "title": "تمت جدولة تغيير الباقة",
-        "body": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) في {date}. اختيار باقة أخرى أدناه يحل محل هذا التغيير.",
-        "bodyNoDate": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) عند التجديد القادم. اختيار باقة أخرى أدناه يستبدل هذا التغيير."
+        "body": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) في {date}. اختيار باقة أخرى أدناه يحل محل هذا التغيير.",
+        "bodyNoDate": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) عند التجديد القادم. اختيار باقة أخرى أدناه يحل محل هذا التغيير."
       },
       "viewOnly": {
         "title": "للعرض فقط",
@@ -82,7 +82,7 @@
       "switchPlan": "الانتقال إلى {plan}",
       "upgrade": "الترقية إلى {plan}",
       "downgrade": "خفض الباقة إلى {plan}",
-      "switchInterval": "التبديل إلى الفوترة {interval, select, monthly {monthly} other {annual}}"
+      "switchInterval": "التبديل إلى الفوترة {interval, select, monthly {الشهرية} other {السنوية}}"
     },
     "values": {
       "perMonth": "{amount} / شهر",
@@ -167,7 +167,7 @@
     }
   },
   "subscribe": {
-    "title": "الاشتراك في {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "title": "الاشتراك في {plan} ({interval, select, monthly {شهريًا} other {سنويًا}})",
     "description": "لم يُخصم أي مبلغ بعد — تُحصّل هذه الدفعة الأولى فور إضافة بطاقتك.",
     "planLine": "باقة {plan} ({interval, select, monthly {الشهر الأول} other {السنة الأولى}})",
     "setupFeeLine": "الإعداد والتهيئة لمرة واحدة",
@@ -182,7 +182,7 @@
     }
   },
   "change": {
-    "title": "التغيير إلى {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "title": "التغيير إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}})",
     "description": "راجع ما سيحدث قبل إجراء أي تغيير.",
     "calculating": "جارٍ الحساب…",
     "previewError": "تعذّرت معاينة هذا التغيير",
@@ -192,8 +192,8 @@
     "creditBanked": "يتحوّل مبلغ {amount} مقابل المدة المدفوعة مسبقًا وغير المستخدمة إلى رصيد في الحساب، ويُستخدم تلقائيًا لسداد الرسوم المستقبلية.",
     "startsImmediately": "تبدأ باقتك الجديدة وفترة فوترة جديدة فورًا.",
     "noChargeToday": "لن يُخصم أي مبلغ اليوم.",
-    "scheduledOn": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) في {date}. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية.",
-    "scheduledAtRenewal": "ستتغير باقتك إلى {plan} ({interval, select, monthly {monthly} other {annual}}) عند التجديد القادم. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية.",
+    "scheduledOn": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) في {date}. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية.",
+    "scheduledAtRenewal": "ستتغير باقتك إلى {plan} ({interval, select, monthly {شهريًا} other {سنويًا}}) عند التجديد القادم. حتى ذلك الحين، يبقى كل شيء ضمن باقتك الحالية.",
     "confirmAndPay": "تأكيد ودفع {amount}",
     "confirmChange": "تأكيد التغيير",
     "toasts": {

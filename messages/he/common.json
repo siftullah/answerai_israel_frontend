@@ -96,5 +96,8 @@
     "showing": "מוצגים {from}–{to} מתוך {total}",
     "rowsPerPage": "שורות בעמוד",
     "selectedCount": "{count, plural, one {# נבחר} other {# נבחרו}}"
+  },
+  "toaster": {
+    "label": "התראות"
   }
 }

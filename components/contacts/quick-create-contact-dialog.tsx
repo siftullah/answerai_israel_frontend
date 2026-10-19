@@ -21,7 +21,7 @@ import { Input } from "@/components/ui/input";
 import { useBusiness } from "@/components/business/business-provider";
 import { useCreateContact } from "@/hooks/use-contacts";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
-import { normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
+import { normalizeIlPhone, optionalIlPhoneField } from "@/lib/phone";
 import type { Contact } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
 
@@ -40,7 +40,7 @@ function quickCreateSchema(tv: Translator, nameRequired: string) {
       .min(1, nameRequired)
       .max(255, tv("length.name", { max: 255 })),
     email: z.union([z.literal(""), z.email(tv("common.emailInvalid"))]),
-    phone: optionalAuPhoneField(tv),
+    phone: optionalIlPhoneField(tv),
   });
 }
 
@@ -79,7 +79,7 @@ export function QuickCreateContactDialog({
       {
         name: values.name,
         phones: values.phone
-          ? [{ e164: normalizeAuPhone(values.phone), primary: true }]
+          ? [{ e164: normalizeIlPhone(values.phone), primary: true }]
           : [],
         emails: values.email ? [{ email: values.email, primary: true }] : [],
         tags: [],

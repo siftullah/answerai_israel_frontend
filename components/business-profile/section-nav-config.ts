@@ -8,7 +8,6 @@ import {
   MessageCircleQuestionIcon,
   PackageIcon,
   PhoneForwardedIcon,
-  PlugIcon,
   ScrollTextIcon,
   UsersRoundIcon,
   type LucideIcon,
@@ -56,7 +55,6 @@ export const sectionGroups: SectionGroup[] = [
       { title: "faqs", segment: "business-profile/faqs", icon: MessageCircleQuestionIcon },
       { title: "policies", segment: "business-profile/policies", icon: ScrollTextIcon },
       { title: "docs", segment: "business-profile/docs", icon: FilesIcon },
-      { title: "integrations", segment: "business-profile/integrations", icon: PlugIcon },
     ],
   },
   {

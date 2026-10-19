@@ -254,7 +254,7 @@
         "startEmpty": "البدء بدليل فارغ"
       },
       "switchDialog": {
-        "title": "تبديل جميع وجهات التحويل إلى {mode, select, screened {screened} other {blind}}؟",
+        "title": "تبديل جميع وجهات التحويل إلى {mode, select, screened {التحويل مع التحقق} other {التحويل المباشر}}؟",
         "description": "يغيّر هذا طريقة تحويل المكالمات لجميع الوجهات في دليل وكيل الذكاء الاصطناعي هذا ({count, plural, zero {{count} وجهة تحويل} one {{count} وجهة تحويل} two {{count} وجهة تحويل} few {{count} وجهات تحويل} many {{count} وجهة تحويل} other {{count} وجهة تحويل}}).",
         "confirm": "تغيير الوضع"
       },

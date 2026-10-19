@@ -73,7 +73,7 @@ export function CallListRow({
 
       {/* Summary headline */}
       {call.summary_title && (
-        <p className="w-full truncate text-sm text-foreground/75">{call.summary_title}</p>
+        <p dir="auto" className="w-full truncate text-sm text-foreground/75">{call.summary_title}</p>
       )}
     </button>
   );

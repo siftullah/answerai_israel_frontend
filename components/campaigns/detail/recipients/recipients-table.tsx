@@ -22,8 +22,10 @@ import {
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { DataTableShell } from "@/components/business-profile/data-table-shell";
 import { CampaignRecipientStatusBadge } from "@/components/campaigns/campaign-status-badge";
+import { useCallStatusLabels } from "@/components/calls/call-status-badge";
 import type { Campaign, CampaignRecipient } from "@/lib/api/types";
 import { RETRYABLE_RECIPIENT_STATUSES } from "@/lib/api/types";
+import { formatEndReason } from "@/lib/call-end-reason";
 import { formatDateAndTime } from "@/lib/datetime";
 import { formatE164 } from "@/lib/phone";
 
@@ -88,6 +90,16 @@ export function RecipientsTable({
 }) {
   const t = useTranslations("campaigns");
   const tc = useTranslations("common");
+  const callStatusLabels = useCallStatusLabels();
+  // last_outcome is the final call status (or voicemail), not display text.
+  const outcomeLabel = (outcome: string | null) => {
+    if (!outcome) return null;
+    if (Object.hasOwn(callStatusLabels, outcome)) {
+      return callStatusLabels[outcome as keyof typeof callStatusLabels];
+    }
+    if (outcome === "voicemail") return t("recipients.table.voicemailOutcome");
+    return formatEndReason(outcome);
+  };
   // A campaign built from the contact book carries no variables — keep its table lean.
   const showVariables = recipients.some((recipient) => recipientVariables(recipient).length > 0);
   /** Short column labels for the contact built-ins a campaign may supply per recipient. */
@@ -122,7 +134,7 @@ export function RecipientsTable({
         </TableHeader>
         <TableBody>
           {recipients.map((recipient) => {
-            const result = recipient.error ?? recipient.last_outcome;
+            const result = recipient.error ?? outcomeLabel(recipient.last_outcome);
             const variables = recipientVariables(recipient);
             return (
               <TableRow key={recipient.id}>

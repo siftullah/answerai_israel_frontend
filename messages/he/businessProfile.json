@@ -5,7 +5,6 @@
     "calendar": "יומן",
     "docs": "מסמכים",
     "faqs": "שאלות נפוצות",
-    "integrations": "אינטגרציות",
     "modules": "מודולים",
     "policies": "מדיניות",
     "products": "מוצרים",
@@ -63,11 +62,6 @@
         "stat": "{minutes} דק׳",
         "summary": "משבצות זמן של {minutes} דק׳",
         "cta": "בדיקת ברירות המחדל"
-      },
-      "integrations": {
-        "connected": "מחובר",
-        "connecting": "מתחבר",
-        "optional": "אופציונלי"
       }
     }
   },
@@ -256,11 +250,11 @@
       "title": "פרטי קשר",
       "description": "איך לקוחות — וסוכן ה-AI שלכם — יכולים ליצור קשר עם העסק.",
       "email": "אימייל לפרסום",
-      "emailPlaceholder": "hello@yourbusiness.com.au",
+      "emailPlaceholder": "hello@yourbusiness.co.il",
       "phone": "טלפון לפרסום",
-      "phonePlaceholder": "(02) 5550 1234",
+      "phonePlaceholder": "03-555-1234",
       "website": "אתר אינטרנט",
-      "websitePlaceholder": "https://yourbusiness.com.au"
+      "websitePlaceholder": "https://yourbusiness.co.il"
     },
     "about": {
       "title": "על העסק",
@@ -273,19 +267,10 @@
       "currency": "מטבע"
     },
     "countries": {
-      "IL": "ישראל",
-      "AU": "אוסטרליה",
-      "NZ": "ניו זילנד",
-      "GB": "הממלכה המאוחדת",
-      "US": "ארצות הברית"
+      "IL": "ישראל"
     },
     "currencies": {
-      "ILS": "ILS — שקל חדש",
-      "AUD": "AUD — דולר אוסטרלי",
-      "NZD": "NZD — דולר ניו זילנדי",
-      "GBP": "GBP — לירה שטרלינג",
-      "USD": "USD — דולר אמריקאי",
-      "EUR": "EUR — אירו"
+      "ILS": "ILS — שקל חדש"
     },
     "socials": {
       "title": "פרופילים ברשתות חברתיות",
@@ -304,7 +289,7 @@
       "landmark": "נקודת ציון (אופציונלי)",
       "landmarkPlaceholder": "ליד סניף הדואר",
       "baseLocation": "מיקום בסיס",
-      "baseLocationPlaceholder": "ניוקאסל NSW",
+      "baseLocationPlaceholder": "חיפה",
       "travelRadius": "רדיוס נסיעה (ק״מ)",
       "travelRadiusPlaceholder": "50"
     },
@@ -349,7 +334,7 @@
     "running": "חילוץ הנתונים מתבצע… זה עשוי לקחת דקה או שתיים. אפשר להשאיר את החלון פתוח או לבטל.",
     "sourceUrl": "עמוד באתר אינטרנט",
     "sourceFile": "מסמך (PDF, DOCX, TXT, MD — עד 10 MB)",
-    "urlPlaceholder": "https://yourbusiness.com.au",
+    "urlPlaceholder": "https://yourbusiness.co.il",
     "chooseFile": "בחירת קובץ",
     "noFile": "לא נבחר קובץ",
     "start": "התחלת חילוץ נתונים",
@@ -470,7 +455,7 @@
         "netDays": "הזינו מספר שלם של ימים בין 0 ל-365"
       },
       "paymentInstructions": "הוראות תשלום",
-      "paymentInstructionsPlaceholder": "העברה בנקאית — BSB, מספר חשבון, אסמכתה…",
+      "paymentInstructionsPlaceholder": "העברה בנקאית — בנק, סניף, מספר חשבון, אסמכתה…",
       "paymentInstructionsHint": "מופיעות אוטומטית בכל חשבונית חדשה; ניתנות לעריכה בכל חשבונית.",
       "fromDetails": "פרטי השולח",
       "fromDetailsPlaceholder": "מספר חברה (ח.פ.), שם מסחרי, כתובת — יוצגו בתחתית החשבונית",
@@ -544,8 +529,8 @@
     "firstNamePlaceholder": "סם",
     "lastName": "שם משפחה",
     "lastNamePlaceholder": "ריברה",
-    "emailPlaceholder": "sam@yourbusiness.com.au",
-    "phonePlaceholder": "0412 345 678",
+    "emailPlaceholder": "sam@yourbusiness.co.il",
+    "phonePlaceholder": "052-123-4567",
     "position": "תפקיד",
     "positionPlaceholder": "מנהל אתר",
     "role": "תפקיד במערכת",
@@ -627,9 +612,9 @@
     "member": "חבר צוות",
     "alreadyTarget": "כבר מוגדר כיעד",
     "phone": "מספר טלפון",
-    "phonePlaceholder": "0412 345 678",
+    "phonePlaceholder": "052-123-4567",
     "memberPhoneHint": "מולא מראש מפרטי חבר הצוות — ערכו כדי להחליף, או נקו כדי להשתמש במספר השמור שלו.",
-    "otherPhoneHint": "מספרים אוסטרליים בלבד, למשל 0412 345 678.",
+    "otherPhoneHint": "מספרים ישראליים בלבד, למשל 052-123-4567.",
     "postDial": "ספרות לחיוג לאחר מענה (אופציונלי)",
     "postDialPlaceholder": "w123#",
     "postDialHint": "נשלחות לאחר מענה — ספרות, * ו-#; w ממתין חצי שנייה.",

@@ -18,23 +18,22 @@ import { TodayCard } from "@/components/dashboard/today-card";
 import { ErrorState } from "@/components/error-state";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { useMe } from "@/hooks/use-me";
-import { displayLocale, runtimeLocale } from "@/lib/i18n/runtime";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { cn } from "@/lib/utils";
 import type { DashboardHours } from "@/lib/api/types";
 
 /**
- * "17:00" → "5 pm" / "17:30" → "5:30 pm" in English (12-hour, like
- * lib/datetime); Hebrew and Arabic read "17:00". Windows are business-local
- * wall-clock values, so they're formatted as UTC to avoid any zone shift.
+ * "17:00" → "5 pm" / "17:30" → "5:30 pm" (12-hour in every language, like
+ * lib/datetime). Windows are business-local wall-clock values, so they're
+ * formatted as UTC to avoid any zone shift.
  */
 function formatWindowTime(hhmm: string): string {
   const [hour, minute] = hhmm.split(":").map(Number);
-  const en = runtimeLocale() === "en";
   return new Date(Date.UTC(2000, 0, 1, hour, minute)).toLocaleTimeString(displayLocale(), {
     timeZone: "UTC",
     hour: "numeric",
-    minute: en && minute === 0 ? undefined : "2-digit",
-    hour12: en,
+    minute: minute === 0 ? undefined : "2-digit",
+    hour12: true,
   });
 }
 

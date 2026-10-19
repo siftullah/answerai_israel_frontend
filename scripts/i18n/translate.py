@@ -76,8 +76,9 @@ APP_CONTEXT = (
 RULES = """Rules — follow every one:
 1. Output ONLY the translations in the requested JSON shape; no explanations.
 2. ICU MessageFormat must survive intact: keep every {placeholder} name exactly (same spelling, same braces); keep
-   the structure of {x, plural, …} / {x, select, …} blocks, translating only the text inside the category braces and
-   keeping `#`; keep every <tag>…</tag> pair with the same tag names (reorder them in the sentence as the grammar
+   the structure of {x, plural, …} / {x, select, …} blocks, translating the text inside EVERY category brace (a branch
+   such as `monthly {monthly}` or `=0 {Add}` must come back with its words translated — only the category name before
+   the brace stays English) and keeping `#`; keep every <tag>…</tag> pair with the same tag names (reorder them in the sentence as the grammar
    needs). A literal apostrophe directly before { or } must be written as '' — otherwise use normal apostrophes.
 3. Never translate: the brand "AnswerAI"; other product names (Stripe, Twilio, ElevenLabs, Google, Outlook, Microsoft,
    SIP); URLs; email addresses; code-like tokens; currency codes (ILS); ICU keywords (plural, select, other, one…).
@@ -256,12 +257,74 @@ LATIN_HASH_LOCALES = {"ar"}
 
 # ---------- validation ----------
 
+ICU_OPEN_RE = re.compile(r"\{\s*([a-zA-Z0-9_]+)\s*,\s*(plural|selectordinal|select)\s*,")
+
+
+def icu_branches(s):
+    """(category, body) for every branch of every plural/select block, nested ones included."""
+    out = []
+    i = 0
+    while True:
+        m = ICU_OPEN_RE.search(s, i)
+        if not m:
+            return out
+        j = m.end()
+        depth = 1
+        start = j
+        while j < len(s) and depth:
+            depth += {"{": 1, "}": -1}.get(s[j], 0)
+            j += 1
+        body = s[start : j - 1]
+        k = 0
+        while k < len(body):
+            bm = re.match(r"\s*(=?\w+)\s*\{", body[k:])
+            if not bm:
+                break
+            c = k + bm.end()
+            d = 1
+            while c < len(body) and d:
+                d += {"{": 1, "}": -1}.get(body[c], 0)
+                c += 1
+            out.append((bm.group(1), body[k + bm.end() : c - 1]))
+            out.extend(icu_branches(body[k + bm.end() : c - 1]))
+            k = c
+        i = j
+
+
+def untranslated_branches(src, dst):
+    """Branch bodies the model copied verbatim although the English has real words in them."""
+    dst_branches = icu_branches(dst)
+    bad = []
+    for cat, body in icu_branches(src):
+        words = re.sub(r"\{[^{}]*\}|<[^>]*>|#", "", body)
+        if not re.search(r"[a-z]{2,}", words):
+            continue
+        if any(c == cat and b.strip() == body.strip() for c, b in dst_branches):
+            bad.append(cat)
+    return bad
+
+
+def placeholders(s):
+    """{name} arguments. A plural/select branch whose body is a single bare word
+    (`monthly {monthly}`, `=0 {Add}`) is text, not an argument — a real argument
+    inside a branch is written `{{name}}` — so it must not be required verbatim
+    in the translation."""
+    bare = {(cat, body.strip()) for cat, body in icu_branches(s) if re.fullmatch(r"\s*[a-zA-Z0-9_]+\s*", body)}
+    out = set()
+    for m in PLACEHOLDER_RE.finditer(s):
+        cat = re.search(r"(=?\w+)\s*$", s[: m.start()])
+        if cat and (cat.group(1), m.group(1)) in bare:
+            continue
+        out.add(m.group(1))
+    return sorted(out)
+
+
 def signature(s):
-    placeholders = sorted(set(m.group(1) for m in PLACEHOLDER_RE.finditer(s)))
+    placeholders_ = placeholders(s)
     tags = sorted(set(TAG_RE.findall(s)))
     has_plural = bool(re.search(r"\{\s*[a-zA-Z0-9_]+\s*,\s*(plural|selectordinal)", s))
     has_select = bool(re.search(r"\{\s*[a-zA-Z0-9_]+\s*,\s*select\b", s))
-    return placeholders, tags, has_plural, has_select
+    return placeholders_, tags, has_plural, has_select
 
 
 def problems(src, dst):
@@ -291,6 +354,9 @@ def problems(src, dst):
             for word in re.findall(r"(\w+)\s*\{", s_keys.pop()):
                 if not re.search(rf"\b{re.escape(word)}\s*\{{", dst):
                     issues.append(f"select option '{word}' missing")
+    if splural or sselect:
+        for cat in untranslated_branches(src, dst):
+            issues.append(f"text inside branch '{cat}' left in English")
     return issues
 
 
@@ -432,7 +498,8 @@ def run(args):
         for key, en, issues in retry:
             note = (
                 "Your previous attempt for this string was rejected: " + "; ".join(issues)
-                + ". Keep every {placeholder}, every <tag>, and the ICU plural/select structure of the English exactly."
+                + ". Keep every {placeholder}, every <tag>, and the ICU plural/select structure of the English exactly, "
+                + "and translate the words inside every plural/select branch."
             )
             try:
                 out2, usage2 = translate_batch(loc, [(key, en)], glossary, note)

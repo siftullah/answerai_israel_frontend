@@ -14,7 +14,7 @@
   },
   "phone": {
     "required": "הזינו מספר טלפון",
-    "invalid": "הזינו מספר טלפון אוסטרלי, למשל 0412 345 678"
+    "invalid": "הזינו מספר טלפון ישראלי, למשל 052-123-4567"
   },
   "length": {
     "name": "השם חייב להכיל פחות מ-{max, number} תווים",
@@ -40,7 +40,7 @@
     "url": "כתובת ה-URL חייבת להכיל פחות מ-{max, number} תווים",
     "address": "הכתובת חייבת להכיל פחות מ-{max, number} תווים",
     "street": "שם הרחוב חייב להכיל פחות מ-{max, number} תווים",
-    "suburb": "שם הפרבר חייב להכיל פחות מ-{max, number} תווים",
+    "suburb": "שם העיר חייב להכיל פחות מ-{max, number} תווים",
     "state": "שם המדינה חייב להכיל פחות מ-{max, number} תווים",
     "postcode": "המיקוד חייב להכיל פחות מ-{max, number} תווים",
     "landmark": "נקודת הציון חייבת להכיל פחות מ-{max, number} תווים",
@@ -48,7 +48,6 @@
     "generic": "השדה חייב להכיל פחות מ-{max, number} תווים",
     "rule": "כל כלל חייב להכיל פחות מ-{max, number} תווים",
     "category": "כל קטגוריה חייבת להכיל עד {max, number} תווים",
-    "agencyId": "מזהה הסוכנות חייב להכיל עד {max, number} תווים",
     "useFewer": "השתמשו ב-{max, number} תווים לכל היותר"
   },
   "count": {
@@ -67,8 +66,8 @@
     "bookings": "בין {min, number} ל-{max, plural, one {# הזמנה} two {# הזמנות} other {# הזמנות}}"
   },
   "weeklyHours": {
-    "windowRequired": "הוסיפו לפחות טווח שעות אחד עבור {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
-    "windowOrder": "כל טווח שעות חייב להסתיים אחרי תחילתו ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
+    "windowRequired": "הוסיפו לפחות טווח שעות אחד ל{day, select, monday {יום שני} tuesday {יום שלישי} wednesday {יום רביעי} thursday {יום חמישי} friday {יום שישי} saturday {יום שבת} sunday {יום ראשון} other {{day}}}",
+    "windowOrder": "כל טווח שעות חייב להסתיים אחרי שעת ההתחלה שלו ({day, select, monday {יום שני} tuesday {יום שלישי} wednesday {יום רביעי} thursday {יום חמישי} friday {יום שישי} saturday {יום שבת} sunday {יום ראשון} other {{day}}})"
   },
   "auth": {
     "passwordRequired": "יש להזין סיסמה",
@@ -136,10 +135,6 @@
     "questionRequired": "יש להזין שאלה",
     "answerRequired": "נדרשת תשובה"
   },
-  "integration": {
-    "agencyIdRequired": "נדרש מזהה סוכנות",
-    "feedsRequired": "בחרו לפחות פיד אחד"
-  },
   "invoice": {
     "dueBeforeIssue": "התאריך לתשלום לא יכול להיות לפני תאריך ההנפקה"
   },
@@ -147,7 +142,7 @@
     "titleRequired": "תנו לעבודה כותרת קצרה",
     "estimatedMinutesRange": "הזינו מספר דקות שלם בין {min} ל-{max}",
     "streetRequired": "הוסיפו כתובת רחוב",
-    "cityRequired": "הוסיפו פרוור או עיר"
+    "cityRequired": "הוסיפו את העיר"
   },
   "knowledge": {
     "agentScopeRequired": "בחרו לפחות סוכן AI אחד",

@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
+import { roleLabel } from "@/components/business-profile/team/role-label";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -89,9 +90,9 @@ export function MemberDialog({
         ...(rolesQuery.data
           ? assignableRoles
               .filter((role) => role.slug !== "member")
-              .map((role) => ({ value: role.id, label: role.name }))
+              .map((role) => ({ value: role.id, label: roleLabel(role) ?? role.name }))
           : savedRole && savedRole.slug !== "owner" && savedRole.slug !== "member"
-            ? [{ value: savedRole.id, label: savedRole.name }]
+            ? [{ value: savedRole.id, label: roleLabel(savedRole) ?? savedRole.name }]
             : []),
       ];
 

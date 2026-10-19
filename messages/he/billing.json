@@ -37,7 +37,7 @@
       },
       "pending": {
         "title": "כמעט סיימנו — הוסיפו כרטיס אשראי להפעלה",
-        "bodyWithPlan": "{plan} ({interval, select, monthly {monthly} other {annual}}) שמור עבורכם. המנוי יתחיל לאחר הוספת כרטיס.",
+        "bodyWithPlan": "מסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) שמור לכם. המנוי יתחיל לאחר הוספת כרטיס אשראי.",
         "body": "המנוי יתחיל לאחר הוספת כרטיס אשראי.",
         "action": "הוספת כרטיס אשראי"
       },
@@ -48,8 +48,8 @@
       },
       "planChange": {
         "title": "שינוי המסלול מתוזמן",
-        "body": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בתאריך {date}. בחירה במסלול אחר בהמשך תחליף את השינוי הזה.",
-        "bodyNoDate": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בחידוש הבא. בחירה במסלול אחר למטה תחליף את השינוי הזה."
+        "body": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) ב-{date}. בחירת מסלול אחר בהמשך תחליף את השינוי הזה.",
+        "bodyNoDate": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) בחידוש הבא. בחירת מסלול אחר בהמשך תחליף את השינוי הזה."
       },
       "viewOnly": {
         "title": "צפייה בלבד",
@@ -82,7 +82,7 @@
       "switchPlan": "מעבר ל-{plan}",
       "upgrade": "שדרוג ל-{plan}",
       "downgrade": "שנמוך למסלול {plan}",
-      "switchInterval": "מעבר לחיוב {interval, select, monthly {monthly} other {annual}}"
+      "switchInterval": "מעבר לחיוב {interval, select, monthly {חודשי} other {שנתי}}"
     },
     "values": {
       "perMonth": "{amount} / חודש",
@@ -167,7 +167,7 @@
     }
   },
   "subscribe": {
-    "title": "הרשמה למסלול {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "title": "הרשמה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}})",
     "description": "עדיין לא בוצע חיוב — החיוב הראשון יתבצע מיד עם הוספת כרטיס האשראי.",
     "planLine": "מסלול {plan} ({interval, select, monthly {חודש ראשון} other {שנה ראשונה}})",
     "setupFeeLine": "דמי הקמה והדרכה חד-פעמיים",
@@ -182,7 +182,7 @@
     }
   },
   "change": {
-    "title": "מעבר ל-{plan} ({interval, select, monthly {monthly} other {annual}})",
+    "title": "מעבר למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}})",
     "description": "בדקו מה יקרה לפני שהשינוי יתבצע.",
     "calculating": "בחישוב…",
     "previewError": "לא ניתן להציג תצוגה מקדימה של השינוי",
@@ -192,8 +192,8 @@
     "creditBanked": "סכום של {amount} עבור זמן ששולם מראש ולא נוצל ייזקף לזכות החשבון ויקוזז אוטומטית מחיובים עתידיים.",
     "startsImmediately": "המסלול החדש ותקופת חיוב חדשה יתחילו מיד.",
     "noChargeToday": "ללא חיוב היום.",
-    "scheduledOn": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בתאריך {date}. עד אז הכל יישאר במסלול הנוכחי שלכם.",
-    "scheduledAtRenewal": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בחידוש הבא. עד אז הכול יישאר במסלול הנוכחי שלכם.",
+    "scheduledOn": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) ב-{date}. עד אז הכל יישאר במסלול הנוכחי שלכם.",
+    "scheduledAtRenewal": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) בחידוש הבא. עד אז הכל יישאר במסלול הנוכחי שלכם.",
     "confirmAndPay": "אישור ותשלום {amount}",
     "confirmChange": "אישור השינוי",
     "toasts": {

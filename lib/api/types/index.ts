@@ -24,7 +24,6 @@ export type * from "./calendar";
 export type * from "./calendar-view";
 export type * from "./dashboard";
 export * from "./appointment";
-export type * from "./integration";
 export * from "./transfer-target";
 export * from "./phone-number";
 export type * from "./sip-connection";

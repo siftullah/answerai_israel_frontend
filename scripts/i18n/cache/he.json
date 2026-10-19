@@ -1068,8 +1068,8 @@
     "t": "הוסיפו כתובת רחוב"
   },
   "validation.job.cityRequired": {
-    "en": "Add the suburb or city",
-    "t": "הוסיפו פרוור או עיר"
+    "en": "Add the city",
+    "t": "הוסיפו את העיר"
   },
   "validation.knowledge.agentScopeRequired": {
     "en": "Choose at least one agent",
@@ -1236,8 +1236,8 @@
     "t": "הזינו מספר טלפון"
   },
   "validation.phone.invalid": {
-    "en": "Enter an Australian phone number, e.g. 0412 345 678",
-    "t": "הזינו מספר טלפון אוסטרלי, למשל 0412 345 678"
+    "en": "Enter an Israeli phone number, e.g. 052-123-4567",
+    "t": "הזינו מספר טלפון ישראלי, למשל 052-123-4567"
   },
   "validation.length.name": {
     "en": "Keep the name under {max, number} characters",
@@ -1332,15 +1332,15 @@
     "t": "שם הרחוב חייב להכיל פחות מ-{max, number} תווים"
   },
   "validation.length.suburb": {
-    "en": "Keep the suburb under {max, number} characters",
-    "t": "שם הפרבר חייב להכיל פחות מ-{max, number} תווים"
+    "en": "Keep the city under {max, number} characters",
+    "t": "שם העיר חייב להכיל פחות מ-{max, number} תווים"
   },
   "validation.length.state": {
     "en": "Keep the state under {max, number} characters",
     "t": "שם המדינה חייב להכיל פחות מ-{max, number} תווים"
   },
   "validation.length.postcode": {
-    "en": "Keep the postcode under {max, number} characters",
+    "en": "Keep the postal code under {max, number} characters",
     "t": "המיקוד חייב להכיל פחות מ-{max, number} תווים"
   },
   "validation.length.landmark": {
@@ -1579,14 +1579,6 @@
     "en": "Question is required",
     "t": "יש להזין שאלה"
   },
-  "validation.weeklyHours.windowRequired": {
-    "en": "Add at least one time window for {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
-    "t": "הוסיפו לפחות טווח שעות אחד עבור {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}"
-  },
-  "validation.weeklyHours.windowOrder": {
-    "en": "Each window must end after it starts ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})",
-    "t": "כל טווח שעות חייב להסתיים אחרי תחילתו ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
-  },
   "billing.meta.title": {
     "en": "Plans",
     "t": "מסלולים"
@@ -1774,18 +1766,6 @@
   "billing.plans.cta.upgrade": {
     "en": "Upgrade to {plan}",
     "t": "שדרוג ל-{plan}"
-  },
-  "billing.plans.alerts.pending.bodyWithPlan": {
-    "en": "{plan} ({interval, select, monthly {monthly} other {annual}}) is reserved for you. Your subscription starts once a card is added.",
-    "t": "{plan} ({interval, select, monthly {monthly} other {annual}}) שמור עבורכם. המנוי יתחיל לאחר הוספת כרטיס."
-  },
-  "billing.plans.alerts.planChange.body": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Choosing a different plan below replaces this change.",
-    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בתאריך {date}. בחירה במסלול אחר בהמשך תחליף את השינוי הזה."
-  },
-  "billing.plans.alerts.planChange.bodyNoDate": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Choosing a different plan below replaces this change.",
-    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בחידוש הבא. בחירה במסלול אחר למטה תחליף את השינוי הזה."
   },
   "billing.plans.cta.downgrade": {
     "en": "Downgrade to {plan}",
@@ -1975,14 +1955,6 @@
     "en": "Renews monthly. Usage beyond your included allowances is billed with each renewal.",
     "t": "המנוי מתחדש מדי חודש. שימוש מעבר למכסות הכלולות מחויב בכל חידוש."
   },
-  "billing.plans.cta.switchInterval": {
-    "en": "Switch to {interval, select, monthly {monthly} other {annual}} billing",
-    "t": "מעבר לחיוב {interval, select, monthly {monthly} other {annual}}"
-  },
-  "billing.subscribe.title": {
-    "en": "Subscribe to {plan} ({interval, select, monthly {monthly} other {annual}})",
-    "t": "הרשמה למסלול {plan} ({interval, select, monthly {monthly} other {annual}})"
-  },
   "billing.subscribe.renewsAnnually": {
     "en": "The plan renews yearly; usage beyond your included allowances is still billed monthly.",
     "t": "המסלול מתחדש מדי שנה; שימוש מעבר למכסות הכלולות עדיין מחויב מדי חודש."
@@ -2110,18 +2082,6 @@
   "billing.card.toasts.unexpected": {
     "en": "The payment form returned an unexpected result. Please try again.",
     "t": "טופס התשלום החזיר תוצאה לא צפויה. נסו שוב."
-  },
-  "billing.change.title": {
-    "en": "Change to {plan} ({interval, select, monthly {monthly} other {annual}})",
-    "t": "מעבר ל-{plan} ({interval, select, monthly {monthly} other {annual}})"
-  },
-  "billing.change.scheduledOn": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Until then everything stays on your current plan.",
-    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בתאריך {date}. עד אז הכל יישאר במסלול הנוכחי שלכם."
-  },
-  "billing.change.scheduledAtRenewal": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Until then everything stays on your current plan.",
-    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בחידוש הבא. עד אז הכול יישאר במסלול הנוכחי שלכם."
   },
   "publicQuote.meta.title": {
     "en": "Quote",
@@ -4324,12 +4284,12 @@
     "t": "פתיחת הגדרות"
   },
   "campaigns.recipients.addDialog.description": {
-    "en": "Australian numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
-    "t": "מספרים אוסטרליים בלבד — כל מספר אחר יסומן כלא תקין. המערכת תדלג אוטומטית על מספרים ברשימת ״אין להתקשר״ שלכם."
+    "en": "Israeli numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
+    "t": "מספרים ישראליים בלבד — כל מספר אחר יסומן כלא תקין. המערכת מדלגת אוטומטית על מספרים שברשימת 'אין להתקשר' שלכם."
   },
   "campaigns.recipients.addDialog.phonePlaceholder": {
-    "en": "Phone, e.g. 0412 345 678",
-    "t": "טלפון, למשל 0412 345 678"
+    "en": "Phone, e.g. 052-123-4567",
+    "t": "טלפון, למשל 052-123-4567"
   },
   "campaigns.recipients.addDialog.namePlaceholder": {
     "en": "Name (optional)",
@@ -4572,8 +4532,8 @@
     "t": "למשל XNWXYZ"
   },
   "knowledge.integrations.dialog.agencyIdHint": {
-    "en": "Your realestate.com.au agency identifier — your account manager or Agency Admin can provide it.",
-    "t": "מזהה הסוכנות שלכם ב-realestate.com.au — מנהל הלקוח או מנהל המערכת של הסוכנות יכולים לספק אותו."
+    "en": "Your agency identifier with the listings provider — your account manager there can provide it.",
+    "t": "מזהה הסוכנות שלכם אצל ספק המודעות — מנהל החשבון שלכם שם יוכל לספק אותו."
   },
   "knowledge.integrations.dialog.feeds": {
     "en": "Listing feeds",
@@ -5508,8 +5468,8 @@
     "t": "ניקוי הכל"
   },
   "calls.placeDialog.numberToCallPlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "calls.placeDialog.variablesHint": {
     "en": "This agent needs a value for each variable below. Anything prefilled came from the contact record or the variable's default, so check each one for this call.",
@@ -6524,8 +6484,8 @@
     "t": "כמות פריט {line}"
   },
   "invoices.form.lineUnitPrice": {
-    "en": "Line {line} unit price in dollars",
-    "t": "מחיר ליחידה בדולרים לפריט {line}"
+    "en": "Line {line} unit price in shekels",
+    "t": "מחיר ליחידה בשקלים בשורה {line}"
   },
   "invoices.form.lineTax": {
     "en": "Line {line} attracts {tax}",
@@ -6540,8 +6500,8 @@
     "t": "יוצג באימייל עם החשבונית (לא חובה)"
   },
   "invoices.form.paymentInstructionsPlaceholder": {
-    "en": "Direct deposit — BSB, account number, reference…",
-    "t": "העברה בנקאית — BSB, מספר חשבון, אסמכתה…"
+    "en": "Bank transfer — bank, branch, account number, reference…",
+    "t": "העברה בנקאית — בנק, סניף, מספר חשבון, אסמכתא…"
   },
   "invoices.sendDialog.title": {
     "en": "Send invoice {number}",
@@ -7336,7 +7296,7 @@
     "t": "כמות לפריט {line}"
   },
   "quotes.form.lineUnitPrice": {
-    "en": "Line {line} unit price in dollars",
+    "en": "Line {line} unit price in shekels",
     "t": "מחיר ליחידה בשקלים לפריט {line}"
   },
   "quotes.form.lineTax": {
@@ -7372,8 +7332,8 @@
     "t": "אחוז שלם מהסכום הכולל של הצעת המחיר."
   },
   "quotes.form.deposit.amountHint": {
-    "en": "Dollar amount payable to commence.",
-    "t": "סכום בשקלים לתשלום לפני תחילת העבודה."
+    "en": "Amount in shekels payable to commence.",
+    "t": "סכום בשקלים לתשלום לצורך התחלת העבודה."
   },
   "quotes.form.deposit.toCommence": {
     "en": "Deposit to commence",
@@ -7576,8 +7536,8 @@
     "t": "שינוי הכתובת ישלח קישור אישור לכתובת החדשה; כתובת האימייל הנוכחית תישאר פעילה עד שתאשרו."
   },
   "settings.profile.details.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "settings.profile.details.position": {
     "en": "Position",
@@ -8444,8 +8404,8 @@
     "t": "כל מה שמסומן כדחוף נשלח גם למשרד"
   },
   "settings.notifications.sections.newJob.rulePlaceholders.third": {
-    "en": "Jobs in the northern suburbs go to the north team",
-    "t": "עבודות בפרברים הצפוניים נשלחות לצוות הצפון"
+    "en": "Jobs in Haifa and the north go to the north team",
+    "t": "עבודות בחיפה ובצפון מועברות לצוות הצפון"
   },
   "settings.notifications.sections.newQuoteRequest.title": {
     "en": "New quote request",
@@ -8572,15 +8532,15 @@
     "t": "דירה, בניין (אופציונלי)"
   },
   "jobs.form.suburb": {
-    "en": "Suburb",
-    "t": "שכונה"
+    "en": "City",
+    "t": "עיר"
   },
   "jobs.form.state": {
     "en": "State",
     "t": "מדינה"
   },
   "jobs.form.postcode": {
-    "en": "Postcode",
+    "en": "Postal code",
     "t": "מיקוד"
   },
   "jobs.form.descriptionPlaceholder": {
@@ -9095,18 +9055,6 @@
     "en": "Receipt",
     "t": "קבלה"
   },
-  "settings.billing.alerts.planChange.body": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. To keep your current plan instead, pick it again on the <link>plans page</link>.",
-    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בתאריך {date}. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>."
-  },
-  "settings.billing.alerts.planChange.bodyNoDate": {
-    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. To keep your current plan instead, pick it again on the <link>plans page</link>.",
-    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בחידוש הבא. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>."
-  },
-  "settings.billing.currentPlan.priceLine": {
-    "en": "{price}/{interval, select, monthly {month} other {year}} + VAT · {interval, select, monthly {Monthly billing} other {Annual billing}}",
-    "t": "{price}/{interval, select, monthly {month} other {year}} + מע\"מ · {interval, select, monthly {חיוב חודשי} other {חיוב שנתי}}"
-  },
   "jobs.detail.facts.callOn": {
     "en": "Call {date}",
     "t": "שיחה ב-{date}"
@@ -9164,7 +9112,7 @@
     "t": "כמות לפריט {line}"
   },
   "jobs.lineItems.aria.unitPrice": {
-    "en": "Line {line} unit price in dollars",
+    "en": "Line {line} unit price in shekels",
     "t": "מחיר ליחידה בשקלים לפריט {line}"
   },
   "jobs.lineItems.aria.remove": {
@@ -9664,8 +9612,8 @@
     "t": "רכישת מספר"
   },
   "phoneNumbers.buy.pickDescription": {
-    "en": "Pick an Australian local number for your AI to answer.",
-    "t": "בחרו מספר מקומי באוסטרליה שסוכן ה-AI שלכם יענה בו."
+    "en": "Pick an Israeli local number for your AI to answer.",
+    "t": "בחרו מספר ישראלי מקומי שסוכן ה-AI שלכם יענה בו."
   },
   "phoneNumbers.buy.detailsDescription": {
     "en": "Confirm the details for your new number.",
@@ -9680,8 +9628,8 @@
     "t": "חיפוש מספרים לפי ספרות"
   },
   "phoneNumbers.buy.searchHint": {
-    "en": "Start with an area code to match from the beginning, e.g. 02 for Sydney or 03 for Melbourne.",
-    "t": "התחילו בקידומת אזור כדי לחפש מתחילת המספר, למשל 02 לסידני או 03 למלבורן."
+    "en": "Start with an area code to match from the beginning, e.g. 02 for Jerusalem or 03 for Tel Aviv.",
+    "t": "התחילו בקידומת אזור כדי לחפש מתחילת המספר, למשל 02 לירושלים או 03 לתל אביב."
   },
   "phoneNumbers.buy.noMatches": {
     "en": "No matches — try different digits.",
@@ -9724,8 +9672,8 @@
     "t": "מספר טלפון"
   },
   "phoneNumbers.addSip.phonePlaceholder": {
-    "en": "(02) 5550 1234",
-    "t": "(02) 5550 1234"
+    "en": "03-555-1234",
+    "t": "03-555-1234"
   },
   "phoneNumbers.addSip.phoneHint": {
     "en": "The number your trunk already carries — include the area code.",
@@ -9944,8 +9892,8 @@
     "t": "אין שיחות עדיין"
   },
   "contacts.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "contacts.reasonOptional": {
     "en": "Reason (optional)",
@@ -10116,8 +10064,8 @@
     "t": "חסימת שיחות יוצאות בלבד"
   },
   "contacts.dnc.infoDescription": {
-    "en": "Single calls, campaigns and scheduled callbacks all check this list before dialling; inbound calls aren't affected. Your AI agents add numbers here automatically when a caller asks. This is your business's own list — it doesn't register numbers on the national Do Not Call Register.",
-    "t": "הרשימה נבדקת לפני חיוג בשיחות בודדות, בקמפיינים ובשיחות חוזרות מתוזמנות; שיחות נכנסות אינן מושפעות. סוכני ה-AI שלכם מוסיפים לכאן מספרים אוטומטית לבקשת המתקשר. זו רשימה פרטית של העסק שלכם — היא לא רושמת מספרים במאגר הארצי \"אל תתקשרו אליי\"."
+    "en": "Single calls, campaigns and scheduled callbacks all check this list before dialling; inbound calls aren't affected. Your AI agents add numbers here automatically when a caller asks. This is your business's own list — it doesn't add numbers to the national Do Not Call Me database.",
+    "t": "שיחות בודדות, קמפיינים ושיחות חוזרות מתוזמנות נבדקים כולם מול הרשימה הזו לפני החיוג; שיחות נכנסות אינן מושפעות. סוכני ה-AI שלכם מוסיפים לכאן מספרים אוטומטית לבקשת המתקשר. זו הרשימה הפרטית של העסק שלכם — היא לא מוסיפה מספרים למאגר הלאומי \"אל תתקשרו אליי\"."
   },
   "contacts.dnc.searchPlaceholder": {
     "en": "Search by number or reason",
@@ -10276,12 +10224,12 @@
     "t": "לאיש קשר נדרש לפחות שם, חברה או מספר טלפון."
   },
   "contacts.editor.namePlaceholder": {
-    "en": "Jane Citizen",
-    "t": "ג'יין סיטיזן"
+    "en": "Dana Cohen",
+    "t": "דנה כהן"
   },
   "contacts.editor.companyPlaceholder": {
-    "en": "Acme Pty Ltd",
-    "t": "Acme Pty Ltd"
+    "en": "Acme Ltd",
+    "t": "אקמי בע\"מ"
   },
   "contacts.editor.primaryPhone": {
     "en": "Primary phone number",
@@ -10336,8 +10284,8 @@
     "t": "הוספת אימייל"
   },
   "contacts.editor.addressPlaceholder": {
-    "en": "123 Example St, Sydney NSW 2000",
-    "t": "רחוב לדוגמה 123, סידני NSW 2000"
+    "en": "12 Herzl St, Tel Aviv 6688112",
+    "t": "הרצל 12, תל אביב 6688112"
   },
   "contacts.editor.tagsPlaceholder": {
     "en": "Type a tag and press Enter",
@@ -11040,7 +10988,7 @@
     "t": "מה מבוקש, למשל החלפת חיווט במטבח"
   },
   "leads.form.valueHint": {
-    "en": "Rough worth of the work, in dollars.",
+    "en": "Rough worth of the work, in shekels.",
     "t": "שווי משוער של העבודה, בשקלים."
   },
   "leads.form.notesPlaceholder": {
@@ -11086,10 +11034,6 @@
   "leads.markLost.title": {
     "en": "Mark this lead as lost",
     "t": "סימון הליד הזה כאבוד"
-  },
-  "leads.detail.markedAs": {
-    "en": "Lead marked as {status, select, contacted {contacted} qualified {qualified} other {{status}}}",
-    "t": "הליד סומן כ{status, select, contacted {contacted} qualified {qualified} other {{status}}}"
   },
   "agents.meta.title": {
     "en": "Agents",
@@ -11827,10 +11771,6 @@
     "en": "Numbers",
     "t": "מספרים"
   },
-  "agents.sections.transfers.switchDialog.title": {
-    "en": "Switch every target to {mode, select, screened {screened} other {blind}}?",
-    "t": "להעביר את כל היעדים למצב {mode, select, screened {screened} other {blind}}?"
-  },
   "agents.sections.voice.unknownVoiceHint": {
     "en": "This voice is no longer offered — pick a replacement.",
     "t": "הקול הזה כבר לא מוצע — בחרו קול חלופי."
@@ -12288,12 +12228,12 @@
     "t": "ריברה"
   },
   "businessProfile.member.emailPlaceholder": {
-    "en": "sam@yourbusiness.com.au",
-    "t": "sam@yourbusiness.com.au"
+    "en": "sam@yourbusiness.co.il",
+    "t": "sam@yourbusiness.co.il"
   },
   "businessProfile.member.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "businessProfile.member.position": {
     "en": "Position",
@@ -12484,8 +12424,8 @@
     "t": "הוראות תשלום"
   },
   "businessProfile.moduleSettings.invoices.paymentInstructionsPlaceholder": {
-    "en": "Direct deposit — BSB, account number, reference…",
-    "t": "העברה בנקאית — BSB, מספר חשבון, אסמכתה…"
+    "en": "Bank transfer — bank, branch, account number, reference…",
+    "t": "העברה בנקאית — בנק, סניף, מספר חשבון, אסמכתה…"
   },
   "businessProfile.moduleSettings.invoices.paymentInstructionsHint": {
     "en": "Pre-filled on every new invoice; editable per invoice.",
@@ -12700,24 +12640,24 @@
     "t": "אימייל לפרסום"
   },
   "businessProfile.profileForm.contact.emailPlaceholder": {
-    "en": "hello@yourbusiness.com.au",
-    "t": "hello@yourbusiness.com.au"
+    "en": "hello@yourbusiness.co.il",
+    "t": "hello@yourbusiness.co.il"
   },
   "businessProfile.profileForm.contact.phone": {
     "en": "Public phone",
     "t": "טלפון לפרסום"
   },
   "businessProfile.profileForm.contact.phonePlaceholder": {
-    "en": "(02) 5550 1234",
-    "t": "(02) 5550 1234"
+    "en": "03-555-1234",
+    "t": "03-555-1234"
   },
   "businessProfile.profileForm.contact.website": {
     "en": "Website",
     "t": "אתר אינטרנט"
   },
   "businessProfile.profileForm.contact.websitePlaceholder": {
-    "en": "https://yourbusiness.com.au",
-    "t": "https://yourbusiness.com.au"
+    "en": "https://yourbusiness.co.il",
+    "t": "https://yourbusiness.co.il"
   },
   "businessProfile.profileForm.about.title": {
     "en": "About the business",
@@ -12852,8 +12792,8 @@
     "t": "מיקום בסיס"
   },
   "businessProfile.profileForm.location.baseLocationPlaceholder": {
-    "en": "Newcastle NSW",
-    "t": "ניוקאסל NSW"
+    "en": "Haifa",
+    "t": "חיפה"
   },
   "businessProfile.profileForm.location.travelRadius": {
     "en": "Travel radius (km)",
@@ -12980,8 +12920,8 @@
     "t": "מסמך (PDF, DOCX, TXT, MD — עד 10 MB)"
   },
   "businessProfile.extraction.urlPlaceholder": {
-    "en": "https://yourbusiness.com.au",
-    "t": "https://yourbusiness.com.au"
+    "en": "https://yourbusiness.co.il",
+    "t": "https://yourbusiness.co.il"
   },
   "businessProfile.extraction.chooseFile": {
     "en": "Choose file",
@@ -13516,16 +13456,16 @@
     "t": "מספר טלפון"
   },
   "businessProfile.transferTarget.phonePlaceholder": {
-    "en": "0412 345 678",
-    "t": "0412 345 678"
+    "en": "052-123-4567",
+    "t": "052-123-4567"
   },
   "businessProfile.transferTarget.memberPhoneHint": {
     "en": "Prefilled from the team member — edit to override, or clear to use their saved number.",
     "t": "מולא מראש מפרטי חבר הצוות — ערכו כדי להחליף, או נקו כדי להשתמש במספר השמור שלו."
   },
   "businessProfile.transferTarget.otherPhoneHint": {
-    "en": "Australian numbers only, e.g. 0412 345 678.",
-    "t": "מספרים אוסטרליים בלבד, למשל 0412 345 678."
+    "en": "Israeli numbers only, e.g. 052-123-4567.",
+    "t": "מספרים ישראליים בלבד, למשל 052-123-4567."
   },
   "businessProfile.transferTarget.postDial": {
     "en": "Post-dial digits (optional)",
@@ -13811,20 +13751,316 @@
     "en": "{count, plural, one {# policy added} other {# policies added}}",
     "t": "{count, plural, one {נוסף פריט מדיניות #} other {נוספו # פריטי מדיניות}}"
   },
+  "common.toaster.label": {
+    "en": "Notifications",
+    "t": "התראות"
+  },
+  "agents.sections.transfers.switchDialog.title": {
+    "en": "Switch every target to {mode, select, screened {screened} other {blind}}?",
+    "t": "להגדיר לכל היעדים {mode, select, screened {העברה עם סינון} other {העברה ישירה}}?"
+  },
+  "billing.plans.alerts.pending.bodyWithPlan": {
+    "en": "{plan} ({interval, select, monthly {monthly} other {annual}}) is reserved for you. Your subscription starts once a card is added.",
+    "t": "מסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) שמור לכם. המנוי יתחיל לאחר הוספת כרטיס אשראי."
+  },
+  "billing.plans.alerts.planChange.body": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Choosing a different plan below replaces this change.",
+    "t": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) ב-{date}. בחירת מסלול אחר בהמשך תחליף את השינוי הזה."
+  },
+  "billing.plans.alerts.planChange.bodyNoDate": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Choosing a different plan below replaces this change.",
+    "t": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) בחידוש הבא. בחירת מסלול אחר בהמשך תחליף את השינוי הזה."
+  },
+  "billing.plans.cta.switchInterval": {
+    "en": "Switch to {interval, select, monthly {monthly} other {annual}} billing",
+    "t": "מעבר לחיוב {interval, select, monthly {חודשי} other {שנתי}}"
+  },
+  "billing.subscribe.title": {
+    "en": "Subscribe to {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "t": "הרשמה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}})"
+  },
+  "billing.change.title": {
+    "en": "Change to {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "t": "מעבר למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}})"
+  },
+  "billing.change.scheduledOn": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Until then everything stays on your current plan.",
+    "t": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) ב-{date}. עד אז הכל יישאר במסלול הנוכחי שלכם."
+  },
+  "billing.change.scheduledAtRenewal": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Until then everything stays on your current plan.",
+    "t": "המסלול שלכם ישתנה למסלול {plan} ({interval, select, monthly {חודשי} other {שנתי}}) בחידוש הבא. עד אז הכל יישאר במסלול הנוכחי שלכם."
+  },
+  "lib.systemRole.owner": {
+    "en": "Owner",
+    "t": "בעלים"
+  },
+  "lib.systemRole.admin": {
+    "en": "Admin",
+    "t": "מנהל מערכת"
+  },
+  "lib.systemRole.member": {
+    "en": "Member",
+    "t": "חבר צוות"
+  },
+  "leads.detail.markedAs": {
+    "en": "Lead marked as {status, select, contacted {contacted} qualified {qualified} other {{status}}}",
+    "t": "הליד סומן בסטטוס {status, select, contacted {נוצר קשר} qualified {כשיר} other {{status}}}"
+  },
   "knowledge.services.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # service} other {Add # services}}",
-    "t": "{count, plural, =0 {Add} one {הוספת # שירות} other {הוספת # שירותים}}"
+    "t": "{count, plural, =0 {הוספה} one {הוספת # שירות} other {הוספת # שירותים}}"
   },
   "knowledge.products.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # product} other {Add # products}}",
-    "t": "{count, plural, =0 {Add} one {הוספת # מוצר} other {הוספת # מוצרים}}"
+    "t": "{count, plural, =0 {הוספה} one {הוספת # מוצר} other {הוספת # מוצרים}}"
   },
   "knowledge.faqs.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # FAQ} other {Add # FAQs}}",
-    "t": "{count, plural, =0 {Add} one {הוספת # שאלה נפוצה} other {הוספת # שאלות נפוצות}}"
+    "t": "{count, plural, =0 {הוספה} one {הוספת # שאלה נפוצה} other {הוספת # שאלות נפוצות}}"
   },
   "knowledge.policies.review.addCount": {
     "en": "{count, plural, =0 {Add} one {Add # policy} other {Add # policies}}",
-    "t": "{count, plural, =0 {Add} one {הוספת # פריט מדיניות} other {הוספת # פריטי מדיניות}}"
+    "t": "{count, plural, =0 {הוספה} one {הוספת # פריט מדיניות} other {הוספת # פריטי מדיניות}}"
+  },
+  "settings.billing.alerts.planChange.body": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. To keep your current plan instead, pick it again on the <link>plans page</link>.",
+    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {חודשי} other {שנתי}}) בתאריך {date}. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>."
+  },
+  "settings.billing.alerts.planChange.bodyNoDate": {
+    "en": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. To keep your current plan instead, pick it again on the <link>plans page</link>.",
+    "t": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {חודשי} other {שנתי}}) בחידוש הבא. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>."
+  },
+  "settings.billing.currentPlan.priceLine": {
+    "en": "{price}/{interval, select, monthly {month} other {year}} + VAT · {interval, select, monthly {Monthly billing} other {Annual billing}}",
+    "t": "{price}/{interval, select, monthly {חודש} other {שנה}} + מע\"מ · {interval, select, monthly {חיוב חודשי} other {חיוב שנתי}}"
+  },
+  "validation.weeklyHours.windowRequired": {
+    "en": "Add at least one time window for {day, select, monday {Monday} tuesday {Tuesday} wednesday {Wednesday} thursday {Thursday} friday {Friday} saturday {Saturday} sunday {Sunday} other {{day}}}",
+    "t": "הוסיפו לפחות טווח שעות אחד ל{day, select, monday {יום שני} tuesday {יום שלישי} wednesday {יום רביעי} thursday {יום חמישי} friday {יום שישי} saturday {יום שבת} sunday {יום ראשון} other {{day}}}"
+  },
+  "validation.weeklyHours.windowOrder": {
+    "en": "Each window must end after it starts ({day, select, monday {Monday} tuesday {Tuesday} wednesday {Wednesday} thursday {Thursday} friday {Friday} saturday {Saturday} sunday {Sunday} other {{day}}})",
+    "t": "כל טווח שעות חייב להסתיים אחרי שעת ההתחלה שלו ({day, select, monday {יום שני} tuesday {יום שלישי} wednesday {יום רביעי} thursday {יום חמישי} friday {יום שישי} saturday {יום שבת} sunday {יום ראשון} other {{day}}})"
+  },
+  "campaigns.recipients.table.voicemailOutcome": {
+    "en": "Voicemail",
+    "t": "תא קולי"
+  },
+  "lib.voiceDescription.archer": {
+    "en": "Calm, conversational male British voice.",
+    "t": "קול גברי בריטי רגוע, בסגנון שיחה טבעי."
+  },
+  "lib.voiceDescription.jenna": {
+    "en": "Warm, relatable female Canadian voice.",
+    "t": "קול נשי קנדי חם ונגיש."
+  },
+  "lib.voiceDescription.jenna-nz": {
+    "en": "Clear, engaging and warm female New Zealand voice.",
+    "t": "קול נשי ניו זילנדי ברור, סוחף וחם."
+  },
+  "lib.voiceDescription.yochai": {
+    "en": "Warm, natural male Hebrew voice.",
+    "t": "קול גברי בעברית, חם וטבעי."
+  },
+  "lib.voiceAccent.american": {
+    "en": "American",
+    "t": "אמריקאי"
+  },
+  "lib.voiceAccent.australian": {
+    "en": "Australian",
+    "t": "אוסטרלי"
+  },
+  "lib.voiceAccent.brazilian": {
+    "en": "Brazilian",
+    "t": "ברזילאי"
+  },
+  "lib.voiceAccent.british": {
+    "en": "British",
+    "t": "בריטי"
+  },
+  "lib.voiceAccent.canadian": {
+    "en": "Canadian",
+    "t": "קנדי"
+  },
+  "lib.voiceAccent.european": {
+    "en": "European",
+    "t": "אירופי"
+  },
+  "lib.voiceAccent.gulf": {
+    "en": "Gulf",
+    "t": "מפרצי"
+  },
+  "lib.voiceAccent.israeli": {
+    "en": "Israeli",
+    "t": "ישראלי"
+  },
+  "lib.voiceAccent.istanbul": {
+    "en": "Istanbul",
+    "t": "איסטנבול"
+  },
+  "lib.voiceAccent.lebanese": {
+    "en": "Lebanese",
+    "t": "לבנוני"
+  },
+  "lib.voiceAccent.malaysian": {
+    "en": "Malaysian",
+    "t": "מלזי"
+  },
+  "lib.voiceAccent.mexican": {
+    "en": "Mexican",
+    "t": "מקסיקני"
+  },
+  "lib.voiceAccent.modern_standard": {
+    "en": "Modern Standard",
+    "t": "ספרותי מודרני"
+  },
+  "lib.voiceAccent.new_zealand": {
+    "en": "New Zealand",
+    "t": "ניו זילנדי"
+  },
+  "lib.voiceAccent.palestinian": {
+    "en": "Palestinian",
+    "t": "פלסטיני"
+  },
+  "lib.voiceAccent.peninsular": {
+    "en": "Peninsular",
+    "t": "מחצי האי האיברי"
+  },
+  "lib.voiceAccent.quebec": {
+    "en": "Quebec",
+    "t": "קוויבק"
+  },
+  "lib.voiceAccent.saudi": {
+    "en": "Saudi",
+    "t": "סעודי"
+  },
+  "lib.voiceAccent.seoul": {
+    "en": "Seoul",
+    "t": "סיאול"
+  },
+  "lib.voiceAccent.sicilian": {
+    "en": "Sicilian",
+    "t": "סיציליאני"
+  },
+  "lib.voiceAccent.standard": {
+    "en": "Standard",
+    "t": "תקני"
+  },
+  "lib.voiceAccent.stockholm": {
+    "en": "Stockholm",
+    "t": "סטוקהולם"
+  },
+  "lib.voiceDescription.liam": {
+    "en": "Natural, middle-aged male voice.",
+    "t": "קול טבעי של גבר בגיל העמידה."
+  },
+  "lib.voiceDescription.jack": {
+    "en": "Crisp, conversational male voice.",
+    "t": "קול גברי חד וברור, בסגנון שיחה."
+  },
+  "lib.voiceDescription.noah": {
+    "en": "Casual, youthful male — easy conversation.",
+    "t": "קול גברי צעיר ולא רשמי — לשיחה קלילה."
+  },
+  "lib.voiceDescription.william": {
+    "en": "Calm, conversational male voice.",
+    "t": "קול גברי רגוע, בסגנון שיחה."
+  },
+  "lib.voiceDescription.oliver": {
+    "en": "Chill, easy-going male voice.",
+    "t": "קול גברי נינוח וקליל."
+  },
+  "lib.voiceDescription.lachlan": {
+    "en": "Casual, conversational male voice.",
+    "t": "קול גברי לא רשמי, בסגנון שיחה."
+  },
+  "lib.voiceDescription.cooper": {
+    "en": "Casual, friendly male voice.",
+    "t": "קול גברי לא רשמי וידידותי."
+  },
+  "lib.voiceDescription.hudson": {
+    "en": "Relaxed, conversational male voice.",
+    "t": "קול גברי נינוח, בסגנון שיחה."
+  },
+  "lib.voiceDescription.harrison": {
+    "en": "Confident male — strong for narration.",
+    "t": "קול גברי בטוח — מצוין לקריינות."
+  },
+  "lib.voiceDescription.mason": {
+    "en": "Calm, measured male — suited to narration.",
+    "t": "קול גברי רגוע ומדוד — מתאים לקריינות."
+  },
+  "lib.voiceDescription.riley": {
+    "en": "Professional, polished male voice.",
+    "t": "קול גברי מקצועי ומלוטש."
+  },
+  "lib.voiceDescription.hunter": {
+    "en": "Confident, energetic young male voice.",
+    "t": "קול גברי צעיר, בטוח ואנרגטי."
+  },
+  "lib.voiceDescription.jacob": {
+    "en": "Warm, natural male voice.",
+    "t": "קול גברי חם וטבעי."
+  },
+  "lib.voiceDescription.olivia": {
+    "en": "Mature, warm female — natural for narration.",
+    "t": "קול נשי בוגר וחם — טבעי לקריינות."
+  },
+  "lib.voiceDescription.charlotte": {
+    "en": "Bright, charming female voice.",
+    "t": "קול נשי מלא חיים ומקסים."
+  },
+  "lib.voiceDescription.amelia": {
+    "en": "Professional, clear female — great for explainers.",
+    "t": "קול נשי מקצועי וברור — מצוין להסברים."
+  },
+  "lib.voiceDescription.isla": {
+    "en": "Confident, youthful female voice.",
+    "t": "קול נשי צעיר ובטוח."
+  },
+  "lib.voiceDescription.mia": {
+    "en": "Calm, gentle young female voice.",
+    "t": "קול נשי צעיר, רגוע ועדין."
+  },
+  "lib.voiceDescription.chloe": {
+    "en": "Confident, lively young female voice.",
+    "t": "קול נשי צעיר, בטוח ותוסס."
+  },
+  "lib.voiceDescription.ruby": {
+    "en": "Confident, expressive female voice.",
+    "t": "קול נשי בטוח ומלא הבעה."
+  },
+  "lib.voiceDescription.matilda": {
+    "en": "Sweet, youthful female voice.",
+    "t": "קול נשי מתוק וצעיר."
+  },
+  "lib.voiceDescription.zoe": {
+    "en": "Classy, refined female voice.",
+    "t": "קול נשי אלגנטי ומעודן."
+  },
+  "lib.voiceDescription.ella": {
+    "en": "Casual, friendly young female voice.",
+    "t": "קול נשי צעיר, לא רשמי וידידותי."
+  },
+  "lib.voiceDescription.grace": {
+    "en": "Calm, reassuring female voice.",
+    "t": "קול נשי רגוע ומרגיע."
+  },
+  "lib.voiceDescription.sienna": {
+    "en": "Pleasant, conversational female voice.",
+    "t": "קול נשי נעים, בסגנון שיחה."
+  },
+  "lib.voiceDescription.harper": {
+    "en": "Casual, conversational female voice.",
+    "t": "קול נשי לא רשמי, בסגנון שיחה."
+  },
+  "lib.voiceDescription.evie": {
+    "en": "Easy-going, conversational female voice.",
+    "t": "קול נשי קליל, בסגנון שיחה."
+  },
+  "lib.voiceDescription.hope": {
+    "en": "Natural, clear and calm female American voice.",
+    "t": "קול נשי אמריקאי טבעי, ברור ורגוע."
   }
 }

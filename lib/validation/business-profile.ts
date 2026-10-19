@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { BusinessProfile, UpdateBusinessProfilePayload } from "@/lib/api/types";
 import { SOCIAL_KEYS } from "@/lib/api/types";
-import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
+import { formatE164, normalizeIlPhone, optionalIlPhoneField } from "@/lib/phone";
 import type { Translator } from "@/lib/i18n/types";
 
 const CURRENT_YEAR = new Date().getFullYear();
@@ -21,7 +21,7 @@ export function businessProfileSchema(t: Translator) {
   return z.object({
     public_email: optionalEmail,
     // Loose AU shape gate; the backend's Phone rule stays the authority.
-    public_phone: optionalAuPhoneField(t),
+    public_phone: optionalIlPhoneField(t),
     website: z.union([
       z.literal(""),
       z.url(t("common.urlInvalid")).max(2000, t("length.url", { max: 2000 })),
@@ -105,7 +105,7 @@ export function toUpdatePayload(
   if (dirty.public_email) payload.public_email = emptyToNull(values.public_email);
   if (dirty.public_phone) {
     payload.public_phone =
-      values.public_phone === "" ? null : normalizeAuPhone(values.public_phone);
+      values.public_phone === "" ? null : normalizeIlPhone(values.public_phone);
   }
   if (dirty.website) payload.website = emptyToNull(values.website);
   if (dirty.country) payload.country = emptyToNull(values.country);

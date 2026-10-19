@@ -96,5 +96,8 @@
     "showing": "عرض {from}–{to} من {total}",
     "rowsPerPage": "الصفوف لكل صفحة",
     "selectedCount": "{count, plural, zero {تم تحديد {count}} one {تم تحديد {count}} two {تم تحديد {count}} few {تم تحديد {count}} many {تم تحديد {count}} other {تم تحديد {count}}}"
+  },
+  "toaster": {
+    "label": "الإشعارات"
   }
 }

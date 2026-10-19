@@ -66,11 +66,11 @@
   },
   "buy": {
     "title": "Buy a number",
-    "pickDescription": "Pick an Australian local number for your AI to answer.",
+    "pickDescription": "Pick an Israeli local number for your AI to answer.",
     "detailsDescription": "Confirm the details for your new number.",
     "searchPlaceholder": "e.g. 02 or 9955",
     "searchLabel": "Search numbers by digits",
-    "searchHint": "Start with an area code to match from the beginning, e.g. 02 for Sydney or 03 for Melbourne.",
+    "searchHint": "Start with an area code to match from the beginning, e.g. 02 for Jerusalem or 03 for Tel Aviv.",
     "noMatches": "No matches — try different digits.",
     "taken": "That number was just taken — pick another.",
     "agentsHint": "You can assign or change agents any time after purchase."
@@ -85,7 +85,7 @@
     "description": "Register a number your trunk already carries, and calls to it will reach your AI.",
     "submit": "Register number",
     "phoneNumber": "Phone number",
-    "phonePlaceholder": "(02) 5550 1234",
+    "phonePlaceholder": "03-555-1234",
     "phoneHint": "The number your trunk already carries — include the area code.",
     "friendlyNamePlaceholder": "Reception line"
   },

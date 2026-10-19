@@ -45,7 +45,7 @@
     },
     "review": {
       "title": "בדיקת השירותים שחולצו",
-      "addCount": "{count, plural, =0 {Add} one {הוספת # שירות} other {הוספת # שירותים}}",
+      "addCount": "{count, plural, =0 {הוספה} one {הוספת # שירות} other {הוספת # שירותים}}",
       "addedCount": "{count, plural, one {נוסף שירות #} other {נוספו # שירותים}}"
     },
     "modal": {
@@ -80,7 +80,7 @@
     },
     "review": {
       "title": "בדיקת המוצרים שחולצו",
-      "addCount": "{count, plural, =0 {Add} one {הוספת # מוצר} other {הוספת # מוצרים}}",
+      "addCount": "{count, plural, =0 {הוספה} one {הוספת # מוצר} other {הוספת # מוצרים}}",
       "addedCount": "{count, plural, one {נוסף מוצר #} other {נוספו # מוצרים}}"
     },
     "modal": {
@@ -140,7 +140,7 @@
     },
     "review": {
       "title": "בדיקת השאלות הנפוצות שחולצו",
-      "addCount": "{count, plural, =0 {Add} one {הוספת # שאלה נפוצה} other {הוספת # שאלות נפוצות}}",
+      "addCount": "{count, plural, =0 {הוספה} one {הוספת # שאלה נפוצה} other {הוספת # שאלות נפוצות}}",
       "addedCount": "{count, plural, one {נוספה שאלה נפוצה #} other {נוספו # שאלות נפוצות}}"
     },
     "modal": {
@@ -189,7 +189,7 @@
     },
     "review": {
       "title": "בדיקת המדיניות שחולצה",
-      "addCount": "{count, plural, =0 {Add} one {הוספת # פריט מדיניות} other {הוספת # פריטי מדיניות}}",
+      "addCount": "{count, plural, =0 {הוספה} one {הוספת # פריט מדיניות} other {הוספת # פריטי מדיניות}}",
       "addedCount": "{count, plural, one {נוסף פריט מדיניות #} other {נוספו # פריטי מדיניות}}"
     },
     "modal": {
@@ -282,48 +282,6 @@
       "saved": "המסמך נשמר",
       "savedResyncing": "המסמך נשמר — מתבצע סנכרון מחדש",
       "deleted": "המסמך נמחק"
-    }
-  },
-  "integrations": {
-    "title": "אינטגרציות",
-    "description": "חברו פלטפורמות חיצוניות שמזינות את מאגר הידע של סוכן ה-AI שלכם.",
-    "loadError": "לא ניתן לטעון את האינטגרציות",
-    "providerDescriptions": {
-      "realestateComAu": "קבלו מודעות נכסים להזנת סוכני ה-AI שלכם.",
-      "fallback": "מזינה את סוכן ה-AI שלכם במודעות ובנתונים ישירות מ-{name}."
-    },
-    "status": {
-      "notConnected": "לא מחובר",
-      "connecting": "בהתחברות",
-      "connectingHint": "הסנכרון הראשוני מסתיים — זה בדרך כלל לוקח כמה שניות.",
-      "error": "שגיאה",
-      "errorHint": "בדקו את ההגדרות תחת ניהול כדי לנסות שוב.",
-      "connected": "מחובר",
-      "lastSynced": "סונכרן לאחרונה {date}"
-    },
-    "actions": {
-      "manage": "ניהול",
-      "connect": "חיבור",
-      "disconnect": "ניתוק"
-    },
-    "disconnectDialog": {
-      "title": "לנתק את {name}?",
-      "description": "מודעות הנכסים שלו יוסרו ממאגר הידע של סוכן ה-AI והפידים שלו יפסיקו להתעדכן."
-    },
-    "dialog": {
-      "manageTitle": "ניהול {name}",
-      "connectTitle": "חיבור {name}",
-      "manageDescription": "שינויים מפעילים מחדש את הסנכרון מיד. מודעות מפידים שתבטלו את סימונם יוסרו ממאגר הידע של סוכן ה-AI.",
-      "connectDescription": "הזינו את מזהה הסוכנות ובחרו אילו פידים של מודעות נכסים ישמרו על סוכן ה-AI מעודכן.",
-      "agencyId": "מזהה סוכנות",
-      "agencyIdPlaceholder": "למשל XNWXYZ",
-      "agencyIdHint": "מזהה הסוכנות שלכם ב-realestate.com.au — מנהל הלקוח או מנהל המערכת של הסוכנות יכולים לספק אותו.",
-      "feeds": "פידים של מודעות נכסים",
-      "saveResync": "שמירה וסנכרון מחדש"
-    },
-    "toasts": {
-      "settingsSaved": "ההגדרות נשמרו — מתבצע סנכרון מחדש",
-      "connected": "{name} מחובר — מודעות הנכסים שלכם מסתנכרנות כעת"
     }
   }
 }

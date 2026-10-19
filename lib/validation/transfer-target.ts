@@ -5,7 +5,7 @@ import type {
   TransferTargetPayload,
 } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
+import { formatE164, normalizeIlPhone, optionalIlPhoneField } from "@/lib/phone";
 import {
   hourRowSchema,
   toApiHourRows,
@@ -28,7 +28,7 @@ export function transferTargetSchema(t: Translator) {
        * drives the required-number rule and the dynamic-follow override resolution. */
       member_phone: z.string(),
       // Loose AU shape gate; the backend's Phone rule stays the authority.
-      to_e164: optionalAuPhoneField(t),
+      to_e164: optionalIlPhoneField(t),
       condition: z
         .string()
         .min(1, t("transferTarget.conditionRequired"))
@@ -121,13 +121,13 @@ export function toTransferTargetValues(target: TransferTarget | null): TransferT
  */
 function resolveTransferNumber(values: TransferTargetValues, isMember: boolean): string | null {
   if (values.destination_kind === "other") {
-    return values.to_e164 === "" ? null : normalizeAuPhone(values.to_e164);
+    return values.to_e164 === "" ? null : normalizeIlPhone(values.to_e164);
   }
   if (!isMember || values.to_e164 === "") {
     return null;
   }
-  const normalized = normalizeAuPhone(values.to_e164);
-  return normalized === normalizeAuPhone(values.member_phone) ? null : normalized;
+  const normalized = normalizeIlPhone(values.to_e164);
+  return normalized === normalizeIlPhone(values.member_phone) ? null : normalized;
 }
 
 /** `mode` is injected on create only — a scope's targets share one mode. */
@@ -143,7 +143,7 @@ export function toTransferTargetPayload(
     // Both keys always sent, inactive side nulled — the backend update request
     // falls back to EXISTING values for absent keys, so omission keeps stale data.
     business_member_id: isMember ? values.business_member_id : null,
-    // Pre-stripped by the schema transform; canonicalized to +61 E.164 here.
+    // Pre-stripped by the schema transform; canonicalized to +972 E.164 here.
     to_e164: resolveTransferNumber(values, isMember),
     ...(mode ? { mode } : {}),
     condition: values.condition.trim(),

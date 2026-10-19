@@ -501,7 +501,7 @@ function PageFrame({
               onClick={() => logout.mutate()}
               disabled={logout.isPending}
             >
-              {logout.isPending ? <Spinner /> : <LogOutIcon />}
+              {logout.isPending ? <Spinner /> : <LogOutIcon className="rtl:-scale-x-100" />}
               {logout.isPending ? t("header.signingOut") : t("header.signOut")}
             </Button>
             <LanguagePicker />

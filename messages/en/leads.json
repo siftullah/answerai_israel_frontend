@@ -120,7 +120,7 @@
     "editDescription": "Update the details — status changes happen from the lead's actions.",
     "title": "Title",
     "titlePlaceholder": "What they're after, e.g. Kitchen rewire",
-    "valueHint": "Rough worth of the work, in dollars.",
+    "valueHint": "Rough worth of the work, in shekels.",
     "notesPlaceholder": "What they asked for, budget, timing… (optional)",
     "notesHint": "Starts the lead's activity timeline.",
     "submitAdd": "Add lead",

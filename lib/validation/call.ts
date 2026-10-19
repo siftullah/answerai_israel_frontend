@@ -1,7 +1,7 @@
 import { z } from "zod";
 import type { PhoneNumber, PlaceCallPayload } from "@/lib/api/types";
 import type { Translator } from "@/lib/i18n/types";
-import { auPhoneField, normalizeAuPhone } from "@/lib/phone";
+import { ilPhoneField, normalizeIlPhone } from "@/lib/phone";
 
 /**
  * Numbers a call can be placed from: platform (Twilio) voice numbers only —
@@ -15,15 +15,15 @@ export function callablePhoneNumbers(numbers: PhoneNumber[] | undefined): PhoneN
 }
 
 /**
- * Loose AU shape check only — the backend's Phone rule is the validation
+ * Loose IL shape check only — the backend's Phone rule is the validation
  * authority; its 422 lands on `to_number` via applyServerErrors. The payload
- * mapper canonicalizes to +61 E.164. `t` is scoped to the `validation` namespace.
+ * mapper canonicalizes to +972 E.164. `t` is scoped to the `validation` namespace.
  */
 export function placeCallSchema(t: Translator) {
   return z.object({
     agent_id: z.string().min(1, t("call.agentRequired")),
     from_phone_number_id: z.string().min(1, t("common.fromNumberRequired")),
-    to_number: auPhoneField(t, t("call.toNumberRequired")),
+    to_number: ilPhoneField(t, t("call.toNumberRequired")),
     /** Carried through when the call starts from a contact; never rendered. */
     contact_id: z.string().optional(),
     /**
@@ -62,7 +62,7 @@ export function toPlaceCallPayload(values: PlaceCallValues): PlaceCallPayload {
   return {
     agent_id: values.agent_id,
     from_phone_number_id: values.from_phone_number_id,
-    to_number: normalizeAuPhone(values.to_number),
+    to_number: normalizeIlPhone(values.to_number),
     ...(values.contact_id ? { contact_id: values.contact_id } : {}),
     ...(Object.keys(variables).length > 0 ? { dynamic_variables: variables } : {}),
   };

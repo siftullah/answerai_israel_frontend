@@ -109,7 +109,7 @@ export function NavUser() {
               onClick={() => logout.mutate()}
               disabled={logout.isPending}
             >
-              <LogOutIcon />
+              <LogOutIcon className="rtl:-scale-x-100" />
               {tc("actions.logOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>

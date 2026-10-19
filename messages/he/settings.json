@@ -31,7 +31,7 @@
       "lastName": "שם משפחה",
       "pendingEmail": "ממתין לאישור: <strong>{email}</strong> — בדקו את תיבת האימייל הזו כדי להשלים את השינוי.",
       "emailHint": "שינוי הכתובת ישלח קישור אישור לכתובת החדשה; כתובת האימייל הנוכחית תישאר פעילה עד שתאשרו.",
-      "phonePlaceholder": "0412 345 678",
+      "phonePlaceholder": "052-123-4567",
       "position": "תפקיד",
       "positionPlaceholder": "למשל, ניהול מרפאה",
       "discardChanges": "ביטול השינויים",
@@ -123,7 +123,7 @@
         "rulePlaceholders": {
           "first": "עבודות אינסטלציה נשלחות אל mick@example.com, עבודות חשמל אל dave@example.com",
           "second": "כל מה שמסומן כדחוף נשלח גם למשרד",
-          "third": "עבודות בפרברים הצפוניים נשלחות לצוות הצפון"
+          "third": "עבודות בחיפה ובצפון מועברות לצוות הצפון"
         }
       },
       "newQuoteRequest": {
@@ -234,8 +234,8 @@
       },
       "planChange": {
         "title": "שינוי המסלול מתוזמן",
-        "body": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בתאריך {date}. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>.",
-        "bodyNoDate": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {monthly} other {annual}}) בחידוש הבא. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>."
+        "body": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {חודשי} other {שנתי}}) בתאריך {date}. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>.",
+        "bodyNoDate": "המסלול שלכם ישתנה ל-{plan} ({interval, select, monthly {חודשי} other {שנתי}}) בחידוש הבא. כדי להישאר במסלול הנוכחי, בחרו בו שוב ב<link>עמוד המסלולים</link>."
       }
     },
     "cancelDialog": {
@@ -253,7 +253,7 @@
     },
     "currentPlan": {
       "fallbackTitle": "מנוי",
-      "priceLine": "{price}/{interval, select, monthly {month} other {year}} + מע\"מ · {interval, select, monthly {חיוב חודשי} other {חיוב שנתי}}",
+      "priceLine": "{price}/{interval, select, monthly {חודש} other {שנה}} + מע\"מ · {interval, select, monthly {חיוב חודשי} other {חיוב שנתי}}",
       "billingLine": "{interval, select, monthly {חיוב חודשי} other {חיוב שנתי}}",
       "ended": "הסתיים",
       "usagePeriod": "תקופת השימוש הנוכחית",

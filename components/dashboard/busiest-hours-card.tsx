@@ -11,23 +11,18 @@ import {
 } from "@/components/ui/chart";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
-import { displayLocale, runtimeLocale } from "@/lib/i18n/runtime";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { cn } from "@/lib/utils";
 import type { DashboardHourlyPoint } from "@/lib/api/types";
 
 /**
- * 0 → "12am", 13 → "1pm" in English (12-hour, like lib/datetime); Hebrew and
- * Arabic read "00:00" / "13:00". Compact — these are axis ticks.
+ * 0 → "12am", 13 → "1pm" (12-hour in every language, like lib/datetime).
+ * Compact — these are axis ticks.
  */
 function hourLabel(hour: number): string {
-  const en = runtimeLocale() === "en";
-  const label = new Date(Date.UTC(2000, 0, 1, hour)).toLocaleTimeString(
-    displayLocale(),
-    en
-      ? { timeZone: "UTC", hour: "numeric", hour12: true }
-      : { timeZone: "UTC", hour: "2-digit", minute: "2-digit", hour12: false }
-  );
-  return en ? label.replace(/\s/g, "") : label;
+  return new Date(Date.UTC(2000, 0, 1, hour))
+    .toLocaleTimeString(displayLocale(), { timeZone: "UTC", hour: "numeric", hour12: true })
+    .replace(/\s/g, "");
 }
 
 function hourRange(hour: number): string {

@@ -74,7 +74,7 @@
     "numberPlaceholder": "Choose a number",
     "noNumbers": "No callable numbers — SIP numbers are inbound-only, so buy a platform number first.",
     "numberToCall": "Number to call",
-    "numberToCallPlaceholder": "0412 345 678",
+    "numberToCallPlaceholder": "052-123-4567",
     "variablesHint": "This agent needs a value for each variable below. Anything prefilled came from the contact record or the variable's default, so check each one for this call."
   },
   "detail": {

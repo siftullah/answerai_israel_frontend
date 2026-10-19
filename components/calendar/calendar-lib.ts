@@ -1,7 +1,7 @@
 import type { ConnectedCalendarEvent, SystemCalendarItem } from "@/lib/api/types";
 import { dayKey, parseDateKey, zonedMinutesOfDay } from "@/lib/datetime";
 import { labelMap } from "@/lib/i18n/label-map";
-import { displayLocale, runtimeLocale } from "@/lib/i18n/runtime";
+import { displayLocale } from "@/lib/i18n/runtime";
 
 export type CalendarViewMode = "month" | "week" | "day";
 export type CalendarSource = "system" | "connected";
@@ -215,15 +215,12 @@ export function dayOfMonth(key: string): number {
 }
 
 /**
- * Hour ruler labels in the active locale's clock, matching formatTimeOfDay:
- * "9 am" / "12 pm" in English (12-hour), "9:00" / "14:00" in Hebrew and
- * Arabic (24-hour, where a bare hour number would read ambiguously).
+ * Hour ruler labels, 12-hour in every language like formatTimeOfDay:
+ * "9 am" / "12 pm", "9 PM", "9 م".
  */
 export function hourLabel(hour: number): string {
-  const twelveHour = runtimeLocale() === "en";
   return new Date(2000, 0, 1, hour).toLocaleTimeString(displayLocale(), {
     hour: "numeric",
-    minute: twelveHour ? undefined : "2-digit",
-    hour12: twelveHour,
+    hour12: true,
   });
 }

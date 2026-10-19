@@ -148,7 +148,7 @@
     "lineDescription": "وصف البند {line}",
     "lineType": "نوع البند {line}",
     "lineQuantity": "كمية البند {line}",
-    "lineUnitPrice": "سعر الوحدة للبند {line} بالدولار",
+    "lineUnitPrice": "سعر الوحدة للبند {line} بالشيكل",
     "lineTax": "يخضع البند {line} لضريبة {tax}",
     "removeLine": "إزالة البند {line}",
     "deposit": {
@@ -158,7 +158,7 @@
       "percentLabel": "نسبة الدفعة المقدمة",
       "amountLabel": "مبلغ الدفعة المقدمة",
       "percentHint": "نسبة مئوية صحيحة من إجمالي عرض السعر.",
-      "amountHint": "المبلغ المستحق بالدولار لبدء العمل.",
+      "amountHint": "المبلغ بالشيكل المستحق لبدء العمل.",
       "toCommence": "دفعة مقدمة لبدء العمل"
     },
     "notesPlaceholder": "تظهر للعميل في عرض السعر (اختياري)",

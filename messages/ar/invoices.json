@@ -120,11 +120,11 @@
     "lineDescription": "وصف البند {line}",
     "lineType": "نوع البند {line}",
     "lineQuantity": "كمية البند {line}",
-    "lineUnitPrice": "سعر الوحدة للبند {line} بالدولار",
+    "lineUnitPrice": "سعر الوحدة للبند {line} بالشيكل",
     "lineTax": "يخضع البند {line} لضريبة {tax}",
     "removeLine": "إزالة البند {line}",
     "notesPlaceholder": "تظهر في رسالة الفاتورة الإلكترونية (اختياري)",
-    "paymentInstructionsPlaceholder": "إيداع مباشر — BSB، رقم الحساب، المرجع…"
+    "paymentInstructionsPlaceholder": "تحويل بنكي — البنك، الفرع، رقم الحساب، المرجع…"
   },
   "sendDialog": {
     "title": "إرسال الفاتورة {number}",
