@@ -256,6 +256,19 @@
       "website": "Website",
       "websitePlaceholder": "https://yourbusiness.co.il"
     },
+    "languages": {
+      "title": "Customer languages",
+      "description": "What customers read in your emails and hear on your phone lines, whichever language each team member uses in the portal.",
+      "customer": {
+        "label": "Customer language",
+        "hint": "Used for customer-facing emails — appointment confirmations, quotes and invoices."
+      },
+      "caller": {
+        "label": "Phone line language",
+        "hint": "What callers hear from the system's own phone lines — connection failures, transfer messages and the suspension notice."
+      },
+      "readOnly": "Only owners and admins can change these."
+    },
     "about": {
       "title": "About the business",
       "description": "What your AI says when callers ask what the business does.",

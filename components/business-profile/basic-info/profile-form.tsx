@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, type Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SparklesIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -29,10 +29,17 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { AddressSearchField } from "@/components/business-profile/basic-info/address-search-field";
 import { CategoriesField } from "@/components/business-profile/basic-info/categories-field";
+import { useBusiness } from "@/components/business/business-provider";
 import { useUpdateBusinessProfile } from "@/hooks/use-business-profile";
+import { localeNames } from "@/i18n/config";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
-import type { BasicInfoDraft, BusinessProfile, SocialKey } from "@/lib/api/types";
-import { SOCIAL_KEYS } from "@/lib/api/types";
+import type {
+  BasicInfoDraft,
+  BusinessProfile,
+  CustomerLocale,
+  SocialKey,
+} from "@/lib/api/types";
+import { CUSTOMER_LOCALES, SOCIAL_KEYS } from "@/lib/api/types";
 import {
   businessProfileSchema,
   toBusinessProfileValues,
@@ -53,6 +60,68 @@ const SOCIAL_LABELS: Record<SocialKey, { label: string; placeholder: string }> =
   x: { label: "X", placeholder: "https://x.com/yourbusiness" },
 };
 
+// Each language in its own script, as the UI picker shows them. Russian is
+// not a portal language yet, so the registry has no name for it.
+const CUSTOMER_LOCALE_NAMES: Record<CustomerLocale, string> = {
+  ...localeNames,
+  ru: "Русский",
+};
+
+const LOCALE_ITEMS = CUSTOMER_LOCALES.map((value) => ({
+  value,
+  label: CUSTOMER_LOCALE_NAMES[value],
+}));
+
+/** One of the customer-language selects — the two fields differ only in copy. */
+function LocaleSelectField({
+  control,
+  name,
+  label,
+  hint,
+  disabled,
+  error,
+}: {
+  control: Control<BusinessProfileValues>;
+  name: "customer_locale" | "caller_locale";
+  label: string;
+  hint: string;
+  disabled: boolean;
+  error: string | undefined;
+}) {
+  return (
+    <Field data-invalid={!!error || undefined}>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          // Base UI's SelectValue renders the raw value unless the root
+          // knows the item labels.
+          <Select
+            items={LOCALE_ITEMS}
+            value={field.value}
+            onValueChange={(value) => field.onChange(value as CustomerLocale)}
+            disabled={disabled}
+          >
+            <SelectTrigger id={name} className="w-full" aria-invalid={!!error}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {LOCALE_ITEMS.map((item) => (
+                <SelectItem key={item.value} value={item.value} lang={item.value}>
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      />
+      <FieldDescription>{hint}</FieldDescription>
+      {error && <FieldError>{error}</FieldError>}
+    </Field>
+  );
+}
+
 export function ProfileForm({
   businessUuid,
   profile,
@@ -69,6 +138,12 @@ export function ProfileForm({
   const ts = useTranslations("businessProfile.shared");
   const tc = useTranslations("common");
   const update = useUpdateBusinessProfile(businessUuid);
+  const { membership } = useBusiness();
+
+  // The API accepts the language fields from owners and admins only (403
+  // otherwise), so members get the controls read-only instead of a failed save.
+  const canSetLocales =
+    membership.role.slug === "owner" || membership.role.slug === "admin";
 
   const countries = [{ value: "IL", label: t("countries.IL") }];
 
@@ -206,6 +281,36 @@ export function ProfileForm({
             />
             {errors.website && <FieldError>{errors.website.message}</FieldError>}
           </Field>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#30aece]">{t("languages.title")}</CardTitle>
+          <CardDescription>{t("languages.description")}</CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col gap-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <LocaleSelectField
+              control={form.control}
+              name="customer_locale"
+              label={t("languages.customer.label")}
+              hint={t("languages.customer.hint")}
+              disabled={!canSetLocales}
+              error={errors.customer_locale?.message}
+            />
+            <LocaleSelectField
+              control={form.control}
+              name="caller_locale"
+              label={t("languages.caller.label")}
+              hint={t("languages.caller.hint")}
+              disabled={!canSetLocales}
+              error={errors.caller_locale?.message}
+            />
+          </div>
+          {!canSetLocales && (
+            <p className="text-sm text-muted-foreground">{t("languages.readOnly")}</p>
+          )}
         </CardContent>
       </Card>
 

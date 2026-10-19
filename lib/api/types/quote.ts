@@ -1,6 +1,7 @@
 /** Mirrors app/Http/Resources/QuoteResource.php */
 
 import { labelMap } from "@/lib/i18n/label-map";
+import type { CustomerLocale } from "./business-profile";
 import type { LineItemKind } from "./invoice";
 
 export const QUOTE_STATUSES = [
@@ -195,6 +196,12 @@ export interface PublicQuote {
   accepted_at: string | null;
   declined_at: string | null;
   items: QuoteItem[];
+  /**
+   * The business's customer language (BusinessProfile.customer_locale) — the
+   * emailed link carries it as ?lang=, which proxy.ts turns into the UI
+   * locale. Absent until the API ships it; not read by the page yet.
+   */
+  locale?: CustomerLocale;
   contact: { name: string };
   business: {
     name: string;
