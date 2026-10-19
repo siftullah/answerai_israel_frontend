@@ -28,6 +28,7 @@
     "ringing": "Ringing",
     "inProgress": "In progress",
     "completed": "Completed",
+    "voicemail": "Voicemail",
     "busy": "Busy",
     "noAnswer": "No answer",
     "failed": "Failed",

@@ -4,12 +4,30 @@ export const CALL_STATUSES = [
   "ringing",
   "in_progress",
   "completed",
+  "voicemail",
   "busy",
   "no_answer",
   "failed",
   "canceled",
 ] as const;
 export type CallStatus = (typeof CALL_STATUSES)[number];
+
+/** Why a call ended — the backend's CallEndReason codes, which the portal
+ * translates itself. `other` means only the provider's raw wording exists. */
+export const CALL_END_REASONS = [
+  "voicemail",
+  "ended_by_agent",
+  "ended_by_caller",
+  "transferred",
+  "no_answer",
+  "busy",
+  "canceled",
+  "completed",
+  "time_limit",
+  "failed",
+  "other",
+] as const;
+export type CallEndReason = (typeof CALL_END_REASONS)[number];
 
 /** Pre-terminal statuses the outbound list keeps polling for (outbound-only:
  * inbound rows are created post-call and land terminal). */
@@ -102,6 +120,10 @@ export interface Call {
   started_at: string | null;
   ended_at: string | null;
   duration_seconds: number | null;
+  /** Stable code to translate; null when nothing was recorded. */
+  end_reason_code: CallEndReason | null;
+  /** English wording — only meaningful for `other`, where the provider's own
+   * text is all there is. */
   end_reason: string | null;
   transfer: CallTransfer | null;
   call_successful: CallOutcome | null;

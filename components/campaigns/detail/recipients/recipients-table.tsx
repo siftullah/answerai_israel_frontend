@@ -91,14 +91,13 @@ export function RecipientsTable({
   const t = useTranslations("campaigns");
   const tc = useTranslations("common");
   const callStatusLabels = useCallStatusLabels();
-  // last_outcome is the final call status (or voicemail), not display text.
+  // last_outcome is the final call status (completed, voicemail, busy, …), not display text.
   const outcomeLabel = (outcome: string | null) => {
     if (!outcome) return null;
     if (Object.hasOwn(callStatusLabels, outcome)) {
       return callStatusLabels[outcome as keyof typeof callStatusLabels];
     }
-    if (outcome === "voicemail") return t("recipients.table.voicemailOutcome");
-    return formatEndReason(outcome);
+    return formatEndReason(outcome, outcome);
   };
   // A campaign built from the contact book carries no variables — keep its table lean.
   const showVariables = recipients.some((recipient) => recipientVariables(recipient).length > 0);

@@ -49,6 +49,7 @@ const OUTBOUND_STATUSES: readonly CallStatus[] = [
   "ringing",
   "in_progress",
   "completed",
+  "voicemail",
   "busy",
   "no_answer",
   "failed",

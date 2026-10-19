@@ -25,15 +25,16 @@
     "line": "VAT ({rate}%)"
   },
   "endReason": {
-    "customer_ended_call": "Caller hung up",
-    "agent_ended_call": "Agent ended the call",
+    "voicemail": "Went to voicemail",
+    "ended_by_agent": "Agent ended the call",
+    "ended_by_caller": "Caller hung up",
     "transferred": "Transferred",
-    "no_conversation": "No conversation",
     "no_answer": "No answer",
     "busy": "Busy",
-    "canceled": "Cancelled",
-    "failed": "Failed",
-    "unknown": "Unknown"
+    "canceled": "Canceled",
+    "completed": "Call ended",
+    "time_limit": "Reached the time limit",
+    "failed": "Failed"
   },
   "modules": {
     "appointments": {

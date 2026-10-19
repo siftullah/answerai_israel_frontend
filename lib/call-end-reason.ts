@@ -1,33 +1,36 @@
 /**
- * end_reason is free-form: ElevenLabs termination_reason (truncated to 40
- * chars), a Twilio status, or a pipeline stamp. Known values get proper
- * labels; anything else falls back to a snake_case humanizer — never throws.
+ * Why a call ended. The backend folds the provider's raw reason (an ElevenLabs
+ * termination_reason, a Twilio status, a pipeline stamp) onto a stable
+ * `end_reason_code` that is translated here; `end_reason` is English wording
+ * that only matters for `other`, where the provider's own text is all there is.
+ * Never throws: an unknown code falls back to the humanized text.
  */
+import type { CallEndReason } from "@/lib/api/types";
 import { labelMap } from "@/lib/i18n/label-map";
 
-const END_REASON_LABELS: Record<string, string> = labelMap("lib.endReason", [
-  "customer_ended_call",
-  "agent_ended_call",
+type CodedEndReason = Exclude<CallEndReason, "other">;
+
+const END_REASON_LABELS: Record<CodedEndReason, string> = labelMap("lib.endReason", [
+  "voicemail",
+  "ended_by_agent",
+  "ended_by_caller",
   "transferred",
-  "no_conversation",
   "no_answer",
   "busy",
   "canceled",
+  "completed",
+  "time_limit",
   "failed",
-  "unknown",
-]);
+] satisfies readonly CodedEndReason[]);
 
-/** Values that share another reason's label. */
-const END_REASON_ALIASES: Record<string, string> = {
-  transfer_completed: "transferred",
-  transfer_bridged: "transferred",
-  transfer: "transferred",
-};
-
-export function formatEndReason(reason: string | null): string | null {
-  if (reason === null || reason === "") return null;
-  const key = Object.hasOwn(END_REASON_ALIASES, reason) ? END_REASON_ALIASES[reason] : reason;
-  if (Object.hasOwn(END_REASON_LABELS, key)) return END_REASON_LABELS[key];
+export function formatEndReason(
+  code: string | null | undefined,
+  reason: string | null | undefined
+): string | null {
+  if (code && Object.hasOwn(END_REASON_LABELS, code)) {
+    return END_REASON_LABELS[code as CodedEndReason];
+  }
+  if (!reason) return null;
   const spaced = reason.replace(/[_-]+/g, " ").trim();
-  return spaced.charAt(0).toUpperCase() + spaced.slice(1);
+  return spaced ? spaced.charAt(0).toUpperCase() + spaced.slice(1) : null;
 }

@@ -170,6 +170,7 @@
       "ringing": "جارٍ الرنين",
       "in_progress": "قيد التنفيذ",
       "completed": "مكتمل",
+      "voicemail": "البريد الصوتي",
       "busy": "مشغول",
       "no_answer": "لا رد",
       "failed": "فشل",
@@ -243,8 +244,7 @@
       "unnamedContact": "جهة اتصال بلا اسم",
       "attemptsOf": "{attempts} من {max}",
       "company": "الشركة",
-      "address": "العنوان",
-      "voicemailOutcome": "البريد الصوتي"
+      "address": "العنوان"
     },
     "retryDialog": {
       "titleSingle": "إعادة محاولة الاتصال بـ {phone}؟",
