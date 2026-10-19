@@ -14082,5 +14082,33 @@
   "businessProfile.profileForm.customerLanguage.readOnly": {
     "en": "Only owners and admins can change this.",
     "t": "רק בעלים ומנהלי מערכת יכולים לשנות זאת."
+  },
+  "businessProfile.profileForm.languages.title": {
+    "en": "Customer languages",
+    "t": "שפות ללקוחות"
+  },
+  "businessProfile.profileForm.languages.description": {
+    "en": "What customers read in your emails and hear on your phone lines, whichever language each team member uses in the portal.",
+    "t": "השפות שבהן לקוחות קוראים את האימיילים שלכם ושומעים הודעות בקווי הטלפון שלכם, ללא תלות בשפה שבה כל חבר צוות משתמש בפורטל."
+  },
+  "businessProfile.profileForm.languages.customer.label": {
+    "en": "Customer language",
+    "t": "שפה ללקוחות"
+  },
+  "businessProfile.profileForm.languages.customer.hint": {
+    "en": "Used for customer-facing emails — appointment confirmations, quotes and invoices.",
+    "t": "משמשת לאימיילים ללקוחות — אישורי פגישות, הצעות מחיר וחשבוניות."
+  },
+  "businessProfile.profileForm.languages.caller.label": {
+    "en": "Phone line language",
+    "t": "שפת קו הטלפון"
+  },
+  "businessProfile.profileForm.languages.caller.hint": {
+    "en": "What callers hear from the system's own phone lines — connection failures, transfer messages and the suspension notice.",
+    "t": "מה שמתקשרים שומעים בקווי הטלפון של המערכת עצמה — כשלים בחיבור, הודעות על העברת שיחות והודעת ההשעיה."
+  },
+  "businessProfile.profileForm.languages.readOnly": {
+    "en": "Only owners and admins can change these.",
+    "t": "רק בעלים ומנהלי מערכת יכולים לשנות הגדרות אלה."
   }
 }

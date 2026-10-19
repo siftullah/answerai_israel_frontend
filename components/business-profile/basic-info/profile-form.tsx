@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo } from "react";
 import { useTranslations } from "next-intl";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, type Control } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SparklesIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -67,6 +67,61 @@ const CUSTOMER_LOCALE_NAMES: Record<CustomerLocale, string> = {
   ru: "Русский",
 };
 
+const LOCALE_ITEMS = CUSTOMER_LOCALES.map((value) => ({
+  value,
+  label: CUSTOMER_LOCALE_NAMES[value],
+}));
+
+/** One of the customer-language selects — the two fields differ only in copy. */
+function LocaleSelectField({
+  control,
+  name,
+  label,
+  hint,
+  disabled,
+  error,
+}: {
+  control: Control<BusinessProfileValues>;
+  name: "customer_locale" | "caller_locale";
+  label: string;
+  hint: string;
+  disabled: boolean;
+  error: string | undefined;
+}) {
+  return (
+    <Field data-invalid={!!error || undefined}>
+      <FieldLabel htmlFor={name}>{label}</FieldLabel>
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          // Base UI's SelectValue renders the raw value unless the root
+          // knows the item labels.
+          <Select
+            items={LOCALE_ITEMS}
+            value={field.value}
+            onValueChange={(value) => field.onChange(value as CustomerLocale)}
+            disabled={disabled}
+          >
+            <SelectTrigger id={name} className="w-full" aria-invalid={!!error}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {LOCALE_ITEMS.map((item) => (
+                <SelectItem key={item.value} value={item.value} lang={item.value}>
+                  {item.label}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        )}
+      />
+      <FieldDescription>{hint}</FieldDescription>
+      {error && <FieldError>{error}</FieldError>}
+    </Field>
+  );
+}
+
 export function ProfileForm({
   businessUuid,
   profile,
@@ -85,14 +140,10 @@ export function ProfileForm({
   const update = useUpdateBusinessProfile(businessUuid);
   const { membership } = useBusiness();
 
-  // The API accepts customer_locale from owners and admins only (403
-  // otherwise), so members get the control read-only instead of a failed save.
-  const canSetCustomerLocale =
+  // The API accepts the language fields from owners and admins only (403
+  // otherwise), so members get the controls read-only instead of a failed save.
+  const canSetLocales =
     membership.role.slug === "owner" || membership.role.slug === "admin";
-  const customerLocaleItems = CUSTOMER_LOCALES.map((value) => ({
-    value,
-    label: CUSTOMER_LOCALE_NAMES[value],
-  }));
 
   const countries = [{ value: "IL", label: t("countries.IL") }];
 
@@ -235,49 +286,31 @@ export function ProfileForm({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">{t("customerLanguage.title")}</CardTitle>
-          <CardDescription>{t("customerLanguage.description")}</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("languages.title")}</CardTitle>
+          <CardDescription>{t("languages.description")}</CardDescription>
         </CardHeader>
-        <CardContent>
-          <Field className="sm:max-w-xs" data-invalid={!!errors.customer_locale || undefined}>
-            <FieldLabel htmlFor="customer_locale">{t("customerLanguage.label")}</FieldLabel>
-            <Controller
+        <CardContent className="flex flex-col gap-5">
+          <div className="grid gap-5 sm:grid-cols-2">
+            <LocaleSelectField
               control={form.control}
               name="customer_locale"
-              render={({ field }) => (
-                // Base UI's SelectValue renders the raw value unless the root
-                // knows the item labels.
-                <Select
-                  items={customerLocaleItems}
-                  value={field.value}
-                  onValueChange={(value) => field.onChange(value as CustomerLocale)}
-                  disabled={!canSetCustomerLocale}
-                >
-                  <SelectTrigger
-                    id="customer_locale"
-                    className="w-full"
-                    aria-invalid={!!errors.customer_locale}
-                  >
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {customerLocaleItems.map((item) => (
-                      <SelectItem key={item.value} value={item.value} lang={item.value}>
-                        {item.label}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              )}
+              label={t("languages.customer.label")}
+              hint={t("languages.customer.hint")}
+              disabled={!canSetLocales}
+              error={errors.customer_locale?.message}
             />
-            <FieldDescription>{t("customerLanguage.hint")}</FieldDescription>
-            {!canSetCustomerLocale && (
-              <FieldDescription>{t("customerLanguage.readOnly")}</FieldDescription>
-            )}
-            {errors.customer_locale && (
-              <FieldError>{errors.customer_locale.message}</FieldError>
-            )}
-          </Field>
+            <LocaleSelectField
+              control={form.control}
+              name="caller_locale"
+              label={t("languages.caller.label")}
+              hint={t("languages.caller.hint")}
+              disabled={!canSetLocales}
+              error={errors.caller_locale?.message}
+            />
+          </div>
+          {!canSetLocales && (
+            <p className="text-sm text-muted-foreground">{t("languages.readOnly")}</p>
+          )}
         </CardContent>
       </Card>
 

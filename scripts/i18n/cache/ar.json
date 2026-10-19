@@ -14082,5 +14082,33 @@
   "businessProfile.profileForm.customerLanguage.readOnly": {
     "en": "Only owners and admins can change this.",
     "t": "يمكن للمالكين والمشرفين فقط تغيير هذا الإعداد."
+  },
+  "businessProfile.profileForm.languages.title": {
+    "en": "Customer languages",
+    "t": "لغات العملاء"
+  },
+  "businessProfile.profileForm.languages.description": {
+    "en": "What customers read in your emails and hear on your phone lines, whichever language each team member uses in the portal.",
+    "t": "ما يقرؤه العملاء في رسائلك الإلكترونية ويسمعونه على خطوط هاتفك، بغض النظر عن اللغة التي يستخدمها كل عضو في الفريق في البوابة."
+  },
+  "businessProfile.profileForm.languages.customer.label": {
+    "en": "Customer language",
+    "t": "لغة العملاء"
+  },
+  "businessProfile.profileForm.languages.customer.hint": {
+    "en": "Used for customer-facing emails — appointment confirmations, quotes and invoices.",
+    "t": "تُستخدم في رسائل البريد الإلكتروني الموجّهة للعملاء — تأكيدات المواعيد وعروض الأسعار والفواتير."
+  },
+  "businessProfile.profileForm.languages.caller.label": {
+    "en": "Phone line language",
+    "t": "لغة خط الهاتف"
+  },
+  "businessProfile.profileForm.languages.caller.hint": {
+    "en": "What callers hear from the system's own phone lines — connection failures, transfer messages and the suspension notice.",
+    "t": "ما يسمعه المتصلون على خطوط الهاتف الخاصة بالنظام — تعذّر الاتصال ورسائل تحويل المكالمات وإشعار التعليق."
+  },
+  "businessProfile.profileForm.languages.readOnly": {
+    "en": "Only owners and admins can change these.",
+    "t": "يمكن للمالكين والمشرفين فقط تغيير هذه الإعدادات."
   }
 }

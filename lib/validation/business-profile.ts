@@ -59,8 +59,9 @@ export function businessProfileSchema(t: Translator) {
         t("businessProfile.travelRadiusRange", { min: 1, max: 1000 })
       ),
     // Always set in the form (the default fills in while the API omits the
-    // field), so it only reaches the payload once the user changes it.
+    // fields), so they only reach the payload once the user changes them.
     customer_locale: z.enum(CUSTOMER_LOCALES),
+    caller_locale: z.enum(CUSTOMER_LOCALES),
   });
 }
 
@@ -87,6 +88,7 @@ export function toBusinessProfileValues(profile: BusinessProfile): BusinessProfi
     base_location: profile.base_location ?? "",
     travel_radius_km: profile.travel_radius_km?.toString() ?? "",
     customer_locale: profile.customer_locale ?? DEFAULT_CUSTOMER_LOCALE,
+    caller_locale: profile.caller_locale ?? DEFAULT_CUSTOMER_LOCALE,
   };
 }
 
@@ -141,6 +143,7 @@ export function toUpdatePayload(
       values.travel_radius_km === "" ? null : Number(values.travel_radius_km);
   }
   if (dirty.customer_locale) payload.customer_locale = values.customer_locale;
+  if (dirty.caller_locale) payload.caller_locale = values.caller_locale;
 
   return payload;
 }
