@@ -308,7 +308,8 @@
     color-mix(in oklab, var(--input) 30%, var(--background)) inset;
   border-radius: calc(var(--radius) * 2.6);
 }
-/* Hebrew and Arabic have no glyphs in Geist/Roboto: switch the sans and
+/* Hebrew and Arabic have no glyphs in Geist/Roboto (Russian is fine: both load
+   the cyrillic subset in app/layout.tsx): switch the sans and
    heading stacks to Rubik (Latin + Hebrew + Arabic) so body copy and headings
    match in those locales. The variable comes from next/font in app/layout. */
 :root:lang(he),

@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "Панель управления"
+  },
+  "header": {
+    "welcome": "С возвращением",
+    "welcomeName": "С возвращением, {name}"
+  },
+  "hours": {
+    "openUntil": "Открыто · закрытие в {time}",
+    "openNow": "Сейчас открыто",
+    "closedUntil": "Закрыто · открытие в {time}",
+    "closedToday": "Сегодня закрыто"
+  },
+  "health": {
+    "agentsTitle": "{count, plural, one {# ИИ-агент не синхронизируется} few {# ИИ-агента не синхронизируются} many {# ИИ-агентов не синхронизируются} other {# ИИ-агента не синхронизируются}}",
+    "agentsDescription": "На звонки может отвечать устаревшая версия. <link>Проверить ИИ-агентов</link>",
+    "numbersTitle": "{count, plural, one {# номер телефона требует внимания} few {# номера телефона требуют внимания} many {# номеров телефонов требуют внимания} other {# номера телефона требуют внимания}}",
+    "numbersDescription": "Сбой подключения — дозвониться на номер невозможно. <link>Исправить номера телефонов</link>",
+    "calendarTitle": "Сбой подключения к календарю",
+    "calendarDescription": "Новые встречи не синхронизируются с внешним календарём. <link>Подключить заново</link>"
+  },
+  "loadError": "Не удалось загрузить сводку",
+  "activity": {
+    "callsToday": "Звонки сегодня",
+    "directionSplit": "{inbound} входящих · {outbound} исходящих",
+    "noCallsToday": "Сегодня звонков пока нет",
+    "answeredByAi": "Принято ИИ",
+    "transferred": "Передано вашей команде: {count}",
+    "handledEndToEnd": "Обработано полностью",
+    "missed": "Пропущено",
+    "missedDetail": "Занято, сбой или нет ответа",
+    "nothingMissed": "Ни одного пропущенного",
+    "minutesThisMonth": "Минуты за этот месяц",
+    "avgPerCall": "В среднем {duration} на звонок",
+    "noTalkTime": "Разговоров пока не было"
+  },
+  "callVolume": {
+    "title": "Количество звонков",
+    "total": "{count, plural, one {# звонок} few {# звонка} many {# звонков} other {# звонка}} за последние 14 дней",
+    "period": "Последние 14 дней",
+    "vsPriorWeek": "по сравнению с прошлой неделей",
+    "emptyTitle": "Звонков пока нет",
+    "emptyDescription": "Когда ИИ начнёт отвечать, здесь появится количество звонков по дням.",
+    "inbound": "Входящие",
+    "outbound": "Исходящие"
+  },
+  "needsAttention": {
+    "title": "Требует внимания",
+    "description": "Где нужно участие человека",
+    "allClear": "Всё в порядке",
+    "allClearDescription": "Сейчас ничто не требует вашего внимания.",
+    "callbacksOverdue": "{count, plural, one {<num>#</num> просроченный обратный звонок} few {<num>#</num> просроченных обратных звонка} many {<num>#</num> просроченных обратных звонков} other {<num>#</num> просроченных обратных звонка}}",
+    "invoicesOverdue": "{count, plural, one {<num>#</num> просроченный счёт · {amount}} few {<num>#</num> просроченных счёта · {amount}} many {<num>#</num> просроченных счетов · {amount}} other {<num>#</num> просроченных счёта · {amount}}}",
+    "jobsHighPriority": "{count, plural, one {<num>#</num> открытый заказ с высоким приоритетом} few {<num>#</num> открытых заказа с высоким приоритетом} many {<num>#</num> открытых заказов с высоким приоритетом} other {<num>#</num> открытых заказа с высоким приоритетом}}",
+    "appointmentsToReview": "{count, plural, one {<num>#</num> встреча для проверки} few {<num>#</num> встречи для проверки} many {<num>#</num> встреч для проверки} other {<num>#</num> встречи для проверки}}",
+    "quotesExpiring": "{count, plural, one {<num>#</num> коммерческое предложение — срок скоро истекает} few {<num>#</num> коммерческих предложения — срок скоро истекает} many {<num>#</num> коммерческих предложений — срок скоро истекает} other {<num>#</num> коммерческого предложения — срок скоро истекает}}",
+    "leadsNew": "{count, plural, one {<num>#</num> новый лид для обработки} few {<num>#</num> новых лида для обработки} many {<num>#</num> новых лидов для обработки} other {<num>#</num> новых лида для обработки}}",
+    "callbacksDueToday": "{count, plural, one {<num>#</num> обратный звонок на сегодня} few {<num>#</num> обратных звонка на сегодня} many {<num>#</num> обратных звонков на сегодня} other {<num>#</num> обратных звонка на сегодня}}"
+  },
+  "answerRate": {
+    "title": "Доля принятых звонков",
+    "period": "Последние 7 дней",
+    "emptyTitle": "На этой неделе звонков нет",
+    "emptyDescription": "Индикатор заполнится, когда начнут поступать звонки.",
+    "seriesAnswered": "Принято",
+    "gaugeCaption": "принято",
+    "summary": "Принято {answered} из {total, plural, one {# звонка} few {# звонков} many {# звонков} other {# звонка}}",
+    "delta": "{sign}{points, plural, one {# п. п.} few {# п. п.} many {# п. п.} other {# п. п.}} к предыдущей неделе"
+  },
+  "busiestHours": {
+    "title": "Часы пик",
+    "peak": "Пик примерно в {range} · за последние 14 дней",
+    "period": "Последние 14 дней",
+    "emptyTitle": "Звонков пока нет",
+    "emptyDescription": "Когда начнут поступать звонки, вы увидите часы наибольшей нагрузки.",
+    "seriesCalls": "Звонки"
+  },
+  "today": {
+    "title": "Сегодня",
+    "description": "Встречи, заказы и обратные звонки",
+    "openCalendar": "Открыть календарь",
+    "emptyTitle": "Ничего не запланировано",
+    "emptyDescription": "Записи, которые ИИ-агент создаёт во время звонков, появляются здесь автоматически.",
+    "kinds": {
+      "appointment": "Встреча",
+      "callback": "Обратный звонок",
+      "job": "Заказ"
+    }
+  },
+  "recentCalls": {
+    "title": "Последние звонки",
+    "description": "Что обрабатывал ваш ИИ-агент",
+    "emptyTitle": "Звонков пока нет",
+    "emptyDescription": "Здесь появятся звонки, которые ваш ИИ-агент принимает или совершает.",
+    "noSummary": "Нет краткого содержания"
+  },
+  "captured": {
+    "title": "Создано вашим ИИ-агентом",
+    "period": "За этот месяц по итогам звонков",
+    "footer": "Создано автоматически — без ручного ввода.",
+    "items": {
+      "leads": "Лиды",
+      "appointments": "Встречи",
+      "quotes": "Запросы коммерческих предложений",
+      "jobs": "Заказы",
+      "callbacks": "Обратные звонки"
+    }
+  },
+  "snapshots": {
+    "leads": {
+      "title": "Лиды",
+      "moneyLabel": "Сумма открытых лидов",
+      "open": "Открытые: {count}",
+      "new": "Новые: {count}"
+    },
+    "quotes": {
+      "title": "Коммерческие предложения",
+      "moneyLabel": "Ожидают ответа",
+      "awaiting": "Ожидают ответа: {count}",
+      "expiringSoon": "Срок скоро истекает: {count}"
+    },
+    "jobs": {
+      "title": "Заказы",
+      "moneyLabel": "Сумма активных заказов",
+      "active": "Активные: {count}",
+      "today": "Сегодня: {count}"
+    },
+    "invoices": {
+      "title": "Счета",
+      "moneyLabel": "Не оплачено",
+      "awaitingPayment": "Ожидают оплаты: {count}",
+      "overdue": "Просрочено: {count}"
+    }
+  }
+}

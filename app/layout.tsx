@@ -7,13 +7,15 @@ import { dirFor, type Locale } from "@/i18n/config";
 import { cn } from "@/lib/utils";
 import { Providers } from "./providers";
 
-const robotoHeading = Roboto({ subsets: ["latin"], variable: "--font-heading" });
+// Russian renders in the same stacks as English: Geist, Geist Mono and Roboto
+// all ship a cyrillic subset on Google Fonts.
+const robotoHeading = Roboto({ subsets: ["latin", "cyrillic"], variable: "--font-heading" });
 
-const geistSans = Geist({ subsets: ["latin"], variable: "--font-sans" });
+const geistSans = Geist({ subsets: ["latin", "cyrillic"], variable: "--font-sans" });
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
-  subsets: ["latin"],
+  subsets: ["latin", "cyrillic"],
 });
 
 // Geist/Roboto carry no Hebrew or Arabic glyphs; globals.css swaps the sans

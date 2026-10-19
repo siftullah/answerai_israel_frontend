@@ -1,0 +1,194 @@
+{
+  "common": {
+    "nameRequired": "Укажите имя",
+    "firstNameRequired": "Укажите имя",
+    "lastNameRequired": "Укажите фамилию",
+    "businessNameRequired": "Укажите название компании",
+    "emailInvalid": "Введите корректный адрес эл. почты",
+    "urlInvalid": "Введите полный URL, включая https://",
+    "contactRequired": "Выберите контакт",
+    "dateRequired": "Выберите дату",
+    "timeRequired": "Выберите время",
+    "fromNumberRequired": "Выберите номер для исходящего звонка",
+    "issueDateFirst": "Сначала укажите дату выставления или оставьте обе даты пустыми для заполнения при отправке"
+  },
+  "phone": {
+    "required": "Введите номер телефона",
+    "invalid": "Введите израильский номер телефона, например 052-123-4567"
+  },
+  "length": {
+    "name": "Длина имени — менее {max, number} символов",
+    "firstName": "Длина имени — менее {max, number} символов",
+    "lastName": "Длина фамилии — менее {max, number} символов",
+    "position": "Длина должности — менее {max, number} символов",
+    "company": "Длина названия компании — менее {max, number} символов",
+    "label": "Длина метки — менее {max, number} символов",
+    "title": "Длина заголовка — менее {max, number} символов",
+    "description": "Длина описания — менее {max, number} символов",
+    "notes": "Длина заметок — менее {max, number} символов",
+    "internalNotes": "Длина внутренних заметок — менее {max, number} символов",
+    "topic": "Длина темы — менее {max, number} символов",
+    "reason": "Длина причины — менее {max, number} символов",
+    "content": "Длина содержимого — менее {max, number} символов",
+    "question": "Длина вопроса — менее {max, number} символов",
+    "answer": "Длина ответа — менее {max, number} символов",
+    "message": "Длина сообщения — менее {max, number} символов",
+    "firstMessage": "Длина первого сообщения — менее {max, number} символов",
+    "prompt": "Длина инструкций агента — менее {max, number} символов",
+    "terms": "Длина условий — менее {max, number} символов",
+    "paymentInstructions": "Длина инструкций по оплате — менее {max, number} символов",
+    "url": "Длина URL — менее {max, number} символов",
+    "address": "Длина адреса — менее {max, number} символов",
+    "street": "Длина названия улицы — менее {max, number} символов",
+    "suburb": "Длина названия города — менее {max, number} символов",
+    "state": "Длина названия региона — менее {max, number} символов",
+    "postcode": "Длина почтового индекса — менее {max, number} символов",
+    "landmark": "Длина описания ориентира — менее {max, number} символов",
+    "baseLocation": "Длина основного местоположения — менее {max, number} символов",
+    "generic": "Длина — менее {max, number} символов",
+    "rule": "Длина каждого правила — менее {max, number} символов",
+    "category": "Длина каждой категории — не более {max, number} символов",
+    "useFewer": "Используйте не более {max, number} символов"
+  },
+  "count": {
+    "variables": "Максимум {max, plural, one {# переменная} few {# переменные} many {# переменных} other {# переменные}}",
+    "categories": "Максимум {max, plural, one {# категория} few {# категории} many {# категорий} other {# категории}}",
+    "phoneNumbers": "Максимум {max, plural, one {# номер телефона} few {# номера телефона} many {# номеров телефонов} other {# номера телефона}}",
+    "emails": "Максимум {max, plural, one {# адрес эл. почты} few {# адреса эл. почты} many {# адресов эл. почты} other {# адреса эл. почты}}",
+    "tags": "Максимум {max, plural, one {# тег} few {# тега} many {# тегов} other {# тега}}",
+    "rules": "Не более {max, plural, one {# правила} few {# правил} many {# правил} other {# правила}}",
+    "recipients": "Всего не более {max, plural, one {# получателя} few {# получателей} many {# получателей} other {# получателя}}"
+  },
+  "range": {
+    "minutes": "От {min, number} до {max, plural, one {# минуты} few {# минут} many {# минут} other {# минуты}}",
+    "minutesWithDays": "От {min, number} до {max, plural, one {# минуты} few {# минут} many {# минут} other {# минуты}} ({days, plural, one {# день} few {# дня} many {# дней} other {# дня}})",
+    "days": "От {min, number} до {max, plural, one {# дня} few {# дней} many {# дней} other {# дня}}",
+    "bookings": "От {min, number} до {max, plural, one {# бронирования} few {# бронирований} many {# бронирований} other {# бронирования}}"
+  },
+  "weeklyHours": {
+    "windowRequired": "Добавьте хотя бы 1 временной интервал на {day, select, monday {понедельник} tuesday {вторник} wednesday {среду} thursday {четверг} friday {пятницу} saturday {субботу} sunday {воскресенье} other {{day}}}",
+    "windowOrder": "Конец каждого интервала должен быть позже начала ({day, select, monday {понедельник} tuesday {вторник} wednesday {среда} thursday {четверг} friday {пятница} saturday {суббота} sunday {воскресенье} other {{day}}})"
+  },
+  "auth": {
+    "passwordRequired": "Укажите пароль",
+    "passwordMin": "Пароль должен содержать не менее {min, number} символов"
+  },
+  "password": {
+    "currentRequired": "Введите текущий пароль",
+    "min": "Не менее {min, number} символов",
+    "confirmationRequired": "Подтвердите новый пароль",
+    "mismatch": "Пароли не совпадают"
+  },
+  "agent": {
+    "voiceRequired": "Выберите голос — без него ИИ-агент не сможет принимать звонки.",
+    "variableNameFormat": "Только строчные буквы, цифры и подчёркивания (максимум {max, number})",
+    "variableNameReserved": "Это имя переменной зарезервировано",
+    "duplicateVariable": "Имя переменной повторяется",
+    "unknownVariable": "Неизвестная переменная {token} — объявите её в разделе «Переменные» или используйте встроенную."
+  },
+  "business": {
+    "timezoneRequired": "Выберите часовой пояс"
+  },
+  "businessProfile": {
+    "yearRange": "Введите год от {min} до {max}",
+    "travelRadiusRange": "Введите расстояние от {min} до {max} км"
+  },
+  "call": {
+    "agentRequired": "Выберите ИИ-агента для звонка",
+    "toNumberRequired": "Введите номер для звонка",
+    "variableValueRequired": "Введите значение этой переменной"
+  },
+  "callback": {
+    "teamMemberRequired": "Выберите участника команды",
+    "outboundAgentRequired": "Выберите ИИ-агента для исходящих звонков"
+  },
+  "campaign": {
+    "agentRequired": "Выберите ИИ-агента для исходящих звонков",
+    "callerNumberRequired": "Выберите номер для исходящих звонков",
+    "numberRequired": "Введите число",
+    "wholeNumber": "Только целые числа",
+    "concurrentMin": "Минимум {min, plural, one {# звонок} few {# звонка} many {# звонков} other {# звонка}} одновременно",
+    "concurrentMax": "Максимум {max, plural, one {# звонок} few {# звонка} many {# звонков} other {# звонка}} одновременно",
+    "attemptsMin": "Минимум {min, plural, one {# попытка} few {# попытки} many {# попыток} other {# попытки}}",
+    "attemptsMax": "Максимум {max, plural, one {# попытка} few {# попытки} many {# попыток} other {# попытки}}",
+    "retryDelayMin": "Минимум {minutes, plural, one {# минута} few {# минуты} many {# минут} other {# минуты}} между попытками",
+    "retryDelayMax": "Максимум {hours, plural, one {# час} few {# часа} many {# часов} other {# часа}} между попытками",
+    "startDateRequired": "Выберите дату начала",
+    "startTimeRequired": "Выберите время начала",
+    "endDateRequired": "Выберите дату окончания",
+    "endTimeRequired": "Выберите время окончания",
+    "endBeforeStart": "Окончание должно быть позже начала"
+  },
+  "contact": {
+    "identityRequired": "Укажите имя, компанию или номер телефона",
+    "primaryRequired": "Отметьте ровно 1 как основной"
+  },
+  "dnc": {
+    "numberRequired": "Введите номер для блокировки"
+  },
+  "document": {
+    "textRequired": "Вставьте текст документа",
+    "textTooLong": "Слишком длинный текст",
+    "contentRequired": "Документ не должен быть пустым"
+  },
+  "faq": {
+    "questionRequired": "Укажите вопрос",
+    "answerRequired": "Укажите ответ"
+  },
+  "invoice": {
+    "dueBeforeIssue": "Срок оплаты не может быть раньше даты выставления"
+  },
+  "job": {
+    "titleRequired": "Укажите краткое название заказа",
+    "estimatedMinutesRange": "Введите целое число минут от {min} до {max}",
+    "streetRequired": "Укажите улицу и номер дома",
+    "cityRequired": "Укажите город"
+  },
+  "knowledge": {
+    "agentScopeRequired": "Выберите хотя бы одного ИИ-агента",
+    "priceTypeRequired": "Выберите способ расчёта цены",
+    "priceRequired": "Введите цену",
+    "priceMinRequired": "Введите минимальную цену",
+    "priceMaxRequired": "Введите максимальную цену",
+    "priceMaxBelowMin": "Значение не должно быть меньше минимума",
+    "priceMessageRequired": "Укажите, что говорить вместо цены",
+    "durationUnitRequired": "Выберите единицу измерения",
+    "durationRange": "Введите длительность от {min} до {max}"
+  },
+  "lead": {
+    "titleRequired": "Укажите краткое название лида",
+    "valueInvalid": "Введите сумму, например 1500 или 1500.50"
+  },
+  "lineItem": {
+    "descriptionRequired": "Опишите работу или деталь",
+    "quantityInvalid": "Введите количество больше нуля",
+    "unitPriceInvalid": "Введите цену, например 180 или 180.50",
+    "itemsRequired": "Добавьте хотя бы одну позицию"
+  },
+  "member": {
+    "roleRequired": "Выберите роль"
+  },
+  "phoneNumber": {
+    "nameRequired": "Укажите название для этого номера",
+    "sipNumberRequired": "Введите номер, обслуживаемый вашим SIP-транком"
+  },
+  "policy": {
+    "contentRequired": "Необходимо заполнить содержание"
+  },
+  "quote": {
+    "validUntilBeforeIssue": "Дата окончания действия не может быть раньше даты выставления",
+    "depositPercentRange": "Введите целое число процентов от {min} до {max}",
+    "depositAmountInvalid": "Введите сумму, например 250 или 250.50"
+  },
+  "recipientRules": {
+    "emailInvalid": "«{input}» — некорректный адрес эл. почты",
+    "recipientRequired": "Выберите хотя бы одного получателя."
+  },
+  "transferTarget": {
+    "conditionRequired": "Опишите, когда переводить звонок этому адресату",
+    "postDialDigitsFormat": "Допустимы только цифры, *, # или w",
+    "memberRequired": "Выберите участника команды",
+    "memberPhoneMissing": "У этого участника нет сохранённого номера — укажите его",
+    "memberHoursNeedsMember": "Для часов доступности необходимо привязать участника команды"
+  }
+}

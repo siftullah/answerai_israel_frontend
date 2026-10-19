@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Translate messages/en/*.json into Hebrew and Arabic with OpenAI (Responses API).
+"""Translate messages/en/*.json into Hebrew, Arabic and Russian with OpenAI (Responses API).
 
 Needs OPENAI_API_KEY in the environment (or in scripts/i18n/.env, which git ignores).
 Run with `python3 -I scripts/i18n/translate.py …` from the repo root.
 
 Usage:
-  translate.py glossary                      # build glossary.json (one call per locale)
-  translate.py run [--ns a,b] [--locales he,ar] [--force] [--batch 50] [--workers 6]
-  translate.py check                         # re-validate placeholders in he/ar vs en
+  translate.py glossary [--locales ru]       # build glossary.json (one call per locale; others kept)
+  translate.py run [--ns a,b] [--locales he,ar,ru] [--force] [--batch 50] [--workers 6]
+  translate.py check [--locales he,ar,ru]    # re-validate placeholders/plurals vs en
 
 Incremental: cache/<locale>.json remembers the English source each translation was
 made from; only new or changed strings are sent. Output is written straight into
@@ -58,7 +58,35 @@ LANG = {
         ),
         "plural": "Arabic ICU plural categories: provide `zero`, `one`, `two`, `few`, `many` and `other`.",
     },
+    "ru": {
+        "name": "Russian",
+        "style": (
+            "Standard contemporary Russian for a business SaaS web app, the register of the Russian UIs of Google, "
+            "Microsoft and Russian-language CRM products. Address the user formally with вы (lower-case, never ты) "
+            "and avoid forms that force the user's gender: prefer impersonal or passive phrasing ('Не удалось "
+            "сохранить', 'Изменения сохранены') over gendered past-tense verbs. Concise UI register: infinitives for "
+            "buttons and menu actions (Сохранить, Отмена, Удалить, Добавить) and short noun phrases for labels, "
+            "table headers and badges, as Russian software does. Standard Russian software terminology (эл. почта, "
+            "пароль, настройки, счёт, коммерческое предложение, лид/лиды, звонок/звонки); use ё where standard "
+            "(ещё, счёт). Russian typography: «ёлочки» for quotation marks, a spaced dash (—) where English uses "
+            "' - ' or ' — ', otherwise keep the source's punctuation (…, :, ?). Currency is the Israeli shekel "
+            "(₪, шекель); digits stay Latin (0-9) and, like the ₪ symbol, are inserted by code through "
+            "{placeholders} — keep every placeholder as-is and never spell numbers out."
+        ),
+        "plural": (
+            "Russian ICU plural categories: every plural block MUST provide `one`, `few`, `many` and `other` (and "
+            "keep any explicit `=0`/`=1` branch of the English). `one` = 1, 21, 31… (1 звонок); `few` = 2–4, 22–24… "
+            "(2 звонка); `many` = 0, 5–20, 25–30… (5 звонков); `other` = fractions (1,5 звонка), so `other` "
+            "normally repeats the `few` wording, never the `many` one. Keep `#` inside the branches. Example: "
+            "\"{count, plural, one {# call} other {# calls}}\" → "
+            "\"{count, plural, one {# звонок} few {# звонка} many {# звонков} other {# звонка}}\"."
+        ),
+    },
 }
+
+# Plural categories every plural block must carry, per locale (checked on top of the
+# generic structure validation). Russian's CLDR rules need all four for correct nouns.
+REQUIRED_PLURAL_CATS = {"ru": {"one", "few", "many", "other"}}
 
 APP_CONTEXT = (
     "The product is AnswerAI (answerai.co.il): AI voice agents that answer and place phone calls for small "
@@ -291,6 +319,56 @@ def icu_branches(s):
         i = j
 
 
+def icu_blocks(s):
+    """(kind, [(category, body), …]) per plural/selectordinal/select block, nested ones first."""
+    out = []
+    i = 0
+    while True:
+        m = ICU_OPEN_RE.search(s, i)
+        if not m:
+            return out
+        j = m.end()
+        depth = 1
+        start = j
+        while j < len(s) and depth:
+            depth += {"{": 1, "}": -1}.get(s[j], 0)
+            j += 1
+        body = s[start : j - 1]
+        branches = []
+        k = 0
+        while k < len(body):
+            bm = re.match(r"\s*(=?\w+)\s*\{", body[k:])
+            if not bm:
+                break
+            c = k + bm.end()
+            d = 1
+            while c < len(body) and d:
+                d += {"{": 1, "}": -1}.get(body[c], 0)
+                c += 1
+            inner = body[k + bm.end() : c - 1]
+            branches.append((bm.group(1), inner))
+            out.extend(icu_blocks(inner))
+            k = c
+        out.append((m.group(2), branches))
+        i = j
+
+
+def plural_category_problems(src, dst, required):
+    """Plural blocks of `dst` missing a required category or an explicit `=N` branch of `src`."""
+    issues = []
+    src_blocks = [b for k, b in icu_blocks(src) if k == "plural"]
+    for n, (kind, branches) in enumerate(b for b in icu_blocks(dst) if b[0] == "plural"):
+        cats = {c for c, _ in branches}
+        missing = required - cats
+        if missing:
+            issues.append(f"plural block lacks {sorted(missing)}")
+        if n < len(src_blocks):
+            explicit = {c for c, _ in src_blocks[n] if c.startswith("=")} - cats
+            if explicit:
+                issues.append(f"plural branch {sorted(explicit)} dropped")
+    return issues
+
+
 def untranslated_branches(src, dst):
     """Branch bodies the model copied verbatim although the English has real words in them."""
     dst_branches = icu_branches(dst)
@@ -327,7 +405,7 @@ def signature(s):
     return placeholders_, tags, has_plural, has_select
 
 
-def problems(src, dst):
+def problems(src, dst, loc=None):
     issues = []
     if not isinstance(dst, str) or not dst.strip():
         return ["empty"]
@@ -357,6 +435,9 @@ def problems(src, dst):
     if splural or sselect:
         for cat in untranslated_branches(src, dst):
             issues.append(f"text inside branch '{cat}' left in English")
+    required = REQUIRED_PLURAL_CATS.get(loc)
+    if required and splural and dplural:
+        issues.extend(plural_category_problems(src, dst, required))
     return issues
 
 
@@ -382,9 +463,10 @@ GLOSSARY_TERMS = [
 ]
 
 
-def build_glossary():
-    glossary = {}
-    for loc, lang in LANG.items():
+def build_glossary(locs):
+    glossary = load_json(GLOSSARY_PATH)
+    for loc in locs:
+        lang = LANG[loc]
         schema = {
             "type": "object",
             "properties": {t: {"type": "string"} for t in GLOSSARY_TERMS},
@@ -489,22 +571,23 @@ def run(args):
         retry = []
         for key, en in items:
             dst = out.get(key)
-            issues = problems(en, dst) if dst is not None else ["missing"]
+            issues = problems(en, dst, loc) if dst is not None else ["missing"]
             if issues:
                 retry.append((key, en, issues))
             else:
                 fixed[key] = dst
         # second pass, one by one, with the specific complaint
         for key, en, issues in retry:
+            print(f"  retry {loc} {key}: {issues}")
             note = (
                 "Your previous attempt for this string was rejected: " + "; ".join(issues)
                 + ". Keep every {placeholder}, every <tag>, and the ICU plural/select structure of the English exactly, "
-                + "and translate the words inside every plural/select branch."
+                + "and translate the words inside every plural/select branch. " + LANG[loc]["plural"]
             )
             try:
                 out2, usage2 = translate_batch(loc, [(key, en)], glossary, note)
                 dst2 = out2.get(key)
-                issues2 = problems(en, dst2) if dst2 is not None else ["missing"]
+                issues2 = problems(en, dst2, loc) if dst2 is not None else ["missing"]
                 if issues2:
                     failures.append((loc, key, en, dst2, issues2))
                 else:
@@ -568,7 +651,7 @@ def check(args):
                     print(f"MISSING {loc} {ns}.{key}")
                     bad += 1
                     continue
-                issues = problems(val, tr[key])
+                issues = problems(val, tr[key], loc)
                 if issues:
                     print(f"BAD {loc} {ns}.{key}: {issues}\n   en: {val}\n   {loc}: {tr[key]}")
                     bad += 1
@@ -582,18 +665,19 @@ def check(args):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("glossary")
+    g = sub.add_parser("glossary")
+    g.add_argument("--locales", default=",".join(LANG))
     r = sub.add_parser("run")
     r.add_argument("--ns", default="")
-    r.add_argument("--locales", default="he,ar")
+    r.add_argument("--locales", default="he,ar,ru")
     r.add_argument("--force", action="store_true")
     r.add_argument("--batch", type=int, default=50)
     r.add_argument("--workers", type=int, default=6)
     c = sub.add_parser("check")
-    c.add_argument("--locales", default="he,ar")
+    c.add_argument("--locales", default="he,ar,ru")
     args = ap.parse_args()
     if args.cmd == "glossary":
-        build_glossary()
+        build_glossary(args.locales.split(","))
     elif args.cmd == "run":
         run(args)
     elif args.cmd == "check":

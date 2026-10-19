@@ -12,6 +12,7 @@ const loaders: Record<Locale, () => Promise<{ default: Messages }>> = {
   en: () => import("../messages/en"),
   he: () => import("../messages/he"),
   ar: () => import("../messages/ar"),
+  ru: () => import("../messages/ru"),
 };
 
 function isPlainObject(value: unknown): value is Record<string, unknown> {

@@ -21,7 +21,7 @@ export interface User {
   avatar: UserAvatar | null;
   /**
    * The language the account's emails are written in and the portal opens in:
-   * one of the API's locales (a superset of the UI's — `isLocale()` narrows it),
+   * one of the API's locales (en/he/ar/ru, the UI's set — `isLocale()` still narrows it),
    * or null until the user has picked one.
    */
   locale: string | null;

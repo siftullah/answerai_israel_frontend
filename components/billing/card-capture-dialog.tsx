@@ -57,7 +57,7 @@ export function CardCaptureDialog({
 }) {
   const t = useTranslations("billing.card");
   const tc = useTranslations("common");
-  // en/he/ar are all Stripe Elements locales — the card form follows the UI.
+  // en/he/ar/ru are all Stripe Elements locales — the card form follows the UI.
   const locale = useLocale() as Locale;
   const { mutateAsync: createSession } = useSetupSession();
   const { mutate: saveCard } = useStorePaymentMethod(businessUuid);
