@@ -256,6 +256,13 @@
       "website": "Website",
       "websitePlaceholder": "https://yourbusiness.co.il"
     },
+    "customerLanguage": {
+      "title": "Customer language",
+      "description": "What your customers hear and read, whichever language each team member uses in the portal.",
+      "label": "Language",
+      "hint": "Used for customer-facing emails — appointment confirmations, quotes and invoices — and the lines callers hear on the phone.",
+      "readOnly": "Only owners and admins can change this."
+    },
     "about": {
       "title": "About the business",
       "description": "What your AI says when callers ask what the business does.",

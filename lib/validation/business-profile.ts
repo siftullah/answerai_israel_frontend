@@ -1,6 +1,6 @@
 import { z } from "zod";
 import type { BusinessProfile, UpdateBusinessProfilePayload } from "@/lib/api/types";
-import { SOCIAL_KEYS } from "@/lib/api/types";
+import { CUSTOMER_LOCALES, DEFAULT_CUSTOMER_LOCALE, SOCIAL_KEYS } from "@/lib/api/types";
 import { formatE164, normalizeIlPhone, optionalIlPhoneField } from "@/lib/phone";
 import type { Translator } from "@/lib/i18n/types";
 
@@ -58,6 +58,9 @@ export function businessProfileSchema(t: Translator) {
         (v) => v === "" || (/^\d+$/.test(v) && Number(v) >= 1 && Number(v) <= 1000),
         t("businessProfile.travelRadiusRange", { min: 1, max: 1000 })
       ),
+    // Always set in the form (the default fills in while the API omits the
+    // field), so it only reaches the payload once the user changes it.
+    customer_locale: z.enum(CUSTOMER_LOCALES),
   });
 }
 
@@ -83,6 +86,7 @@ export function toBusinessProfileValues(profile: BusinessProfile): BusinessProfi
     longitude: profile.longitude,
     base_location: profile.base_location ?? "",
     travel_radius_km: profile.travel_radius_km?.toString() ?? "",
+    customer_locale: profile.customer_locale ?? DEFAULT_CUSTOMER_LOCALE,
   };
 }
 
@@ -136,6 +140,7 @@ export function toUpdatePayload(
     payload.travel_radius_km =
       values.travel_radius_km === "" ? null : Number(values.travel_radius_km);
   }
+  if (dirty.customer_locale) payload.customer_locale = values.customer_locale;
 
   return payload;
 }

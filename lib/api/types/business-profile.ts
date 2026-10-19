@@ -10,6 +10,18 @@ export type SocialKey = (typeof SOCIAL_KEYS)[number];
 
 export type LocationType = "fixed" | "mobile" | "online";
 
+/**
+ * Language the business talks to its customers in — customer-facing emails
+ * (appointment confirmations, quotes, invoices) and the lines callers hear —
+ * independent of each staff member's portal language. Mirrors the backend
+ * contract: BusinessProfileResource.customer_locale, PATCH owner/admin only.
+ */
+export const CUSTOMER_LOCALES = ["he", "en", "ar", "ru"] as const;
+export type CustomerLocale = (typeof CUSTOMER_LOCALES)[number];
+
+/** What the API assumes — and the form shows — while the field is unset. */
+export const DEFAULT_CUSTOMER_LOCALE: CustomerLocale = "he";
+
 export interface BusinessLogo {
   id: string;
   name: string;
@@ -41,6 +53,8 @@ export interface BusinessProfile {
   longitude: number | null;
   base_location: string | null;
   travel_radius_km: number | null;
+  /** Absent until the API ships it; read as "he" (DEFAULT_CUSTOMER_LOCALE). */
+  customer_locale?: CustomerLocale;
   logo: BusinessLogo | null;
   created_at: string;
   updated_at: string;

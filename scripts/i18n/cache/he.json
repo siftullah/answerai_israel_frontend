@@ -14062,5 +14062,25 @@
   "lib.voiceDescription.hope": {
     "en": "Natural, clear and calm female American voice.",
     "t": "קול נשי אמריקאי טבעי, ברור ורגוע."
+  },
+  "businessProfile.profileForm.customerLanguage.title": {
+    "en": "Customer language",
+    "t": "שפת הלקוחות"
+  },
+  "businessProfile.profileForm.customerLanguage.description": {
+    "en": "What your customers hear and read, whichever language each team member uses in the portal.",
+    "t": "מה שהלקוחות שומעים וקוראים, ללא תלות בשפה שבה כל חבר צוות משתמש בפורטל."
+  },
+  "businessProfile.profileForm.customerLanguage.label": {
+    "en": "Language",
+    "t": "שפה"
+  },
+  "businessProfile.profileForm.customerLanguage.hint": {
+    "en": "Used for customer-facing emails — appointment confirmations, quotes and invoices — and the lines callers hear on the phone.",
+    "t": "משמשת לאימיילים ללקוחות — אישורי פגישות, הצעות מחיר וחשבוניות — ולהודעות שהמתקשרים שומעים בטלפון."
+  },
+  "businessProfile.profileForm.customerLanguage.readOnly": {
+    "en": "Only owners and admins can change this.",
+    "t": "רק בעלים ומנהלי מערכת יכולים לשנות זאת."
   }
 }

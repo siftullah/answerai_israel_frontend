@@ -15,7 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Field, FieldError, FieldLabel } from "@/components/ui/field";
+import { Field, FieldDescription, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import {
@@ -29,10 +29,17 @@ import { Spinner } from "@/components/ui/spinner";
 import { Textarea } from "@/components/ui/textarea";
 import { AddressSearchField } from "@/components/business-profile/basic-info/address-search-field";
 import { CategoriesField } from "@/components/business-profile/basic-info/categories-field";
+import { useBusiness } from "@/components/business/business-provider";
 import { useUpdateBusinessProfile } from "@/hooks/use-business-profile";
+import { localeNames } from "@/i18n/config";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
-import type { BasicInfoDraft, BusinessProfile, SocialKey } from "@/lib/api/types";
-import { SOCIAL_KEYS } from "@/lib/api/types";
+import type {
+  BasicInfoDraft,
+  BusinessProfile,
+  CustomerLocale,
+  SocialKey,
+} from "@/lib/api/types";
+import { CUSTOMER_LOCALES, SOCIAL_KEYS } from "@/lib/api/types";
 import {
   businessProfileSchema,
   toBusinessProfileValues,
@@ -53,6 +60,13 @@ const SOCIAL_LABELS: Record<SocialKey, { label: string; placeholder: string }> =
   x: { label: "X", placeholder: "https://x.com/yourbusiness" },
 };
 
+// Each language in its own script, as the UI picker shows them. Russian is
+// not a portal language yet, so the registry has no name for it.
+const CUSTOMER_LOCALE_NAMES: Record<CustomerLocale, string> = {
+  ...localeNames,
+  ru: "Русский",
+};
+
 export function ProfileForm({
   businessUuid,
   profile,
@@ -69,6 +83,16 @@ export function ProfileForm({
   const ts = useTranslations("businessProfile.shared");
   const tc = useTranslations("common");
   const update = useUpdateBusinessProfile(businessUuid);
+  const { membership } = useBusiness();
+
+  // The API accepts customer_locale from owners and admins only (403
+  // otherwise), so members get the control read-only instead of a failed save.
+  const canSetCustomerLocale =
+    membership.role.slug === "owner" || membership.role.slug === "admin";
+  const customerLocaleItems = CUSTOMER_LOCALES.map((value) => ({
+    value,
+    label: CUSTOMER_LOCALE_NAMES[value],
+  }));
 
   const countries = [{ value: "IL", label: t("countries.IL") }];
 
@@ -205,6 +229,54 @@ export function ProfileForm({
               {...form.register("website")}
             />
             {errors.website && <FieldError>{errors.website.message}</FieldError>}
+          </Field>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="text-[#30aece]">{t("customerLanguage.title")}</CardTitle>
+          <CardDescription>{t("customerLanguage.description")}</CardDescription>
+        </CardHeader>
+        <CardContent>
+          <Field className="sm:max-w-xs" data-invalid={!!errors.customer_locale || undefined}>
+            <FieldLabel htmlFor="customer_locale">{t("customerLanguage.label")}</FieldLabel>
+            <Controller
+              control={form.control}
+              name="customer_locale"
+              render={({ field }) => (
+                // Base UI's SelectValue renders the raw value unless the root
+                // knows the item labels.
+                <Select
+                  items={customerLocaleItems}
+                  value={field.value}
+                  onValueChange={(value) => field.onChange(value as CustomerLocale)}
+                  disabled={!canSetCustomerLocale}
+                >
+                  <SelectTrigger
+                    id="customer_locale"
+                    className="w-full"
+                    aria-invalid={!!errors.customer_locale}
+                  >
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {customerLocaleItems.map((item) => (
+                      <SelectItem key={item.value} value={item.value} lang={item.value}>
+                        {item.label}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            />
+            <FieldDescription>{t("customerLanguage.hint")}</FieldDescription>
+            {!canSetCustomerLocale && (
+              <FieldDescription>{t("customerLanguage.readOnly")}</FieldDescription>
+            )}
+            {errors.customer_locale && (
+              <FieldError>{errors.customer_locale.message}</FieldError>
+            )}
           </Field>
         </CardContent>
       </Card>
