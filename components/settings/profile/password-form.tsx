@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -30,10 +32,14 @@ const EMPTY: PasswordValues = {
 };
 
 export function PasswordForm() {
+  const t = useTranslations("settings.profile.password");
+  const tc = useTranslations("common");
   const update = useUpdatePassword();
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => passwordSchema(tv), [tv]);
   const form = useForm<PasswordValues>({
-    resolver: zodResolver(passwordSchema),
+    resolver: zodResolver(schema),
     defaultValues: EMPTY,
   });
   const { errors, isDirty } = form.formState;
@@ -42,7 +48,7 @@ export function PasswordForm() {
     update.mutate(toPasswordPayload(values), {
       onSuccess: () => {
         form.reset(EMPTY);
-        toast.success("Password updated");
+        toast.success(t("toasts.updated"));
       },
       onError: (error) => applyServerErrors(form, error),
     });
@@ -52,8 +58,8 @@ export function PasswordForm() {
     <form onSubmit={onSubmit} noValidate>
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">Password</CardTitle>
-          <CardDescription>Change the password you use to sign in.</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           {errors.root?.server && (
@@ -63,7 +69,7 @@ export function PasswordForm() {
           )}
 
           <Field data-invalid={!!errors.current_password || undefined}>
-            <FieldLabel htmlFor="current_password">Current password</FieldLabel>
+            <FieldLabel htmlFor="current_password">{t("current")}</FieldLabel>
             <PasswordInput
               id="current_password"
               autoComplete="current-password"
@@ -77,7 +83,7 @@ export function PasswordForm() {
 
           <div className="grid gap-5 sm:grid-cols-2">
             <Field data-invalid={!!errors.password || undefined}>
-              <FieldLabel htmlFor="password">New password</FieldLabel>
+              <FieldLabel htmlFor="password">{t("new")}</FieldLabel>
               <PasswordInput
                 id="password"
                 autoComplete="new-password"
@@ -88,7 +94,7 @@ export function PasswordForm() {
             </Field>
 
             <Field data-invalid={!!errors.password_confirmation || undefined}>
-              <FieldLabel htmlFor="password_confirmation">Confirm new password</FieldLabel>
+              <FieldLabel htmlFor="password_confirmation">{t("confirm")}</FieldLabel>
               <PasswordInput
                 id="password_confirmation"
                 autoComplete="new-password"
@@ -104,12 +110,12 @@ export function PasswordForm() {
           <div className="flex items-center justify-end gap-2">
             {isDirty && (
               <Button type="button" variant="ghost" onClick={() => form.reset(EMPTY)}>
-                Discard
+                {tc("actions.discard")}
               </Button>
             )}
             <Button type="submit" disabled={!isDirty || update.isPending}>
               {update.isPending && <Spinner />}
-              Update password
+              {t("update")}
             </Button>
           </div>
         </CardContent>

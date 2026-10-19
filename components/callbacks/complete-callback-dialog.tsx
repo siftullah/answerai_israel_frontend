@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -45,11 +47,15 @@ export function CompleteCallbackDialog({
   callback: Callback;
 }) {
   const completeCallback = useCompleteCallback(businessUuid);
+  const t = useTranslations("callbacks");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => completeCallbackSchema(tv), [tv]);
 
   // Notes prefilled: completing with notes overwrites the callback's notes,
   // so starting from the existing text prevents accidental clearing.
   const form = useForm<CompleteCallbackValues>({
-    resolver: zodResolver(completeCallbackSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultCompleteCallbackValues(callback.notes),
   });
   const rootServerError = (
@@ -66,7 +72,7 @@ export function CompleteCallbackDialog({
       { id: callback.id, payload: toCompleteCallbackPayload(values) },
       {
         onSuccess: () => {
-          toast.success("Callback completed");
+          toast.success(t("toasts.completed"));
           onOpenChange(false);
         },
         onError: (error) => applyCallbackServerErrors(form, error),
@@ -78,9 +84,11 @@ export function CompleteCallbackDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Complete callback</DialogTitle>
+          <DialogTitle>{t("completeDialog.title")}</DialogTitle>
           <DialogDescription>
-            Record how the call back to {callback.contact?.name ?? "the contact"} went.
+            {callback.contact?.name
+              ? t("completeDialog.descriptionNamed", { name: callback.contact.name })
+              : t("completeDialog.descriptionUnnamed")}
           </DialogDescription>
         </DialogHeader>
 
@@ -91,7 +99,9 @@ export function CompleteCallbackDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={!!fieldState.error || undefined}>
-                  <FieldLabel htmlFor="complete-callback-outcome">Outcome</FieldLabel>
+                  <FieldLabel htmlFor="complete-callback-outcome">
+                    {t("labels.outcome")}
+                  </FieldLabel>
                   <Select
                     items={outcomeItems}
                     value={field.value}
@@ -122,12 +132,12 @@ export function CompleteCallbackDialog({
             />
 
             <Field data-invalid={!!form.formState.errors.notes || undefined}>
-              <FieldLabel htmlFor="complete-callback-notes">Notes</FieldLabel>
+              <FieldLabel htmlFor="complete-callback-notes">{tc("labels.notes")}</FieldLabel>
               <Textarea
                 id="complete-callback-notes"
                 {...form.register("notes")}
                 rows={3}
-                placeholder="What was discussed or agreed? (optional)"
+                placeholder={t("completeDialog.notesPlaceholder")}
                 aria-invalid={!!form.formState.errors.notes}
               />
               {form.formState.errors.notes?.message && (
@@ -143,10 +153,10 @@ export function CompleteCallbackDialog({
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button type="submit" disabled={completeCallback.isPending}>
-                {completeCallback.isPending ? "Completing…" : "Mark completed"}
+                {completeCallback.isPending ? t("actions.completing") : t("actions.markCompleted")}
               </Button>
             </DialogFooter>
           </form>

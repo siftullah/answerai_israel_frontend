@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useBusiness, useModuleEnabled } from "@/components/business/business-provider";
@@ -20,6 +21,7 @@ export function ModuleGate({
 }) {
   const { business, membership } = useBusiness();
   const enabled = useModuleEnabled(module);
+  const t = useTranslations("business");
 
   const privileged =
     membership.role.slug === "owner" || membership.role.slug === "admin";
@@ -29,17 +31,14 @@ export function ModuleGate({
       <div className="flex flex-1 items-center justify-center p-6">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
-            <CardTitle>Module not enabled</CardTitle>
-            <CardDescription>
-              This feature isn&apos;t turned on for this business. An owner or admin can enable it
-              under Business profile → Modules.
-            </CardDescription>
+            <CardTitle>{t("moduleGate.title")}</CardTitle>
+            <CardDescription>{t("moduleGate.description")}</CardDescription>
           </CardHeader>
           {/* Members can't reach that page, so don't send them to a dead end. */}
           {privileged && (
             <CardContent className="justify-center">
               <Button render={<Link href={`/b/${business.id}/business-profile/modules`} />}>
-                Go to modules
+                {t("moduleGate.goToModules")}
               </Button>
             </CardContent>
           )}

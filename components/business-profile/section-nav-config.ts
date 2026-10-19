@@ -19,8 +19,12 @@ import {
  * SectionNav rail renders from these groups and the main nav-config
  * derives its breadcrumb entries from the flat list, so the two can
  * never disagree.
+ *
+ * `title` and `label` are message keys under `layout.nav` — renderers
+ * translate them with `t(\`nav.${key}\`)`; never show them raw.
  */
 export interface SectionItem {
+  /** Message key under `layout.nav`. */
   title: string;
   /** Path segment under /b/{uuid}. */
   segment: string;
@@ -32,7 +36,7 @@ export interface SectionItem {
 }
 
 export interface SectionGroup {
-  /** Omitted for the ungrouped items at the top (Overview). */
+  /** Message key under `layout.nav`; omitted for the ungrouped items at the top (Overview). */
   label?: string;
   items: SectionItem[];
 }
@@ -40,33 +44,33 @@ export interface SectionGroup {
 export const sectionGroups: SectionGroup[] = [
   {
     items: [
-      { title: "Overview", segment: "business-profile", icon: GaugeIcon, exact: true },
+      { title: "overview", segment: "business-profile", icon: GaugeIcon, exact: true },
     ],
   },
   {
-    label: "Knowledge base",
+    label: "knowledgeBase",
     items: [
-      { title: "Basic info", segment: "business-profile/basic-info", icon: InfoIcon },
-      { title: "Services", segment: "business-profile/services", icon: BriefcaseIcon },
-      { title: "Products", segment: "business-profile/products", icon: PackageIcon },
-      { title: "FAQs", segment: "business-profile/faqs", icon: MessageCircleQuestionIcon },
-      { title: "Policies", segment: "business-profile/policies", icon: ScrollTextIcon },
-      { title: "Docs", segment: "business-profile/docs", icon: FilesIcon },
-      { title: "Integrations", segment: "business-profile/integrations", icon: PlugIcon },
+      { title: "basicInfo", segment: "business-profile/basic-info", icon: InfoIcon },
+      { title: "services", segment: "business-profile/services", icon: BriefcaseIcon },
+      { title: "products", segment: "business-profile/products", icon: PackageIcon },
+      { title: "faqs", segment: "business-profile/faqs", icon: MessageCircleQuestionIcon },
+      { title: "policies", segment: "business-profile/policies", icon: ScrollTextIcon },
+      { title: "docs", segment: "business-profile/docs", icon: FilesIcon },
+      { title: "integrations", segment: "business-profile/integrations", icon: PlugIcon },
     ],
   },
   {
-    label: "Operations",
+    label: "operations",
     items: [
-      { title: "Team", segment: "business-profile/team", icon: UsersRoundIcon },
-      { title: "Transfers", segment: "business-profile/transfers", icon: PhoneForwardedIcon },
+      { title: "team", segment: "business-profile/team", icon: UsersRoundIcon },
+      { title: "transfers", segment: "business-profile/transfers", icon: PhoneForwardedIcon },
       {
-        title: "Modules",
+        title: "modules",
         segment: "business-profile/modules",
         icon: BlocksIcon,
         privileged: true,
       },
-      { title: "Calendar", segment: "business-profile/calendar", icon: CalendarClockIcon },
+      { title: "calendar", segment: "business-profile/calendar", icon: CalendarClockIcon },
     ],
   },
 ];

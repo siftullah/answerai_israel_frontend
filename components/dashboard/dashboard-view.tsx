@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { TriangleAlertIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { PageHeader } from "@/components/layout/page-header";
 import { useBusiness } from "@/components/business/business-provider";
@@ -17,19 +18,30 @@ import { TodayCard } from "@/components/dashboard/today-card";
 import { ErrorState } from "@/components/error-state";
 import { useDashboard } from "@/hooks/use-dashboard";
 import { useMe } from "@/hooks/use-me";
-import { LOCALE } from "@/lib/datetime";
+import { displayLocale, runtimeLocale } from "@/lib/i18n/runtime";
 import { cn } from "@/lib/utils";
 import type { DashboardHours } from "@/lib/api/types";
 
-/** "17:00" → "5 pm" / "17:30" → "5:30 pm". Windows are business-local. */
+/**
+ * "17:00" → "5 pm" / "17:30" → "5:30 pm" in English (12-hour, like
+ * lib/datetime); Hebrew and Arabic read "17:00". Windows are business-local
+ * wall-clock values, so they're formatted as UTC to avoid any zone shift.
+ */
 function formatWindowTime(hhmm: string): string {
   const [hour, minute] = hhmm.split(":").map(Number);
-  const suffix = hour >= 12 ? "pm" : "am";
-  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-  return minute === 0 ? `${hour12} ${suffix}` : `${hour12}:${String(minute).padStart(2, "0")} ${suffix}`;
+  const en = runtimeLocale() === "en";
+  return new Date(Date.UTC(2000, 0, 1, hour, minute)).toLocaleTimeString(displayLocale(), {
+    timeZone: "UTC",
+    hour: "numeric",
+    minute: en && minute === 0 ? undefined : "2-digit",
+    hour12: en,
+  });
 }
 
-/** The business-local wall clock as "HH:MM", comparable to window bounds. */
+/**
+ * The business-local wall clock as "HH:MM", comparable to window bounds.
+ * Fixed en-GB on purpose: the string is compared, never displayed.
+ */
 function businessNowHHMM(timeZone: string): string {
   return new Intl.DateTimeFormat("en-GB", {
     hour: "2-digit",
@@ -46,6 +58,7 @@ function OpenStatusChip({
   hours: DashboardHours | undefined;
   timeZone: string;
 }) {
+  const t = useTranslations("dashboard");
   if (!hours) return null;
 
   if (hours.open_now) {
@@ -54,7 +67,9 @@ function OpenStatusChip({
     return (
       <span className="inline-flex items-center gap-1.5 rounded-full bg-success/10 px-3 py-1 text-xs font-medium text-success dark:bg-success/20">
         <span className="size-1.5 animate-pulse rounded-full bg-current" aria-hidden />
-        {current ? `Open · closes ${formatWindowTime(current.end)}` : "Open now"}
+        {current
+          ? t("hours.openUntil", { time: formatWindowTime(current.end) })
+          : t("hours.openNow")}
       </span>
     );
   }
@@ -63,13 +78,26 @@ function OpenStatusChip({
   const next = hours.today_windows.find((w) => w.start > now);
   return (
     <span className="inline-flex items-center gap-1.5 rounded-full bg-muted px-3 py-1 text-xs font-medium text-muted-foreground">
-      {next ? `Closed · opens ${formatWindowTime(next.start)}` : "Closed today"}
+      {next
+        ? t("hours.closedUntil", { time: formatWindowTime(next.start) })
+        : t("hours.closedToday")}
     </span>
   );
 }
 
+/** Rich-text renderer for the "<link>…</link>" call to action in a health alert. */
+function alertLink(href: string) {
+  return function renderAlertLink(chunks: React.ReactNode) {
+    return (
+      <Link href={href} className="font-medium underline underline-offset-4">
+        {chunks}
+      </Link>
+    );
+  };
+}
+
 function todayLine(timeZone: string): string {
-  return new Intl.DateTimeFormat(LOCALE, {
+  return new Intl.DateTimeFormat(displayLocale(), {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -84,6 +112,7 @@ function todayLine(timeZone: string): string {
  * hide themselves when their module is off, mirroring the sidebar.
  */
 export function DashboardView() {
+  const t = useTranslations("dashboard");
   const { business } = useBusiness();
   // Served from the RequireAuth cache — no extra request.
   const me = useMe();
@@ -99,16 +128,9 @@ export function DashboardView() {
     healthAlerts.push(
       <Alert key="agents" variant="destructive">
         <TriangleAlertIcon />
-        <AlertTitle>
-          {health.agent_errors === 1
-            ? "An agent is failing to sync"
-            : `${health.agent_errors} agents are failing to sync`}
-        </AlertTitle>
+        <AlertTitle>{t("health.agentsTitle", { count: health.agent_errors })}</AlertTitle>
         <AlertDescription>
-          Callers may reach an outdated version.{" "}
-          <Link href={`${base}/agents`} className="font-medium underline underline-offset-4">
-            Review agents
-          </Link>
+          {t.rich("health.agentsDescription", { link: alertLink(`${base}/agents`) })}
         </AlertDescription>
       </Alert>
     );
@@ -118,19 +140,9 @@ export function DashboardView() {
     healthAlerts.push(
       <Alert key="numbers" variant="destructive">
         <TriangleAlertIcon />
-        <AlertTitle>
-          {health.phone_number_errors === 1
-            ? "A phone number needs attention"
-            : `${health.phone_number_errors} phone numbers need attention`}
-        </AlertTitle>
+        <AlertTitle>{t("health.numbersTitle", { count: health.phone_number_errors })}</AlertTitle>
         <AlertDescription>
-          Provisioning failed — callers can&apos;t get through on it.{" "}
-          <Link
-            href={`${base}/phone-numbers`}
-            className="font-medium underline underline-offset-4"
-          >
-            Fix phone numbers
-          </Link>
+          {t.rich("health.numbersDescription", { link: alertLink(`${base}/phone-numbers`) })}
         </AlertDescription>
       </Alert>
     );
@@ -140,15 +152,11 @@ export function DashboardView() {
     healthAlerts.push(
       <Alert key="calendar" variant="warning">
         <TriangleAlertIcon />
-        <AlertTitle>Your calendar connection is failing</AlertTitle>
+        <AlertTitle>{t("health.calendarTitle")}</AlertTitle>
         <AlertDescription>
-          New bookings aren&apos;t syncing to your external calendar.{" "}
-          <Link
-            href={`${base}/settings/calendar`}
-            className="font-medium underline underline-offset-4"
-          >
-            Reconnect
-          </Link>
+          {t.rich("health.calendarDescription", {
+            link: alertLink(`${base}/settings/calendar`),
+          })}
         </AlertDescription>
       </Alert>
     );
@@ -157,7 +165,7 @@ export function DashboardView() {
   return (
     <div className="flex flex-col gap-5">
       <PageHeader
-        title={firstName ? `Welcome back, ${firstName}` : "Welcome back"}
+        title={firstName ? t("header.welcomeName", { name: firstName }) : t("header.welcome")}
         description={`${todayLine(business.timezone)} · ${business.name}`}
         actions={<OpenStatusChip hours={data?.hours} timeZone={business.timezone} />}
       />
@@ -167,7 +175,7 @@ export function DashboardView() {
       {query.isError ? (
         <div className="rounded-2xl border border-border">
           <ErrorState
-            title="Couldn't load your overview"
+            title={t("loadError")}
             message={query.error.message}
             onRetry={() => void query.refetch()}
           />

@@ -6,6 +6,7 @@ import {
   CircleCheckBigIcon,
   ClockAlertIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCents } from "@/lib/money";
 import { cn } from "@/lib/utils";
@@ -47,10 +48,6 @@ function StatTile({
   );
 }
 
-function plural(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`;
-}
-
 /** The work-at-a-glance strip: what needs booking, today's run, what it's worth, what landed. */
 export function JobStatTiles({
   counts,
@@ -59,6 +56,8 @@ export function JobStatTiles({
   counts: JobCounts | undefined;
   className?: string;
 }) {
+  const t = useTranslations("jobs.stats");
+
   if (!counts) {
     return (
       <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4", className)}>
@@ -73,40 +72,44 @@ export function JobStatTiles({
     <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4", className)}>
       <StatTile
         icon={ClockAlertIcon}
-        label="To schedule"
+        label={t("toSchedule.label")}
         value={String(counts.open)}
         detail={
           counts.open === 0
-            ? "Every job has a time"
+            ? t("toSchedule.allBooked")
             : counts.high_priority_active > 0
-              ? `${plural(counts.high_priority_active, "high-priority job")} in play`
-              : "Waiting to be booked in"
+              ? t("toSchedule.highPriority", { count: counts.high_priority_active })
+              : t("toSchedule.waiting")
         }
         tone="warning"
       />
       <StatTile
         icon={CalendarClockIcon}
-        label="Visits today"
+        label={t("visitsToday.label")}
         value={String(counts.scheduled_today)}
         detail={
           counts.in_progress > 0
-            ? `${plural(counts.in_progress, "job")} in progress`
-            : `${plural(counts.scheduled, "visit")} booked ahead`
+            ? t("visitsToday.inProgress", { count: counts.in_progress })
+            : t("visitsToday.bookedAhead", { count: counts.scheduled })
         }
         tone="info"
       />
       <StatTile
         icon={BanknoteIcon}
-        label="Active work"
+        label={t("activeWork.label")}
         value={formatCents(counts.active_value_cents)}
-        detail={counts.active > 0 ? `Across ${plural(counts.active, "active job")}` : "No active jobs"}
+        detail={
+          counts.active > 0
+            ? t("activeWork.across", { count: counts.active })
+            : t("activeWork.none")
+        }
         tone="cta"
       />
       <StatTile
         icon={CircleCheckBigIcon}
-        label="Completed this month"
+        label={t("completedThisMonth.label")}
         value={formatCents(counts.completed_this_month_cents)}
-        detail={`${plural(counts.completed, "job")} completed all time`}
+        detail={t("completedThisMonth.allTime", { count: counts.completed })}
         tone="success"
       />
     </div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   BanIcon,
@@ -44,13 +45,14 @@ import { useCompleteJob, useJobDetail, useStartJob } from "@/hooks/use-jobs";
 import { formatDate, formatDateTime, formatTimeOfDay } from "@/lib/datetime";
 import { formatCents } from "@/lib/money";
 import type { Job, JobServiceAddress } from "@/lib/api/types";
-import { JOB_SOURCE_LABELS } from "@/lib/api/types";
+import { JOB_SOURCE_LABELS, JOB_STATUS_LABELS } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("jobs.detail");
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All jobs
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("back")}
     </Button>
   );
 }
@@ -91,6 +93,8 @@ function MetaBand({
   job: Job;
   timeZone: string;
 }) {
+  const t = useTranslations("jobs");
+
   // A minute-resolution "now" so the overdue flag stays honest over time
   // without impure clock reads during render.
   const [nowMs, setNowMs] = useState(() => Date.now());
@@ -107,38 +111,42 @@ function MetaBand({
 
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label="Customer">
+      <Meta label={t("fields.customer")}>
         {job.contact ? (
           <Link
             href={`/b/${businessUuid}/contacts/${job.contact.id}`}
             className="text-primary hover:underline"
           >
-            {job.contact.name ?? "Unnamed contact"}
+            {job.contact.name ?? t("detail.facts.unnamedContact")}
           </Link>
         ) : (
           "—"
         )}
       </Meta>
-      <Meta label="Visit">
+      <Meta label={t("detail.facts.visit")}>
         {window ? (
           <span className={overdueVisit ? "text-warning" : undefined}>{window}</span>
         ) : (
-          "Not booked yet"
+          t("detail.facts.notBooked")
         )}
       </Meta>
-      <Meta label="Quoted value">
+      <Meta label={t("detail.facts.quotedValue")}>
         {job.quote_cents !== null
           ? formatCents(job.quote_cents, job.currency ?? "ILS")
-          : "Not priced yet"}
+          : t("detail.facts.notPriced")}
       </Meta>
-      <Meta label="Assignee">{job.assignee?.name ?? "Unassigned"}</Meta>
-      <Meta label="Source">{JOB_SOURCE_LABELS[job.source]}</Meta>
+      <Meta label={t("fields.assignee")}>{job.assignee?.name ?? t("fields.unassigned")}</Meta>
+      <Meta label={t("detail.facts.source")}>{JOB_SOURCE_LABELS[job.source]}</Meta>
       {job.estimated_minutes !== null && (
-        <Meta label="Estimated duration">{job.estimated_minutes} min</Meta>
+        <Meta label={t("fields.estimatedDuration")}>
+          {t("detail.facts.durationMinutes", { count: job.estimated_minutes })}
+        </Meta>
       )}
-      {job.service_address && <Meta label="Site address">{formatAddress(job.service_address)}</Meta>}
+      {job.service_address && (
+        <Meta label={t("fields.siteAddress")}>{formatAddress(job.service_address)}</Meta>
+      )}
       {job.lead && (
-        <Meta label="From lead">
+        <Meta label={t("detail.facts.fromLead")}>
           <Link
             href={`/b/${businessUuid}/leads?lead=${job.lead.id}`}
             className="text-primary hover:underline"
@@ -148,28 +156,33 @@ function MetaBand({
         </Meta>
       )}
       {job.quote && (
-        <Meta label="From quote">
+        <Meta label={t("detail.facts.fromQuote")}>
           <Link
             href={`/b/${businessUuid}/quotes?quote=${job.quote.id}`}
             className="text-primary hover:underline"
           >
-            {job.quote.title ?? `Quote ${job.quote.number}`}
+            {job.quote.title ?? t("detail.facts.quoteNumber", { number: job.quote.number })}
           </Link>
         </Meta>
       )}
       {job.call && (
-        <Meta label="Captured on">
+        <Meta label={t("detail.facts.capturedOn")}>
           <Link
             href={`/b/${businessUuid}/calls/${job.call.id}`}
             className="text-primary hover:underline"
           >
-            {job.call.summary_title ?? `Call ${formatDate(job.call.created_at, timeZone)}`}
+            {job.call.summary_title ??
+              t("detail.facts.callOn", { date: formatDate(job.call.created_at, timeZone) })}
           </Link>
         </Meta>
       )}
-      {job.completed_at && <Meta label="Completed">{formatDateTime(job.completed_at, timeZone)}</Meta>}
+      {job.completed_at && (
+        <Meta label={JOB_STATUS_LABELS.completed}>
+          {formatDateTime(job.completed_at, timeZone)}
+        </Meta>
+      )}
       {job.canceled_at && (
-        <Meta label="Canceled">
+        <Meta label={JOB_STATUS_LABELS.canceled}>
           {formatDateTime(job.canceled_at, timeZone)}
           {job.canceled_reason && (
             <span className="block text-xs font-normal text-muted-foreground">
@@ -178,7 +191,7 @@ function MetaBand({
           )}
         </Meta>
       )}
-      <Meta label="Created">{formatDate(job.created_at, timeZone)}</Meta>
+      <Meta label={t("detail.facts.created")}>{formatDate(job.created_at, timeZone)}</Meta>
     </dl>
   );
 }
@@ -194,6 +207,8 @@ export function JobDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const jobQuery = useJobDetail(businessUuid, jobUuid);
   const startJob = useStartJob(businessUuid);
@@ -215,8 +230,8 @@ export function JobDetailPane({
           <EmptyMedia variant="icon">
             <WrenchIcon />
           </EmptyMedia>
-          <EmptyTitle>No job selected</EmptyTitle>
-          <EmptyDescription>Select a job to see its details and history.</EmptyDescription>
+          <EmptyTitle>{t("detail.noSelection.title")}</EmptyTitle>
+          <EmptyDescription>{t("detail.noSelection.description")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -242,8 +257,8 @@ export function JobDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Job not found" : "Couldn't load this job"}
-          message={notFound ? "This job doesn't exist or was removed." : jobQuery.error.message}
+          title={notFound ? t("detail.notFound.title") : t("detail.loadError")}
+          message={notFound ? t("detail.notFound.description") : jobQuery.error.message}
           onRetry={notFound ? onClearSelection : () => jobQuery.refetch()}
         />
       </div>
@@ -261,13 +276,13 @@ export function JobDetailPane({
 
   const start = () =>
     startJob.mutate(job.id, {
-      onSuccess: () => toast.success(`${job.reference} started`),
+      onSuccess: () => toast.success(t("toasts.started", { reference: job.reference })),
       onError: (error) => toast.error(error.message),
     });
 
   const complete = () =>
     completeJob.mutate(job.id, {
-      onSuccess: () => toast.success(`${job.reference} completed — ready to invoice`),
+      onSuccess: () => toast.success(t("toasts.completed", { reference: job.reference })),
       onError: (error) => toast.error(error.message),
     });
 
@@ -275,7 +290,7 @@ export function JobDetailPane({
     <div key={job.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           <div className="flex flex-col gap-4 pb-6">
             {/* Identity + status */}
@@ -287,8 +302,14 @@ export function JobDetailPane({
                   </h2>
                   <JobStatusBadge status={job.status} />
                   <JobPriorityBadge priority={job.priority} />
-                  {job.source === "agent_call" && <Badge variant="outline">From a call</Badge>}
-                  {liveInvoice && <Badge variant="outline">Invoiced as {liveInvoice.number}</Badge>}
+                  {job.source === "agent_call" && (
+                    <Badge variant="outline">{JOB_SOURCE_LABELS.agent_call}</Badge>
+                  )}
+                  {liveInvoice && (
+                    <Badge variant="outline">
+                      {t("detail.invoicedAs", { number: liveInvoice.number })}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   <span className="tabular-nums">{job.reference}</span>
@@ -305,7 +326,7 @@ export function JobDetailPane({
                   render={<Link href={`/b/${businessUuid}/contacts/${job.contact.id}`} />}
                 >
                   <UserRoundIcon />
-                  View contact
+                  {t("detail.viewContact")}
                 </Button>
               )}
             </div>
@@ -316,25 +337,25 @@ export function JobDetailPane({
               {open && (
                 <Button size="sm" onClick={() => setScheduling(true)}>
                   <CalendarClockIcon />
-                  Schedule visit
+                  {t("detail.actions.scheduleVisit")}
                 </Button>
               )}
               {scheduled && (
                 <Button size="sm" disabled={transitioning} onClick={start}>
                   <PlayIcon />
-                  Start job
+                  {t("detail.actions.startJob")}
                 </Button>
               )}
               {open && (
                 <Button size="sm" variant="outline" disabled={transitioning} onClick={start}>
                   <PlayIcon />
-                  Start now
+                  {t("detail.actions.startNow")}
                 </Button>
               )}
               {inProgress && (
                 <Button size="sm" disabled={transitioning} onClick={complete}>
                   <CheckIcon />
-                  Complete job
+                  {t("detail.actions.completeJob")}
                 </Button>
               )}
               {(open || scheduled) && (
@@ -346,19 +367,19 @@ export function JobDetailPane({
                   onClick={complete}
                 >
                   <CheckIcon />
-                  Mark completed
+                  {t("detail.actions.markCompleted")}
                 </Button>
               )}
               {(scheduled || inProgress) && (
                 <Button size="sm" variant="outline" onClick={() => setScheduling(true)}>
                   <CalendarClockIcon />
-                  Reschedule
+                  {t("detail.actions.reschedule")}
                 </Button>
               )}
               {job.status === "completed" && invoicesEnabled && !liveInvoice && (
                 <Button size="sm" onClick={() => setInvoicing(true)}>
                   <ReceiptTextIcon />
-                  Create invoice
+                  {t("invoice.confirm")}
                 </Button>
               )}
               {job.status === "completed" && liveInvoice && (
@@ -368,19 +389,19 @@ export function JobDetailPane({
                   render={<Link href={`/b/${businessUuid}/invoices?invoice=${liveInvoice.id}`} />}
                 >
                   <ReceiptTextIcon />
-                  View invoice
+                  {t("detail.actions.viewInvoice")}
                 </Button>
               )}
               {closed && (
                 <Button size="sm" variant="outline" onClick={() => setReopening(true)}>
                   <RotateCcwIcon />
-                  Reopen
+                  {t("detail.actions.reopen")}
                 </Button>
               )}
               {active && (
                 <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
                   <PencilIcon />
-                  Edit
+                  {tc("actions.edit")}
                 </Button>
               )}
               {active && (
@@ -391,7 +412,7 @@ export function JobDetailPane({
                   onClick={() => setCanceling(true)}
                 >
                   <BanIcon />
-                  Cancel job
+                  {t("cancel.confirm")}
                 </Button>
               )}
               <Button
@@ -401,13 +422,13 @@ export function JobDetailPane({
                 onClick={() => setDeleting(true)}
               >
                 <Trash2Icon />
-                Delete
+                {tc("actions.delete")}
               </Button>
             </div>
           </div>
 
           {job.description && (
-            <DetailCard title="Description">
+            <DetailCard title={tc("labels.description")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{job.description}</p>
             </DetailCard>
           )}

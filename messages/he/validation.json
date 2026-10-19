@@ -1,0 +1,199 @@
+{
+  "common": {
+    "nameRequired": "יש להזין שם",
+    "firstNameRequired": "יש להזין שם פרטי",
+    "lastNameRequired": "יש להזין שם משפחה",
+    "businessNameRequired": "יש להזין שם עסק",
+    "emailInvalid": "הזינו כתובת אימייל תקינה",
+    "urlInvalid": "הזינו כתובת URL מלאה, כולל https://",
+    "contactRequired": "בחרו איש קשר",
+    "dateRequired": "בחרו תאריך",
+    "timeRequired": "בחרו שעה",
+    "fromNumberRequired": "בחרו מספר שממנו תתבצע השיחה",
+    "issueDateFirst": "הגדירו קודם תאריך הנפקה, או השאירו את שני השדות ריקים למילוי בעת השליחה"
+  },
+  "phone": {
+    "required": "הזינו מספר טלפון",
+    "invalid": "הזינו מספר טלפון אוסטרלי, למשל 0412 345 678"
+  },
+  "length": {
+    "name": "השם חייב להכיל פחות מ-{max, number} תווים",
+    "firstName": "השם הפרטי חייב להכיל פחות מ-{max, number} תווים",
+    "lastName": "שם המשפחה חייב להכיל פחות מ-{max, number} תווים",
+    "position": "התפקיד חייב להכיל פחות מ-{max, number} תווים",
+    "company": "שם החברה חייב להכיל פחות מ-{max, number} תווים",
+    "label": "התווית חייבת להכיל פחות מ-{max, number} תווים",
+    "title": "הכותרת חייבת להכיל פחות מ-{max, number} תווים",
+    "description": "התיאור חייב להכיל פחות מ-{max, number} תווים",
+    "notes": "ההערות חייבות להכיל פחות מ-{max, number} תווים",
+    "internalNotes": "ההערות הפנימיות חייבות להכיל פחות מ-{max, number} תווים",
+    "topic": "הנושא חייב להכיל פחות מ-{max, number} תווים",
+    "reason": "הסיבה חייבת להכיל פחות מ-{max, number} תווים",
+    "content": "התוכן חייב להכיל פחות מ-{max, number} תווים",
+    "question": "השאלה חייבת להכיל פחות מ-{max, number} תווים",
+    "answer": "התשובה חייבת להכיל פחות מ-{max, number} תווים",
+    "message": "ההודעה חייבת להכיל פחות מ-{max, number} תווים",
+    "firstMessage": "ההודעה הראשונה חייבת להכיל פחות מ-{max, number} תווים",
+    "prompt": "ההנחיות לסוכן חייבות להכיל פחות מ-{max, number} תווים",
+    "terms": "התנאים חייבים להכיל פחות מ-{max, number} תווים",
+    "paymentInstructions": "הוראות התשלום חייבות להכיל פחות מ-{max, number} תווים",
+    "url": "כתובת ה-URL חייבת להכיל פחות מ-{max, number} תווים",
+    "address": "הכתובת חייבת להכיל פחות מ-{max, number} תווים",
+    "street": "שם הרחוב חייב להכיל פחות מ-{max, number} תווים",
+    "suburb": "שם הפרבר חייב להכיל פחות מ-{max, number} תווים",
+    "state": "שם המדינה חייב להכיל פחות מ-{max, number} תווים",
+    "postcode": "המיקוד חייב להכיל פחות מ-{max, number} תווים",
+    "landmark": "נקודת הציון חייבת להכיל פחות מ-{max, number} תווים",
+    "baseLocation": "מיקום הבסיס חייב להכיל פחות מ-{max, number} תווים",
+    "generic": "השדה חייב להכיל פחות מ-{max, number} תווים",
+    "rule": "כל כלל חייב להכיל פחות מ-{max, number} תווים",
+    "category": "כל קטגוריה חייבת להכיל עד {max, number} תווים",
+    "agencyId": "מזהה הסוכנות חייב להכיל עד {max, number} תווים",
+    "useFewer": "השתמשו ב-{max, number} תווים לכל היותר"
+  },
+  "count": {
+    "variables": "עד {max, plural, one {משתנה #} other {# משתנים}}",
+    "categories": "עד {max, plural, one {קטגוריה #} other {# קטגוריות}}",
+    "phoneNumbers": "עד {max, plural, one {מספר טלפון #} other {# מספרי טלפון}}",
+    "emails": "עד {max, plural, one {כתובת אימייל #} other {# כתובות אימייל}}",
+    "tags": "עד {max, plural, one {# תגית} two {# תגיות} other {# תגיות}}",
+    "rules": "עד {max, plural, one {# כלל} two {# כללים} other {# כללים}}",
+    "recipients": "עד {max, plural, one {# נמען} two {# נמענים} other {# נמענים}} בסך הכול"
+  },
+  "range": {
+    "minutes": "בין {min, number} ל-{max, plural, one {# דקה} two {# דקות} other {# דקות}}",
+    "minutesWithDays": "בין {min, number} ל-{max, plural, one {# דקה} two {# דקות} other {# דקות}} ({days, plural, one {# יום} two {# ימים} other {# ימים}})",
+    "days": "בין {min, number} ל-{max, plural, one {# יום} two {# ימים} other {# ימים}}",
+    "bookings": "בין {min, number} ל-{max, plural, one {# הזמנה} two {# הזמנות} other {# הזמנות}}"
+  },
+  "weeklyHours": {
+    "windowRequired": "הוסיפו לפחות טווח שעות אחד עבור {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
+    "windowOrder": "כל טווח שעות חייב להסתיים אחרי תחילתו ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
+  },
+  "auth": {
+    "passwordRequired": "יש להזין סיסמה",
+    "passwordMin": "הסיסמה חייבת להכיל לפחות {min, number} תווים"
+  },
+  "password": {
+    "currentRequired": "הזינו את הסיסמה הנוכחית",
+    "min": "לפחות {min, number} תווים",
+    "confirmationRequired": "אשרו את הסיסמה החדשה",
+    "mismatch": "הסיסמאות לא תואמות"
+  },
+  "agent": {
+    "voiceRequired": "בחרו קול — סוכן ה-AI לא יכול לקבל שיחות בלעדיו.",
+    "variableNameFormat": "אותיות קטנות באנגלית, ספרות וקווים תחתונים בלבד (עד {max, number})",
+    "variableNameReserved": "שם המשתנה הזה שמור",
+    "duplicateVariable": "שם משתנה כפול",
+    "unknownVariable": "משתנה לא מוכר {token} — הגדירו אותו תחת משתנים או השתמשו במשתנה מובנה."
+  },
+  "business": {
+    "timezoneRequired": "בחרו אזור זמן"
+  },
+  "businessProfile": {
+    "yearRange": "הזינו שנה בין {min} ל-{max}",
+    "travelRadiusRange": "הזינו מרחק בין {min} ל-{max} ק\"מ"
+  },
+  "call": {
+    "agentRequired": "בחרו סוכן AI לביצוע השיחה",
+    "toNumberRequired": "הזינו את המספר שאליו להתקשר",
+    "variableValueRequired": "הזינו ערך למשתנה הזה"
+  },
+  "callback": {
+    "teamMemberRequired": "בחרו חבר צוות",
+    "outboundAgentRequired": "בחרו סוכן AI לשיחות יוצאות"
+  },
+  "campaign": {
+    "agentRequired": "בחרו סוכן AI לשיחות יוצאות",
+    "callerNumberRequired": "בחרו מספר מתקשר",
+    "numberRequired": "הזינו מספר",
+    "wholeNumber": "מספרים שלמים בלבד",
+    "concurrentMin": "לפחות {min, plural, one {# שיחה} two {# שיחות} other {# שיחות}} במקביל",
+    "concurrentMax": "לכל היותר {max, plural, one {# שיחה} two {# שיחות} other {# שיחות}} במקביל",
+    "attemptsMin": "לפחות {min, plural, one {# ניסיון} two {# ניסיונות} other {# ניסיונות}}",
+    "attemptsMax": "לכל היותר {max, plural, one {# ניסיון} two {# ניסיונות} other {# ניסיונות}}",
+    "retryDelayMin": "לפחות {minutes, plural, one {# דקה} two {# דקות} other {# דקות}} בין ניסיונות",
+    "retryDelayMax": "לכל היותר {hours, plural, one {# שעה} two {# שעות} other {# שעות}} בין ניסיונות",
+    "startDateRequired": "בחרו תאריך התחלה",
+    "startTimeRequired": "בחרו שעת התחלה",
+    "endDateRequired": "בחרו תאריך סיום",
+    "endTimeRequired": "בחרו שעת סיום",
+    "endBeforeStart": "מועד הסיום חייב להיות אחרי מועד ההתחלה"
+  },
+  "contact": {
+    "identityRequired": "הוסיפו שם, חברה או מספר טלפון",
+    "primaryRequired": "סמנו אחד בלבד כראשי"
+  },
+  "dnc": {
+    "numberRequired": "הזינו את המספר לחסימה"
+  },
+  "document": {
+    "textRequired": "הדביקו את טקסט המסמך",
+    "textTooLong": "הטקסט ארוך מדי",
+    "contentRequired": "המסמך חייב להכיל תוכן"
+  },
+  "faq": {
+    "questionRequired": "יש להזין שאלה",
+    "answerRequired": "נדרשת תשובה"
+  },
+  "integration": {
+    "agencyIdRequired": "נדרש מזהה סוכנות",
+    "feedsRequired": "בחרו לפחות פיד אחד"
+  },
+  "invoice": {
+    "dueBeforeIssue": "התאריך לתשלום לא יכול להיות לפני תאריך ההנפקה"
+  },
+  "job": {
+    "titleRequired": "תנו לעבודה כותרת קצרה",
+    "estimatedMinutesRange": "הזינו מספר דקות שלם בין {min} ל-{max}",
+    "streetRequired": "הוסיפו כתובת רחוב",
+    "cityRequired": "הוסיפו פרוור או עיר"
+  },
+  "knowledge": {
+    "agentScopeRequired": "בחרו לפחות סוכן AI אחד",
+    "priceTypeRequired": "בחרו איך לתמחר",
+    "priceRequired": "הזינו מחיר",
+    "priceMinRequired": "הזינו ערך מינימלי",
+    "priceMaxRequired": "הזינו ערך מקסימלי",
+    "priceMaxBelowMin": "הערך חייב להיות לפחות הערך המינימלי",
+    "priceMessageRequired": "הזינו מה לומר במקום מחיר",
+    "durationUnitRequired": "בחרו יחידה",
+    "durationRange": "הזינו משך זמן בין {min} ל-{max}"
+  },
+  "lead": {
+    "titleRequired": "תנו לליד כותרת קצרה",
+    "valueInvalid": "הזינו סכום כמו 1500 או 1500.50"
+  },
+  "lineItem": {
+    "descriptionRequired": "תארו את העבודה או החלק",
+    "quantityInvalid": "הזינו כמות גדולה מאפס",
+    "unitPriceInvalid": "הזינו מחיר כמו 180 או 180.50",
+    "itemsRequired": "הוסיפו לפחות פריט אחד"
+  },
+  "member": {
+    "roleRequired": "בחרו תפקיד"
+  },
+  "phoneNumber": {
+    "nameRequired": "תנו שם למספר הזה",
+    "sipNumberRequired": "הזינו את המספר המשויך לטראנק SIP שלכם"
+  },
+  "policy": {
+    "contentRequired": "נדרש תוכן"
+  },
+  "quote": {
+    "validUntilBeforeIssue": "תאריך התוקף לא יכול להיות לפני תאריך ההנפקה",
+    "depositPercentRange": "הזינו אחוז במספר שלם בין {min} ל-{max}",
+    "depositAmountInvalid": "הזינו סכום כמו 250 או 250.50"
+  },
+  "recipientRules": {
+    "emailInvalid": "\"{input}\" אינה כתובת אימייל תקינה",
+    "recipientRequired": "בחרו לפחות נמען אחד."
+  },
+  "transferTarget": {
+    "conditionRequired": "תארו מתי להעביר שיחות ליעד הזה",
+    "postDialDigitsFormat": "ספרות, *, # או w בלבד",
+    "memberRequired": "בחרו חבר צוות",
+    "memberPhoneMissing": "לחבר הצוות הזה אין מספר שמור — הזינו מספר",
+    "memberHoursNeedsMember": "שעות זמינות מחייבות שיוך לחבר צוות"
+  }
+}

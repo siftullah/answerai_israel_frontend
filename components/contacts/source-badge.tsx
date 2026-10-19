@@ -1,11 +1,7 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 
 type Source = "manual" | "ai";
-
-const SOURCE_LABELS: Record<Source, string> = {
-  manual: "Manual",
-  ai: "AI",
-};
 
 const SOURCE_VARIANTS: Record<Source, "secondary" | "info"> = {
   manual: "secondary",
@@ -15,5 +11,7 @@ const SOURCE_VARIANTS: Record<Source, "secondary" | "info"> = {
 /** Who created the record — a person, or the AI mid-call. Shared by the
  * contacts and DNC tables. */
 export function SourceBadge({ source }: { source: Source }) {
-  return <Badge variant={SOURCE_VARIANTS[source]}>{SOURCE_LABELS[source]}</Badge>;
+  const t = useTranslations("contacts.source");
+  const labels: Record<Source, string> = { manual: t("manual"), ai: t("ai") };
+  return <Badge variant={SOURCE_VARIANTS[source]}>{labels[source]}</Badge>;
 }

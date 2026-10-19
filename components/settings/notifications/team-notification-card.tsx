@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -31,6 +32,7 @@ import type {
 } from "@/lib/api/types";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
 import {
+  RECIPIENT_RULES_MAX_RULES,
   recipientRulesSchema,
   recipientRulesServerErrorKey,
   toRecipientRulesPayload,
@@ -38,15 +40,24 @@ import {
   type RecipientRulesValues,
 } from "@/lib/validation/recipient-rules";
 
-/** The per-notification wording: what fires it, where it goes by default, example rules. */
+/**
+ * The per-notification wording: what fires it, where it goes by default,
+ * example rules. Already translated — every sentence that names the routed
+ * thing is spelled out per notification.
+ */
 export interface TeamNotificationSectionCopy {
   type: TeamNotificationType;
   title: string;
   description: string;
-  /** Where the email goes with routing off — shown so the switch is never a mystery. */
-  defaultRecipient: string;
-  /** The thing being routed, singular, for the test button's wording. */
-  noun: string;
+  /** Says where the email goes with routing off — so the switch is never a mystery. */
+  enabledDescription: string;
+  recipientsDescription: string;
+  rulesDescription: string;
+  rulesEmpty: string;
+  /** "Test with the latest lead". */
+  testLabel: string;
+  /** Toast when the test routes to nobody and the assistant gave no reason. */
+  testNobody: string;
   rulePlaceholders: string[];
 }
 
@@ -64,29 +75,33 @@ export function TeamNotificationCard({
   settings: TeamNotificationSettings;
   copy: TeamNotificationSectionCopy;
 }) {
+  const t = useTranslations("settings.notifications.card");
+  const tc = useTranslations("common");
   const membersQuery = useMembers(businessUuid);
   const update = useUpdateTeamNotificationSettings(businessUuid, copy.type);
   const runTest = useTestTeamNotificationRouting(copy.type);
   const [testResult, setTestResult] = useState<TeamNotificationTestResult | null>(null);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => recipientRulesSchema(tv), [tv]);
   const form = useForm<RecipientRulesValues>({
-    resolver: zodResolver(recipientRulesSchema),
+    resolver: zodResolver(schema),
     defaultValues: toRecipientRulesValues(settings),
   });
   const { errors, isDirty } = form.formState;
   const enabled = form.watch("enabled");
 
   const fieldsCopy: RecipientRulesCopy = {
-    enabledLabel: "Let an assistant choose who receives it",
-    enabledDescription: `When off, ${copy.defaultRecipient} Your recipients and rules are kept for when you turn it back on.`,
-    recipientsTitle: "Who it may go to",
-    recipientsDescription: `The people the assistant can choose from. It picks who actually gets each ${copy.noun} from your rules and their roles — usually one person, not everyone.`,
-    customEmailsDescription: "Anyone else who may receive it, such as a shared inbox.",
-    rulesTitle: "Rules for the assistant",
-    rulesDescription: `Plain-English instructions for which ${copy.noun}s go to whom, and which should go to nobody.`,
-    rulesEmpty: `No rules yet — the assistant will go by each person's role to decide who should get each ${copy.noun}. Add rules to tell it how to route them.`,
+    enabledLabel: t("enabledLabel"),
+    enabledDescription: copy.enabledDescription,
+    recipientsTitle: t("recipientsTitle"),
+    recipientsDescription: copy.recipientsDescription,
+    customEmailsDescription: t("customEmailsDescription"),
+    rulesTitle: t("rulesTitle"),
+    rulesDescription: copy.rulesDescription,
+    rulesEmpty: copy.rulesEmpty,
     rulePlaceholders: copy.rulePlaceholders,
-    rulesLimitNote: "Up to 20 rules per notification.",
+    rulesLimitNote: t("rulesLimitNote", { count: RECIPIENT_RULES_MAX_RULES }),
   };
 
   const onSubmit = form.handleSubmit((values) => {
@@ -94,7 +109,7 @@ export function TeamNotificationCard({
       onSuccess: (result) => {
         form.reset(toRecipientRulesValues(result));
         setTestResult(null);
-        toast.success(`${copy.title} settings saved`);
+        toast.success(t("toasts.saved", { title: copy.title }));
       },
       onError: (error) => {
         applyServerErrors(form, error, { mapKey: recipientRulesServerErrorKey });
@@ -108,7 +123,7 @@ export function TeamNotificationCard({
       onSuccess: (result) => {
         setTestResult(result);
         if (!result.routed) {
-          toast.info(result.reason ?? `The assistant would have sent that ${copy.noun} to nobody.`);
+          toast.info(result.reason ?? copy.testNobody);
         }
       },
       onError: (error) => toast.error(error.message),
@@ -117,16 +132,16 @@ export function TeamNotificationCard({
 
   // Tests run against the SAVED settings, so unsaved edits can't be previewed.
   const testTooltip = !enabled
-    ? "Turn routing on and save to test it."
+    ? t("testTooltip.disabled")
     : isDirty
-      ? "Save your changes first — tests use the saved settings."
+      ? t("testTooltip.unsaved")
       : null;
   const testDisabled = testTooltip !== null || update.isPending || runTest.isPending;
 
   const testButton = (
     <Button type="button" variant="outline" disabled={testDisabled} onClick={test}>
       {runTest.isPending && <Spinner />}
-      Test with the latest {copy.noun}
+      {copy.testLabel}
     </Button>
   );
 
@@ -155,8 +170,8 @@ export function TeamNotificationCard({
             <Alert>
               <AlertTitle>
                 {testResult.routed
-                  ? `Would go to ${testResult.recipients.join(", ")}`
-                  : "Would go to nobody"}
+                  ? t("testResult.routed", { recipients: testResult.recipients.join(", ") })
+                  : t("testResult.nobody")}
               </AlertTitle>
               <AlertDescription>
                 <p>
@@ -185,12 +200,12 @@ export function TeamNotificationCard({
                 disabled={update.isPending}
                 onClick={() => form.reset()}
               >
-                Discard
+                {tc("actions.discard")}
               </Button>
             )}
             <Button type="submit" disabled={!isDirty || update.isPending}>
               {update.isPending && <Spinner />}
-              Save
+              {tc("actions.save")}
             </Button>
           </div>
         </form>

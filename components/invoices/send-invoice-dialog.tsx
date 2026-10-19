@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { SendIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -40,6 +41,8 @@ export function SendInvoiceDialog({
   businessUuid: string;
   invoice: Invoice;
 }) {
+  const t = useTranslations("invoices");
+  const tc = useTranslations("common");
   const sendInvoice = useSendInvoice(businessUuid);
   const settingsQuery = useModuleSettings<InvoiceModuleSettings>(businessUuid, "invoices");
   const contactQuery = useContact(businessUuid, invoice.contact?.id ?? null);
@@ -56,19 +59,25 @@ export function SendInvoiceDialog({
   const missingRecipient = contactLoaded && primaryEmail === null && toEmail.trim() === "";
 
   const datesLine = invoice.issue_date
-    ? `Issued ${formatDateKey(invoice.issue_date)}, due ${
-        invoice.due_date ? formatDateKey(invoice.due_date) : `${netDays} days later`
-      }.`
-    : `The issue date will be set to today and the due date ${netDays} days later.`;
+    ? invoice.due_date
+      ? t("sendDialog.datesIssuedDue", {
+          issued: formatDateKey(invoice.issue_date),
+          due: formatDateKey(invoice.due_date),
+        })
+      : t("sendDialog.datesIssuedNoDue", {
+          issued: formatDateKey(invoice.issue_date),
+          days: netDays,
+        })
+    : t("sendDialog.datesUnset", { days: netDays });
 
   const submit = () => {
     const override = toEmail.trim();
     if (override !== "" && !EMAIL_PATTERN.test(override)) {
-      setFieldError("Enter a valid email address");
+      setFieldError(t("sendDialog.invalidEmail"));
       return;
     }
     if (missingRecipient) {
-      setFieldError("This contact has no email — enter one to send to");
+      setFieldError(t("sendDialog.noEmailError"));
       return;
     }
 
@@ -76,7 +85,7 @@ export function SendInvoiceDialog({
       { id: invoice.id, ...(override !== "" ? { to_email: override } : {}) },
       {
         onSuccess: () => {
-          toast.success(`Invoice ${invoice.number} sent`);
+          toast.success(t("toasts.sent", { number: invoice.number }));
           onOpenChange(false);
         },
         onError: (error) => setServerError(error.message),
@@ -88,16 +97,19 @@ export function SendInvoiceDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Send invoice {invoice.number}</DialogTitle>
+          <DialogTitle>{t("sendDialog.title", { number: invoice.number })}</DialogTitle>
           <DialogDescription>
-            Emails {invoice.contact?.name ?? "the customer"} an invoice for{" "}
-            {formatCents(invoice.total_cents, invoice.currency)}. {datesLine}
+            {t("sendDialog.description", {
+              customer: invoice.contact?.name ?? t("theCustomer"),
+              amount: formatCents(invoice.total_cents, invoice.currency),
+              dates: datesLine,
+            })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <Field data-invalid={!!fieldError || undefined}>
-            <FieldLabel htmlFor="send-invoice-email">Email to</FieldLabel>
+            <FieldLabel htmlFor="send-invoice-email">{t("sendDialog.emailLabel")}</FieldLabel>
             <Input
               id="send-invoice-email"
               type="email"
@@ -113,7 +125,7 @@ export function SendInvoiceDialog({
               <FieldError>{fieldError}</FieldError>
             ) : primaryEmail ? (
               <FieldDescription>
-                Leave blank to send to {primaryEmail}.
+                {t("sendDialog.emailHint", { email: primaryEmail })}
               </FieldDescription>
             ) : null}
           </Field>
@@ -121,8 +133,9 @@ export function SendInvoiceDialog({
           {missingRecipient && (
             <Alert variant="destructive">
               <AlertDescription>
-                {invoice.contact?.name ?? "This contact"} has no email address on file. Enter one
-                above, or the invoice will be marked sent without emailing anyone.
+                {t("sendDialog.noEmailAlert", {
+                  name: invoice.contact?.name ?? t("thisContact"),
+                })}
               </AlertDescription>
             </Alert>
           )}
@@ -136,11 +149,11 @@ export function SendInvoiceDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="button" onClick={submit} disabled={sendInvoice.isPending}>
             <SendIcon />
-            {sendInvoice.isPending ? "Sending…" : "Send invoice"}
+            {sendInvoice.isPending ? t("actions.sending") : t("actions.send")}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -76,14 +77,6 @@ import { draftToServicePayload } from "@/lib/validation/service";
 
 type Availability = "all" | "available" | "unavailable";
 
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the filter trigger shows e.g. "all".
-const AVAILABILITY_ITEMS: { value: Availability; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "available", label: "Available" },
-  { value: "unavailable", label: "Unavailable" },
-];
-
 function ServiceRowActions({
   service,
   onEdit,
@@ -93,11 +86,17 @@ function ServiceRowActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${service.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={ts("rowActions", { name: service.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -105,11 +104,11 @@ function ServiceRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -118,6 +117,17 @@ function ServiceRowActions({
 
 export function ServicesView() {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.services");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
+
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the filter trigger shows e.g. "all".
+  const availabilityItems: { value: Availability; label: string }[] = [
+    { value: "all", label: tc("labels.all") },
+    { value: "available", label: ts("available") },
+    { value: "unavailable", label: ts("unavailable") },
+  ];
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search.trim(), 300);
@@ -145,7 +155,7 @@ export function ServicesView() {
       (item) => item.name
     );
     if (items.length === 0) {
-      toast.info("Nothing usable was extracted from that source.");
+      toast.info(ts("nothingExtracted"));
       return;
     }
     setDraftRows(toDraftRows(items.map(draftToServicePayload)));
@@ -159,19 +169,19 @@ export function ServicesView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Services"
-        description="What your business offers and how your AI talks about it."
+        title={t("title")}
+        description={t("description")}
         actions={
           <>
             <ExtractionDialog
               target="services"
-              title="Extract services"
-              description="Pull your service list from your website or a document. You review every row before anything is added."
+              title={t("extract.title")}
+              description={t("extract.description")}
               onReady={(extraction) => onExtractionReady(extraction.draft)}
             />
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add service
+              {t("add")}
             </Button>
           </>
         }
@@ -181,27 +191,27 @@ export function ServicesView() {
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search services"
+          placeholder={t("searchPlaceholder")}
           className="w-full sm:w-64"
           autoComplete="off"
         />
         <Select
-          items={AVAILABILITY_ITEMS}
+          items={availabilityItems}
           value={availability}
           onValueChange={(value) => setAvailability((value as Availability | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by availability">
+          <SelectTrigger aria-label={ts("filterByAvailability")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {AVAILABILITY_ITEMS.map((item) => (
+            {availabilityItems.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ml-auto" />
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ms-auto" />
       </div>
 
       {servicesQuery.isPending ? (
@@ -212,27 +222,24 @@ export function ServicesView() {
         </div>
       ) : servicesQuery.isError ? (
         <ErrorState
-          title="Couldn't load services"
+          title={t("loadError")}
           message={servicesQuery.error.message}
           onRetry={() => servicesQuery.refetch()}
         />
       ) : servicesQuery.data.length === 0 ? (
         hasFilters ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No services match your search.
+            {t("noMatches")}
           </p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>Add your first service</EmptyTitle>
-              <EmptyDescription>
-                Services tell your AI what the business offers, what it costs and how long
-                it takes.
-              </EmptyDescription>
+              <EmptyTitle>{t("empty.title")}</EmptyTitle>
+              <EmptyDescription>{t("empty.description")}</EmptyDescription>
             </EmptyHeader>
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add service
+              {t("add")}
             </Button>
           </Empty>
         )
@@ -261,16 +268,18 @@ export function ServicesView() {
               <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                 <span>{rowSummary(service)}</span>
                 {service.agent_scope === "all" ? (
-                  <span>· All agents</span>
+                  <span>· {ts("allAgents")}</span>
                 ) : (
-                  <Badge variant="secondary">{service.agent_ids.length} selected</Badge>
+                  <Badge variant="secondary">
+                    {ts("selectedAgents", { count: service.agent_ids.length })}
+                  </Badge>
                 )}
               </div>
               <div className="mt-auto flex items-center justify-between border-t pt-3">
-                <span className="text-sm text-muted-foreground">Available</span>
+                <span className="text-sm text-muted-foreground">{ts("available")}</span>
                 <Switch
                   checked={service.available}
-                  aria-label={`Toggle availability of ${service.name}`}
+                  aria-label={ts("toggleAvailability", { name: service.name })}
                   onCheckedChange={(checked) =>
                     updateService.mutate(
                       { id: service.id, payload: { available: checked } },
@@ -287,10 +296,10 @@ export function ServicesView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Agents</TableHead>
-                <TableHead>Available</TableHead>
+                <TableHead>{tc("labels.name")}</TableHead>
+                <TableHead>{ts("price")}</TableHead>
+                <TableHead>{ts("agents")}</TableHead>
+                <TableHead>{ts("available")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -312,15 +321,17 @@ export function ServicesView() {
                   </TableCell>
                   <TableCell>
                     {service.agent_scope === "all" ? (
-                      <span className="text-muted-foreground">All agents</span>
+                      <span className="text-muted-foreground">{ts("allAgents")}</span>
                     ) : (
-                      <Badge variant="secondary">{service.agent_ids.length} selected</Badge>
+                      <Badge variant="secondary">
+                        {ts("selectedAgents", { count: service.agent_ids.length })}
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
                     <Switch
                       checked={service.available}
-                      aria-label={`Toggle availability of ${service.name}`}
+                      aria-label={ts("toggleAvailability", { name: service.name })}
                       onCheckedChange={(checked) =>
                         updateService.mutate(
                           { id: service.id, payload: { available: checked } },
@@ -361,24 +372,24 @@ export function ServicesView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your AI will no longer know about this service. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteService.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Service deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -390,8 +401,9 @@ export function ServicesView() {
           onOpenChange={(next) => {
             if (!next) setDraftRows(null);
           }}
-          title="Review extracted services"
-          itemNoun="service"
+          title={t("review.title")}
+          addLabel={(count) => t("review.addCount", { count })}
+          addedLabel={(count) => t("review.addedCount", { count })}
           rows={draftRows}
           onRowsChange={setDraftRows}
           summary={(item) => ({

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Card,
   CardAction,
@@ -15,6 +16,7 @@ import { useBusiness } from "@/components/business/business-provider";
 import { CallDirectionIcon, CallStatusBadge } from "@/components/calls/call-status-badge";
 import { useCallsInfinite } from "@/hooks/use-calls";
 import { formatDayHeading, formatDuration, formatTimeOfDay } from "@/lib/datetime";
+import { rt } from "@/lib/i18n/runtime";
 import { formatE164 } from "@/lib/phone";
 import { cn } from "@/lib/utils";
 import type { Call, CallListFilters } from "@/lib/api/types";
@@ -30,22 +32,26 @@ function callerLabel(call: Call): string {
 
 /** Latest activity across both directions; each row deep-links to the call. */
 export function RecentCallsCard({ className }: { className?: string }) {
+  const t = useTranslations("dashboard.recentCalls");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const query = useCallsInfinite(business.id, RECENT_FILTERS);
 
   const calls = query.data?.pages[0]?.data.slice(0, VISIBLE);
+  // formatDayHeading returns this exact (translated) string for today's calls.
+  const todayHeading = rt("lib.datetime.today");
 
   return (
     <Card className={cn("h-full", className)}>
       <CardHeader>
-        <CardTitle>Recent calls</CardTitle>
-        <CardDescription>What your AI has been handling</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
         <CardAction>
           <Link
             href={`/b/${business.id}/calls/inbound-logs`}
             className="text-[13px] font-medium text-cta hover:underline"
           >
-            View all
+            {tc("actions.viewAll")}
           </Link>
         </CardAction>
       </CardHeader>
@@ -59,10 +65,8 @@ export function RecentCallsCard({ className }: { className?: string }) {
         ) : query.isError || !calls || calls.length === 0 ? (
           <Empty className="border border-dashed py-10">
             <EmptyHeader>
-              <EmptyTitle>No calls yet</EmptyTitle>
-              <EmptyDescription>
-                Calls your AI answers or places will appear here.
-              </EmptyDescription>
+              <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (
@@ -70,7 +74,7 @@ export function RecentCallsCard({ className }: { className?: string }) {
             {calls.map((call) => {
               const heading = formatDayHeading(call.created_at, business.timezone);
               const timeLabel =
-                heading === "Today"
+                heading === todayHeading
                   ? formatTimeOfDay(call.created_at, business.timezone)
                   : heading;
 
@@ -98,7 +102,7 @@ export function RecentCallsCard({ className }: { className?: string }) {
                       {callerLabel(call)}
                     </span>
                     <span className="truncate text-xs text-muted-foreground">
-                      {call.summary_title ?? "No summary"}
+                      {call.summary_title ?? t("noSummary")}
                     </span>
                   </span>
                   <span className="hidden shrink-0 sm:block">

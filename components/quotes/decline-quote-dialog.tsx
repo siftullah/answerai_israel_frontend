@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { XIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -31,6 +32,8 @@ export function DeclineQuoteDialog({
   businessUuid: string;
   quote: Quote;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const declineQuote = useDeclineQuote(businessUuid);
   const [reason, setReason] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
@@ -41,7 +44,7 @@ export function DeclineQuoteDialog({
       { id: quote.id, ...(trimmed !== "" ? { reason: trimmed } : {}) },
       {
         onSuccess: () => {
-          toast.success(`Quote ${quote.number} marked as declined`);
+          toast.success(t("toasts.declined", { number: quote.number }));
           onOpenChange(false);
         },
         onError: (error) => setServerError(error.message),
@@ -53,25 +56,28 @@ export function DeclineQuoteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Mark quote {quote.number} as declined</DialogTitle>
+          <DialogTitle>{t("declineDialog.title", { number: quote.number })}</DialogTitle>
           <DialogDescription>
-            Records that {quote.contact?.name ?? "the customer"} turned down the{" "}
-            {formatCents(quote.total_cents, quote.currency)} quote. Declined is final — duplicate
-            the quote to re-price the work.
+            {t("declineDialog.description", {
+              customer: quote.contact?.name ?? t("theCustomer"),
+              amount: formatCents(quote.total_cents, quote.currency),
+            })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <Field>
-            <FieldLabel htmlFor="decline-quote-reason">Reason</FieldLabel>
+            <FieldLabel htmlFor="decline-quote-reason">
+              {t("declineDialog.reasonLabel")}
+            </FieldLabel>
             <Input
               id="decline-quote-reason"
               value={reason}
               onChange={(event) => setReason(event.target.value)}
               maxLength={500}
-              placeholder="Went with another provider"
+              placeholder={t("declineDialog.reasonPlaceholder")}
             />
-            <FieldDescription>Optional — why the customer said no.</FieldDescription>
+            <FieldDescription>{t("declineDialog.reasonHint")}</FieldDescription>
           </Field>
 
           {serverError && (
@@ -83,7 +89,7 @@ export function DeclineQuoteDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             type="button"
@@ -92,7 +98,7 @@ export function DeclineQuoteDialog({
             disabled={declineQuote.isPending}
           >
             <XIcon />
-            {declineQuote.isPending ? "Saving…" : "Mark as declined"}
+            {declineQuote.isPending ? tc("actions.saving") : t("declineDialog.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

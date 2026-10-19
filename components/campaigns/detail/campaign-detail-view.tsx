@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -12,6 +13,7 @@ import { useCampaign } from "@/hooks/use-campaigns";
 
 /** Route-level wrapper: resolves the campaign, then remounts the body per campaign. */
 export function CampaignDetailView() {
+  const t = useTranslations("campaigns");
   const { campaignUuid } = useParams<{ businessUuid: string; campaignUuid: string }>();
   const { business } = useBusiness();
   const campaignQuery = useCampaign(business.id, campaignUuid);
@@ -35,16 +37,12 @@ export function CampaignDetailView() {
           size="sm"
           render={<Link href={`/b/${business.id}/calls/campaigns`} />}
         >
-          <ArrowLeftIcon />
-          Campaigns
+          <ArrowLeftIcon className="rtl:-scale-x-100" />
+          {t("list.title")}
         </Button>
         <ErrorState
-          title={notFound ? "Campaign not found" : "Couldn't load this campaign"}
-          message={
-            notFound
-              ? "This campaign doesn't exist or was deleted."
-              : campaignQuery.error.message
-          }
+          title={notFound ? t("detail.notFoundTitle") : t("detail.loadError")}
+          message={notFound ? t("detail.notFoundMessage") : campaignQuery.error.message}
           onRetry={notFound ? undefined : () => campaignQuery.refetch()}
         />
       </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray, type UseFormReturn } from "react-hook-form";
 import type { UseQueryResult } from "@tanstack/react-query";
 import { PlusIcon, Trash2Icon } from "lucide-react";
@@ -63,6 +64,7 @@ export function RecipientRulesFields({
   membersQuery: UseQueryResult<BusinessMember[], ApiError>;
   copy: RecipientRulesCopy;
 }) {
+  const t = useTranslations("settings.recipientRules");
   const { errors, disabled } = form.formState;
   const enabled = form.watch("enabled");
   const memberIds = form.watch("member_ids");
@@ -120,12 +122,10 @@ export function RecipientRulesFields({
                   </div>
                 ) : membersQuery.isError ? (
                   <p className="px-3 py-3 text-sm text-muted-foreground">
-                    Couldn&apos;t load team members — add addresses below instead.
+                    {t("membersLoadError")}
                   </p>
                 ) : members.length === 0 ? (
-                  <p className="px-3 py-3 text-sm text-muted-foreground">
-                    No team members yet — add addresses below instead.
-                  </p>
+                  <p className="px-3 py-3 text-sm text-muted-foreground">{t("noMembers")}</p>
                 ) : (
                   members.map((member, index) => {
                     const noEmail = member.email === null;
@@ -164,7 +164,7 @@ export function RecipientRulesFields({
                             )}
                           </span>
                           <span className="truncate text-xs text-muted-foreground">
-                            {member.email ?? "No email"}
+                            {member.email ?? t("noEmail")}
                           </span>
                         </span>
                       </label>
@@ -178,7 +178,7 @@ export function RecipientRulesFields({
         </div>
 
         <Field data-invalid={!!customEmailError || undefined}>
-          <FieldLabel htmlFor={`${idPrefix}-custom-emails`}>Other email addresses</FieldLabel>
+          <FieldLabel htmlFor={`${idPrefix}-custom-emails`}>{t("customEmails")}</FieldLabel>
           <Controller
             control={form.control}
             name="custom_emails"
@@ -189,8 +189,8 @@ export function RecipientRulesFields({
                 onChange={field.onChange}
                 max={Math.max(0, RECIPIENT_RULES_MAX_RECIPIENTS - memberIds.length)}
                 maxItemLength={254}
-                placeholder="Type an address and press Enter"
-                limitPlaceholder="Recipient limit reached"
+                placeholder={t("customEmailsPlaceholder")}
+                limitPlaceholder={t("recipientLimit")}
                 invalid={!!customEmailError}
                 disabled={disabled}
               />
@@ -219,7 +219,7 @@ export function RecipientRulesFields({
                         id={`${idPrefix}-rule-${index}`}
                         rows={2}
                         maxLength={RECIPIENT_RULES_RULE_MAX_LENGTH}
-                        aria-label={`Rule ${index + 1}`}
+                        aria-label={t("ruleLabel", { number: index + 1 })}
                         aria-invalid={!!rowError}
                         placeholder={copy.rulePlaceholders[index % copy.rulePlaceholders.length]}
                         {...form.register(`rules.${index}.text`)}
@@ -230,7 +230,7 @@ export function RecipientRulesFields({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label="Remove rule"
+                      aria-label={t("removeRule")}
                       disabled={disabled}
                       onClick={() => remove(index)}
                     >
@@ -252,7 +252,7 @@ export function RecipientRulesFields({
               onClick={() => append({ text: "" })}
             >
               <PlusIcon />
-              Add rule
+              {t("addRule")}
             </Button>
             {fields.length >= RECIPIENT_RULES_MAX_RULES && (
               <p className="text-sm text-muted-foreground">{copy.rulesLimitNote}</p>

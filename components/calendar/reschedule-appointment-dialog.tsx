@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -45,11 +47,15 @@ export function RescheduleAppointmentDialog({
   /** Assignee user uuid ("" = unassigned) — scopes the suggested slots. */
   memberId: string;
 }) {
+  const t = useTranslations("calendar.rescheduleDialog");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const reschedule = useRescheduleAppointment(business.id);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => rescheduleAppointmentSchema(tv), [tv]);
   const form = useForm<RescheduleAppointmentValues>({
-    resolver: zodResolver(rescheduleAppointmentSchema),
+    resolver: zodResolver(schema),
     defaultValues: { ...utcIsoToZonedFields(startsAt, business.timezone), slot_iso: "" },
   });
   const rootServerError = (
@@ -61,7 +67,7 @@ export function RescheduleAppointmentDialog({
       { id: appointmentUuid, ...toRescheduleAppointmentPayload(values, business.timezone) },
       {
         onSuccess: () => {
-          toast.success("Appointment rescheduled");
+          toast.success(t("toasts.rescheduled"));
           onOpenChange(false);
         },
         onError: (error) => applyAppointmentServerErrors(form, error),
@@ -73,10 +79,8 @@ export function RescheduleAppointmentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Reschedule appointment</DialogTitle>
-          <DialogDescription>
-            Pick a new time — the contact will be emailed the update.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
@@ -85,7 +89,9 @@ export function RescheduleAppointmentDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="reschedule-appointment-date">Date</FieldLabel>
+                <FieldLabel htmlFor="reschedule-appointment-date">
+                  {tc("labels.date")}
+                </FieldLabel>
                 <DatePicker
                   id="reschedule-appointment-date"
                   ref={field.ref}
@@ -124,10 +130,10 @@ export function RescheduleAppointmentDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={reschedule.isPending}>
-              {reschedule.isPending ? "Rescheduling…" : "Reschedule"}
+              {reschedule.isPending ? t("rescheduling") : t("reschedule")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,13 +1,13 @@
+import { labelMap } from "@/lib/i18n/label-map";
+
 export type TransferMode = "blind" | "screened";
 export type HoursMode = "inherit" | "member" | "custom" | "bypass";
 
 /** Short labels for badges/tables — the pickers carry their own card copy. */
-export const HOURS_MODE_LABELS: Record<HoursMode, string> = {
-  inherit: "Business hours",
-  member: "Availability",
-  custom: "Custom",
-  bypass: "Always",
-};
+export const HOURS_MODE_LABELS: Record<HoursMode, string> = labelMap(
+  "lib.hoursMode",
+  ["inherit", "member", "custom", "bypass"]
+);
 
 export const WEEKDAYS = [
   "monday",

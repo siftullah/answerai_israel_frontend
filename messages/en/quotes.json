@@ -1,0 +1,235 @@
+{
+  "meta": {
+    "title": "Quotes"
+  },
+  "page": {
+    "title": "Quotes",
+    "description": "Price up work, send it for approval, and track what gets accepted."
+  },
+  "newQuote": "New quote",
+  "theCustomer": "the customer",
+  "thisContact": "This contact",
+  "tabs": {
+    "open": "Open",
+    "expired": "Expired",
+    "accepted": "Accepted"
+  },
+  "empty": {
+    "open": {
+      "title": "No open quotes",
+      "description": "Drafts and quotes awaiting a customer response will show up here."
+    },
+    "expired": {
+      "title": "Nothing expired",
+      "description": "Quotes that lapse without an answer land here — revive or re-quote them."
+    },
+    "accepted": {
+      "title": "No accepted quotes yet",
+      "description": "Quotes your customers say yes to will appear here."
+    },
+    "all": {
+      "title": "No quotes yet",
+      "description": "Price up your first job and send it for the customer to accept."
+    },
+    "noMatch": {
+      "title": "No quotes match",
+      "description": "Try a different search or clear some filters."
+    }
+  },
+  "stats": {
+    "awaitingResponse": "Awaiting response",
+    "withCustomers": "{count, plural, one {# quote with customers} other {# quotes with customers}}",
+    "withCustomersExpiring": "{count, plural, one {# quote with customers} other {# quotes with customers}} · {expiring} expiring soon",
+    "nothingAwaiting": "Nothing awaiting a response",
+    "acceptedThisMonth": "Accepted this month",
+    "acceptedAllTime": "{count, plural, one {# quote accepted all time} other {# quotes accepted all time}}",
+    "winRate": "Win rate",
+    "winRateDetail": "{accepted} of {decided, plural, one {# decided quote} other {# decided quotes}}, last 90 days",
+    "noDecided": "No decided quotes in the last 90 days"
+  },
+  "list": {
+    "loadError": "Couldn't load quotes",
+    "searchPlaceholder": "Search number, title or contact…",
+    "searchLabel": "Search quotes by number, title or contact name",
+    "filterLabel": "Filter quotes",
+    "anyStatus": "Any status",
+    "removeFilter": "Remove {status} filter"
+  },
+  "row": {
+    "callRequest": "Quote request from a call — price it up",
+    "draft": "Draft — not sent yet",
+    "validUntil": "Valid until {date}",
+    "accepted": "Accepted {date}",
+    "declined": "Declined {date}",
+    "expired": "Expired {date}",
+    "voided": "Voided {date}"
+  },
+  "labels": {
+    "customer": "Customer",
+    "lineItems": "Line items",
+    "type": "Type",
+    "qty": "Qty",
+    "unit": "Unit",
+    "unitPrice": "Unit price",
+    "amount": "Amount",
+    "validUntil": "Valid until",
+    "setOnSend": "Set on send",
+    "terms": "Terms",
+    "internalNotes": "Internal notes",
+    "deposit": "Deposit",
+    "taxLine": "{label} ({rate}%)"
+  },
+  "actions": {
+    "send": "Send quote",
+    "sending": "Sending…",
+    "revive": "Revive & re-send",
+    "resend": "Re-send",
+    "resendQuote": "Re-send quote",
+    "convertToInvoice": "Convert to invoice",
+    "viewInvoice": "View invoice",
+    "convertToJob": "Convert to job",
+    "viewJob": "View job",
+    "copyLink": "Copy link",
+    "markAccepted": "Mark accepted",
+    "markDeclined": "Mark declined",
+    "duplicate": "Duplicate",
+    "void": "Void",
+    "voidQuote": "Void quote",
+    "voiding": "Voiding…",
+    "keepQuote": "Keep quote",
+    "deleteDraft": "Delete draft",
+    "keepDraft": "Keep draft",
+    "createDraft": "Create draft",
+    "converting": "Converting…",
+    "viewContact": "View contact"
+  },
+  "detail": {
+    "back": "All quotes",
+    "noneSelected": {
+      "title": "No quote selected",
+      "description": "Select a quote to see its details."
+    },
+    "notFound": {
+      "title": "Quote not found",
+      "description": "This quote doesn't exist or was removed."
+    },
+    "loadError": "Couldn't load this quote",
+    "title": "Quote {number}",
+    "fromCallBadge": "From a call",
+    "invoicedAsBadge": "Invoiced as {number}",
+    "jobBadge": "Job {reference}",
+    "fields": {
+      "fromLead": "From lead",
+      "issued": "Issued",
+      "sent": "Sent",
+      "viewed": "Viewed by customer",
+      "accepted": "Accepted",
+      "acceptedOnline": "Online via the quote link",
+      "acceptedInPortal": "Recorded in the portal",
+      "declined": "Declined",
+      "voided": "Voided",
+      "created": "Created"
+    },
+    "noItemsFromCall": "No line items yet — this request came in from a call. Edit the draft to price it up.",
+    "noItems": "No line items yet — edit the draft to add them.",
+    "depositPercent": "Deposit ({percent}%)",
+    "internalNotesHint": "Never shown to the customer."
+  },
+  "form": {
+    "editTitle": "Edit quote {number}",
+    "editDescription": "Drafts stay editable until you send them.",
+    "newDescription": "Price up the work, then send it for the customer to accept.",
+    "title": "Title",
+    "titlePlaceholder": "What the quote is for, e.g. Kitchen rewire",
+    "issueDate": "Issue date",
+    "validUntilHint": "Left blank, sending sets it {days, plural, one {# day} other {# days}} after the issue date.",
+    "addLine": "Add line",
+    "descriptionPlaceholder": "What will be done or supplied",
+    "lineDescription": "Line {line} description",
+    "lineType": "Line {line} type",
+    "lineQuantity": "Line {line} quantity",
+    "lineUnitPrice": "Line {line} unit price in dollars",
+    "lineTax": "Line {line} attracts {tax}",
+    "removeLine": "Remove line {line}",
+    "deposit": {
+      "none": "No deposit",
+      "percent": "Percentage of total",
+      "fixed": "Fixed amount",
+      "percentLabel": "Deposit percentage",
+      "amountLabel": "Deposit amount",
+      "percentHint": "Whole percent of the quote total.",
+      "amountHint": "Dollar amount payable to commence.",
+      "toCommence": "Deposit to commence"
+    },
+    "notesPlaceholder": "Shown to the customer on the quote (optional)",
+    "termsPlaceholder": "Scope of work, exclusions, payment terms…",
+    "internalNotesPlaceholder": "Pricing workings, call details — never shown to the customer"
+  },
+  "sendDialog": {
+    "title": "Send quote {number}",
+    "description": "Emails {customer} a quote for {amount} with a link to accept online. {dates}",
+    "datesIssuedValid": "Issued {issued}, valid until {validUntil}.",
+    "datesIssuedNoValid": "Issued {issued}, valid until {days, plural, one {# day later} other {# days later}}.",
+    "datesUnset": "The issue date will be set to today and the quote stays valid {days, plural, one {# day} other {# days}}.",
+    "emailLabel": "Email to",
+    "emailHint": "Leave blank to send to {email}.",
+    "invalidEmail": "Enter a valid email address",
+    "noEmailAlert": "{name} has no email address on file. You can still send — the quote goes live and you share its link by text or in person."
+  },
+  "resendDialog": {
+    "reviveTitle": "Revive quote {number}",
+    "resendTitle": "Re-send quote {number}",
+    "reviveDescription": "Puts the quote back in front of the customer with a fresh validity window.",
+    "resendDescription": "Sends the customer another email with the same accept link.",
+    "validUntilPlaceholder": "{days, plural, one {# day from today} other {# days from today}}",
+    "validUntilHint": "Left blank, the quote stays valid {days, plural, one {# day} other {# days}} from today."
+  },
+  "acceptDialog": {
+    "title": "Mark quote {number} as accepted?",
+    "description": "Records that {customer} accepted the {amount} quote. You can then convert it to an invoice.",
+    "descriptionExpired": "Records that {customer} accepted the {amount} quote (even though it had expired). You can then convert it to an invoice.",
+    "confirm": "Mark as accepted"
+  },
+  "declineDialog": {
+    "title": "Mark quote {number} as declined",
+    "description": "Records that {customer} turned down the {amount} quote. Declined is final — duplicate the quote to re-price the work.",
+    "reasonLabel": "Reason",
+    "reasonPlaceholder": "Went with another provider",
+    "reasonHint": "Optional — why the customer said no.",
+    "confirm": "Mark as declined"
+  },
+  "convertDialog": {
+    "title": "Convert quote {number} to an invoice?",
+    "description": "Drafts an invoice for {amount} with the same line items and tax rates, ready to review and send to {customer}. A quote converts once.",
+    "confirm": "Create invoice"
+  },
+  "convertToJobDialog": {
+    "title": "Convert quote {number} to a job?",
+    "description": "Creates a job worth {amount} (ex. tax) with the same line items, ready to schedule for {customer}. A quote converts once — the quote stays here with its history.",
+    "confirm": "Create job"
+  },
+  "voidDialog": {
+    "title": "Void quote {number}?",
+    "description": "Withdraws the {amount} quote for {customer} — their link stops accepting. The quote stays on record but can't be reopened."
+  },
+  "deleteDialog": {
+    "title": "Delete draft {number}?",
+    "description": "The draft and its line items are removed for good. This can't be undone."
+  },
+  "toasts": {
+    "draftCreated": "Draft {number} created",
+    "draftDeleted": "Draft {number} deleted",
+    "updated": "Quote {number} updated",
+    "sent": "Quote {number} sent",
+    "sentNoEmail": "Quote {number} is live, but no email went out — copy the link to share it.",
+    "resent": "Quote {number} re-sent",
+    "resentNoEmail": "Quote {number} is live again, but no email went out — copy the link to share it.",
+    "accepted": "Quote {number} accepted",
+    "declined": "Quote {number} marked as declined",
+    "voided": "Quote {number} voided",
+    "convertedToInvoice": "Invoice {invoice} drafted from quote {quote}",
+    "convertedToJob": "{job} created from quote {quote} — book it in",
+    "linkCopied": "Quote link copied",
+    "copyFailed": "Couldn't copy — the link is shown in your browser at {url}"
+  }
+}

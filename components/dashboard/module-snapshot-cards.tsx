@@ -9,6 +9,7 @@ import {
   WrenchIcon,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBusiness, useModuleEnabled } from "@/components/business/business-provider";
 import { useInvoiceCounts } from "@/hooks/use-invoices";
@@ -49,7 +50,7 @@ function SnapshotCard({
           <Icon className="size-4" />
         </span>
         <span className="text-sm font-semibold">{title}</span>
-        <ArrowUpRightIcon className="ml-auto size-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100" />
+        <ArrowUpRightIcon className="ms-auto size-4 text-muted-foreground opacity-0 transition-opacity group-hover:opacity-100 rtl:-scale-x-100" />
       </div>
       <div className="flex flex-col gap-0.5">
         <span className="font-heading text-2xl font-semibold tracking-tight tabular-nums">
@@ -67,6 +68,7 @@ function SnapshotCard({
  * with each module's own page, so the dashboard never double-fetches.
  */
 export function ModuleSnapshotCards() {
+  const t = useTranslations("dashboard.snapshots");
   const { business } = useBusiness();
   const base = `/b/${business.id}`;
 
@@ -86,20 +88,22 @@ export function ModuleSnapshotCards() {
     cards.push(
       <SnapshotCard
         key="leads"
-        title="Leads"
+        title={t("leads.title")}
         icon={TargetIcon}
         href={`${base}/leads`}
         loading={leads.isPending}
         money={leads.data?.pipeline_value_cents}
-        moneyLabel="Open pipeline"
+        moneyLabel={t("leads.moneyLabel")}
         foot={
           leads.data && (
             <>
-              {leads.data.open} open
+              {t("leads.open", { count: leads.data.open })}
               {leads.data.new > 0 && (
                 <>
                   {" · "}
-                  <span className="font-medium text-info">{leads.data.new} new</span>
+                  <span className="font-medium text-info">
+                    {t("leads.new", { count: leads.data.new })}
+                  </span>
                 </>
               )}
             </>
@@ -113,21 +117,21 @@ export function ModuleSnapshotCards() {
     cards.push(
       <SnapshotCard
         key="quotes"
-        title="Quotes"
+        title={t("quotes.title")}
         icon={FileTextIcon}
         href={`${base}/quotes`}
         loading={quotes.isPending}
         money={quotes.data?.open_value_cents}
-        moneyLabel="Awaiting response"
+        moneyLabel={t("quotes.moneyLabel")}
         foot={
           quotes.data && (
             <>
-              {quotes.data.awaiting} awaiting
+              {t("quotes.awaiting", { count: quotes.data.awaiting })}
               {quotes.data.expiring_soon > 0 && (
                 <>
                   {" · "}
                   <span className="font-medium text-warning">
-                    {quotes.data.expiring_soon} expiring soon
+                    {t("quotes.expiringSoon", { count: quotes.data.expiring_soon })}
                   </span>
                 </>
               )}
@@ -142,21 +146,21 @@ export function ModuleSnapshotCards() {
     cards.push(
       <SnapshotCard
         key="jobs"
-        title="Jobs"
+        title={t("jobs.title")}
         icon={WrenchIcon}
         href={`${base}/jobs`}
         loading={jobs.isPending}
         money={jobs.data?.active_value_cents}
-        moneyLabel="Active value"
+        moneyLabel={t("jobs.moneyLabel")}
         foot={
           jobs.data && (
             <>
-              {jobs.data.active} active
+              {t("jobs.active", { count: jobs.data.active })}
               {jobs.data.scheduled_today > 0 && (
                 <>
                   {" · "}
                   <span className="font-medium text-info">
-                    {jobs.data.scheduled_today} today
+                    {t("jobs.today", { count: jobs.data.scheduled_today })}
                   </span>
                 </>
               )}
@@ -171,21 +175,21 @@ export function ModuleSnapshotCards() {
     cards.push(
       <SnapshotCard
         key="invoices"
-        title="Invoices"
+        title={t("invoices.title")}
         icon={ReceiptTextIcon}
         href={`${base}/invoices`}
         loading={invoices.isPending}
         money={invoices.data?.outstanding_cents}
-        moneyLabel="Outstanding"
+        moneyLabel={t("invoices.moneyLabel")}
         foot={
           invoices.data && (
             <>
-              {invoices.data.awaiting_payment} awaiting payment
+              {t("invoices.awaitingPayment", { count: invoices.data.awaiting_payment })}
               {invoices.data.overdue > 0 && (
                 <>
                   {" · "}
                   <span className="font-medium text-destructive">
-                    {invoices.data.overdue} overdue
+                    {t("invoices.overdue", { count: invoices.data.overdue })}
                   </span>
                 </>
               )}

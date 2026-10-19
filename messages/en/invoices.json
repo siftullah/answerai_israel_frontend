@@ -1,0 +1,164 @@
+{
+  "meta": {
+    "title": "Invoices"
+  },
+  "page": {
+    "title": "Invoices",
+    "description": "Raise invoices for completed work and track what's been paid."
+  },
+  "newInvoice": "New invoice",
+  "theCustomer": "the customer",
+  "thisContact": "This contact",
+  "tabs": {
+    "open": "Open",
+    "overdue": "Overdue",
+    "paid": "Paid"
+  },
+  "empty": {
+    "open": {
+      "title": "No open invoices",
+      "description": "Drafts and invoices awaiting payment will show up here."
+    },
+    "overdue": {
+      "title": "Nothing overdue",
+      "description": "Invoices that pass their due date unpaid land here."
+    },
+    "paid": {
+      "title": "No paid invoices yet",
+      "description": "Invoices you mark as paid will appear here."
+    },
+    "all": {
+      "title": "No invoices yet",
+      "description": "Raise your first invoice for completed work."
+    },
+    "noMatch": {
+      "title": "No invoices match",
+      "description": "Try a different search or clear some filters."
+    }
+  },
+  "stats": {
+    "outstanding": "Outstanding",
+    "awaitingPayment": "{count, plural, =0 {Nothing awaiting payment} one {# invoice awaiting payment} other {# invoices awaiting payment}}",
+    "overdue": "Overdue",
+    "pastDue": "{count, plural, =0 {Nothing past due} one {# invoice past due} other {# invoices past due}}",
+    "paidThisMonth": "Paid this month",
+    "paidAllTime": "{count, plural, one {# invoice paid all time} other {# invoices paid all time}}"
+  },
+  "list": {
+    "loadError": "Couldn't load invoices",
+    "searchPlaceholder": "Search number or contact…",
+    "searchLabel": "Search invoices by number or contact name",
+    "filterLabel": "Filter invoices",
+    "anyStatus": "Any status",
+    "removeFilter": "Remove {status} filter"
+  },
+  "row": {
+    "draft": "Draft — not sent yet",
+    "due": "Due {date}",
+    "wasDue": "Was due {date}",
+    "paid": "Paid {date}",
+    "voided": "Voided {date}"
+  },
+  "labels": {
+    "customer": "Customer",
+    "lineItems": "Line items",
+    "type": "Type",
+    "qty": "Qty",
+    "unit": "Unit",
+    "unitPrice": "Unit price",
+    "amount": "Amount",
+    "paymentInstructions": "Payment instructions",
+    "setOnSend": "Set on send",
+    "taxLine": "{label} ({rate}%)"
+  },
+  "actions": {
+    "send": "Send invoice",
+    "sending": "Sending…",
+    "markPaid": "Mark as paid",
+    "duplicate": "Duplicate",
+    "void": "Void",
+    "voidInvoice": "Void invoice",
+    "voiding": "Voiding…",
+    "keepInvoice": "Keep invoice",
+    "deleteDraft": "Delete draft",
+    "keepDraft": "Keep draft",
+    "createDraft": "Create draft",
+    "viewContact": "View contact"
+  },
+  "detail": {
+    "back": "All invoices",
+    "noneSelected": {
+      "title": "No invoice selected",
+      "description": "Select an invoice to see its details."
+    },
+    "notFound": {
+      "title": "Invoice not found",
+      "description": "This invoice doesn't exist or was removed."
+    },
+    "loadError": "Couldn't load this invoice",
+    "title": "Invoice {number}",
+    "fromJobBadge": "From {reference}",
+    "fields": {
+      "fromJob": "From job",
+      "issued": "Issued",
+      "due": "Due",
+      "sent": "Sent",
+      "paid": "Paid",
+      "voided": "Voided",
+      "created": "Created"
+    }
+  },
+  "form": {
+    "editTitle": "Edit invoice {number}",
+    "editDescription": "Drafts stay editable until you send them.",
+    "newDescription": "Raise a draft, then send it when you're ready.",
+    "issueDate": "Issue date",
+    "dueDate": "Due date",
+    "dueDateHint": "Left blank, sending sets it {days, plural, one {# day} other {# days}} after the issue date.",
+    "addLine": "Add line",
+    "descriptionPlaceholder": "What was done or supplied",
+    "lineDescription": "Line {line} description",
+    "lineType": "Line {line} type",
+    "lineQuantity": "Line {line} quantity",
+    "lineUnitPrice": "Line {line} unit price in dollars",
+    "lineTax": "Line {line} attracts {tax}",
+    "removeLine": "Remove line {line}",
+    "notesPlaceholder": "Shown on the invoice email (optional)",
+    "paymentInstructionsPlaceholder": "Direct deposit — BSB, account number, reference…"
+  },
+  "sendDialog": {
+    "title": "Send invoice {number}",
+    "description": "Emails {customer} an invoice for {amount}. {dates}",
+    "datesIssuedDue": "Issued {issued}, due {due}.",
+    "datesIssuedNoDue": "Issued {issued}, due {days, plural, one {# day later} other {# days later}}.",
+    "datesUnset": "The issue date will be set to today and the due date {days, plural, one {# day later} other {# days later}}.",
+    "emailLabel": "Email to",
+    "emailHint": "Leave blank to send to {email}.",
+    "invalidEmail": "Enter a valid email address",
+    "noEmailError": "This contact has no email — enter one to send to",
+    "noEmailAlert": "{name} has no email address on file. Enter one above, or the invoice will be marked sent without emailing anyone."
+  },
+  "markPaidDialog": {
+    "title": "Mark invoice {number} as paid",
+    "description": "Records {amount} from {customer} as received.",
+    "referenceLabel": "Payment reference",
+    "referencePlaceholder": "Bank transfer #88213",
+    "referenceHint": "Optional — how the payment arrived."
+  },
+  "voidDialog": {
+    "title": "Void invoice {number}?",
+    "description": "The {amount} owed by {customer} stops counting as outstanding. The invoice stays on record but can't be reopened."
+  },
+  "deleteDialog": {
+    "title": "Delete draft {number}?",
+    "description": "The draft and its line items are removed for good. This can't be undone."
+  },
+  "toasts": {
+    "draftCreated": "Draft {number} created",
+    "draftDeleted": "Draft {number} deleted",
+    "updated": "Invoice {number} updated",
+    "sent": "Invoice {number} sent",
+    "markedPaid": "Invoice {number} marked as paid",
+    "voided": "Invoice {number} voided"
+  }
+}

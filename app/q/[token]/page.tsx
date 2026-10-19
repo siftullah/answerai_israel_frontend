@@ -1,7 +1,11 @@
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { PublicQuoteView } from "@/components/public-quote/public-quote-view";
 
-export const metadata: Metadata = { title: "Quote" };
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("publicQuote");
+  return { title: t("meta.title") };
+}
 
 /**
  * The customer-facing accept-link page. Unauthenticated by design — the

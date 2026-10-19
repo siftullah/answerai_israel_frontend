@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -15,6 +16,7 @@ export function AgentDetailView() {
   const { agentUuid } = useParams<{ businessUuid: string; agentUuid: string }>();
   const { business } = useBusiness();
   const agentQuery = useAgent(business.id, agentUuid);
+  const t = useTranslations("agents.detail");
 
   if (agentQuery.isPending) {
     return (
@@ -35,16 +37,12 @@ export function AgentDetailView() {
           size="sm"
           render={<Link href={`/b/${business.id}/agents`} />}
         >
-          <ArrowLeftIcon />
-          Agents
+          <ArrowLeftIcon className="rtl:-scale-x-100" />
+          {t("back")}
         </Button>
         <ErrorState
-          title={notFound ? "Agent not found" : "Couldn't load this agent"}
-          message={
-            notFound
-              ? "This agent doesn't exist or was deleted."
-              : agentQuery.error.message
-          }
+          title={notFound ? t("notFound.title") : t("loadError")}
+          message={notFound ? t("notFound.description") : agentQuery.error.message}
           onRetry={notFound ? undefined : () => agentQuery.refetch()}
         />
       </div>

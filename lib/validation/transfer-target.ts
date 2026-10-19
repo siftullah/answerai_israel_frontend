@@ -4,6 +4,7 @@ import type {
   TransferTarget,
   TransferTargetPayload,
 } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
 import {
   hourRowSchema,
@@ -14,72 +15,78 @@ import {
 
 export { defaultWeeklyHours, toEditableWeek } from "@/lib/validation/weekly-hours";
 
-export const transferTargetSchema = z
-  .object({
-    name: z.string().min(1, "Name is required").max(100, "Keep the name under 100 characters"),
-    /** UI-only: which destination tab is active — never sent to the API. */
-    destination_kind: z.enum(["member", "other"]),
-    /** "" = no member picked. */
-    business_member_id: z.string(),
-    /** UI-only: the selected member's current saved E.164 (or ""). Never sent —
-     * drives the required-number rule and the dynamic-follow override resolution. */
-    member_phone: z.string(),
-    // Loose AU shape gate; the backend's Phone rule stays the authority.
-    to_e164: optionalAuPhoneField(),
-    condition: z.string().min(1, "Describe when to transfer here").max(500, "Keep this under 500 characters"),
-    post_dial_digits: z
-      .string()
-      .max(32, "Use 32 characters or fewer")
-      .regex(/^[0-9*#w]*$/, "Digits, *, # or w only"),
-    hours_mode: z.enum(["inherit", "member", "custom", "bypass"]),
-    custom_hours: z.array(hourRowSchema),
-  })
-  .superRefine((values, ctx) => {
-    if (values.destination_kind === "member" && values.business_member_id === "") {
-      ctx.addIssue({
-        code: "custom",
-        path: ["business_member_id"],
-        message: "Pick a team member",
-      });
-    }
-    if (values.destination_kind === "other" && values.to_e164 === "") {
-      ctx.addIssue({
-        code: "custom",
-        path: ["to_e164"],
-        message: "Enter a phone number",
-      });
-    }
-    // A member with no saved number can't be dialled — force an override number.
-    // Attached to to_e164 (a Details-step field) so Next surfaces it.
-    if (
-      values.destination_kind === "member" &&
-      values.business_member_id !== "" &&
-      values.member_phone === "" &&
-      values.to_e164 === ""
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["to_e164"],
-        message: "This member has no saved number — enter one",
-      });
-    }
-    // Backstop for the backend rule — the UI hides the option for "other".
-    if (
-      values.hours_mode === "member" &&
-      (values.destination_kind !== "member" || values.business_member_id === "")
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["hours_mode"],
-        message: "Availability hours needs a linked team member",
-      });
-    }
-    if (values.hours_mode === "custom") {
-      validateHourRows(values.custom_hours, ctx, ["custom_hours"]);
-    }
-  });
+/** `t` is a translator scoped to the `validation` namespace. */
+export function transferTargetSchema(t: Translator) {
+  return z
+    .object({
+      name: z.string().min(1, t("common.nameRequired")).max(100, t("length.name", { max: 100 })),
+      /** UI-only: which destination tab is active — never sent to the API. */
+      destination_kind: z.enum(["member", "other"]),
+      /** "" = no member picked. */
+      business_member_id: z.string(),
+      /** UI-only: the selected member's current saved E.164 (or ""). Never sent —
+       * drives the required-number rule and the dynamic-follow override resolution. */
+      member_phone: z.string(),
+      // Loose AU shape gate; the backend's Phone rule stays the authority.
+      to_e164: optionalAuPhoneField(t),
+      condition: z
+        .string()
+        .min(1, t("transferTarget.conditionRequired"))
+        .max(500, t("length.generic", { max: 500 })),
+      post_dial_digits: z
+        .string()
+        .max(32, t("length.useFewer", { max: 32 }))
+        .regex(/^[0-9*#w]*$/, t("transferTarget.postDialDigitsFormat")),
+      hours_mode: z.enum(["inherit", "member", "custom", "bypass"]),
+      custom_hours: z.array(hourRowSchema),
+    })
+    .superRefine((values, ctx) => {
+      if (values.destination_kind === "member" && values.business_member_id === "") {
+        ctx.addIssue({
+          code: "custom",
+          path: ["business_member_id"],
+          message: t("transferTarget.memberRequired"),
+        });
+      }
+      if (values.destination_kind === "other" && values.to_e164 === "") {
+        ctx.addIssue({
+          code: "custom",
+          path: ["to_e164"],
+          message: t("phone.required"),
+        });
+      }
+      // A member with no saved number can't be dialled — force an override number.
+      // Attached to to_e164 (a Details-step field) so Next surfaces it.
+      if (
+        values.destination_kind === "member" &&
+        values.business_member_id !== "" &&
+        values.member_phone === "" &&
+        values.to_e164 === ""
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["to_e164"],
+          message: t("transferTarget.memberPhoneMissing"),
+        });
+      }
+      // Backstop for the backend rule — the UI hides the option for "other".
+      if (
+        values.hours_mode === "member" &&
+        (values.destination_kind !== "member" || values.business_member_id === "")
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["hours_mode"],
+          message: t("transferTarget.memberHoursNeedsMember"),
+        });
+      }
+      if (values.hours_mode === "custom") {
+        validateHourRows(t, values.custom_hours, ctx, ["custom_hours"]);
+      }
+    });
+}
 
-export type TransferTargetValues = z.infer<typeof transferTargetSchema>;
+export type TransferTargetValues = z.infer<ReturnType<typeof transferTargetSchema>>;
 
 export function toTransferTargetValues(target: TransferTarget | null): TransferTargetValues {
   const memberPhone = target?.business_member?.phone_e164 ?? "";

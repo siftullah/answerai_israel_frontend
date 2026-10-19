@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { FormProvider, useForm, type FieldErrors } from "react-hook-form";
@@ -119,8 +120,12 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
   const rotateToken = useRotateAgentToolToken(agent.id);
   const numbersQuery = usePhoneNumbers(business.id);
 
+  const t = useTranslations("agents");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => agentSettingsSchema(tv), [tv]);
   const form = useForm<AgentSettingsValues>({
-    resolver: zodResolver(agentSettingsSchema),
+    resolver: zodResolver(schema),
     defaultValues: toAgentSettingsValues(agent),
     disabled: archived,
   });
@@ -147,14 +152,14 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
         onSuccess: (result) => {
           form.reset(toAgentSettingsValues(result.agent));
           setWarnings(result.warnings);
-          toast.success("Agent saved — publishing to the voice engine…");
+          toast.success(t("detail.toasts.saved"));
         },
         onError: (error) => {
           applyServerErrors(form, error, { mapKey: agentServerErrorKey });
           const fieldKeys = Object.keys(form.formState.errors).filter((key) => key !== "root");
           if (fieldKeys.length > 0) {
             scrollToFirstError(form.formState.errors);
-            toast.error("Fix the highlighted fields.");
+            toast.error(t("detail.toasts.fixFields"));
           } else {
             toast.error(error.message);
           }
@@ -167,7 +172,7 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
   const handleArchiveToggle = () => {
     const mutation = archived ? restoreAgent : archiveAgent;
     mutation.mutate(agent.id, {
-      onSuccess: () => toast.success(archived ? "Agent restored" : "Agent archived"),
+      onSuccess: () => toast.success(archived ? t("toasts.restored") : t("toasts.archived")),
       onError: (error) => toast.error(error.message),
     });
   };
@@ -178,18 +183,18 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
   );
 
   const testTooltip = archived
-    ? "Restore the agent to test it."
+    ? t("detail.testTooltip.archived")
     : !agent.has_been_published
-      ? "The agent publishes to the voice engine after its first save — testing unlocks once that completes."
+      ? t("detail.testTooltip.unpublished")
       : TRANSITIONAL_SYNC_STATUSES.includes(agent.sync_status)
-        ? "A publish is in progress — tests use the last published version."
+        ? t("detail.testTooltip.publishing")
         : null;
   const testDisabled = archived || !agent.has_been_published;
 
   const testButton = (
     <Button type="button" variant="cta" disabled={testDisabled} onClick={() => setTestOpen(true)}>
       <PhoneIcon />
-      Test agent
+      {t("detail.testAgent")}
     </Button>
   );
 
@@ -207,14 +212,14 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
             }}
             className="flex w-fit items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground"
           >
-            <ArrowLeftIcon className="size-4" />
-            Agents
+            <ArrowLeftIcon className="size-4 rtl:-scale-x-100" />
+            {t("detail.back")}
           </Link>
           <div className="flex flex-wrap items-center gap-2.5">
             <h1 className="font-heading text-2xl font-semibold">{agent.name}</h1>
             <AgentPurposeBadge purpose={agent.purpose} />
             {archived ? (
-              <Badge variant="ghost">Archived</Badge>
+              <Badge variant="ghost">{t("badges.archived")}</Badge>
             ) : (
               <AgentSyncBadge status={agent.sync_status} error={agent.sync_error} />
             )}
@@ -232,7 +237,9 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
           )}
           <DropdownMenu>
             <DropdownMenuTrigger
-              render={<Button variant="ghost" size="icon" aria-label="Agent actions" />}
+              render={
+                <Button variant="ghost" size="icon" aria-label={t("detail.actionsLabel")} />
+              }
             >
               <EllipsisVerticalIcon />
             </DropdownMenuTrigger>
@@ -240,21 +247,21 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
               {archived ? (
                 <DropdownMenuItem onClick={handleArchiveToggle}>
                   <ArchiveRestoreIcon />
-                  Restore
+                  {t("actions.restore")}
                 </DropdownMenuItem>
               ) : (
                 <DropdownMenuItem onClick={handleArchiveToggle}>
                   <ArchiveIcon />
-                  Archive
+                  {t("actions.archive")}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem disabled={archived} onClick={() => setConfirmRotate(true)}>
                 <KeyRoundIcon />
-                Rotate tool token
+                {t("actions.rotateToolToken")}
               </DropdownMenuItem>
               <DropdownMenuItem variant="destructive" onClick={() => setConfirmDelete(true)}>
                 <Trash2Icon />
-                Delete
+                {tc("actions.delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -263,19 +270,19 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
 
       {!archived && agent.sync_status === "error" && (
         <Alert variant="destructive">
-          <AlertTitle>Publish failed</AlertTitle>
+          <AlertTitle>{t("detail.publishFailed.title")}</AlertTitle>
           <AlertDescription>
-            {agent.sync_error ?? "The voice engine rejected the last publish."} We retry
-            automatically every 15 minutes — your changes are safe and go live on the next
-            successful sync.
+            {t("detail.publishFailed.description", {
+              error: agent.sync_error ?? t("detail.publishFailed.fallback"),
+            })}
           </AlertDescription>
         </Alert>
       )}
 
       {archived && (
         <Alert>
-          <AlertTitle>This agent is archived and read-only.</AlertTitle>
-          <AlertDescription>Restore it to make changes or take calls.</AlertDescription>
+          <AlertTitle>{t("detail.archivedBanner.title")}</AlertTitle>
+          <AlertDescription>{t("detail.archivedBanner.description")}</AlertDescription>
           <AlertAction>
             <Button
               type="button"
@@ -284,7 +291,7 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
               disabled={restoreAgent.isPending}
               onClick={handleArchiveToggle}
             >
-              Restore
+              {t("actions.restore")}
             </Button>
           </AlertAction>
         </Alert>
@@ -328,15 +335,11 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
       <AlertDialog open={confirmRotate} onOpenChange={setConfirmRotate}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Rotate the tool token?</AlertDialogTitle>
-            <AlertDialogDescription>
-              The old token stops working immediately. The voice engine receives the new one
-              automatically on the next sync — live calls in progress may lose tool access
-              until then.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("detail.rotateDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("detail.rotateDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-cta text-cta-foreground hover:bg-cta/90"
               onClick={() => {
@@ -347,7 +350,7 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
                 setConfirmRotate(false);
               }}
             >
-              Rotate token
+              {t("actions.rotateToken")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -356,27 +359,27 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
       <AlertDialog open={confirmDelete} onOpenChange={setConfirmDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {agent.name}?</AlertDialogTitle>
+            <AlertDialogTitle>{t("deleteDialog.title", { name: agent.name })}</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently deletes the agent and unpublishes it from the voice engine.
+              {t("deleteDialog.description")}
               {routedNumbers.length > 0 && (
                 <>
                   {" "}
-                  {routedNumbers.length}{" "}
-                  {routedNumbers.length === 1 ? "phone number" : "phone numbers"} currently
-                  route to this agent and will be left unassigned:{" "}
-                  {routedNumbers.map((number) => formatE164(number.e164)).join(", ")}.
+                  {t("deleteDialog.routedNumbers", {
+                    count: routedNumbers.length,
+                    numbers: routedNumbers.map((number) => formatE164(number.e164)).join(", "),
+                  })}
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 deleteAgent.mutate(agent.id, {
                   onSuccess: () => {
-                    toast.success("Agent deleted");
+                    toast.success(t("toasts.deleted"));
                     router.push(listHref);
                   },
                   onError: (error) => toast.error(error.message),
@@ -384,7 +387,7 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
                 setConfirmDelete(false);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -393,20 +396,18 @@ export function AgentDetailBody({ agent }: { agent: Agent }) {
       <AlertDialog open={confirmLeave} onOpenChange={setConfirmLeave}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Discard unsaved changes?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your edits haven&apos;t been saved.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("detail.leaveDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("detail.leaveDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep editing</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.keepEditing")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setConfirmLeave(false);
                 router.push(listHref);
               }}
             >
-              Discard and leave
+              {t("detail.leaveDialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

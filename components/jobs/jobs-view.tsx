@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,30 +43,6 @@ const TAB_REFINE: Record<JobTab, readonly JobStatus[]> = {
   all: JOB_STATUSES,
 };
 
-const COPY: Record<JobTab, { emptyTitle: string; emptyDescription: string }> = {
-  active: {
-    emptyTitle: "No active jobs",
-    emptyDescription: "Work your agent captures on calls, or that you log, shows up here.",
-  },
-  unscheduled: {
-    emptyTitle: "Nothing to schedule",
-    emptyDescription: "Every open job has a booked visit. New work lands here first.",
-  },
-  completed: {
-    emptyTitle: "No completed jobs yet",
-    emptyDescription: "Jobs you finish land here, ready to invoice.",
-  },
-  all: {
-    emptyTitle: "No jobs yet",
-    emptyDescription: "Log your first job, or let your agent capture them from calls.",
-  },
-};
-
-const NO_MATCH_COPY = {
-  emptyTitle: "No jobs match",
-  emptyDescription: "Try a different search or clear some filters.",
-};
-
 /**
  * Master-detail shell mirroring the leads page: list rail + detail pane on
  * one divider, with the work stat strip above. Only the selected job lives in
@@ -73,6 +50,8 @@ const NO_MATCH_COPY = {
  * on the default tab but the pane still renders any uuid.
  */
 export function JobsView() {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -122,17 +101,30 @@ export function JobsView() {
   const newJobButton = (
     <Button onClick={() => setCreating(true)}>
       <PlusIcon />
-      New job
+      {t("page.newJob")}
     </Button>
   );
 
-  const copy = hasActiveFilters ? NO_MATCH_COPY : COPY[tab];
+  const emptyCopy: Record<JobTab | "noMatch", { title: string; description: string }> = {
+    active: { title: t("empty.active.title"), description: t("empty.active.description") },
+    unscheduled: {
+      title: t("empty.unscheduled.title"),
+      description: t("empty.unscheduled.description"),
+    },
+    completed: {
+      title: t("empty.completed.title"),
+      description: t("empty.completed.description"),
+    },
+    all: { title: t("empty.all.title"), description: t("empty.all.description") },
+    noMatch: { title: t("empty.noMatch.title"), description: t("empty.noMatch.description") },
+  };
+  const copy = emptyCopy[hasActiveFilters ? "noMatch" : tab];
 
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Jobs"
-        description="Work captured from calls or logged by your team — scheduled, delivered, and invoiced."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={newJobButton}
       />
 
@@ -141,14 +133,14 @@ export function JobsView() {
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
           <Tabs value={tab} onValueChange={(value) => changeTab(value as JobTab)}>
             <TabsList className="w-full">
               <TabsTrigger value="active">
-                Active
+                {tc("labels.active")}
                 {counts !== undefined && counts.active > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.active}
@@ -156,15 +148,15 @@ export function JobsView() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="unscheduled">
-                To schedule
+                {t("tabs.unscheduled")}
                 {counts !== undefined && counts.open > 0 && (
                   <Badge variant="warning" className="h-5">
                     {counts.open}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="completed">Done</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="completed">{t("tabs.completed")}</TabsTrigger>
+              <TabsTrigger value="all">{tc("labels.all")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -176,14 +168,14 @@ export function JobsView() {
             statuses={TAB_REFINE[tab]}
           />
 
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <JobList
               businessUuid={business.id}
               filters={apiFilters}
               selectedId={selectedId}
               onSelect={select}
-              emptyTitle={copy.emptyTitle}
-              emptyDescription={copy.emptyDescription}
+              emptyTitle={copy.title}
+              emptyDescription={copy.description}
               emptyAction={hasActiveFilters ? undefined : newJobButton}
             />
           </div>
@@ -193,7 +185,7 @@ export function JobsView() {
           // Keyed so switching jobs starts the pane back at the top.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

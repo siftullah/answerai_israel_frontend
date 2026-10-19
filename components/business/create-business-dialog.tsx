@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -26,9 +27,12 @@ export function CreateBusinessDialog({ trigger }: { trigger: React.ReactElement 
   const [open, setOpen] = useState(false);
   const router = useRouter();
   const createBusiness = useCreateBusiness();
+  const t = useTranslations("business");
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => createBusinessSchema(tv), [tv]);
   const form = useForm<CreateBusinessValues>({
-    resolver: zodResolver(createBusinessSchema),
+    resolver: zodResolver(schema),
     defaultValues: { name: "" },
   });
   const { errors } = form.formState;
@@ -48,10 +52,8 @@ export function CreateBusinessDialog({ trigger }: { trigger: React.ReactElement 
       <DialogTrigger render={trigger} />
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create a business</DialogTitle>
-          <DialogDescription>
-            Set up a new business on AnswerAI. You&apos;ll be its owner.
-          </DialogDescription>
+          <DialogTitle>{t("createDialog.title")}</DialogTitle>
+          <DialogDescription>{t("createDialog.description")}</DialogDescription>
         </DialogHeader>
 
         {errors.root?.server && (
@@ -63,7 +65,7 @@ export function CreateBusinessDialog({ trigger }: { trigger: React.ReactElement 
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup className="gap-4">
             <Field data-invalid={!!errors.name || undefined}>
-              <FieldLabel htmlFor="business-name">Business name</FieldLabel>
+              <FieldLabel htmlFor="business-name">{t("createDialog.nameLabel")}</FieldLabel>
               <Input
                 id="business-name"
                 autoComplete="organization"
@@ -75,7 +77,7 @@ export function CreateBusinessDialog({ trigger }: { trigger: React.ReactElement 
 
             <Button type="submit" disabled={createBusiness.isPending}>
               {createBusiness.isPending && <Spinner />}
-              Create business
+              {t("createDialog.submit")}
             </Button>
           </FieldGroup>
         </form>

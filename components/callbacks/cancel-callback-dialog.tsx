@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -26,13 +27,14 @@ export function CancelCallbackDialog({
   callback: Callback | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("callbacks");
   const { business } = useBusiness();
   const cancelCallback = useCancelCallback(businessUuid);
 
   const confirm = () => {
     if (!callback) return;
     cancelCallback.mutate(callback.id, {
-      onSuccess: () => toast.success("Callback canceled"),
+      onSuccess: () => toast.success(t("toasts.canceled")),
       onError: (error) => toast.error(error.message),
     });
     onOpenChange(false);
@@ -42,16 +44,19 @@ export function CancelCallbackDialog({
     <AlertDialog open={callback !== null} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Cancel this callback?</AlertDialogTitle>
+          <AlertDialogTitle>{t("cancelDialog.title")}</AlertDialogTitle>
           <AlertDialogDescription>
             {callback
-              ? `${callback.contact?.name ?? formatE164(callback.to_e164)} won't be called back at ${formatDateTime(callback.scheduled_at, business.timezone)}. This can't be undone.`
+              ? t("cancelDialog.description", {
+                  name: callback.contact?.name ?? formatE164(callback.to_e164),
+                  date: formatDateTime(callback.scheduled_at, business.timezone),
+                })
               : ""}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep callback</AlertDialogCancel>
-          <AlertDialogAction onClick={confirm}>Cancel callback</AlertDialogAction>
+          <AlertDialogCancel>{t("actions.keepCallback")}</AlertDialogCancel>
+          <AlertDialogAction onClick={confirm}>{t("actions.cancelCallback")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

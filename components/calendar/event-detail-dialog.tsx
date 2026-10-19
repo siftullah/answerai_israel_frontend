@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +53,7 @@ function DetailRow({ label, children }: { label: string; children: React.ReactNo
   return (
     <div className="flex items-start justify-between gap-6 text-sm">
       <span className="shrink-0 text-muted-foreground">{label}</span>
-      <span className="min-w-0 text-right break-words">{children}</span>
+      <span className="min-w-0 text-end break-words">{children}</span>
     </div>
   );
 }
@@ -72,6 +73,8 @@ function AppointmentDetail({
   event: GridEvent;
   item: Extract<SystemCalendarItem, { type: "appointment" }>;
 }) {
+  const t = useTranslations("calendar.detail");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const enabled = useModuleEnabled("appointments");
   const detailQuery = useAppointment(business.id, enabled ? item.id : null);
@@ -118,7 +121,7 @@ function AppointmentDetail({
       </div>
 
       <div className="flex flex-col gap-2">
-        <DetailRow label="Contact">
+        <DetailRow label={t("contact")}>
           {item.contact ? (
             <Link
               href={`/b/${business.id}/contacts?contact=${item.contact.id}`}
@@ -130,31 +133,31 @@ function AppointmentDetail({
             "—"
           )}
         </DetailRow>
-        <DetailRow label="Assignee">{item.member?.name ?? "Unassigned"}</DetailRow>
+        <DetailRow label={t("assignee")}>{item.member?.name ?? t("unassigned")}</DetailRow>
         {enabled && detailQuery.isPending && <Skeleton className="h-4 w-full" />}
-        {appointment?.notes && <DetailRow label="Notes">{appointment.notes}</DetailRow>}
+        {appointment?.notes && (
+          <DetailRow label={tc("labels.notes")}>{appointment.notes}</DetailRow>
+        )}
         {appointment?.canceled_reason && (
-          <DetailRow label="Cancel reason">{appointment.canceled_reason}</DetailRow>
+          <DetailRow label={t("cancelReason")}>{appointment.canceled_reason}</DetailRow>
         )}
       </div>
 
       {!enabled && (
-        <p className="text-sm text-muted-foreground">
-          Enable the Appointments module to manage this booking.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("appointment.moduleDisabled")}</p>
       )}
 
       {enabled && (
         <DialogFooter className="flex-wrap">
           <Button
             variant="ghost"
-            className="mr-auto px-2"
+            className="me-auto px-2"
             render={
               <Link href={`/b/${business.id}/appointments?appointment=${item.id}`} />
             }
           >
-            Open in Appointments
-            <ArrowUpRightIcon />
+            {t("appointment.open")}
+            <ArrowUpRightIcon className="rtl:-scale-x-100" />
           </Button>
           {upcoming && (
             <>
@@ -163,30 +166,33 @@ function AppointmentDetail({
                 disabled={acting}
                 onClick={() => setCanceling(true)}
               >
-                Cancel booking
+                {t("appointment.cancel")}
               </Button>
               <Button variant="outline" disabled={acting} onClick={() => setRescheduling(true)}>
-                Reschedule
+                {t("reschedule")}
               </Button>
               {ended && (
                 <Button
                   variant="warning"
                   disabled={acting}
-                  onClick={() => run(noShow, "Marked as no-show")}
+                  onClick={() => run(noShow, t("appointment.toasts.noShow"))}
                 >
-                  No-show
+                  {t("appointment.noShow")}
                 </Button>
               )}
               <Button
                 variant="success"
                 disabled={acting}
-                onClick={() => run(complete, "Appointment completed")}
+                onClick={() => run(complete, t("appointment.toasts.completed"))}
               >
-                Complete
+                {t("complete")}
               </Button>
               {status === "scheduled" && (
-                <Button disabled={acting} onClick={() => run(confirm, "Appointment confirmed")}>
-                  Confirm
+                <Button
+                  disabled={acting}
+                  onClick={() => run(confirm, t("appointment.toasts.confirmed"))}
+                >
+                  {tc("actions.confirm")}
                 </Button>
               )}
             </>
@@ -225,6 +231,8 @@ function CallbackDetail({
   event: GridEvent;
   item: Extract<SystemCalendarItem, { type: "callback" }>;
 }) {
+  const t = useTranslations("calendar.detail");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const enabled = useModuleEnabled("callbacks");
   const detailQuery = useCallbackDetail(business.id, enabled ? item.id : null);
@@ -259,7 +267,7 @@ function CallbackDetail({
       </div>
 
       <div className="flex flex-col gap-2">
-        <DetailRow label="Contact">
+        <DetailRow label={t("contact")}>
           {item.contact ? (
             <Link
               href={`/b/${business.id}/contacts?contact=${item.contact.id}`}
@@ -271,41 +279,43 @@ function CallbackDetail({
             "—"
           )}
         </DetailRow>
-        <DetailRow label="Assignee">{item.member?.name ?? "Unassigned"}</DetailRow>
+        <DetailRow label={t("assignee")}>{item.member?.name ?? t("unassigned")}</DetailRow>
         {enabled && detailQuery.isPending && <Skeleton className="h-4 w-full" />}
-        {callback && <DetailRow label="Number">{formatE164(callback.to_e164)}</DetailRow>}
-        {callback?.topic && <DetailRow label="Topic">{callback.topic}</DetailRow>}
-        {callback?.notes && <DetailRow label="Notes">{callback.notes}</DetailRow>}
+        {callback && (
+          <DetailRow label={t("callback.number")}>
+            <span dir="ltr">{formatE164(callback.to_e164)}</span>
+          </DetailRow>
+        )}
+        {callback?.topic && <DetailRow label={t("callback.topic")}>{callback.topic}</DetailRow>}
+        {callback?.notes && <DetailRow label={tc("labels.notes")}>{callback.notes}</DetailRow>}
       </div>
 
       {!enabled && (
-        <p className="text-sm text-muted-foreground">
-          Enable the Callbacks module to manage this callback.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("callback.moduleDisabled")}</p>
       )}
 
       {enabled && (
         <DialogFooter className="flex-wrap">
           <Button
             variant="ghost"
-            className="mr-auto px-2"
+            className="me-auto px-2"
             render={<Link href={`/b/${business.id}/calls/callbacks?callback=${item.id}`} />}
           >
-            Open in Callbacks
-            <ArrowUpRightIcon />
+            {t("callback.open")}
+            <ArrowUpRightIcon className="rtl:-scale-x-100" />
           </Button>
           {callback && open && (
             <>
               <Button variant="destructive-outline" onClick={() => setCanceling(true)}>
-                Cancel callback
+                {t("callback.cancel")}
               </Button>
               {status === "scheduled" && (
                 <Button variant="outline" onClick={() => setRescheduling(true)}>
-                  Reschedule
+                  {t("reschedule")}
                 </Button>
               )}
               <Button variant="success" onClick={() => setCompleting(true)}>
-                Complete
+                {t("complete")}
               </Button>
             </>
           )}
@@ -352,6 +362,8 @@ function JobDetail({
   event: GridEvent;
   item: Extract<SystemCalendarItem, { type: "job" }>;
 }) {
+  const t = useTranslations("calendar.detail");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const enabled = useModuleEnabled("jobs");
   const detailQuery = useJobDetail(business.id, enabled ? item.id : null);
@@ -388,7 +400,7 @@ function JobDetail({
       </div>
 
       <div className="flex flex-col gap-2">
-        <DetailRow label="Contact">
+        <DetailRow label={t("contact")}>
           {item.contact ? (
             <Link
               href={`/b/${business.id}/contacts?contact=${item.contact.id}`}
@@ -400,52 +412,59 @@ function JobDetail({
             "—"
           )}
         </DetailRow>
-        <DetailRow label="Assignee">{item.member?.name ?? "Unassigned"}</DetailRow>
+        <DetailRow label={t("assignee")}>{item.member?.name ?? t("unassigned")}</DetailRow>
         {enabled && detailQuery.isPending && <Skeleton className="h-4 w-full" />}
-        {job?.description && <DetailRow label="Description">{job.description}</DetailRow>}
+        {job?.description && (
+          <DetailRow label={tc("labels.description")}>{job.description}</DetailRow>
+        )}
       </div>
 
-      {!enabled && (
-        <p className="text-sm text-muted-foreground">
-          Enable the Jobs module to manage this job.
-        </p>
-      )}
+      {!enabled && <p className="text-sm text-muted-foreground">{t("job.moduleDisabled")}</p>}
 
       {enabled && (
         <DialogFooter className="flex-wrap">
           <Button
             variant="ghost"
-            className="mr-auto px-2"
+            className="me-auto px-2"
             render={<Link href={`/b/${business.id}/jobs?job=${item.id}`} />}
           >
-            Open in Jobs
-            <ArrowUpRightIcon />
+            {t("job.open")}
+            <ArrowUpRightIcon className="rtl:-scale-x-100" />
           </Button>
           {job && (scheduled || inProgress) && (
             <>
               <Button variant="outline" disabled={acting} onClick={() => setRescheduling(true)}>
-                Reschedule
+                {t("reschedule")}
               </Button>
               {scheduled ? (
                 <>
                   <Button
                     variant="success"
                     disabled={acting}
-                    onClick={() => run(completeJob, `${job.reference} completed — ready to invoice`)}
+                    onClick={() =>
+                      run(completeJob, t("job.toasts.completed", { reference: job.reference }))
+                    }
                   >
-                    Complete
+                    {t("complete")}
                   </Button>
-                  <Button disabled={acting} onClick={() => run(startJob, `${job.reference} started`)}>
-                    Start job
+                  <Button
+                    disabled={acting}
+                    onClick={() =>
+                      run(startJob, t("job.toasts.started", { reference: job.reference }))
+                    }
+                  >
+                    {t("job.start")}
                   </Button>
                 </>
               ) : (
                 <Button
                   variant="success"
                   disabled={acting}
-                  onClick={() => run(completeJob, `${job.reference} completed — ready to invoice`)}
+                  onClick={() =>
+                    run(completeJob, t("job.toasts.completed", { reference: job.reference }))
+                  }
                 >
-                  Complete job
+                  {t("job.complete")}
                 </Button>
               )}
             </>
@@ -467,6 +486,7 @@ function JobDetail({
 }
 
 function ExternalDetail({ event }: { event: GridEvent }) {
+  const t = useTranslations("calendar.detail.external");
   const { business } = useBusiness();
   const external = event.external;
   if (!external) return null;
@@ -477,7 +497,7 @@ function ExternalDetail({ event }: { event: GridEvent }) {
         <DialogTitle>{external.title}</DialogTitle>
         <DialogDescription>
           {external.all_day ? (
-            "All day"
+            t("allDay")
           ) : (
             <WhenText event={event} timeZone={business.timezone} />
           )}
@@ -486,23 +506,23 @@ function ExternalDetail({ event }: { event: GridEvent }) {
 
       <div className="flex flex-wrap items-center gap-1.5">
         {event.kind === "external-ours" ? (
-          <Badge variant="info">AnswerAI booking</Badge>
+          <Badge variant="info">{t("ourBooking")}</Badge>
         ) : (
           <Badge variant="outline">Outlook</Badge>
         )}
         <Badge variant={external.busy ? "secondary" : "ghost"}>
-          {external.busy ? "Busy" : "Free"}
+          {external.busy ? t("busy") : t("free")}
         </Badge>
       </div>
 
       <div className="flex flex-col gap-2">
-        {external.location && <DetailRow label="Location">{external.location}</DetailRow>}
+        {external.location && (
+          <DetailRow label={t("location")}>{external.location}</DetailRow>
+        )}
       </div>
 
       <p className="text-sm text-muted-foreground">
-        {event.kind === "external-ours"
-          ? "This is our own booking's synced copy — manage it from the system calendar."
-          : "External events are view-only here; edit them in Outlook."}
+        {event.kind === "external-ours" ? t("oursNote") : t("externalNote")}
       </p>
     </>
   );

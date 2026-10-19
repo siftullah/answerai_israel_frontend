@@ -10,44 +10,56 @@ import type {
 import { CALLBACK_OUTCOMES, CALLBACK_TYPES } from "@/lib/api/types";
 import { zonedDateTimeToUtcIso } from "@/lib/datetime";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import type { Translator } from "@/lib/i18n/types";
 
 /**
  * Loose mirrors — the backend's CallbackService is the validation authority
  * (calling hours, calendar-busy, destination allowlist…). Its 422s carry a
  * machine `reason` and no field bag; applyCallbackServerErrors maps them.
+ * Schema factories take a translator scoped to the `validation` namespace.
  */
-export const createCallbackSchema = z
-  .object({
-    type: z.enum(CALLBACK_TYPES),
-    contact_id: z.string().min(1, "Choose a contact"),
-    date: z.string().min(1, "Pick a date"),
-    time: z.string().min(1, "Pick a time"),
-    topic: z.string().max(300, "Keep the topic under 300 characters"),
-    notes: z.string().max(5000, "Keep the notes under 5,000 characters"),
-    assignee_user_id: z.string(),
-    agent_id: z.string(),
-    caller_phone_number_id: z.string(),
-    /** Kept as select strings; "" = backend defaults (2 attempts, 30 min). */
-    max_attempts: z.string(),
-    retry_delay_minutes: z.string(),
-  })
-  .superRefine((values, ctx) => {
-    if (values.type === "team_member" && !values.assignee_user_id) {
-      ctx.addIssue({ code: "custom", path: ["assignee_user_id"], message: "Choose a team member" });
-    }
-    if (values.type === "agent" && !values.agent_id) {
-      ctx.addIssue({ code: "custom", path: ["agent_id"], message: "Choose an outbound agent" });
-    }
-    if (values.type === "agent" && !values.caller_phone_number_id) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["caller_phone_number_id"],
-        message: "Choose a number to call from",
-      });
-    }
-  });
+export function createCallbackSchema(t: Translator) {
+  return z
+    .object({
+      type: z.enum(CALLBACK_TYPES),
+      contact_id: z.string().min(1, t("common.contactRequired")),
+      date: z.string().min(1, t("common.dateRequired")),
+      time: z.string().min(1, t("common.timeRequired")),
+      topic: z.string().max(300, t("length.topic", { max: 300 })),
+      notes: z.string().max(5000, t("length.notes", { max: 5000 })),
+      assignee_user_id: z.string(),
+      agent_id: z.string(),
+      caller_phone_number_id: z.string(),
+      /** Kept as select strings; "" = backend defaults (2 attempts, 30 min). */
+      max_attempts: z.string(),
+      retry_delay_minutes: z.string(),
+    })
+    .superRefine((values, ctx) => {
+      if (values.type === "team_member" && !values.assignee_user_id) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["assignee_user_id"],
+          message: t("callback.teamMemberRequired"),
+        });
+      }
+      if (values.type === "agent" && !values.agent_id) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["agent_id"],
+          message: t("callback.outboundAgentRequired"),
+        });
+      }
+      if (values.type === "agent" && !values.caller_phone_number_id) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["caller_phone_number_id"],
+          message: t("common.fromNumberRequired"),
+        });
+      }
+    });
+}
 
-export type CreateCallbackValues = z.infer<typeof createCallbackSchema>;
+export type CreateCallbackValues = z.infer<ReturnType<typeof createCallbackSchema>>;
 
 export function defaultCreateCallbackValues(
   overrides: Partial<CreateCallbackValues> = {}
@@ -94,12 +106,14 @@ export function toStoreCallbackPayload(
   };
 }
 
-export const rescheduleCallbackSchema = z.object({
-  date: z.string().min(1, "Pick a date"),
-  time: z.string().min(1, "Pick a time"),
-});
+export function rescheduleCallbackSchema(t: Translator) {
+  return z.object({
+    date: z.string().min(1, t("common.dateRequired")),
+    time: z.string().min(1, t("common.timeRequired")),
+  });
+}
 
-export type RescheduleCallbackValues = z.infer<typeof rescheduleCallbackSchema>;
+export type RescheduleCallbackValues = z.infer<ReturnType<typeof rescheduleCallbackSchema>>;
 
 export function toReschedulePayload(
   values: RescheduleCallbackValues,
@@ -108,14 +122,16 @@ export function toReschedulePayload(
   return { scheduled_at: zonedDateTimeToUtcIso(values.date, values.time, timeZone) };
 }
 
-export const editCallbackSchema = z.object({
-  topic: z.string().max(300, "Keep the topic under 300 characters"),
-  notes: z.string().max(5000, "Keep the notes under 5,000 characters"),
-  assignee_user_id: z.string(),
-  agent_id: z.string(),
-});
+export function editCallbackSchema(t: Translator) {
+  return z.object({
+    topic: z.string().max(300, t("length.topic", { max: 300 })),
+    notes: z.string().max(5000, t("length.notes", { max: 5000 })),
+    assignee_user_id: z.string(),
+    agent_id: z.string(),
+  });
+}
 
-export type EditCallbackValues = z.infer<typeof editCallbackSchema>;
+export type EditCallbackValues = z.infer<ReturnType<typeof editCallbackSchema>>;
 
 /** Sends only the reassign key the type accepts — the other 422s as not applicable. */
 export function toUpdateCallbackPayload(
@@ -135,12 +151,14 @@ export function toUpdateCallbackPayload(
   };
 }
 
-export const completeCallbackSchema = z.object({
-  outcome: z.enum(CALLBACK_OUTCOMES),
-  notes: z.string().max(5000, "Keep the notes under 5,000 characters"),
-});
+export function completeCallbackSchema(t: Translator) {
+  return z.object({
+    outcome: z.enum(CALLBACK_OUTCOMES),
+    notes: z.string().max(5000, t("length.notes", { max: 5000 })),
+  });
+}
 
-export type CompleteCallbackValues = z.infer<typeof completeCallbackSchema>;
+export type CompleteCallbackValues = z.infer<ReturnType<typeof completeCallbackSchema>>;
 
 export function defaultCompleteCallbackValues(notes: string | null): CompleteCallbackValues {
   return { outcome: "handled", notes: notes ?? "" };

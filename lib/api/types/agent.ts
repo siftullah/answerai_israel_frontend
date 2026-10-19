@@ -1,3 +1,6 @@
+import { rt } from "@/lib/i18n/runtime";
+import { labelMap } from "@/lib/i18n/label-map";
+
 export type AgentPurpose = "inbound" | "outbound" | "consult";
 export type AgentStatus = "active" | "archived";
 
@@ -26,12 +29,10 @@ export const OVERRIDABLE_BUILTIN_VARIABLES = [
 ] as const;
 export type OverridableBuiltinVariable = (typeof OVERRIDABLE_BUILTIN_VARIABLES)[number];
 
-export const OVERRIDABLE_BUILTIN_LABELS: Record<OverridableBuiltinVariable, string> = {
-  contact_name: "The contact's name",
-  contact_email: "The contact's primary email",
-  contact_company: "The contact's company",
-  contact_address: "The contact's address",
-};
+export const OVERRIDABLE_BUILTIN_LABELS: Record<OverridableBuiltinVariable, string> = labelMap(
+  "lib.overridableBuiltin",
+  ["contact_name", "contact_email", "contact_company", "contact_address"]
+);
 
 /** Sparse per-agent calendar mechanics; absent key = inherit the business/member tier. */
 export interface AgentCalendarOverrides {
@@ -74,41 +75,66 @@ export interface Agent {
   updated_at: string;
 }
 
+/** `label`/`description` are getters so they read in the active UI language. */
 export const AGENT_TEMPLATES = [
   {
     value: "blank",
-    label: "Start blank",
-    description: "An empty agent you configure from scratch.",
+    get label() {
+      return rt("lib.agentTemplates.blank.label");
+    },
+    get description() {
+      return rt("lib.agentTemplates.blank.description");
+    },
     purpose: "inbound",
   },
   {
     value: "receptionist",
-    label: "Receptionist",
-    description: "Answers calls, handles questions, and takes messages.",
+    get label() {
+      return rt("lib.agentTemplates.receptionist.label");
+    },
+    get description() {
+      return rt("lib.agentTemplates.receptionist.description");
+    },
     purpose: "inbound",
   },
   {
     value: "appointment_setter",
-    label: "Appointment setter",
-    description: "Books, checks, and cancels appointments for callers.",
+    get label() {
+      return rt("lib.agentTemplates.appointment_setter.label");
+    },
+    get description() {
+      return rt("lib.agentTemplates.appointment_setter.description");
+    },
     purpose: "inbound",
   },
   {
     value: "after_hours",
-    label: "After hours",
-    description: "Covers calls outside business hours and captures details.",
+    get label() {
+      return rt("lib.agentTemplates.after_hours.label");
+    },
+    get description() {
+      return rt("lib.agentTemplates.after_hours.description");
+    },
     purpose: "inbound",
   },
   {
     value: "outbound_caller",
-    label: "Outbound caller",
-    description: "Dials contacts for campaigns, callbacks, and follow-ups.",
+    get label() {
+      return rt("lib.agentTemplates.outbound_caller.label");
+    },
+    get description() {
+      return rt("lib.agentTemplates.outbound_caller.description");
+    },
     purpose: "outbound",
   },
   {
     value: "lead_qualifier",
-    label: "Lead qualifier",
-    description: "Calls new leads, qualifies interest, and records details.",
+    get label() {
+      return rt("lib.agentTemplates.lead_qualifier.label");
+    },
+    get description() {
+      return rt("lib.agentTemplates.lead_qualifier.description");
+    },
     purpose: "outbound",
   },
 ] as const;

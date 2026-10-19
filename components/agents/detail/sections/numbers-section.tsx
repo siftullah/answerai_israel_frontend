@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -13,6 +14,8 @@ import type { Agent } from "@/lib/api/types";
 import { formatE164 } from "@/lib/phone";
 
 export function NumbersSection({ agent }: { agent: Agent }) {
+  const t = useTranslations("agents.sections.numbers");
+  const ta = useTranslations("agents");
   const { business } = useBusiness();
   const numbersQuery = usePhoneNumbers(business.id);
 
@@ -24,21 +27,19 @@ export function NumbersSection({ agent }: { agent: Agent }) {
   return (
     <AgentSection
       id="numbers"
-      title="Numbers"
-      description="Phone numbers that route calls to or from this agent."
+      title={t("title")}
+      description={t("description")}
       actions={
         <Button size="sm" render={<Link href={`/b/${business.id}/phone-numbers`} />}>
-          Manage phone numbers
-          <ArrowUpRightIcon />
+          {t("manage")}
+          <ArrowUpRightIcon className="rtl:-scale-x-100" />
         </Button>
       }
     >
       {numbersQuery.isPending ? (
         <Skeleton className="h-10 w-full" />
       ) : numbers.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          No phone numbers use this agent yet — assign it on the phone numbers page.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
         <div className="flex flex-col divide-y">
           {numbers.map((number) => (
@@ -52,10 +53,10 @@ export function NumbersSection({ agent }: { agent: Agent }) {
                 )}
               </div>
               {number.inbound_agent?.id === agent.id && (
-                <Badge variant="secondary">Inbound</Badge>
+                <Badge variant="secondary">{ta("purpose.inbound.label")}</Badge>
               )}
               {number.outbound_agent?.id === agent.id && (
-                <Badge variant="secondary">Outbound</Badge>
+                <Badge variant="secondary">{ta("purpose.outbound.label")}</Badge>
               )}
               <NumberStatusBadge status={number.status} />
             </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   CalendarCheckIcon,
   EllipsisVerticalIcon,
@@ -78,11 +79,17 @@ function MemberRowActions({
   onRevokeInvite: () => void;
   onRemove: () => void;
 }) {
+  const t = useTranslations("businessProfile.team");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${member.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("actionsFor", { name: member.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -90,17 +97,17 @@ function MemberRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         {invitation ? (
           <>
             <DropdownMenuItem onClick={onResendInvite}>
               <SendIcon />
-              Resend invite
+              {t("resendInvite")}
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onClick={onRevokeInvite}>
               <MailXIcon />
-              Revoke invite
+              {t("revokeInvite")}
             </DropdownMenuItem>
           </>
         ) : (
@@ -108,14 +115,14 @@ function MemberRowActions({
           member.email && (
             <DropdownMenuItem onClick={onInvite}>
               <MailPlusIcon />
-              Invite to create account
+              {t("inviteToCreate")}
             </DropdownMenuItem>
           )
         )}
         {!isOwner && (
           <DropdownMenuItem variant="destructive" onClick={onRemove}>
             <Trash2Icon />
-            Remove
+            {tc("actions.remove")}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
@@ -131,19 +138,22 @@ function MemberStatusBadge({
   member: BusinessMember;
   invitation: Invitation | null;
 }) {
+  const t = useTranslations("businessProfile.team.status");
   const { business } = useBusiness();
-  if (member.has_account) return <Badge variant="success">Account exists</Badge>;
+  if (member.has_account) return <Badge variant="success">{t("accountExists")}</Badge>;
   if (invitation) {
     return (
       <Badge
         variant="info"
-        title={`Invite expires ${formatDate(invitation.expires_at, business.timezone)}`}
+        title={t("inviteExpires", {
+          date: formatDate(invitation.expires_at, business.timezone),
+        })}
       >
-        Invited
+        {t("invited")}
       </Badge>
     );
   }
-  return <Badge variant="warning">No account</Badge>;
+  return <Badge variant="warning">{t("noAccount")}</Badge>;
 }
 
 /** The Status column/card content: state badge plus a calendar chip when connected. */
@@ -154,16 +164,17 @@ function MemberAccountStatus({
   member: BusinessMember;
   invitation: Invitation | null;
 }) {
+  const t = useTranslations("businessProfile.team.status");
   return (
     <span className="inline-flex items-center gap-2">
       <MemberStatusBadge member={member} invitation={invitation} />
       {member.has_account && member.has_calendar_connected && (
         <span
           className="inline-flex items-center gap-1 text-sm text-muted-foreground"
-          title="Calendar connected"
+          title={t("calendarConnected")}
         >
           <CalendarCheckIcon className="size-4" />
-          Calendar
+          {t("calendar")}
         </span>
       )}
     </span>
@@ -171,6 +182,8 @@ function MemberAccountStatus({
 }
 
 export function TeamView() {
+  const t = useTranslations("businessProfile.team");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const appointmentsEnabled = useModuleEnabled("appointments");
 
@@ -195,7 +208,7 @@ export function TeamView() {
 
   const resendInvite = (invitation: Invitation) => {
     resendInvitation.mutate(invitation.id, {
-      onSuccess: () => toast.success("Invitation re-sent"),
+      onSuccess: () => toast.success(t("toasts.resent")),
       onError: (error) => toast.error(error.message),
     });
   };
@@ -212,12 +225,12 @@ export function TeamView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Team"
-        description="People in your business, their roles and invitations."
+        title={t("title")}
+        description={t("description")}
         actions={
           <Button onClick={() => setMemberDialog({ member: null })}>
             <PlusIcon />
-            Add member
+            {t("addMember")}
           </Button>
         }
       />
@@ -229,7 +242,7 @@ export function TeamView() {
         </div>
       ) : membersQuery.isError ? (
         <ErrorState
-          title="Couldn't load the team"
+          title={t("loadError")}
           message={membersQuery.error.message}
           onRetry={() => membersQuery.refetch()}
         />
@@ -292,10 +305,10 @@ export function TeamView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Role</TableHead>
-                <TableHead>Status</TableHead>
+                <TableHead>{tc("labels.name")}</TableHead>
+                <TableHead>{t("columns.contact")}</TableHead>
+                <TableHead>{t("columns.role")}</TableHead>
+                <TableHead>{tc("labels.status")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -384,11 +397,10 @@ export function TeamView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Remove {removing?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              They lose access to this business. Transfer targets pointing at them stop
-              working.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("removeDialog.title", { name: removing?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("removeDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           {appointmentsEnabled && (
             <RadioGroup
@@ -401,33 +413,33 @@ export function TeamView() {
               <Field orientation="horizontal">
                 <RadioGroupItem id="remove-keep" value="keep" />
                 <FieldLabel htmlFor="remove-keep" className="font-normal">
-                  Keep their future appointments assigned
+                  {t("removeDialog.keepAppointments")}
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
                 <RadioGroupItem id="remove-unassign" value="unassign" />
                 <FieldLabel htmlFor="remove-unassign" className="font-normal">
-                  Unassign their future appointments
+                  {t("removeDialog.unassignAppointments")}
                 </FieldLabel>
               </Field>
             </RadioGroup>
           )}
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!removing) return;
                 deleteMember.mutate(
                   { id: removing.id, futureAppointments },
                   {
-                    onSuccess: () => toast.success("Member removed"),
+                    onSuccess: () => toast.success(t("toasts.removed")),
                     onError: (error) => toast.error(error.message),
                   }
                 );
                 setRemoving(null);
               }}
             >
-              Remove
+              {tc("actions.remove")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -441,22 +453,22 @@ export function TeamView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revoke this invitation?</AlertDialogTitle>
-            <AlertDialogDescription>The link stops working immediately.</AlertDialogDescription>
+            <AlertDialogTitle>{t("revokeDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("revokeDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!revoking) return;
                 revokeInvitation.mutate(revoking, {
-                  onSuccess: () => toast.success("Invitation revoked"),
+                  onSuccess: () => toast.success(t("toasts.revoked")),
                   onError: (error) => toast.error(error.message),
                 });
                 setRevoking(null);
               }}
             >
-              Revoke
+              {t("revokeDialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

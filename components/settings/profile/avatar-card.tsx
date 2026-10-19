@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { UserRoundIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -30,6 +31,8 @@ const ACCEPTED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/svg+xml"
 const MAX_BYTES = 2 * 1024 * 1024;
 
 export function AvatarCard({ avatar }: { avatar: UserAvatar | null }) {
+  const t = useTranslations("settings.profile.avatar");
+  const tc = useTranslations("common");
   const inputRef = useRef<HTMLInputElement>(null);
   const upload = useUploadAvatar();
   const remove = useDeleteAvatar();
@@ -37,15 +40,15 @@ export function AvatarCard({ avatar }: { avatar: UserAvatar | null }) {
   const onFile = (file: File | undefined) => {
     if (!file) return;
     if (!ACCEPTED_TYPES.includes(file.type)) {
-      toast.error("Use a JPEG, PNG, WebP or SVG image.");
+      toast.error(t("toasts.invalidType"));
       return;
     }
     if (file.size > MAX_BYTES) {
-      toast.error("The photo must be 2 MB or smaller.");
+      toast.error(t("toasts.tooLarge"));
       return;
     }
     upload.mutate(file, {
-      onSuccess: () => toast.success("Photo updated"),
+      onSuccess: () => toast.success(t("toasts.updated")),
       onError: (error) => toast.error(error.message),
     });
   };
@@ -53,15 +56,15 @@ export function AvatarCard({ avatar }: { avatar: UserAvatar | null }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-[#30aece]">Profile picture</CardTitle>
-        <CardDescription>JPEG, PNG, WebP or SVG, up to 2 MB.</CardDescription>
+        <CardTitle className="text-[#30aece]">{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent className="flex items-center gap-4">
         {avatar ? (
           // eslint-disable-next-line @next/next/no-img-element -- backend-served upload, not an optimizable static asset
           <img
             src={avatar.url}
-            alt="Profile picture"
+            alt={t("title")}
             className="size-16 shrink-0 rounded-full border object-cover"
           />
         ) : (
@@ -87,7 +90,7 @@ export function AvatarCard({ avatar }: { avatar: UserAvatar | null }) {
             onClick={() => inputRef.current?.click()}
           >
             {upload.isPending && <Spinner />}
-            {avatar ? "Replace" : "Upload photo"}
+            {avatar ? t("replace") : t("upload")}
           </Button>
           {avatar && (
             <AlertDialog>
@@ -95,26 +98,24 @@ export function AvatarCard({ avatar }: { avatar: UserAvatar | null }) {
                 render={<Button type="button" variant="ghost" disabled={remove.isPending} />}
               >
                 {remove.isPending && <Spinner />}
-                Remove
+                {tc("actions.remove")}
               </AlertDialogTrigger>
               <AlertDialogContent>
                 <AlertDialogHeader>
-                  <AlertDialogTitle>Remove your photo?</AlertDialogTitle>
-                  <AlertDialogDescription>
-                    You can upload a new one at any time.
-                  </AlertDialogDescription>
+                  <AlertDialogTitle>{t("removeTitle")}</AlertDialogTitle>
+                  <AlertDialogDescription>{t("removeDescription")}</AlertDialogDescription>
                 </AlertDialogHeader>
                 <AlertDialogFooter>
-                  <AlertDialogCancel>Cancel</AlertDialogCancel>
+                  <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
                   <AlertDialogAction
                     onClick={() =>
                       remove.mutate(undefined, {
-                        onSuccess: () => toast.success("Photo removed"),
+                        onSuccess: () => toast.success(t("toasts.removed")),
                         onError: (error) => toast.error(error.message),
                       })
                     }
                   >
-                    Remove
+                    {tc("actions.remove")}
                   </AlertDialogAction>
                 </AlertDialogFooter>
               </AlertDialogContent>

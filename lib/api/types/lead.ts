@@ -1,26 +1,24 @@
 /** Mirrors app/Http/Resources/LeadResource.php */
 
+import { labelMap } from "@/lib/i18n/label-map";
+
 export const LEAD_STATUSES = ["new", "contacted", "qualified", "won", "lost"] as const;
 export type LeadStatus = (typeof LEAD_STATUSES)[number];
 
 /** The Open tab's status set — leads still being worked. */
 export const OPEN_LEAD_STATUSES: readonly LeadStatus[] = ["new", "contacted", "qualified"];
 
-export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = {
-  new: "New",
-  contacted: "Contacted",
-  qualified: "Qualified",
-  won: "Won",
-  lost: "Lost",
-};
+export const LEAD_STATUS_LABELS: Record<LeadStatus, string> = labelMap(
+  "lib.leadStatus",
+  ["new", "contacted", "qualified", "won", "lost"]
+);
 
 export type LeadSource = "manual" | "agent_call" | "api";
 
-export const LEAD_SOURCE_LABELS: Record<LeadSource, string> = {
-  manual: "Added manually",
-  agent_call: "From a call",
-  api: "Via the API",
-};
+export const LEAD_SOURCE_LABELS: Record<LeadSource, string> = labelMap(
+  "lib.leadSource",
+  ["manual", "agent_call", "api"]
+);
 
 export interface LeadContactRef {
   id: string;

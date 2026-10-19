@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "title": "שיחות חוזרות"
+  },
+  "labels": {
+    "agent": "סוכן AI",
+    "assignee": "אחראי",
+    "type": "סוג",
+    "topic": "נושא",
+    "outcome": "תוצאה",
+    "contact": "איש קשר",
+    "callFrom": "התקשרות מהמספר"
+  },
+  "placeholders": {
+    "agent": "בחרו סוכן AI לשיחות יוצאות",
+    "assignee": "בחרו חבר צוות",
+    "number": "בחרו מספר"
+  },
+  "actions": {
+    "newCallback": "שיחה חוזרת חדשה",
+    "viewContact": "הצגת איש קשר",
+    "reschedule": "שינוי מועד",
+    "rescheduling": "משנים מועד…",
+    "complete": "השלמה",
+    "markCompleted": "סימון כהושלם",
+    "completing": "משלימים…",
+    "scheduleCallback": "תזמון שיחה חוזרת",
+    "scheduling": "מתזמנים…",
+    "keepCallback": "השארת השיחה החוזרת",
+    "cancelCallback": "ביטול שיחה חוזרת"
+  },
+  "toasts": {
+    "scheduled": "השיחה החוזרת תוזמנה",
+    "updated": "השיחה החוזרת עודכנה",
+    "rescheduled": "מועד השיחה החוזרת שונה",
+    "completed": "השיחה החוזרת הושלמה",
+    "canceled": "השיחה החוזרת בוטלה"
+  },
+  "view": {
+    "title": "שיחות חוזרות",
+    "description": "שיחות חוזרות שהובטחו למתקשרים — בביצוע סוכני ה-AI שלכם או בטיפול הצוות שלכם.",
+    "tabs": {
+      "open": "פתוחות",
+      "dueToday": "לביצוע היום",
+      "history": "היסטוריה"
+    },
+    "empty": {
+      "open": {
+        "title": "אין שיחות חוזרות פתוחות",
+        "description": "שיחות חוזרות שסוכני ה-AI שלכם מבטיחים למתקשרים — וגם כאלה שתתזמנו בעצמכם — יופיעו כאן."
+      },
+      "dueToday": {
+        "title": "אין שיחות חוזרות לביצוע היום",
+        "description": "שיחות חוזרות פתוחות שמתוזמנות להיום יופיעו כאן."
+      },
+      "history": {
+        "title": "אין עדיין היסטוריית שיחות חוזרות",
+        "description": "שיחות חוזרות שהושלמו, הוחמצו או בוטלו יופיעו כאן."
+      },
+      "noMatch": {
+        "title": "לא נמצאו שיחות חוזרות תואמות",
+        "description": "נסו חיפוש אחר או הסירו חלק מהמסננים."
+      }
+    }
+  },
+  "list": {
+    "loadFailed": "לא ניתן לטעון את השיחות החוזרות"
+  },
+  "badges": {
+    "overdue": "באיחור"
+  },
+  "filters": {
+    "searchPlaceholder": "חיפוש לפי נושא או מספר…",
+    "searchAriaLabel": "חיפוש שיחות חוזרות לפי נושא או מספר טלפון",
+    "filterAriaLabel": "סינון שיחות חוזרות",
+    "any": "הכול",
+    "source": "מקור",
+    "overdueOnly": "באיחור בלבד",
+    "removeFilter": "הסרת המסנן {label}",
+    "clearAll": "ניקוי הכול"
+  },
+  "detail": {
+    "backToList": "כל השיחות החוזרות",
+    "emptyTitle": "לא נבחרה שיחה חוזרת",
+    "emptyDescription": "בחרו שיחה חוזרת כדי לראות את פרטיה.",
+    "notFoundTitle": "השיחה החוזרת לא נמצאה",
+    "notFoundMessage": "השיחה החוזרת הזו לא קיימת או הוסרה.",
+    "loadFailedTitle": "לא ניתן לטעון את השיחה החוזרת הזו",
+    "scheduledFor": "מתוזמנת ל",
+    "requestedIn": "התבקשה לפי אזור הזמן {timezone}",
+    "numberToCall": "מספר לחיוג",
+    "dialFrom": "חיוג ממספר",
+    "autoSelected": "נבחר אוטומטית",
+    "attempts": "ניסיונות",
+    "attemptsValue": "{attempts} מתוך {max}",
+    "nextAttempt": "הבא ב-{date}",
+    "reminderEmailed": "נשלחה תזכורת באימייל",
+    "closed": "נסגרה",
+    "completed": "הושלם",
+    "byName": "על ידי {name}",
+    "created": "נוצרה",
+    "linkedCalls": "שיחות מקושרות",
+    "promisedDuringCall": "הובטחה במהלך שיחה",
+    "fulfilledByCall": "בוצעה בשיחה הזו",
+    "latestAttempt": "הניסיון האחרון"
+  },
+  "createDialog": {
+    "title": "שיחה חוזרת חדשה",
+    "description": "תזמון שיחה חוזרת לאיש קשר — בטיפול חבר צוות או בחיוג של סוכן AI.",
+    "dncWarning": "איש הקשר הזה נמצא ברשימת אין להתקשר שלכם. עדיין אפשר לתזמן שיחה חוזרת, אך כדאי לשקול אם ליצור איתו קשר.",
+    "noAssignees": "עדיין אין חברי צוות עם חשבון — הזמינו חבר צוות דרך <link>צוות</link>.",
+    "noAgents": "אין סוכני AI מסונכרנים לשיחות יוצאות — צרו אחד תחילה דרך <link>סוכני AI</link>.",
+    "noNumbers": "אין מספרים לחיוג — מספרי SIP מיועדים לשיחות נכנסות בלבד, לכן רכשו מספר של הפלטפורמה דרך <link>מספרי טלפון</link>.",
+    "retrySettings": "הגדרות ניסיונות חוזרים",
+    "maxAttempts": "מספר ניסיונות מרבי",
+    "retryAfter": "ניסיון חוזר לאחר",
+    "defaultOption": "{value} (ברירת מחדל)",
+    "minutes": "{count, plural, one {# דקה} other {# דקות}}",
+    "hours": "{count, plural, one {# שעה} other {# שעות}}",
+    "topicPlaceholder": "מה נושא השיחה החוזרת? (לא חובה)",
+    "notesPlaceholder": "רקע למי שיבצע את השיחה (לא חובה)"
+  },
+  "editDialog": {
+    "title": "עריכת שיחה חוזרת",
+    "description": "עדכון הנושא, ההערות או הגורם המטפל בשיחה החוזרת."
+  },
+  "rescheduleDialog": {
+    "title": "שינוי מועד השיחה החוזרת",
+    "description": "בחרו מועד חדש. ניסיונות החיוג יתחילו מחדש, והתזכורת לגורם המטפל תישלח שוב בהתאם למועד החדש."
+  },
+  "completeDialog": {
+    "title": "השלמת שיחה חוזרת",
+    "descriptionNamed": "תעדו איך התנהלה השיחה החוזרת ל-{name}.",
+    "descriptionUnnamed": "תעדו איך התנהלה השיחה החוזרת לאיש הקשר.",
+    "notesPlaceholder": "מה נדון או סוכם? (לא חובה)"
+  },
+  "cancelDialog": {
+    "title": "לבטל את השיחה החוזרת הזו?",
+    "description": "לא תתבצע שיחה חוזרת ל-{name} ב-{date}. לא ניתן לבטל את הפעולה הזו."
+  },
+  "contactPicker": {
+    "placeholder": "בחירת איש קשר",
+    "searchPlaceholder": "חיפוש אנשי קשר…",
+    "noMatches": "לא נמצאו אנשי קשר תואמים.",
+    "newContact": "איש קשר חדש",
+    "newContactNamed": "איש קשר חדש \"{query}\"",
+    "unnamed": "איש קשר ללא שם",
+    "onDnc": "ברשימת אין להתקשר (DNC)",
+    "noPhone": "ללא מספר טלפון",
+    "loadMore": "טעינת עוד"
+  }
+}

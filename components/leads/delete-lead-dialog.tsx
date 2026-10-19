@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,6 +26,8 @@ export function DeleteLeadDialog({
   onOpenChange: (open: boolean) => void;
   onDeleted?: () => void;
 }) {
+  const t = useTranslations("leads.delete");
+  const tc = useTranslations("common");
   const deleteLead = useDeleteLead(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
@@ -32,7 +35,7 @@ export function DeleteLeadDialog({
   const confirm = () => {
     deleteLead.mutate(lead.id, {
       onSuccess: () => {
-        toast.success("Lead deleted");
+        toast.success(t("toast"));
         onDeleted?.();
       },
       onError: (error) => toast.error(error.message),
@@ -44,20 +47,17 @@ export function DeleteLeadDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete this lead?</AlertDialogTitle>
-          <AlertDialogDescription>
-            &ldquo;{lead.title}&rdquo; and its activity timeline are removed for good. Mark it
-            lost instead if you want to keep the history.
-          </AlertDialogDescription>
+          <AlertDialogTitle>{t("title")}</AlertDialogTitle>
+          <AlertDialogDescription>{t("description", { title: lead.title })}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep lead</AlertDialogCancel>
+          <AlertDialogCancel>{t("keep")}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={deleteLead.isPending}
             onClick={confirm}
           >
-            {deleteLead.isPending ? "Deleting…" : "Delete lead"}
+            {deleteLead.isPending ? tc("actions.deleting") : t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

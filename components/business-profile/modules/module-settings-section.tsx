@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -32,6 +33,7 @@ import type {
  * write their module's whole settings bag (the endpoint replaces, not merges).
  */
 export function ModuleSettingsSection() {
+  const t = useTranslations("businessProfile.moduleSettings");
   const { business, modules } = useBusiness();
   const enabled = new Set(modules.filter((module) => module.enabled).map((module) => module.key));
 
@@ -47,9 +49,9 @@ export function ModuleSettingsSection() {
       {(quotesOn || invoicesOn) && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="font-heading text-lg font-semibold">Billing defaults</h2>
+            <h2 className="font-heading text-lg font-semibold">{t("billing.title")}</h2>
             <p className="text-sm text-muted-foreground">
-              Used whenever a quote or invoice is raised — each document can still override them.
+              {t("billing.description")}
             </p>
           </div>
 
@@ -64,9 +66,9 @@ export function ModuleSettingsSection() {
       {leadsOn && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="font-heading text-lg font-semibold">Lead capture</h2>
+            <h2 className="font-heading text-lg font-semibold">{t("leadCapture.title")}</h2>
             <p className="text-sm text-muted-foreground">
-              How leads get logged from your agent&apos;s calls.
+              {t("leadCapture.description")}
             </p>
           </div>
 
@@ -79,9 +81,9 @@ export function ModuleSettingsSection() {
       {jobsOn && (
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h2 className="font-heading text-lg font-semibold">Job scheduling</h2>
+            <h2 className="font-heading text-lg font-semibold">{t("jobScheduling.title")}</h2>
             <p className="text-sm text-muted-foreground">
-              How job visits get booked, on calls and in the portal.
+              {t("jobScheduling.description")}
             </p>
           </div>
 
@@ -134,6 +136,8 @@ function TaxDefaultsForm({
   initialLabel: string;
   initialPercent: string;
 }) {
+  const t = useTranslations("businessProfile.moduleSettings");
+  const tc = useTranslations("common");
   const updateProfile = useUpdateBusinessProfile(businessUuid);
 
   const [label, setLabel] = useState(initialLabel);
@@ -145,18 +149,18 @@ function TaxDefaultsForm({
   const save = () => {
     const bp = percentToBp(percent);
     if (bp === null) {
-      setError("Enter a rate between 0 and 100, like 10 or 12.5");
+      setError(t("tax.errors.rate"));
       return;
     }
     if (label.trim() === "" || label.trim().length > 20) {
-      setError("Give the tax a short name, like VAT");
+      setError(t("tax.errors.name"));
       return;
     }
 
     updateProfile.mutate(
       { tax_label: label.trim(), tax_rate_bp: bp },
       {
-        onSuccess: () => toast.success("Tax defaults saved"),
+        onSuccess: () => toast.success(t("tax.toasts.saved")),
         onError: (mutationError) => toast.error(mutationError.message),
       }
     );
@@ -165,14 +169,14 @@ function TaxDefaultsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-[#30aece]">Tax</CardTitle>
+        <CardTitle className="text-[#30aece]">{tc("labels.tax")}</CardTitle>
         <CardDescription>
-          The default rate applied to new line items on quotes and invoices.
+          {t("tax.description")}
         </CardDescription>
       </CardHeader>
       <CardContent className="grid gap-4 sm:grid-cols-2">
         <Field data-invalid={!!error || undefined}>
-          <FieldLabel htmlFor="tax-label">Tax name</FieldLabel>
+          <FieldLabel htmlFor="tax-label">{t("tax.name")}</FieldLabel>
           <Input
             id="tax-label"
             value={label}
@@ -181,11 +185,11 @@ function TaxDefaultsForm({
               setLabel(event.target.value);
               setError(null);
             }}
-            placeholder="VAT"
+            placeholder={t("tax.namePlaceholder")}
           />
         </Field>
         <Field data-invalid={!!error || undefined}>
-          <FieldLabel htmlFor="tax-rate">Rate (%)</FieldLabel>
+          <FieldLabel htmlFor="tax-rate">{t("tax.rate")}</FieldLabel>
           <Input
             id="tax-rate"
             inputMode="decimal"
@@ -194,18 +198,18 @@ function TaxDefaultsForm({
               setPercent(event.target.value);
               setError(null);
             }}
-            placeholder="18"
+            placeholder={t("tax.ratePlaceholder")}
           />
           {error ? (
             <FieldError>{error}</FieldError>
           ) : (
-            <FieldDescription>18% VAT for most Israeli businesses.</FieldDescription>
+            <FieldDescription>{t("tax.rateHint")}</FieldDescription>
           )}
         </Field>
       </CardContent>
       <CardFooter className="justify-end">
         <Button size="sm" onClick={save} disabled={!dirty || updateProfile.isPending}>
-          {updateProfile.isPending ? "Saving…" : "Save tax defaults"}
+          {updateProfile.isPending ? tc("actions.saving") : t("tax.save")}
         </Button>
       </CardFooter>
     </Card>
@@ -228,6 +232,8 @@ function LeadSettingsForm({
   businessUuid: string;
   initial: LeadModuleSettings;
 }) {
+  const t = useTranslations("businessProfile.moduleSettings");
+  const tc = useTranslations("common");
   const updateSettings = useUpdateModuleSettings(businessUuid, "leads");
 
   const [autoCreate, setAutoCreate] = useState(initial.auto_create_lead_on_inbound);
@@ -238,7 +244,7 @@ function LeadSettingsForm({
     updateSettings.mutate(
       { auto_create_lead_on_inbound: autoCreate },
       {
-        onSuccess: () => toast.success("Lead settings saved"),
+        onSuccess: () => toast.success(t("leads.toasts.saved")),
         onError: (mutationError) => toast.error(mutationError.message),
       }
     );
@@ -247,16 +253,15 @@ function LeadSettingsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-[#30aece]">Leads</CardTitle>
-        <CardDescription>How leads are captured from inbound calls.</CardDescription>
+        <CardTitle className="text-[#30aece]">{t("leads.title")}</CardTitle>
+        <CardDescription>{t("leads.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         <Field orientation="horizontal">
           <div className="flex flex-col gap-0.5">
-            <FieldLabel htmlFor="lead-auto-create">Auto-create from inbound calls</FieldLabel>
+            <FieldLabel htmlFor="lead-auto-create">{t("leads.autoCreate")}</FieldLabel>
             <FieldDescription>
-              After an inbound call with no open lead for the caller, log a new one
-              automatically. Your agent can always log leads with its create_lead tool.
+              {t("leads.autoCreateHint")}
             </FieldDescription>
           </div>
           <Switch
@@ -268,7 +273,7 @@ function LeadSettingsForm({
       </CardContent>
       <CardFooter className="justify-end">
         <Button size="sm" onClick={save} disabled={!dirty || updateSettings.isPending}>
-          {updateSettings.isPending ? "Saving…" : "Save lead settings"}
+          {updateSettings.isPending ? tc("actions.saving") : t("leads.save")}
         </Button>
       </CardFooter>
     </Card>
@@ -291,6 +296,8 @@ function JobSettingsForm({
   businessUuid: string;
   initial: JobModuleSettings;
 }) {
+  const t = useTranslations("businessProfile.moduleSettings");
+  const tc = useTranslations("common");
   const updateSettings = useUpdateModuleSettings(businessUuid, "jobs");
 
   const [allowScheduling, setAllowScheduling] = useState(initial.allow_agent_scheduling);
@@ -304,7 +311,7 @@ function JobSettingsForm({
   const save = () => {
     const minutes = Number(defaultMinutes);
     if (!Number.isInteger(minutes) || minutes < 1 || minutes > 1440) {
-      setError("Enter whole minutes between 1 and 1440");
+      setError(t("jobs.errors.minutes"));
       return;
     }
 
@@ -314,7 +321,7 @@ function JobSettingsForm({
         default_estimated_minutes: minutes,
       },
       {
-        onSuccess: () => toast.success("Job settings saved"),
+        onSuccess: () => toast.success(t("jobs.toasts.saved")),
         onError: (mutationError) => toast.error(mutationError.message),
       }
     );
@@ -323,18 +330,17 @@ function JobSettingsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-[#30aece]">Jobs</CardTitle>
-        <CardDescription>How job visits get booked.</CardDescription>
+        <CardTitle className="text-[#30aece]">{t("jobs.title")}</CardTitle>
+        <CardDescription>{t("jobs.description")}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Field orientation="horizontal">
           <div className="flex flex-col gap-0.5">
             <FieldLabel htmlFor="job-allow-agent-scheduling">
-              Let the agent book visits on calls
+              {t("jobs.allowScheduling")}
             </FieldLabel>
             <FieldDescription>
-              Your agent offers free slots and books job visits with its check_job_availability
-              and book_job tools. Off = it still logs jobs, but the team confirms the time.
+              {t("jobs.allowSchedulingHint")}
             </FieldDescription>
           </div>
           <Switch
@@ -344,7 +350,7 @@ function JobSettingsForm({
           />
         </Field>
         <Field data-invalid={!!error || undefined}>
-          <FieldLabel htmlFor="job-default-minutes">Default visit length (minutes)</FieldLabel>
+          <FieldLabel htmlFor="job-default-minutes">{t("jobs.defaultMinutes")}</FieldLabel>
           <Input
             id="job-default-minutes"
             inputMode="numeric"
@@ -359,14 +365,14 @@ function JobSettingsForm({
             <FieldError>{error}</FieldError>
           ) : (
             <FieldDescription>
-              Used when a job has no estimate — for offered slots and booked windows.
+              {t("jobs.defaultMinutesHint")}
             </FieldDescription>
           )}
         </Field>
       </CardContent>
       <CardFooter className="justify-end">
         <Button size="sm" onClick={save} disabled={!dirty || updateSettings.isPending}>
-          {updateSettings.isPending ? "Saving…" : "Save job settings"}
+          {updateSettings.isPending ? tc("actions.saving") : t("jobs.save")}
         </Button>
       </CardFooter>
     </Card>
@@ -389,6 +395,8 @@ function QuoteSettingsForm({
   businessUuid: string;
   initial: QuoteModuleSettings;
 }) {
+  const t = useTranslations("businessProfile.moduleSettings");
+  const tc = useTranslations("common");
   const updateSettings = useUpdateModuleSettings(businessUuid, "quotes");
 
   const [validDays, setValidDays] = useState(String(initial.valid_days));
@@ -404,7 +412,7 @@ function QuoteSettingsForm({
   const save = () => {
     const days = Number(validDays);
     if (!Number.isInteger(days) || days < 1 || days > 365) {
-      setError("Enter a whole number of days between 1 and 365");
+      setError(t("quotes.errors.validDays"));
       return;
     }
 
@@ -415,7 +423,7 @@ function QuoteSettingsForm({
         from_details: fromDetails.trim() || null,
       },
       {
-        onSuccess: () => toast.success("Quote settings saved"),
+        onSuccess: () => toast.success(t("quotes.toasts.saved")),
         onError: (mutationError) => toast.error(mutationError.message),
       }
     );
@@ -424,12 +432,12 @@ function QuoteSettingsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-[#30aece]">Quotes</CardTitle>
-        <CardDescription>Defaults for new quotes.</CardDescription>
+        <CardTitle className="text-[#30aece]">{t("quotes.title")}</CardTitle>
+        <CardDescription>{t("quotes.description")}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Field data-invalid={!!error || undefined}>
-          <FieldLabel htmlFor="quote-valid-days">Validity (days)</FieldLabel>
+          <FieldLabel htmlFor="quote-valid-days">{t("quotes.validDays")}</FieldLabel>
           <Input
             id="quote-valid-days"
             inputMode="numeric"
@@ -444,37 +452,37 @@ function QuoteSettingsForm({
             <FieldError>{error}</FieldError>
           ) : (
             <FieldDescription>
-              How long a sent quote stays open before it expires.
+              {t("quotes.validDaysHint")}
             </FieldDescription>
           )}
         </Field>
         <Field>
-          <FieldLabel htmlFor="quote-default-terms">Default terms</FieldLabel>
+          <FieldLabel htmlFor="quote-default-terms">{t("quotes.terms")}</FieldLabel>
           <Textarea
             id="quote-default-terms"
             value={terms}
             onChange={(event) => setTerms(event.target.value)}
             rows={3}
             maxLength={5000}
-            placeholder="Scope of work, exclusions, payment terms…"
+            placeholder={t("quotes.termsPlaceholder")}
           />
-          <FieldDescription>Pre-filled on every new quote; editable per quote.</FieldDescription>
+          <FieldDescription>{t("quotes.termsHint")}</FieldDescription>
         </Field>
         <Field>
-          <FieldLabel htmlFor="quote-from-details">From details</FieldLabel>
+          <FieldLabel htmlFor="quote-from-details">{t("quotes.fromDetails")}</FieldLabel>
           <Textarea
             id="quote-from-details"
             value={fromDetails}
             onChange={(event) => setFromDetails(event.target.value)}
             rows={2}
             maxLength={2000}
-            placeholder="Company no. (ח.פ.), trading name, address — shown on the quote footer"
+            placeholder={t("quotes.fromDetailsPlaceholder")}
           />
         </Field>
       </CardContent>
       <CardFooter className="justify-end">
         <Button size="sm" onClick={save} disabled={!dirty || updateSettings.isPending}>
-          {updateSettings.isPending ? "Saving…" : "Save quote settings"}
+          {updateSettings.isPending ? tc("actions.saving") : t("quotes.save")}
         </Button>
       </CardFooter>
     </Card>
@@ -497,6 +505,8 @@ function InvoiceSettingsForm({
   businessUuid: string;
   initial: InvoiceModuleSettings;
 }) {
+  const t = useTranslations("businessProfile.moduleSettings");
+  const tc = useTranslations("common");
   const updateSettings = useUpdateModuleSettings(businessUuid, "invoices");
 
   const [netDays, setNetDays] = useState(String(initial.net_days));
@@ -514,7 +524,7 @@ function InvoiceSettingsForm({
   const save = () => {
     const days = Number(netDays);
     if (!Number.isInteger(days) || days < 0 || days > 365) {
-      setError("Enter a whole number of days between 0 and 365");
+      setError(t("invoices.errors.netDays"));
       return;
     }
 
@@ -525,7 +535,7 @@ function InvoiceSettingsForm({
         from_details: fromDetails.trim() || null,
       },
       {
-        onSuccess: () => toast.success("Invoice settings saved"),
+        onSuccess: () => toast.success(t("invoices.toasts.saved")),
         onError: (mutationError) => toast.error(mutationError.message),
       }
     );
@@ -534,12 +544,12 @@ function InvoiceSettingsForm({
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-[#30aece]">Invoices</CardTitle>
-        <CardDescription>Defaults for new invoices.</CardDescription>
+        <CardTitle className="text-[#30aece]">{t("invoices.title")}</CardTitle>
+        <CardDescription>{t("invoices.description")}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         <Field data-invalid={!!error || undefined}>
-          <FieldLabel htmlFor="invoice-net-days">Payment terms (days)</FieldLabel>
+          <FieldLabel htmlFor="invoice-net-days">{t("invoices.netDays")}</FieldLabel>
           <Input
             id="invoice-net-days"
             inputMode="numeric"
@@ -554,37 +564,39 @@ function InvoiceSettingsForm({
             <FieldError>{error}</FieldError>
           ) : (
             <FieldDescription>
-              Sending an invoice sets its due date this many days after issue.
+              {t("invoices.netDaysHint")}
             </FieldDescription>
           )}
         </Field>
         <Field>
-          <FieldLabel htmlFor="invoice-payment-instructions">Payment instructions</FieldLabel>
+          <FieldLabel htmlFor="invoice-payment-instructions">
+            {t("invoices.paymentInstructions")}
+          </FieldLabel>
           <Textarea
             id="invoice-payment-instructions"
             value={paymentInstructions}
             onChange={(event) => setPaymentInstructions(event.target.value)}
             rows={3}
             maxLength={2000}
-            placeholder="Direct deposit — BSB, account number, reference…"
+            placeholder={t("invoices.paymentInstructionsPlaceholder")}
           />
-          <FieldDescription>Pre-filled on every new invoice; editable per invoice.</FieldDescription>
+          <FieldDescription>{t("invoices.paymentInstructionsHint")}</FieldDescription>
         </Field>
         <Field>
-          <FieldLabel htmlFor="invoice-from-details">From details</FieldLabel>
+          <FieldLabel htmlFor="invoice-from-details">{t("invoices.fromDetails")}</FieldLabel>
           <Textarea
             id="invoice-from-details"
             value={fromDetails}
             onChange={(event) => setFromDetails(event.target.value)}
             rows={2}
             maxLength={2000}
-            placeholder="Company no. (ח.פ.), trading name, address — shown on the invoice footer"
+            placeholder={t("invoices.fromDetailsPlaceholder")}
           />
         </Field>
       </CardContent>
       <CardFooter className="justify-end">
         <Button size="sm" onClick={save} disabled={!dirty || updateSettings.isPending}>
-          {updateSettings.isPending ? "Saving…" : "Save invoice settings"}
+          {updateSettings.isPending ? tc("actions.saving") : t("invoices.save")}
         </Button>
       </CardFooter>
     </Card>

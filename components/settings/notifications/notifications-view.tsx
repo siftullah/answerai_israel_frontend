@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ErrorState } from "@/components/error-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -11,76 +12,90 @@ import {
 import { useTeamNotificationSettings } from "@/hooks/use-team-notification-settings";
 import { TEAM_NOTIFICATION_MODULE } from "@/lib/api/types";
 
-/** Every routable notification, in display order. Each card hides with its module. */
-const SECTIONS: TeamNotificationSectionCopy[] = [
-  {
-    type: "new_lead",
-    title: "New lead",
-    description:
-      "Sent when your AI assistant logs a lead on a call. Leads you add in the portal never trigger it.",
-    defaultRecipient: "it goes to the lead's assignee, or the business owner when nobody is assigned.",
-    noun: "lead",
-    rulePlaceholders: [
-      "Any appraisal or sales enquiry goes to bill@example.com",
-      "Rental enquiries go to the property manager",
-      "Don't email anyone about tenants asking for a rent receipt",
-    ],
-  },
-  {
-    type: "new_job",
-    title: "New job",
-    description:
-      "Sent when your AI assistant logs or books a job on a call. Jobs you add in the portal never trigger it.",
-    defaultRecipient: "it goes to the job's assignee, or the business owner when nobody is assigned.",
-    noun: "job",
-    rulePlaceholders: [
-      "Plumbing jobs go to mick@example.com, electrical to dave@example.com",
-      "Anything marked urgent also goes to the office",
-      "Jobs in the northern suburbs go to the north team",
-    ],
-  },
-  {
-    type: "new_quote_request",
-    title: "New quote request",
-    description:
-      "Sent when your AI assistant logs a quote request on a call, so it gets priced up. Quotes you create in the portal never trigger it.",
-    defaultRecipient: "it goes to the business owner.",
-    noun: "quote request",
-    rulePlaceholders: [
-      "Commercial quotes go to sales@example.com",
-      "Anything under $500 goes to the office, larger jobs to the owner",
-      "Quotes for existing customers go to their account manager",
-    ],
-  },
-  {
-    type: "team_callback_reminder",
-    title: "Team callback reminder",
-    description:
-      "Sent shortly before a callback that someone on your team promised to make, so it isn't missed.",
-    defaultRecipient: "it goes to the team member the callback is assigned to.",
-    noun: "callback",
-    rulePlaceholders: [
-      "Callbacks about rentals go to the property manager, not the owner",
-      "If the caller asked for a specific person, remind that person",
-      "Send every reminder to the office inbox as well",
-    ],
-  },
-];
-
 export function NotificationsView() {
+  const t = useTranslations("settings.notifications");
   const { business, modules } = useBusiness();
   const settingsQuery = useTeamNotificationSettings(business.id);
 
-  const sections = SECTIONS.filter((section) =>
+  /**
+   * Every routable notification, in display order. Each card hides with its
+   * module. Sentences are spelled out per notification (not built from a noun)
+   * so translations can agree in gender and number.
+   */
+  const allSections: TeamNotificationSectionCopy[] = [
+    {
+      type: "new_lead",
+      title: t("sections.newLead.title"),
+      description: t("sections.newLead.description"),
+      enabledDescription: t("sections.newLead.enabledDescription"),
+      recipientsDescription: t("sections.newLead.recipientsDescription"),
+      rulesDescription: t("sections.newLead.rulesDescription"),
+      rulesEmpty: t("sections.newLead.rulesEmpty"),
+      testLabel: t("sections.newLead.testLabel"),
+      testNobody: t("sections.newLead.testNobody"),
+      rulePlaceholders: [
+        t("sections.newLead.rulePlaceholders.first"),
+        t("sections.newLead.rulePlaceholders.second"),
+        t("sections.newLead.rulePlaceholders.third"),
+      ],
+    },
+    {
+      type: "new_job",
+      title: t("sections.newJob.title"),
+      description: t("sections.newJob.description"),
+      enabledDescription: t("sections.newJob.enabledDescription"),
+      recipientsDescription: t("sections.newJob.recipientsDescription"),
+      rulesDescription: t("sections.newJob.rulesDescription"),
+      rulesEmpty: t("sections.newJob.rulesEmpty"),
+      testLabel: t("sections.newJob.testLabel"),
+      testNobody: t("sections.newJob.testNobody"),
+      rulePlaceholders: [
+        t("sections.newJob.rulePlaceholders.first"),
+        t("sections.newJob.rulePlaceholders.second"),
+        t("sections.newJob.rulePlaceholders.third"),
+      ],
+    },
+    {
+      type: "new_quote_request",
+      title: t("sections.newQuoteRequest.title"),
+      description: t("sections.newQuoteRequest.description"),
+      enabledDescription: t("sections.newQuoteRequest.enabledDescription"),
+      recipientsDescription: t("sections.newQuoteRequest.recipientsDescription"),
+      rulesDescription: t("sections.newQuoteRequest.rulesDescription"),
+      rulesEmpty: t("sections.newQuoteRequest.rulesEmpty"),
+      testLabel: t("sections.newQuoteRequest.testLabel"),
+      testNobody: t("sections.newQuoteRequest.testNobody"),
+      rulePlaceholders: [
+        t("sections.newQuoteRequest.rulePlaceholders.first"),
+        t("sections.newQuoteRequest.rulePlaceholders.second"),
+        t("sections.newQuoteRequest.rulePlaceholders.third"),
+      ],
+    },
+    {
+      type: "team_callback_reminder",
+      title: t("sections.teamCallbackReminder.title"),
+      description: t("sections.teamCallbackReminder.description"),
+      enabledDescription: t("sections.teamCallbackReminder.enabledDescription"),
+      recipientsDescription: t("sections.teamCallbackReminder.recipientsDescription"),
+      rulesDescription: t("sections.teamCallbackReminder.rulesDescription"),
+      rulesEmpty: t("sections.teamCallbackReminder.rulesEmpty"),
+      testLabel: t("sections.teamCallbackReminder.testLabel"),
+      testNobody: t("sections.teamCallbackReminder.testNobody"),
+      rulePlaceholders: [
+        t("sections.teamCallbackReminder.rulePlaceholders.first"),
+        t("sections.teamCallbackReminder.rulePlaceholders.second"),
+        t("sections.teamCallbackReminder.rulePlaceholders.third"),
+      ],
+    },
+  ];
+
+  const sections = allSections.filter((section) =>
     modules.some((module) => module.key === TEAM_NOTIFICATION_MODULE[section.type] && module.enabled)
   );
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Notifications"
-        description="Who on your team hears about what your AI assistant captures. Turn routing on for a notification and an assistant picks the recipients from your rules and their roles; off, each goes to its usual default."
-      />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {settingsQuery.isPending ? (
         <div className="flex max-w-3xl flex-col gap-6">
@@ -89,15 +104,12 @@ export function NotificationsView() {
         </div>
       ) : settingsQuery.isError ? (
         <ErrorState
-          title="Couldn't load notification settings"
+          title={t("loadError")}
           message={settingsQuery.error.message}
           onRetry={() => settingsQuery.refetch()}
         />
       ) : sections.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          None of the modules that send team notifications (leads, jobs, quotes, callbacks) are
-          enabled for this business.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("noModules")}</p>
       ) : (
         <div className="flex max-w-3xl flex-col gap-6">
           {sections.map((section) => {

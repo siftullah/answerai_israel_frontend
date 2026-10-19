@@ -21,8 +21,12 @@ import type { ModuleKey } from "@/lib/api/types";
  * this list and the breadcrumb resolves against it, so the two can never
  * disagree. Items (and children) with a `module` key only show while that
  * module is enabled for the business.
+ *
+ * `title` is a message key under `layout.nav` — renderers translate it with
+ * `t(\`nav.${item.title}\`)`; never show it raw.
  */
 export interface NavChild {
+  /** Message key under `layout.nav`. */
   title: string;
   /** Path segment under /b/{uuid}. */
   segment: string;
@@ -38,6 +42,7 @@ export interface NavChild {
 }
 
 export interface NavItem {
+  /** Message key under `layout.nav`. */
   title: string;
   /** Path segment under /b/{uuid}; "" is the dashboard index. */
   segment: string;
@@ -56,45 +61,45 @@ export interface NavItem {
 }
 
 export const navMain: NavItem[] = [
-  { title: "Dashboard", segment: "", icon: LayoutDashboardIcon, exact: true },
+  { title: "dashboard", segment: "", icon: LayoutDashboardIcon, exact: true },
   {
-    title: "Contacts",
+    title: "contacts",
     segment: "contacts",
     icon: UsersIcon,
     children: [
-      { title: "All contacts", segment: "contacts", exact: true },
-      { title: "Do not call (DNC)", segment: "contacts/dnc" },
+      { title: "allContacts", segment: "contacts", exact: true },
+      { title: "dnc", segment: "contacts/dnc" },
     ],
   },
   {
-    title: "Calls",
+    title: "calls",
     segment: "calls",
     icon: PhoneIcon,
     children: [
-      { title: "Inbound logs", segment: "calls/inbound-logs" },
-      { title: "Outbound logs", segment: "calls/outbound-logs" },
-      { title: "Callbacks", segment: "calls/callbacks", module: "callbacks" },
-      { title: "Campaigns", segment: "calls/campaigns" },
+      { title: "inboundLogs", segment: "calls/inbound-logs" },
+      { title: "outboundLogs", segment: "calls/outbound-logs" },
+      { title: "callbacks", segment: "calls/callbacks", module: "callbacks" },
+      { title: "campaigns", segment: "calls/campaigns" },
     ],
   },
-  { title: "Calendar", segment: "calendar", icon: CalendarIcon },
-  { title: "Appointments", segment: "appointments", icon: CalendarDaysIcon, module: "appointments" },
-  { title: "Leads", segment: "leads", icon: TargetIcon, module: "leads" },
-  { title: "Quotes", segment: "quotes", icon: FileTextIcon, module: "quotes" },
-  { title: "Jobs", segment: "jobs", icon: WrenchIcon, module: "jobs" },
-  { title: "Invoices", segment: "invoices", icon: ReceiptTextIcon, module: "invoices" },
+  { title: "calendar", segment: "calendar", icon: CalendarIcon },
+  { title: "appointments", segment: "appointments", icon: CalendarDaysIcon, module: "appointments" },
+  { title: "leads", segment: "leads", icon: TargetIcon, module: "leads" },
+  { title: "quotes", segment: "quotes", icon: FileTextIcon, module: "quotes" },
+  { title: "jobs", segment: "jobs", icon: WrenchIcon, module: "jobs" },
+  { title: "invoices", segment: "invoices", icon: ReceiptTextIcon, module: "invoices" },
 ];
 
 /** "Setup AI" group — configuring the business and its agents. */
 export const navSetup: NavItem[] = [
   {
-    title: "Business profile",
+    title: "businessProfile",
     segment: "business-profile",
     icon: Building2Icon,
     crumbChildren: sectionCrumbs,
   },
-  { title: "Phone numbers", segment: "phone-numbers", icon: HashIcon },
-  { title: "Agents", segment: "agents", icon: BotIcon },
+  { title: "phoneNumbers", segment: "phone-numbers", icon: HashIcon },
+  { title: "agents", segment: "agents", icon: BotIcon },
 ];
 
 /**
@@ -103,17 +108,17 @@ export const navSetup: NavItem[] = [
  */
 const hiddenPages: NavChild[] = [
   {
-    title: "Settings",
+    title: "settings",
     segment: "settings",
     crumbChildren: [
-      { title: "Profile", segment: "settings/profile" },
-      { title: "Calendar", segment: "settings/calendar" },
-      { title: "Notifications", segment: "settings/notifications" },
-      { title: "Billing", segment: "settings/billing" },
+      { title: "profile", segment: "settings/profile" },
+      { title: "calendar", segment: "settings/calendar" },
+      { title: "notifications", segment: "settings/notifications" },
+      { title: "billing", segment: "settings/billing" },
     ],
   },
   // Reached from Billing's "Change plan" (and the no-subscription landing).
-  { title: "Plans", segment: "plans" },
+  { title: "plans", segment: "plans" },
 ];
 
 export function navHref(businessUuid: string, item: NavItem | NavChild): string {
@@ -127,7 +132,8 @@ export function isNavActive(pathname: string, href: string, exact?: boolean): bo
 
 /**
  * Breadcrumb trail for the pathname: [item title] or [parent, child]
- * for sub-links. Empty when no nav item owns the path.
+ * for sub-links. Empty when no nav item owns the path. Entries are
+ * `layout.nav` message keys — the caller translates them.
  */
 export function activeNavTrail(pathname: string, businessUuid: string): string[] {
   for (const item of [...navMain, ...navSetup]) {

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -16,6 +18,7 @@ import { useCreateFaq } from "@/hooks/use-faqs";
 import { useCreateProduct, useUpdateProduct } from "@/hooks/use-products";
 import type { ApiError } from "@/lib/api/errors";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { PRODUCT_PRICE_TYPES, type Product, type ProductPayload } from "@/lib/api/types";
 import {
   productSchema,
@@ -44,12 +47,26 @@ export function ProductModal({
   const update = useUpdateProduct(business.id);
   const createFaq = useCreateFaq(business.id);
 
-  const editing = Boolean(source && "id" in source);
-  const title = onSubmitOverride ? "Review draft" : editing ? "Edit product" : "Add product";
-  const submitLabel = onSubmitOverride ? "Apply" : editing ? "Save changes" : "Add product";
+  const t = useTranslations("knowledge.products");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
+  const editing = Boolean(source && "id" in source);
+  const title = onSubmitOverride
+    ? ts("reviewDraft")
+    : editing
+      ? t("modal.editTitle")
+      : t("add");
+  const submitLabel = onSubmitOverride
+    ? tc("actions.apply")
+    : editing
+      ? tc("actions.saveChanges")
+      : t("add");
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => productSchema(tv), [tv]);
   const form = useForm<ProductValues>({
-    resolver: zodResolver(productSchema),
+    resolver: zodResolver(schema),
     defaultValues: toProductValues(source),
   });
   const { errors } = form.formState;
@@ -67,7 +84,7 @@ export function ProductModal({
         { id: (source as Product).id, payload },
         {
           onSuccess: () => {
-            toast.success("Product saved");
+            toast.success(t("toasts.saved"));
             onOpenChange(false);
           },
           onError: (error) => applyServerErrors(form, error),
@@ -88,11 +105,14 @@ export function ProductModal({
           });
         } catch (error) {
           toast.error(
-            `Couldn't add FAQ "${row.question.slice(0, 40)}": ${(error as ApiError).message}`
+            ts("faqAttachFailed", {
+              question: row.question.slice(0, 40),
+              message: (error as ApiError).message,
+            })
           );
         }
       }
-      toast.success("Product added");
+      toast.success(t("toasts.added"));
       onOpenChange(false);
     } catch (error) {
       applyServerErrors(form, error as ApiError);
@@ -111,15 +131,15 @@ export function ProductModal({
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Details",
+            title: ts("steps.details"),
             fields: ["name", "description", "available"],
             content: (
               <>
                 <Field data-invalid={!!errors.name || undefined}>
-                  <FieldLabel htmlFor="product-name">Name</FieldLabel>
+                  <FieldLabel htmlFor="product-name">{tc("labels.name")}</FieldLabel>
                   <Input
                     id="product-name"
-                    placeholder="Colorbond gutter guard"
+                    placeholder={t("modal.namePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.name}
                     {...form.register("name")}
@@ -128,16 +148,21 @@ export function ProductModal({
                 </Field>
 
                 <Field data-invalid={!!errors.description || undefined}>
-                  <FieldLabel htmlFor="product-description">Description</FieldLabel>
+                  <FieldLabel htmlFor="product-description">
+                    {tc("labels.description")}
+                  </FieldLabel>
                   <Textarea
                     id="product-description"
                     className="min-h-32"
-                    placeholder="What's included, who it's for, what makes it different…"
+                    placeholder={ts("descriptionPlaceholder")}
                     aria-invalid={!!errors.description}
                     {...form.register("description")}
                   />
-                  <p className="text-right text-sm text-muted-foreground">
-                    {descriptionLength.toLocaleString()} / 2,000
+                  <p className="text-end text-sm text-muted-foreground">
+                    {ts("charCount", {
+                      length: descriptionLength.toLocaleString(displayLocale()),
+                      max: (2000).toLocaleString(displayLocale()),
+                    })}
                   </p>
                   {errors.description && (
                     <FieldError>{errors.description.message}</FieldError>
@@ -158,11 +183,10 @@ export function ProductModal({
                   />
                   <div className="flex flex-col gap-0.5">
                     <FieldLabel htmlFor="product-available" className="font-normal">
-                      Available
+                      {ts("available")}
                     </FieldLabel>
                     <p className="text-sm text-muted-foreground">
-                      Unavailable products stay listed here but your AI won&apos;t offer
-                      them.
+                      {t("modal.availableHint")}
                     </p>
                   </div>
                 </Field>
@@ -170,7 +194,7 @@ export function ProductModal({
             ),
           },
           {
-            title: "Pricing",
+            title: ts("steps.pricing"),
             fields: [
               "has_price",
               "ai_can_quote_price",
@@ -183,7 +207,7 @@ export function ProductModal({
             content: <PriceEditor priceTypes={PRODUCT_PRICE_TYPES} />,
           },
           {
-            title: "FAQs",
+            title: ts("steps.faqs"),
             fields: ["faq_mode", "faq_ids"],
             content: (
               <FaqAttachmentField
@@ -198,7 +222,7 @@ export function ProductModal({
             ),
           },
           {
-            title: "Agents",
+            title: ts("steps.agents"),
             fields: ["agent_scope", "agent_ids"],
             content: <AgentScopeField idPrefix="product" />,
           },

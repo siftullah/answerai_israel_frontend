@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -36,13 +37,6 @@ import {
 } from "@/hooks/use-calendar-connections";
 import type { CalendarConnection } from "@/lib/api/types";
 
-/** Coded errors the OAuth callback appends to the return URL. */
-const CONNECT_ERRORS: Record<string, string> = {
-  state_expired: "The connection request expired. Please try connecting again.",
-  access_denied: "Microsoft sign-in was cancelled.",
-  provider_error: "Microsoft couldn't complete the connection. Please try again.",
-};
-
 /** Decorative — the card title already names the provider. */
 function OutlookLogo() {
   return (
@@ -57,6 +51,7 @@ function OutlookLogo() {
 }
 
 export function CalendarConnectionView() {
+  const t = useTranslations("settings.calendar");
   const { business } = useBusiness();
   const connectionsQuery = useCalendarConnections(business.id);
   const router = useRouter();
@@ -67,27 +62,32 @@ export function CalendarConnectionView() {
     const status = searchParams.get("connection");
     if (!status) return;
     if (status === "success") {
-      toast.success("Calendar connected");
+      toast.success(t("toasts.connected"));
     } else {
+      // Coded errors the OAuth callback appends to the return URL.
+      const code = searchParams.get("code");
       toast.error(
-        CONNECT_ERRORS[searchParams.get("code") ?? ""] ?? "Couldn't connect your calendar"
+        code === "state_expired"
+          ? t("errors.stateExpired")
+          : code === "access_denied"
+            ? t("errors.accessDenied")
+            : code === "provider_error"
+              ? t("errors.providerError")
+              : t("errors.generic")
       );
     }
     router.replace(`/b/${business.id}/settings/calendar`);
-  }, [searchParams, router, business.id]);
+  }, [searchParams, router, business.id, t]);
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Calendar"
-        description="Connect your Microsoft calendar so your AI can check your real availability and write appointments and callbacks straight to it."
-      />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {connectionsQuery.isPending ? (
         <Skeleton className="h-48 w-full max-w-2xl" />
       ) : connectionsQuery.isError ? (
         <ErrorState
-          title="Couldn't load your calendar connection"
+          title={t("loadError")}
           message={connectionsQuery.error.message}
           onRetry={() => connectionsQuery.refetch()}
         />
@@ -105,6 +105,8 @@ function MicrosoftConnectionCard({
   businessUuid: string;
   connections: CalendarConnection[];
 }) {
+  const t = useTranslations("settings.calendar.card");
+  const tc = useTranslations("common");
   const connect = useConnectCalendar();
   const disconnect = useDisconnectCalendar(businessUuid);
 
@@ -123,17 +125,14 @@ function MicrosoftConnectionCard({
         <CardHeader>
           <div className="flex items-center gap-3">
             <OutlookLogo />
-            <CardTitle className="text-[#30aece]">Microsoft Calendar</CardTitle>
+            <CardTitle className="text-[#30aece]">{t("providerName")}</CardTitle>
           </div>
-          <CardDescription>
-            No calendar is connected yet. Connecting lets your AI offer your real availability and
-            add appointments and callbacks straight to your calendar.
-          </CardDescription>
+          <CardDescription>{t("notConnected")}</CardDescription>
         </CardHeader>
         <CardContent>
           <Button type="button" onClick={onConnect} disabled={connect.isPending}>
             {connect.isPending && <Spinner />}
-            Connect Microsoft Calendar
+            {t("connect")}
           </Button>
         </CardContent>
       </Card>
@@ -147,40 +146,34 @@ function MicrosoftConnectionCard({
       <CardHeader>
         <div className="flex flex-wrap items-center gap-3">
           <OutlookLogo />
-          <CardTitle className="text-[#30aece]">Microsoft Calendar</CardTitle>
+          <CardTitle className="text-[#30aece]">{t("providerName")}</CardTitle>
           {healthy ? (
-            <Badge variant="success">Connected</Badge>
+            <Badge variant="success">{t("connected")}</Badge>
           ) : (
-            <Badge variant="warning">Needs reconnecting</Badge>
+            <Badge variant="warning">{t("needsReconnecting")}</Badge>
           )}
         </div>
         <CardDescription>
-          {primary.account_email ? (
-            <>
-              Connected as{" "}
-              <span className="font-medium text-foreground">{primary.account_email}</span>. Your
-              appointments and callbacks sync to this calendar.
-            </>
-          ) : (
-            "Your Microsoft calendar is connected — appointments and callbacks sync to it."
-          )}
+          {primary.account_email
+            ? t.rich("connectedAs", {
+                email: primary.account_email,
+                strong: (chunks) => <span className="font-medium text-foreground">{chunks}</span>,
+              })
+            : t("connectedNoEmail")}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {!healthy && (
           <Alert variant="warning">
-            <AlertTitle>Reconnection required</AlertTitle>
-            <AlertDescription>
-              {primary.last_error ??
-                "The connection stopped working. Reconnect to resume availability checks and syncing appointments and callbacks."}
-            </AlertDescription>
+            <AlertTitle>{t("reconnectTitle")}</AlertTitle>
+            <AlertDescription>{primary.last_error ?? t("reconnectFallback")}</AlertDescription>
           </Alert>
         )}
         <div className="flex flex-wrap items-center gap-2">
           {!healthy && (
             <Button type="button" onClick={onConnect} disabled={connect.isPending}>
               {connect.isPending && <Spinner />}
-              Reconnect
+              {t("reconnect")}
             </Button>
           )}
           <AlertDialog>
@@ -194,27 +187,24 @@ function MicrosoftConnectionCard({
               }
             >
               {disconnect.isPending && <Spinner />}
-              Disconnect
+              {t("disconnect")}
             </AlertDialogTrigger>
             <AlertDialogContent>
               <AlertDialogHeader>
-                <AlertDialogTitle>Disconnect this calendar?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  Your AI will stop checking this calendar for availability, and new appointments
-                  and callbacks won&apos;t be added to it. You can reconnect at any time.
-                </AlertDialogDescription>
+                <AlertDialogTitle>{t("disconnectTitle")}</AlertDialogTitle>
+                <AlertDialogDescription>{t("disconnectDescription")}</AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={() =>
                     disconnect.mutate(primary.id, {
-                      onSuccess: () => toast.success("Calendar disconnected"),
+                      onSuccess: () => toast.success(t("toasts.disconnected")),
                       onError: (error) => toast.error(error.message),
                     })
                   }
                 >
-                  Disconnect
+                  {t("disconnect")}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>

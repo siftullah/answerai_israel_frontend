@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -56,14 +57,18 @@ export function CreateAppointmentDialog({
   /** Prefill for grid-click entry points. */
   defaults?: Partial<CreateAppointmentValues>;
 }) {
+  const t = useTranslations("calendar");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const membersQuery = useMembers(business.id);
   const createAppointment = useCreateAppointment(business.id);
 
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => createAppointmentSchema(tv), [tv]);
   const form = useForm<CreateAppointmentValues>({
-    resolver: zodResolver(createAppointmentSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultCreateAppointmentValues(defaults),
   });
   const contactError = form.formState.errors.contact_id;
@@ -75,7 +80,7 @@ export function CreateAppointmentDialog({
     (member) => member.has_account && member.user
   );
   const assigneeItems = [
-    { value: "", label: "Unassigned (shared pool)" },
+    { value: "", label: t("assign.unassignedPool") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -85,7 +90,7 @@ export function CreateAppointmentDialog({
   const onSubmit = form.handleSubmit((values) => {
     createAppointment.mutate(toStoreAppointmentPayload(values, business.timezone), {
       onSuccess: (appointment) => {
-        toast.success("Appointment booked");
+        toast.success(t("createDialog.toasts.booked"));
         onOpenChange(false);
         onCreated?.(appointment);
       },
@@ -97,15 +102,15 @@ export function CreateAppointmentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>New appointment</DialogTitle>
-          <DialogDescription>
-            Book a time for a contact. Duration follows your calendar settings.
-          </DialogDescription>
+          <DialogTitle>{t("createDialog.title")}</DialogTitle>
+          <DialogDescription>{t("createDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           <Field data-invalid={!!contactError || undefined}>
-            <FieldLabel htmlFor="create-appointment-contact">Contact</FieldLabel>
+            <FieldLabel htmlFor="create-appointment-contact">
+              {t("createDialog.contact")}
+            </FieldLabel>
             <ContactCombobox
               id="create-appointment-contact"
               selected={selectedContact}
@@ -124,7 +129,7 @@ export function CreateAppointmentDialog({
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel htmlFor="create-appointment-member">Assign to</FieldLabel>
+                <FieldLabel htmlFor="create-appointment-member">{t("assign.label")}</FieldLabel>
                 <Select
                   items={assigneeItems}
                   value={field.value}
@@ -153,7 +158,7 @@ export function CreateAppointmentDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="create-appointment-date">Date</FieldLabel>
+                <FieldLabel htmlFor="create-appointment-date">{tc("labels.date")}</FieldLabel>
                 <DatePicker
                   id="create-appointment-date"
                   ref={field.ref}
@@ -185,11 +190,11 @@ export function CreateAppointmentDialog({
           />
 
           <Field data-invalid={!!form.formState.errors.notes || undefined}>
-            <FieldLabel htmlFor="create-appointment-notes">Notes</FieldLabel>
+            <FieldLabel htmlFor="create-appointment-notes">{tc("labels.notes")}</FieldLabel>
             <Textarea
               id="create-appointment-notes"
               {...form.register("notes")}
-              placeholder="Anything the team should know (optional)"
+              placeholder={t("createDialog.notesPlaceholder")}
               rows={3}
               aria-invalid={!!form.formState.errors.notes}
             />
@@ -206,10 +211,10 @@ export function CreateAppointmentDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={createAppointment.isPending}>
-              {createAppointment.isPending ? "Booking…" : "Book appointment"}
+              {createAppointment.isPending ? t("createDialog.booking") : t("createDialog.book")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { SparklesIcon } from "lucide-react";
@@ -40,23 +41,9 @@ import {
 } from "@/lib/validation/business-profile";
 import { formatE164 } from "@/lib/phone";
 
-const COUNTRIES = [
-  { value: "IL", label: "Israel" },
-  { value: "AU", label: "Australia" },
-  { value: "NZ", label: "New Zealand" },
-  { value: "GB", label: "United Kingdom" },
-  { value: "US", label: "United States" },
-];
+const DESCRIPTION_MAX = 5000;
 
-const CURRENCIES = [
-  { value: "ILS", label: "ILS — Israeli new shekel" },
-  { value: "AUD", label: "AUD — Australian dollar" },
-  { value: "NZD", label: "NZD — New Zealand dollar" },
-  { value: "GBP", label: "GBP — British pound" },
-  { value: "USD", label: "USD — US dollar" },
-  { value: "EUR", label: "EUR — Euro" },
-];
-
+// Brand names and URL patterns — not translated.
 const SOCIAL_LABELS: Record<SocialKey, { label: string; placeholder: string }> = {
   facebook: { label: "Facebook", placeholder: "https://facebook.com/yourbusiness" },
   instagram: { label: "Instagram", placeholder: "https://instagram.com/yourbusiness" },
@@ -78,10 +65,32 @@ export function ProfileForm({
   draft: BasicInfoDraft | null;
   onDraftHandled: () => void;
 }) {
+  const t = useTranslations("businessProfile.profileForm");
+  const ts = useTranslations("businessProfile.shared");
+  const tc = useTranslations("common");
   const update = useUpdateBusinessProfile(businessUuid);
 
+  const countries = [
+    { value: "IL", label: t("countries.IL") },
+    { value: "AU", label: t("countries.AU") },
+    { value: "NZ", label: t("countries.NZ") },
+    { value: "GB", label: t("countries.GB") },
+    { value: "US", label: t("countries.US") },
+  ];
+
+  const currencies = [
+    { value: "ILS", label: t("currencies.ILS") },
+    { value: "AUD", label: t("currencies.AUD") },
+    { value: "NZD", label: t("currencies.NZD") },
+    { value: "GBP", label: t("currencies.GBP") },
+    { value: "USD", label: t("currencies.USD") },
+    { value: "EUR", label: t("currencies.EUR") },
+  ];
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => businessProfileSchema(tv), [tv]);
   const form = useForm<BusinessProfileValues>({
-    resolver: zodResolver(businessProfileSchema),
+    resolver: zodResolver(schema),
     defaultValues: toBusinessProfileValues(profile),
   });
   const { errors, isDirty } = form.formState;
@@ -131,7 +140,7 @@ export function ProfileForm({
       onSuccess: (updated) => {
         form.reset(toBusinessProfileValues(updated));
         if (draft) onDraftHandled();
-        toast.success("Profile saved");
+        toast.success(t("toasts.saved"));
       },
       onError: (error) => applyServerErrors(form, error),
     });
@@ -142,9 +151,9 @@ export function ProfileForm({
       {draft && (
         <Alert>
           <SparklesIcon />
-          <AlertTitle>Extracted details filled in</AlertTitle>
+          <AlertTitle>{t("draft.title")}</AlertTitle>
           <AlertDescription className="flex flex-col items-start gap-2">
-            Review the highlighted values below, adjust anything that&apos;s off, then save.
+            {t("draft.description")}
             <Button
               type="button"
               variant="outline"
@@ -154,7 +163,7 @@ export function ProfileForm({
                 onDraftHandled();
               }}
             >
-              Discard draft
+              {t("draft.discard")}
             </Button>
           </AlertDescription>
         </Alert>
@@ -168,16 +177,16 @@ export function ProfileForm({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">Contact details</CardTitle>
-          <CardDescription>How customers — and your AI — can reach the business.</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("contact.title")}</CardTitle>
+          <CardDescription>{t("contact.description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           <Field data-invalid={!!errors.public_email || undefined}>
-            <FieldLabel htmlFor="public_email">Public email</FieldLabel>
+            <FieldLabel htmlFor="public_email">{t("contact.email")}</FieldLabel>
             <Input
               id="public_email"
               type="email"
-              placeholder="hello@yourbusiness.com.au"
+              placeholder={t("contact.emailPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.public_email}
               {...form.register("public_email")}
@@ -186,11 +195,11 @@ export function ProfileForm({
           </Field>
 
           <Field data-invalid={!!errors.public_phone || undefined}>
-            <FieldLabel htmlFor="public_phone">Public phone</FieldLabel>
+            <FieldLabel htmlFor="public_phone">{t("contact.phone")}</FieldLabel>
             <Input
               id="public_phone"
               type="tel"
-              placeholder="(02) 5550 1234"
+              placeholder={t("contact.phonePlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.public_phone}
               {...form.register("public_phone")}
@@ -199,11 +208,11 @@ export function ProfileForm({
           </Field>
 
           <Field className="sm:col-span-2" data-invalid={!!errors.website || undefined}>
-            <FieldLabel htmlFor="website">Website</FieldLabel>
+            <FieldLabel htmlFor="website">{t("contact.website")}</FieldLabel>
             <Input
               id="website"
               type="url"
-              placeholder="https://yourbusiness.com.au"
+              placeholder={t("contact.websitePlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.website}
               {...form.register("website")}
@@ -215,29 +224,29 @@ export function ProfileForm({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">About the business</CardTitle>
+          <CardTitle className="text-[#30aece]">{t("about.title")}</CardTitle>
           <CardDescription>
-            What your AI says when callers ask what the business does.
+            {t("about.description")}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <Field data-invalid={!!errors.description || undefined}>
-            <FieldLabel htmlFor="description">Description</FieldLabel>
+            <FieldLabel htmlFor="description">{tc("labels.description")}</FieldLabel>
             <Textarea
               id="description"
               rows={5}
-              placeholder="Tell callers what you do, who you serve, and what makes you the right choice…"
+              placeholder={t("about.descriptionPlaceholder")}
               aria-invalid={!!errors.description}
               {...form.register("description")}
             />
-            <p className="text-right text-sm text-muted-foreground">
-              {descriptionLength.toLocaleString()} / 5,000
+            <p className="text-end text-sm text-muted-foreground">
+              {ts("charCount", { count: descriptionLength, max: DESCRIPTION_MAX })}
             </p>
             {errors.description && <FieldError>{errors.description.message}</FieldError>}
           </Field>
 
           <Field data-invalid={!!errors.categories || undefined}>
-            <FieldLabel htmlFor="categories">Categories</FieldLabel>
+            <FieldLabel htmlFor="categories">{t("about.categories")}</FieldLabel>
             <Controller
               control={form.control}
               name="categories"
@@ -254,11 +263,11 @@ export function ProfileForm({
 
           <div className="grid gap-5 sm:grid-cols-3">
             <Field data-invalid={!!errors.year_founded || undefined}>
-              <FieldLabel htmlFor="year_founded">Year founded</FieldLabel>
+              <FieldLabel htmlFor="year_founded">{t("about.yearFounded")}</FieldLabel>
               <Input
                 id="year_founded"
                 inputMode="numeric"
-                placeholder="2015"
+                placeholder={t("about.yearFoundedPlaceholder")}
                 autoComplete="off"
                 aria-invalid={!!errors.year_founded}
                 {...form.register("year_founded")}
@@ -267,15 +276,15 @@ export function ProfileForm({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="country">Country</FieldLabel>
+              <FieldLabel htmlFor="country">{t("about.country")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="country"
                 render={({ field }) => {
                   const countryItems =
-                    COUNTRIES.some((c) => c.value === field.value) || !field.value
-                      ? COUNTRIES
-                      : [...COUNTRIES, { value: field.value, label: field.value }];
+                    countries.some((c) => c.value === field.value) || !field.value
+                      ? countries
+                      : [...countries, { value: field.value, label: field.value }];
                   // Base UI's SelectValue renders the raw value unless the
                   // root knows the item labels.
                   return (
@@ -285,7 +294,7 @@ export function ProfileForm({
                       onValueChange={(value) => field.onChange((value as string | null) ?? "")}
                     >
                       <SelectTrigger id="country" className="w-full">
-                        <SelectValue placeholder="Select" />
+                        <SelectValue placeholder={tc("actions.select")} />
                       </SelectTrigger>
                       <SelectContent>
                         {countryItems.map((country) => (
@@ -301,15 +310,15 @@ export function ProfileForm({
             </Field>
 
             <Field>
-              <FieldLabel htmlFor="currency">Currency</FieldLabel>
+              <FieldLabel htmlFor="currency">{t("about.currency")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="currency"
                 render={({ field }) => {
                   const currencyItems =
-                    CURRENCIES.some((c) => c.value === field.value) || !field.value
-                      ? CURRENCIES
-                      : [...CURRENCIES, { value: field.value, label: field.value }];
+                    currencies.some((c) => c.value === field.value) || !field.value
+                      ? currencies
+                      : [...currencies, { value: field.value, label: field.value }];
                   // Base UI's SelectValue renders the raw value unless the
                   // root knows the item labels.
                   return (
@@ -319,7 +328,7 @@ export function ProfileForm({
                       onValueChange={(value) => field.onChange((value as string | null) ?? "")}
                     >
                       <SelectTrigger id="currency" className="w-full">
-                        <SelectValue placeholder="Select" />
+                        <SelectValue placeholder={tc("actions.select")} />
                       </SelectTrigger>
                       <SelectContent>
                         {currencyItems.map((currency) => (
@@ -339,8 +348,8 @@ export function ProfileForm({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">Social profiles</CardTitle>
-          <CardDescription>Linked profiles your AI can point callers to.</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("socials.title")}</CardTitle>
+          <CardDescription>{t("socials.description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           {SOCIAL_KEYS.map((key) => (
@@ -364,8 +373,8 @@ export function ProfileForm({
 
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">Location</CardTitle>
-          <CardDescription>Where you operate — used for directions and travel questions.</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("location.title")}</CardTitle>
+          <CardDescription>{t("location.description")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           <Controller
@@ -381,27 +390,27 @@ export function ProfileForm({
                   <RadioGroupItem id="location-fixed" value="fixed" />
                   <div className="flex flex-col gap-0.5">
                     <FieldLabel htmlFor="location-fixed" className="font-normal">
-                      Fixed location
+                      {t("location.fixed")}
                     </FieldLabel>
-                    <p className="text-sm text-muted-foreground">Customers visit your premises.</p>
+                    <p className="text-sm text-muted-foreground">{t("location.fixedHint")}</p>
                   </div>
                 </Field>
                 <Field orientation="horizontal">
                   <RadioGroupItem id="location-mobile" value="mobile" />
                   <div className="flex flex-col gap-0.5">
                     <FieldLabel htmlFor="location-mobile" className="font-normal">
-                      Mobile
+                      {t("location.mobile")}
                     </FieldLabel>
-                    <p className="text-sm text-muted-foreground">You travel to customers.</p>
+                    <p className="text-sm text-muted-foreground">{t("location.mobileHint")}</p>
                   </div>
                 </Field>
                 <Field orientation="horizontal">
                   <RadioGroupItem id="location-online" value="online" />
                   <div className="flex flex-col gap-0.5">
                     <FieldLabel htmlFor="location-online" className="font-normal">
-                      Online only
+                      {t("location.online")}
                     </FieldLabel>
-                    <p className="text-sm text-muted-foreground">No physical location.</p>
+                    <p className="text-sm text-muted-foreground">{t("location.onlineHint")}</p>
                   </div>
                 </Field>
               </RadioGroup>
@@ -411,7 +420,7 @@ export function ProfileForm({
           {locationType === "fixed" && (
             <div className="grid gap-5 sm:grid-cols-2">
               <Field className="sm:col-span-2" data-invalid={!!errors.address || undefined}>
-                <FieldLabel htmlFor="address">Address</FieldLabel>
+                <FieldLabel htmlFor="address">{t("location.address")}</FieldLabel>
                 <Controller
                   control={form.control}
                   name="address"
@@ -442,10 +451,10 @@ export function ProfileForm({
               </Field>
 
               <Field className="sm:col-span-2" data-invalid={!!errors.landmark || undefined}>
-                <FieldLabel htmlFor="landmark">Landmark (optional)</FieldLabel>
+                <FieldLabel htmlFor="landmark">{t("location.landmark")}</FieldLabel>
                 <Input
                   id="landmark"
-                  placeholder="Next to the post office"
+                  placeholder={t("location.landmarkPlaceholder")}
                   autoComplete="off"
                   aria-invalid={!!errors.landmark}
                   {...form.register("landmark")}
@@ -458,10 +467,10 @@ export function ProfileForm({
           {locationType === "mobile" && (
             <div className="grid gap-5 sm:grid-cols-2">
               <Field data-invalid={!!errors.base_location || undefined}>
-                <FieldLabel htmlFor="base_location">Base location</FieldLabel>
+                <FieldLabel htmlFor="base_location">{t("location.baseLocation")}</FieldLabel>
                 <Input
                   id="base_location"
-                  placeholder="Newcastle NSW"
+                  placeholder={t("location.baseLocationPlaceholder")}
                   autoComplete="off"
                   aria-invalid={!!errors.base_location}
                   {...form.register("base_location")}
@@ -470,11 +479,11 @@ export function ProfileForm({
               </Field>
 
               <Field data-invalid={!!errors.travel_radius_km || undefined}>
-                <FieldLabel htmlFor="travel_radius_km">Travel radius (km)</FieldLabel>
+                <FieldLabel htmlFor="travel_radius_km">{t("location.travelRadius")}</FieldLabel>
                 <Input
                   id="travel_radius_km"
                   inputMode="numeric"
-                  placeholder="50"
+                  placeholder={t("location.travelRadiusPlaceholder")}
                   autoComplete="off"
                   aria-invalid={!!errors.travel_radius_km}
                   {...form.register("travel_radius_km")}
@@ -498,12 +507,12 @@ export function ProfileForm({
               if (draft) onDraftHandled();
             }}
           >
-            Discard changes
+            {ts("discardChanges")}
           </Button>
         )}
         <Button type="submit" disabled={!isDirty || update.isPending}>
           {update.isPending && <Spinner />}
-          Save changes
+          {tc("actions.saveChanges")}
         </Button>
       </div>
     </form>

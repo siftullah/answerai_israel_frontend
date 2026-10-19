@@ -1,0 +1,268 @@
+{
+  "meta": {
+    "title": "עבודות"
+  },
+  "page": {
+    "title": "עבודות",
+    "description": "עבודות שנקלטו משיחות או נרשמו על ידי הצוות — מתזמון וביצוע ועד להפקת חשבונית.",
+    "newJob": "עבודה חדשה"
+  },
+  "tabs": {
+    "unscheduled": "לתזמון",
+    "completed": "הושלמו"
+  },
+  "empty": {
+    "active": {
+      "title": "אין עבודות פעילות",
+      "description": "כאן יופיעו עבודות שסוכן ה-AI קולט בשיחות, או שאתם רושמים."
+    },
+    "unscheduled": {
+      "title": "אין עבודות לתזמון",
+      "description": "לכל עבודה פתוחה נקבע ביקור. עבודות חדשות מופיעות כאן קודם."
+    },
+    "completed": {
+      "title": "אין עדיין עבודות שהושלמו",
+      "description": "עבודות שהשלמתם יופיעו כאן, מוכנות להפקת חשבונית."
+    },
+    "all": {
+      "title": "אין עדיין עבודות",
+      "description": "רשמו את העבודה הראשונה, או תנו לסוכן ה-AI לקלוט עבודות משיחות."
+    },
+    "noMatch": {
+      "title": "לא נמצאו עבודות תואמות",
+      "description": "נסו חיפוש אחר או נקו חלק מהמסננים."
+    }
+  },
+  "stats": {
+    "toSchedule": {
+      "label": "לתזמון",
+      "allBooked": "לכל עבודה נקבע מועד",
+      "highPriority": "{count, plural, one {עבודה פעילה בעדיפות גבוהה: #} two {עבודות פעילות בעדיפות גבוהה: #} other {עבודות פעילות בעדיפות גבוהה: #}}",
+      "waiting": "ממתינות לקביעת מועד"
+    },
+    "visitsToday": {
+      "label": "ביקורים היום",
+      "inProgress": "{count, plural, one {עבודה בביצוע: #} two {עבודות בביצוע: #} other {עבודות בביצוע: #}}",
+      "bookedAhead": "{count, plural, one {ביקור שנקבע מראש: #} two {ביקורים שנקבעו מראש: #} other {ביקורים שנקבעו מראש: #}}"
+    },
+    "activeWork": {
+      "label": "עבודות פעילות",
+      "across": "{count, plural, one {במסגרת עבודה פעילה אחת (#)} two {במסגרת # עבודות פעילות} other {במסגרת # עבודות פעילות}}",
+      "none": "אין עבודות פעילות"
+    },
+    "completedThisMonth": {
+      "label": "הושלמו החודש",
+      "allTime": "{count, plural, one {עבודה שהושלמה בסך הכול: #} two {עבודות שהושלמו בסך הכול: #} other {עבודות שהושלמו בסך הכול: #}}"
+    }
+  },
+  "priorityBadge": {
+    "high": "עדיפות גבוהה",
+    "low": "עדיפות נמוכה"
+  },
+  "fields": {
+    "customer": "לקוח",
+    "priority": "עדיפות",
+    "assignee": "אחראי",
+    "unassigned": "ללא שיוך",
+    "siteAddress": "כתובת האתר",
+    "estimatedDuration": "משך משוער"
+  },
+  "list": {
+    "loadError": "לא ניתן לטעון את העבודות"
+  },
+  "row": {
+    "completedOn": "הושלמה ב-{date}",
+    "canceledOn": "בוטלה ב-{date}",
+    "startedBooked": "התחילה — נקבעה ל-{date}",
+    "wasBooked": "הייתה קבועה ל-{date}",
+    "booked": "נקבעה ל-{date}",
+    "capturedFromCall": "נקלטה משיחה ב-{date} — יש לקבוע מועד",
+    "added": "נוספה ב-{date} — יש לקבוע מועד"
+  },
+  "filters": {
+    "searchPlaceholder": "חיפוש לפי כותרת או איש קשר…",
+    "searchLabel": "חיפוש עבודות לפי כותרת או שם איש קשר",
+    "filterLabel": "סינון עבודות",
+    "sort": "מיון",
+    "anyStatus": "כל סטטוס",
+    "anyPriority": "כל עדיפות",
+    "anyone": "כולם",
+    "sortOptions": {
+      "newest": "החדשות ביותר תחילה",
+      "scheduled_start": "הביקור הקרוב ביותר",
+      "quote": "הסכום הגבוה ביותר"
+    },
+    "priorityChip": "עדיפות {priority}",
+    "removeFilter": "הסרת המסנן {label}"
+  },
+  "form": {
+    "editTitle": "עריכת {reference}",
+    "createDescription": "תעדו עבודה לתזמון ולביצוע. אפשר לתמחר אותה באמצעות פריטים בהמשך.",
+    "editDescription": "עדכנו את הפרטים — שינוי הסטטוס והמועדים מתבצע דרך פעולות העבודה.",
+    "title": "כותרת",
+    "titlePlaceholder": "העבודה לביצוע, למשל החלפת דוד מים חמים",
+    "estimatedMinutes": "משך משוער (דקות)",
+    "estimatedMinutesHint": "משך הביקור — קובע את חלון הזמן שיוזמן. ריק = ברירת המחדל של המודול.",
+    "streetAddress": "רחוב ומספר בית",
+    "unitLabel": "דירה או בניין",
+    "unitPlaceholder": "דירה, בניין (אופציונלי)",
+    "suburb": "שכונה",
+    "state": "מדינה",
+    "postcode": "מיקוד",
+    "descriptionPlaceholder": "היקף העבודה, חומרים, הערות גישה… (אופציונלי)",
+    "notesPlaceholder": "כל דבר נוסף שכדאי לתעד… (אופציונלי)",
+    "notesHint": "יוצר את הרשומה הראשונה בציר הזמן של פעילות העבודה.",
+    "submitCreate": "הוספת עבודה"
+  },
+  "detail": {
+    "back": "כל העבודות",
+    "noSelection": {
+      "title": "לא נבחרה עבודה",
+      "description": "בחרו עבודה כדי לראות את הפרטים וההיסטוריה שלה."
+    },
+    "notFound": {
+      "title": "העבודה לא נמצאה",
+      "description": "העבודה הזו לא קיימת או הוסרה."
+    },
+    "loadError": "לא ניתן לטעון את העבודה הזו",
+    "invoicedAs": "הופקה חשבונית {number}",
+    "viewContact": "הצגת איש הקשר",
+    "actions": {
+      "scheduleVisit": "תזמון ביקור",
+      "startJob": "התחלת העבודה",
+      "startNow": "התחלה עכשיו",
+      "completeJob": "השלמת העבודה",
+      "markCompleted": "סימון כהושלם",
+      "reschedule": "שינוי מועד",
+      "viewInvoice": "הצגת חשבונית",
+      "reopen": "פתיחה מחדש"
+    },
+    "facts": {
+      "unnamedContact": "איש קשר ללא שם",
+      "visit": "ביקור",
+      "notBooked": "טרם נקבע",
+      "quotedValue": "סכום הצעת המחיר",
+      "notPriced": "טרם תומחר",
+      "source": "מקור",
+      "durationMinutes": "{count, plural, other {# דקות}}",
+      "fromLead": "מליד",
+      "fromQuote": "מהצעת מחיר",
+      "quoteNumber": "הצעת מחיר {number}",
+      "capturedOn": "תועד בתאריך",
+      "callOn": "שיחה ב-{date}",
+      "created": "נוצרה"
+    }
+  },
+  "lineItems": {
+    "title": "פריטים",
+    "dialogTitle": "פריטים — {reference}",
+    "dialogDescription": "עבודה וחומרים לעבודה זו. מע\"מ יחושב בעת הפקת החשבונית.",
+    "columns": {
+      "type": "סוג",
+      "qty": "כמות",
+      "unit": "יחידה",
+      "unitPrice": "מחיר ליחידה",
+      "amount": "סכום"
+    },
+    "descriptionPlaceholder": "מה יבוצע או יסופק",
+    "aria": {
+      "description": "תיאור פריט {line}",
+      "type": "סוג פריט {line}",
+      "quantity": "כמות לפריט {line}",
+      "unitPrice": "מחיר ליחידה בשקלים לפריט {line}",
+      "remove": "הסרת פריט {line}"
+    },
+    "addLine": "הוספת פריט",
+    "totalExTax": "סה\"כ (ללא מס)",
+    "save": "שמירת פריטים",
+    "addItems": "הוספת פריטים",
+    "editItems": "עריכת פריטים",
+    "emptyFromCall": "עדיין אין פריטים — העבודה נוצרה משיחה. תמחרו אותה לפני הפקת חשבונית.",
+    "empty": "עדיין אין פריטים — הוסיפו עבודה וחומרים כדי לתמחר את העבודה."
+  },
+  "photos": {
+    "title": "תמונות וקבצים",
+    "loadError": "לא ניתן לטעון את התמונות",
+    "empty": "עדיין אין תמונות — תמונות מהשטח ומסמכים נשמרים כאן עם העבודה.",
+    "uploading": "בהעלאה…",
+    "add": "הוספת תמונה או קובץ",
+    "openFile": "פתיחת {name}",
+    "deleteFile": "מחיקת {name}",
+    "deleteTitle": "למחוק את {name}?",
+    "deleteDescription": "הקובץ יוסר מהעבודה הזו לצמיתות.",
+    "keepFile": "השארת הקובץ",
+    "confirmDelete": "מחיקת הקובץ",
+    "sizeMb": "{size} MB",
+    "sizeKb": "{size} KB"
+  },
+  "activity": {
+    "title": "פעילות",
+    "notePlaceholder": "הוסיפו הערה — גישה לאתר העבודה, חלקים שהוזמנו, מה בוצע…",
+    "noteLabel": "הוספת הערה לעבודה הזו",
+    "adding": "בהוספה…",
+    "addNote": "הוספת הערה",
+    "loadError": "לא ניתן לטעון את ציר הזמן",
+    "empty": "עדיין אין פעילות — הערות, תיאומי ביקורים ושינויי סטטוס יופיעו כאן."
+  },
+  "keepJob": "השארת העבודה",
+  "schedule": {
+    "scheduleTitle": "תזמון {reference}",
+    "rescheduleTitle": "שינוי מועד {reference}",
+    "scheduleDescription": "קבעו מועד לביקור — הלקוח יקבל אישור באימייל.",
+    "rescheduleDescription": "בחרו מועד חדש לביקור — הלקוח יקבל עדכון באימייל.",
+    "startTime": "שעת התחלה",
+    "keepsLength": "משך הביקור יישאר ללא שינוי.",
+    "bookedFor": "{minutes, plural, one {הביקור נקבע למשך # דקה.} other {הביקור נקבע למשך # דקות.}}",
+    "bookedForDefault": "{minutes, plural, one {הביקור נקבע למשך # דקה (ברירת המחדל של המודול שלכם).} other {הביקור נקבע למשך # דקות (ברירת המחדל של המודול שלכם).}}",
+    "timezone": "השעות הן לפי אזור הזמן {timezone}.",
+    "booking": "קביעת הביקור…",
+    "rescheduling": "שינוי המועד…",
+    "book": "קביעת ביקור",
+    "reschedule": "שינוי מועד הביקור"
+  },
+  "cancel": {
+    "title": "לבטל את {reference}?",
+    "descriptionBooked": "הביקור שנקבע יבוטל והלקוח יקבל אימייל ביטול.",
+    "descriptionOpen": "העבודה תיסגר כמבוטלת — אפשר לפתוח אותה מחדש בהמשך.",
+    "reason": "סיבה",
+    "reasonPlaceholder": "הלקוח דחה, אין גישה… (לא חובה)",
+    "reasonHint": "הסיבה נשמרת בעבודה — ומצוטטת באימייל ללקוח.",
+    "canceling": "ביטול…",
+    "confirm": "ביטול עבודה"
+  },
+  "delete": {
+    "title": "למחוק את {reference}?",
+    "description": "“{title}” וציר הזמן שלה יימחקו מהפורטל. אם נקבע ביקור, משבצת הזמן שלו תתפנה ביומן. חשבוניות שכבר נוצרו מהעבודה יישמרו.",
+    "confirm": "מחיקת עבודה"
+  },
+  "reopen": {
+    "title": "לפתוח מחדש את {reference}?",
+    "description": "העבודה תחזור לסטטוס פתוח וללא מועד — כל ביקור קודם יישאר מבוטל, אז קבעו ביקור חדש כשיתאים לכם. היסטוריית העבודה תישמר.",
+    "reopening": "פתיחה מחדש…",
+    "confirm": "פתיחת העבודה מחדש"
+  },
+  "invoice": {
+    "title": "ליצור חשבונית עבור {reference}?",
+    "descriptionWithAmount": "תיווצר טיוטת חשבונית בסך {amount} (בתוספת מס) עם העתק של פריטי העבודה, מוכנה לבדיקה ולשליחה אל {customer}. אפשר ליצור חשבונית מהעבודה פעם אחת בלבד.",
+    "description": "תיווצר טיוטת חשבונית עם העתק של פריטי העבודה, מוכנה לבדיקה ולשליחה אל {customer}. אפשר ליצור חשבונית מהעבודה פעם אחת בלבד.",
+    "theCustomer": "הלקוח",
+    "converting": "המרה…",
+    "confirm": "יצירת חשבונית"
+  },
+  "toasts": {
+    "updated": "העבודה עודכנה",
+    "added": "{reference} נוספה",
+    "deleted": "{reference} נמחקה",
+    "rescheduled": "המועד של {reference} שונה — יישלח אימייל ללקוח",
+    "booked": "נקבע ביקור עבור {reference} — יישלח אימייל ללקוח",
+    "canceled": "{reference} בוטלה",
+    "reopened": "{reference} נפתחה מחדש — קבעו מועד חדש כשיתאים לכם",
+    "started": "{reference} התחילה",
+    "completed": "{reference} הושלמה — אפשר ליצור חשבונית",
+    "invoiceDrafted": "נוצרה טיוטת חשבונית {number} מתוך {reference}",
+    "lineItemsSaved": "הפריטים נשמרו",
+    "photoAdded": "התמונה נוספה",
+    "photoDeleted": "התמונה נמחקה",
+    "fileTooLarge": "הקובץ גדול מ-10 MB — הקטינו אותו ונסו שוב."
+  }
+}

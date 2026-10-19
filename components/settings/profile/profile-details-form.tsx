@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -32,10 +34,14 @@ export function ProfileDetailsForm({
   user: User;
   membership: Membership;
 }) {
+  const t = useTranslations("settings.profile.details");
+  const tc = useTranslations("common");
   const update = useUpdateProfile();
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => profileSchema(tv), [tv]);
   const form = useForm<ProfileValues>({
-    resolver: zodResolver(profileSchema),
+    resolver: zodResolver(schema),
     defaultValues: toProfileValues(user, membership),
   });
   const { errors, isDirty } = form.formState;
@@ -52,8 +58,8 @@ export function ProfileDetailsForm({
         form.reset(toProfileValues(updated.user, updated.membership ?? membership));
         toast.success(
           emailChanged
-            ? `Confirm your new email — we sent a link to ${values.email.trim()}.`
-            : "Profile saved"
+            ? t("toasts.emailPending", { email: values.email.trim() })
+            : t("toasts.saved")
         );
       },
       onError: (error) => applyServerErrors(form, error),
@@ -64,8 +70,8 @@ export function ProfileDetailsForm({
     <form onSubmit={onSubmit} noValidate className="flex flex-col gap-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">Your details</CardTitle>
-          <CardDescription>Your name, email and contact details.</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           {errors.root?.server && (
@@ -75,7 +81,7 @@ export function ProfileDetailsForm({
           )}
 
           <Field data-invalid={!!errors.first_name || undefined}>
-            <FieldLabel htmlFor="first_name">First name</FieldLabel>
+            <FieldLabel htmlFor="first_name">{t("firstName")}</FieldLabel>
             <Input
               id="first_name"
               autoComplete="off"
@@ -86,7 +92,7 @@ export function ProfileDetailsForm({
           </Field>
 
           <Field data-invalid={!!errors.last_name || undefined}>
-            <FieldLabel htmlFor="last_name">Last name</FieldLabel>
+            <FieldLabel htmlFor="last_name">{t("lastName")}</FieldLabel>
             <Input
               id="last_name"
               autoComplete="off"
@@ -97,7 +103,7 @@ export function ProfileDetailsForm({
           </Field>
 
           <Field className="sm:col-span-2" data-invalid={!!errors.email || undefined}>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <FieldLabel htmlFor="email">{tc("labels.email")}</FieldLabel>
             <Input
               id="email"
               type="email"
@@ -107,25 +113,25 @@ export function ProfileDetailsForm({
             />
             {user.pending_email ? (
               <p className="text-sm text-muted-foreground">
-                Pending confirmation:{" "}
-                <span className="font-medium text-foreground">{user.pending_email}</span> — check
-                that inbox to finish the change.
+                {t.rich("pendingEmail", {
+                  email: user.pending_email,
+                  strong: (chunks) => (
+                    <span className="font-medium text-foreground">{chunks}</span>
+                  ),
+                })}
               </p>
             ) : (
-              <p className="text-sm text-muted-foreground">
-                Changing this sends a confirmation link to the new address; your current email
-                stays active until you confirm.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("emailHint")}</p>
             )}
             {errors.email && <FieldError>{errors.email.message}</FieldError>}
           </Field>
 
           <Field data-invalid={!!errors.phone_e164 || undefined}>
-            <FieldLabel htmlFor="phone_e164">Phone</FieldLabel>
+            <FieldLabel htmlFor="phone_e164">{tc("labels.phone")}</FieldLabel>
             <Input
               id="phone_e164"
               type="tel"
-              placeholder="0412 345 678"
+              placeholder={t("phonePlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.phone_e164}
               {...form.register("phone_e164")}
@@ -134,10 +140,10 @@ export function ProfileDetailsForm({
           </Field>
 
           <Field data-invalid={!!errors.position || undefined}>
-            <FieldLabel htmlFor="position">Position</FieldLabel>
+            <FieldLabel htmlFor="position">{t("position")}</FieldLabel>
             <Input
               id="position"
-              placeholder="e.g. Practice Manager"
+              placeholder={t("positionPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.position}
               {...form.register("position")}
@@ -150,12 +156,12 @@ export function ProfileDetailsForm({
       <div className="flex items-center justify-end gap-2">
         {isDirty && (
           <Button type="button" variant="ghost" onClick={() => form.reset()}>
-            Discard changes
+            {t("discardChanges")}
           </Button>
         )}
         <Button type="submit" disabled={!isDirty || update.isPending}>
           {update.isPending && <Spinner />}
-          Save changes
+          {tc("actions.saveChanges")}
         </Button>
       </div>
     </form>

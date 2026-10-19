@@ -1,0 +1,23 @@
+{
+  "chooser": {
+    "signedInAs": "You're signed in as {email}",
+    "createTitle": "Create a business",
+    "createDescription": "Set up your business on AnswerAI"
+  },
+  "createDialog": {
+    "title": "Create a business",
+    "description": "Set up a new business on AnswerAI. You'll be its owner.",
+    "nameLabel": "Business name",
+    "submit": "Create business"
+  },
+  "moduleGate": {
+    "title": "Module not enabled",
+    "description": "This feature isn't turned on for this business. An owner or admin can enable it under Business profile → Modules.",
+    "goToModules": "Go to modules"
+  },
+  "gate": {
+    "noAccessTitle": "No access to this business",
+    "noAccessDescription": "It may have been removed, or you're no longer a member.",
+    "loadErrorTitle": "Couldn't load this business"
+  }
+}

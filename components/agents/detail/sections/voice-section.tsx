@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 import { CircleCheckIcon, PauseIcon, PlayIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
@@ -20,6 +21,12 @@ const GENDER_TINTS: Record<string, string> = {
   female: "bg-rose-500/10 text-rose-600 dark:bg-rose-500/20 dark:text-rose-400",
 };
 
+/** Voice gender is a backend value: translate the ones we know, show the rest verbatim. */
+function useGenderLabel() {
+  const t = useTranslations("agents.sections.voice");
+  return (gender: string) => (t.has(`gender.${gender}`) ? t(`gender.${gender}`) : gender);
+}
+
 function VoiceCard({
   voice,
   selected,
@@ -35,6 +42,8 @@ function VoiceCard({
   preview: ReturnType<typeof useVoicePreview>;
   unknown?: boolean;
 }) {
+  const t = useTranslations("agents.sections.voice");
+  const genderLabel = useGenderLabel();
   const playing = preview.playingId === voice.id;
   const loading = preview.loadingId === voice.id;
 
@@ -53,7 +62,7 @@ function VoiceCard({
         }
       }}
       className={cn(
-        "flex cursor-pointer items-start gap-3 rounded-2xl border bg-card p-4 text-left outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "flex cursor-pointer items-start gap-3 rounded-2xl border bg-card p-4 text-start outline-none transition-colors focus-visible:ring-[3px] focus-visible:ring-ring/50",
         selected
           ? "border-primary bg-primary/5 ring-1 ring-primary"
           : "hover:border-foreground/20",
@@ -66,16 +75,14 @@ function VoiceCard({
           {selected && <CircleCheckIcon className="size-4 shrink-0 text-primary" />}
         </div>
         <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
-          {unknown
-            ? "This voice is no longer offered — pick a replacement."
-            : voice.description}
+          {unknown ? t("unknownVoiceHint") : voice.description}
         </p>
         <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <Badge
             variant="secondary"
             className={cn("capitalize", GENDER_TINTS[voice.gender])}
           >
-            {voice.gender}
+            {genderLabel(voice.gender)}
           </Badge>
           <Badge variant="ghost" className="capitalize">
             {voice.accent}
@@ -85,7 +92,11 @@ function VoiceCard({
       {!unknown && (
         <button
           type="button"
-          aria-label={playing ? `Pause ${voice.display_name}` : `Play ${voice.display_name}`}
+          aria-label={
+            playing
+              ? t("pause", { name: voice.display_name })
+              : t("play", { name: voice.display_name })
+          }
           onClick={(event) => {
             event.stopPropagation();
             void preview.toggle(voice.id);
@@ -111,6 +122,9 @@ function VoiceCard({
 }
 
 export function VoiceSection() {
+  const t = useTranslations("agents.sections.voice");
+  const tc = useTranslations("common");
+  const genderLabel = useGenderLabel();
   const { business } = useBusiness();
   const form = useFormContext<AgentSettingsValues>();
   const { disabled } = form.formState;
@@ -124,11 +138,7 @@ export function VoiceSection() {
   const visible = voices.filter((voice) => gender === "all" || voice.gender === gender);
 
   return (
-    <AgentSection
-      id="voice"
-      title="Voice"
-      description="How this agent sounds on a call. Tap play to hear a sample."
-    >
+    <AgentSection id="voice" title={t("title")} description={t("description")}>
       <Controller
         control={form.control}
         name="voice_id"
@@ -143,7 +153,7 @@ export function VoiceSection() {
                 </div>
               ) : voicesQuery.isError ? (
                 <ErrorState
-                  title="Couldn't load voices"
+                  title={t("loadError")}
                   message={voicesQuery.error.message}
                   onRetry={() => voicesQuery.refetch()}
                 />
@@ -152,7 +162,7 @@ export function VoiceSection() {
                   <div className="flex flex-wrap items-center gap-2">
                     <div
                       role="group"
-                      aria-label="Filter voices by gender"
+                      aria-label={t("genderFilterLabel")}
                       className="flex shrink-0 items-center gap-0.5 rounded-full bg-muted p-1"
                     >
                       {["all", ...genders].map((option) => (
@@ -169,7 +179,7 @@ export function VoiceSection() {
                               : "text-muted-foreground hover:text-foreground"
                           )}
                         >
-                          {option === "all" ? "All" : option}
+                          {option === "all" ? tc("labels.all") : genderLabel(option)}
                         </button>
                       ))}
                     </div>
@@ -182,17 +192,20 @@ export function VoiceSection() {
                         fieldState.error ? "font-medium text-destructive" : "text-muted-foreground"
                       )}
                     >
-                      {fieldState.error?.message ??
-                        "No voice selected yet — the agent can't take calls without one."}
+                      {fieldState.error?.message ?? t("noVoiceSelected")}
                     </p>
                   )}
 
-                  <div role="radiogroup" aria-label="Voice" className="grid gap-3 sm:grid-cols-2">
+                  <div
+                    role="radiogroup"
+                    aria-label={t("title")}
+                    className="grid gap-3 sm:grid-cols-2"
+                  >
                     {field.value !== "" && !knownSelection && (
                       <VoiceCard
                         voice={{
                           id: field.value,
-                          display_name: `Unknown voice (${field.value})`,
+                          display_name: t("unknownVoice", { id: field.value }),
                           description: "",
                           gender: "—",
                           accent: "—",
@@ -217,7 +230,7 @@ export function VoiceSection() {
                     ))}
                   </div>
                   {visible.length === 0 && (
-                    <p className="text-sm text-muted-foreground">No voices match.</p>
+                    <p className="text-sm text-muted-foreground">{t("noMatch")}</p>
                   )}
                 </>
               )}

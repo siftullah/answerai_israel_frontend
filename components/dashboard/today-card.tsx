@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Card,
   CardAction,
@@ -17,23 +18,45 @@ import { useSystemCalendar } from "@/hooks/use-calendar-view";
 import { businessDayUtcRange, formatTimeOfDay } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 import type { SystemCalendarItem } from "@/lib/api/types";
+import {
+  APPOINTMENT_STATUS_LABELS,
+  CALLBACK_STATUS_LABELS,
+  JOB_STATUS_LABELS,
+} from "@/lib/api/types";
 
 /** Matches the calendar legend — one hue per event kind. */
-const KIND: Record<SystemCalendarItem["type"], { dot: string; label: string }> = {
-  appointment: { dot: "bg-event-appointment", label: "Appointment" },
-  callback: { dot: "bg-event-callback", label: "Callback" },
-  job: { dot: "bg-event-job", label: "Job" },
+const KIND_DOT: Record<SystemCalendarItem["type"], string> = {
+  appointment: "bg-event-appointment",
+  callback: "bg-event-callback",
+  job: "bg-event-job",
 };
 
-function subLabel(item: SystemCalendarItem): string {
-  const parts = [KIND[item.type].label, item.status.replace(/_/g, " ")];
-  if (item.member) parts.push(item.member.name);
-  return parts.join(" · ");
+function statusLabel(item: SystemCalendarItem): string {
+  switch (item.type) {
+    case "appointment":
+      return APPOINTMENT_STATUS_LABELS[item.status];
+    case "callback":
+      return CALLBACK_STATUS_LABELS[item.status];
+    case "job":
+      return JOB_STATUS_LABELS[item.status];
+  }
 }
 
 /** Today's bookings from the system calendar, as a compact agenda rail. */
 export function TodayCard({ className }: { className?: string }) {
+  const t = useTranslations("dashboard.today");
   const { business } = useBusiness();
+
+  const kindLabel: Record<SystemCalendarItem["type"], string> = {
+    appointment: t("kinds.appointment"),
+    callback: t("kinds.callback"),
+    job: t("kinds.job"),
+  };
+  const subLabel = (item: SystemCalendarItem): string => {
+    const parts = [kindLabel[item.type], statusLabel(item)];
+    if (item.member) parts.push(item.member.name);
+    return parts.join(" · ");
+  };
 
   const range = useMemo(() => {
     const { startIso, endIso } = businessDayUtcRange(business.timezone);
@@ -51,14 +74,14 @@ export function TodayCard({ className }: { className?: string }) {
   return (
     <Card className={cn("h-full", className)}>
       <CardHeader>
-        <CardTitle>Today</CardTitle>
-        <CardDescription>Appointments, jobs and callbacks</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
         <CardAction>
           <Link
             href={`/b/${business.id}/calendar`}
             className="text-[13px] font-medium text-cta hover:underline"
           >
-            Open calendar
+            {t("openCalendar")}
           </Link>
         </CardAction>
       </CardHeader>
@@ -72,10 +95,8 @@ export function TodayCard({ className }: { className?: string }) {
         ) : items.length === 0 ? (
           <Empty className="flex-1 border border-dashed py-10">
             <EmptyHeader>
-              <EmptyTitle>Nothing scheduled</EmptyTitle>
-              <EmptyDescription>
-                Bookings your AI makes on calls land here automatically.
-              </EmptyDescription>
+              <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (
@@ -85,12 +106,12 @@ export function TodayCard({ className }: { className?: string }) {
                 key={`${item.type}-${item.id}`}
                 className="flex items-center gap-3 border-b border-border/60 py-2.5 last:border-b-0"
               >
-                <span className="w-16 shrink-0 text-right text-xs text-muted-foreground tabular-nums">
+                <span className="w-16 shrink-0 text-end text-xs text-muted-foreground tabular-nums">
                   {formatTimeOfDay(item.starts_at, business.timezone)}
                 </span>
                 <span
                   aria-hidden
-                  className={cn("size-2 shrink-0 rounded-full", KIND[item.type].dot)}
+                  className={cn("size-2 shrink-0 rounded-full", KIND_DOT[item.type])}
                 />
                 <span className="flex min-w-0 flex-col">
                   <span className="truncate text-sm font-medium">{item.title}</span>

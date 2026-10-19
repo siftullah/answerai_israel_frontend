@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useBusiness } from "@/components/business/business-provider";
 import { isNavActive, navHref } from "@/components/layout/nav-config";
 import {
@@ -19,6 +20,7 @@ import { cn } from "@/lib/utils";
 export function SettingsNav() {
   const { business, membership } = useBusiness();
   const pathname = usePathname();
+  const t = useTranslations("layout");
 
   const privileged =
     membership.role.slug === "owner" || membership.role.slug === "admin";
@@ -29,7 +31,7 @@ export function SettingsNav() {
 
   return (
     <>
-      <nav aria-label="Settings sections" className="-mx-1 px-1 lg:hidden">
+      <nav aria-label={t("settingsNav.label")} className="-mx-1 px-1 lg:hidden">
         <ul className="flex gap-1.5 overflow-x-auto pb-2">
           {items.map((item) => (
             <li key={item.segment} className="shrink-0">
@@ -43,7 +45,7 @@ export function SettingsNav() {
                 )}
               >
                 <item.icon className="size-4 shrink-0" />
-                {item.title}
+                {t(`nav.${item.title}`)}
               </Link>
             </li>
           ))}
@@ -51,10 +53,10 @@ export function SettingsNav() {
       </nav>
 
       <nav
-        aria-label="Settings sections"
+        aria-label={t("settingsNav.label")}
         className="hidden w-52 shrink-0 lg:sticky lg:top-6 lg:block lg:self-start"
       >
-        <p className="px-3 pb-3 font-heading text-lg font-semibold">Settings</p>
+        <p className="px-3 pb-3 font-heading text-lg font-semibold">{t("nav.settings")}</p>
         <ul className="flex flex-col gap-0.5">
           {items.map((item) => (
             <li key={item.segment}>
@@ -68,7 +70,7 @@ export function SettingsNav() {
                 )}
               >
                 <item.icon className="size-4 shrink-0" />
-                {item.title}
+                {t(`nav.${item.title}`)}
               </Link>
             </li>
           ))}

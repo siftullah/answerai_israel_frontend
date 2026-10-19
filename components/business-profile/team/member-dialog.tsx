@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -53,6 +54,8 @@ export function MemberDialog({
   onOpenChange: (open: boolean) => void;
   member: BusinessMember | null;
 }) {
+  const t = useTranslations("businessProfile.member");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const rolesQuery = useRoles(business.id);
   const create = useCreateMember(business.id);
@@ -63,8 +66,10 @@ export function MemberDialog({
   const isOwner = member?.role?.slug === "owner";
   const accountLocked = Boolean(member?.has_account);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => memberSchema(tv), [tv]);
   const form = useForm<MemberValues>({
-    resolver: zodResolver(memberSchema),
+    resolver: zodResolver(schema),
     defaultValues: toMemberValues(member),
   });
   const { errors } = form.formState;
@@ -78,9 +83,9 @@ export function MemberDialog({
   // e.g. an Admin never flashes the uuid.
   const savedRole = member?.role;
   const roleItems = isOwner
-    ? [{ value: "default", label: "Owner" }]
+    ? [{ value: "default", label: t("roles.owner") }]
     : [
-        { value: "default", label: "Member (default)" },
+        { value: "default", label: t("roles.memberDefault") },
         ...(rolesQuery.data
           ? assignableRoles
               .filter((role) => role.slug !== "member")
@@ -96,7 +101,7 @@ export function MemberDialog({
         { id: member.id, payload: toUpdateMemberPayload(values, { accountLocked, isOwner }) },
         {
           onSuccess: () => {
-            toast.success("Member saved");
+            toast.success(t("toasts.saved"));
             onOpenChange(false);
           },
           onError: (error) =>
@@ -107,7 +112,7 @@ export function MemberDialog({
       create.mutate(toStoreMemberPayload(values), {
         onSuccess: (created) => {
           if (!sendInvite) {
-            toast.success("Member added");
+            toast.success(t("toasts.added"));
             onOpenChange(false);
             return;
           }
@@ -124,14 +129,14 @@ export function MemberDialog({
           // uniqueness check. The row's "Invite to create account"
           // action is the retry path.
           const inviteFailed = (description: string) => {
-            toast.warning("Member added, but the invitation couldn't be sent", {
+            toast.warning(t("toasts.addedInviteFailed"), {
               description,
             });
             onOpenChange(false);
           };
 
           if (!inviteRoleId) {
-            inviteFailed('Use "Invite to create account" on the member to retry.');
+            inviteFailed(t("toasts.retryHint"));
             return;
           }
 
@@ -139,7 +144,7 @@ export function MemberDialog({
             { member_id: created.id, role_id: inviteRoleId },
             {
               onSuccess: () => {
-                toast.success("Member added and invitation sent");
+                toast.success(t("toasts.addedAndInvited"));
                 onOpenChange(false);
               },
               onError: (error) => inviteFailed(error.message),
@@ -157,30 +162,36 @@ export function MemberDialog({
       <EntityModal
         open={open}
         onOpenChange={onOpenChange}
-        title={member ? "Edit member" : "Add member"}
+        title={member ? t("editTitle") : t("addTitle")}
         description={
           member
             ? accountLocked
-              ? "Name and email are managed by the member's account."
-              : "Directory details for this member."
-            : "Add someone to your team directory — optionally invite them to create a login."
+              ? t("descriptionLocked")
+              : t("descriptionEdit")
+            : t("descriptionAdd")
         }
         onSubmit={onSubmit}
-        submitLabel={member ? "Save changes" : sendInvite ? "Add & send invite" : "Add member"}
+        submitLabel={
+          member
+            ? tc("actions.saveChanges")
+            : sendInvite
+              ? t("submitAddInvite")
+              : t("submitAdd")
+        }
         pending={create.isPending || update.isPending || createInvitation.isPending}
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Details",
+            title: t("steps.details"),
             fields: ["first_name", "last_name", "email", "phone_e164", "position", "role_id"],
             content: (
               <>
                 <div className="grid grid-cols-2 gap-4">
                   <Field data-invalid={!!errors.first_name || undefined}>
-                    <FieldLabel htmlFor="member-first-name">First name</FieldLabel>
+                    <FieldLabel htmlFor="member-first-name">{t("firstName")}</FieldLabel>
                     <Input
                       id="member-first-name"
-                      placeholder="Sam"
+                      placeholder={t("firstNamePlaceholder")}
                       autoComplete="off"
                       disabled={accountLocked}
                       aria-invalid={!!errors.first_name}
@@ -189,10 +200,10 @@ export function MemberDialog({
                     {errors.first_name && <FieldError>{errors.first_name.message}</FieldError>}
                   </Field>
                   <Field data-invalid={!!errors.last_name || undefined}>
-                    <FieldLabel htmlFor="member-last-name">Last name</FieldLabel>
+                    <FieldLabel htmlFor="member-last-name">{t("lastName")}</FieldLabel>
                     <Input
                       id="member-last-name"
-                      placeholder="Rivera"
+                      placeholder={t("lastNamePlaceholder")}
                       autoComplete="off"
                       disabled={accountLocked}
                       aria-invalid={!!errors.last_name}
@@ -203,11 +214,11 @@ export function MemberDialog({
                 </div>
 
                 <Field data-invalid={!!errors.email || undefined}>
-                  <FieldLabel htmlFor="member-email">Email</FieldLabel>
+                  <FieldLabel htmlFor="member-email">{tc("labels.email")}</FieldLabel>
                   <Input
                     id="member-email"
                     type="email"
-                    placeholder="sam@yourbusiness.com.au"
+                    placeholder={t("emailPlaceholder")}
                     autoComplete="off"
                     disabled={accountLocked}
                     aria-invalid={!!errors.email}
@@ -218,11 +229,11 @@ export function MemberDialog({
 
                 <div className="grid grid-cols-2 gap-4">
                   <Field data-invalid={!!errors.phone_e164 || undefined}>
-                    <FieldLabel htmlFor="member-phone">Phone</FieldLabel>
+                    <FieldLabel htmlFor="member-phone">{tc("labels.phone")}</FieldLabel>
                     <Input
                       id="member-phone"
                       type="tel"
-                      placeholder="0412 345 678"
+                      placeholder={t("phonePlaceholder")}
                       autoComplete="off"
                       aria-invalid={!!errors.phone_e164}
                       {...form.register("phone_e164")}
@@ -230,10 +241,10 @@ export function MemberDialog({
                     {errors.phone_e164 && <FieldError>{errors.phone_e164.message}</FieldError>}
                   </Field>
                   <Field data-invalid={!!errors.position || undefined}>
-                    <FieldLabel htmlFor="member-position">Position</FieldLabel>
+                    <FieldLabel htmlFor="member-position">{t("position")}</FieldLabel>
                     <Input
                       id="member-position"
-                      placeholder="Site manager"
+                      placeholder={t("positionPlaceholder")}
                       autoComplete="off"
                       aria-invalid={!!errors.position}
                       {...form.register("position")}
@@ -243,7 +254,7 @@ export function MemberDialog({
                 </div>
 
                 <Field>
-                  <FieldLabel htmlFor="member-role">Role</FieldLabel>
+                  <FieldLabel htmlFor="member-role">{t("role")}</FieldLabel>
                   <Controller
                     control={form.control}
                     name="role_id"
@@ -282,10 +293,9 @@ export function MemberDialog({
                         onCheckedChange={(checked) => setSendInvite(checked === true)}
                       />
                       <FieldContent>
-                        <FieldTitle>Send invite to create account</FieldTitle>
+                        <FieldTitle>{t("sendInvite")}</FieldTitle>
                         <FieldDescription>
-                          They&apos;ll get an email link to create their login, connected to
-                          this member.
+                          {t("sendInviteHint")}
                         </FieldDescription>
                       </FieldContent>
                     </Field>
@@ -295,14 +305,14 @@ export function MemberDialog({
             ),
           },
           {
-            title: "Availability",
+            title: t("steps.availability"),
             fields: ["hours_mode", "calling_hours"],
             content: (
               <>
                 <div>
-                  <p className="text-base font-medium">Calling availability</p>
+                  <p className="text-base font-medium">{t("availability.title")}</p>
                   <p className="text-sm text-muted-foreground">
-                    When your AI can transfer calls to this member.
+                    {t("availability.description")}
                   </p>
                 </div>
 
@@ -316,13 +326,13 @@ export function MemberDialog({
                       options={[
                         {
                           value: "inherit",
-                          label: "Business hours",
-                          description: "Same as your business trading hours.",
+                          label: t("availability.inherit"),
+                          description: t("availability.inheritHint"),
                         },
                         {
                           value: "custom",
-                          label: "Custom hours",
-                          description: "Set specific days and times for this member.",
+                          label: t("availability.custom"),
+                          description: t("availability.customHint"),
                         },
                       ]}
                     />

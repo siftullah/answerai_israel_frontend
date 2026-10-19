@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,34 +9,35 @@ import { useBusiness } from "@/components/business/business-provider";
 import { selectableAgents, useAgents } from "@/hooks/use-agents";
 import type { AgentPurpose, AgentScope } from "@/lib/api/types";
 
-const PURPOSE_LABELS: Record<AgentPurpose, string> = {
-  inbound: "Inbound",
-  outbound: "Outbound",
-  consult: "Consult",
-};
-
-const SCOPE_OPTIONS = [
-  {
-    value: "all",
-    label: "All agents",
-    description: "Current and future agents can use this.",
-  },
-  {
-    value: "selected",
-    label: "Selected agents",
-    description: "Pick exactly which agents get it.",
-  },
-] as const;
-
 /**
  * The universal per-agent enablement control (agent_scope + agent_ids).
  * Registers the API's exact field names via form context — every
  * knowledge form (service, product, FAQ, policy, doc) renders this as-is.
  */
 export function AgentScopeField({ idPrefix }: { idPrefix: string }) {
+  const t = useTranslations("businessProfile.agentScope");
   const { business } = useBusiness();
   const agentsQuery = useAgents(business.id);
   const agents = selectableAgents(agentsQuery.data);
+
+  const purposeLabels: Record<AgentPurpose, string> = {
+    inbound: t("purpose.inbound"),
+    outbound: t("purpose.outbound"),
+    consult: t("purpose.consult"),
+  };
+
+  const scopeOptions = [
+    {
+      value: "all",
+      label: t("scope.all"),
+      description: t("scope.allDescription"),
+    },
+    {
+      value: "selected",
+      label: t("scope.selected"),
+      description: t("scope.selectedDescription"),
+    },
+  ] as const;
 
   const form = useFormContext();
   const scope = useWatch({ name: "agent_scope" }) as AgentScope;
@@ -56,8 +58,8 @@ export function AgentScopeField({ idPrefix }: { idPrefix: string }) {
   return (
     <div className="flex flex-col gap-3">
       <div>
-        <p className="text-base font-medium">Agent access</p>
-        <p className="text-sm text-muted-foreground">Which AI agents can use this.</p>
+        <p className="text-base font-medium">{t("title")}</p>
+        <p className="text-sm text-muted-foreground">{t("description")}</p>
       </div>
 
       <Controller
@@ -67,7 +69,7 @@ export function AgentScopeField({ idPrefix }: { idPrefix: string }) {
           <ChoiceCards
             value={field.value as AgentScope}
             onChange={field.onChange}
-            options={SCOPE_OPTIONS}
+            options={scopeOptions}
           />
         )}
       />
@@ -77,7 +79,7 @@ export function AgentScopeField({ idPrefix }: { idPrefix: string }) {
           <div className="flex flex-col rounded-2xl border">
             {agentsQuery.isSuccess && agents.length === 0 ? (
               <p className="px-3 py-3 text-sm text-muted-foreground">
-                No agents yet — create an agent first, then pick it here.
+                {t("noAgents")}
               </p>
             ) : (
               agents.map((agent, index) => (
@@ -95,7 +97,7 @@ export function AgentScopeField({ idPrefix }: { idPrefix: string }) {
                     onCheckedChange={() => toggle(agent.id)}
                   />
                   <span className="min-w-0 flex-1 truncate text-sm">{agent.name}</span>
-                  <Badge variant="secondary">{PURPOSE_LABELS[agent.purpose]}</Badge>
+                  <Badge variant="secondary">{purposeLabels[agent.purpose]}</Badge>
                 </label>
               ))
             )}

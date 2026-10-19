@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ListFilterIcon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -42,8 +43,10 @@ export function InvoiceListFilters({
   /** Refine options for the active tab; empty hides the filter popover. */
   statuses: readonly InvoiceStatus[];
 }) {
+  const t = useTranslations("invoices.list");
+  const tc = useTranslations("common");
   const items = [
-    { value: "", label: "Any status" },
+    { value: "", label: t("anyStatus") },
     ...statuses.map((status) => ({ value: status, label: INVOICE_STATUS_LABELS[status] })),
   ];
 
@@ -53,8 +56,8 @@ export function InvoiceListFilters({
         <Input
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search number or contact…"
-          aria-label="Search invoices by number or contact name"
+          placeholder={t("searchPlaceholder")}
+          aria-label={t("searchLabel")}
         />
         {statuses.length > 0 && (
           <Popover>
@@ -63,18 +66,18 @@ export function InvoiceListFilters({
                 <Button
                   variant="outline"
                   size="icon"
-                  aria-label="Filter invoices"
+                  aria-label={t("filterLabel")}
                   className="relative shrink-0"
                 />
               }
             >
               <ListFilterIcon />
               {filters.status !== "" && (
-                <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-primary" />
+                <span className="absolute -top-0.5 -end-0.5 size-2 rounded-full bg-primary" />
               )}
             </PopoverTrigger>
             <PopoverContent align="end" className="flex w-64 flex-col gap-1.5">
-              <Label htmlFor="invoice-filter-status">Status</Label>
+              <Label htmlFor="invoice-filter-status">{tc("labels.status")}</Label>
               <Select
                 items={items}
                 value={filters.status}
@@ -100,12 +103,12 @@ export function InvoiceListFilters({
 
       {filters.status !== "" && (
         <div className="flex flex-wrap items-center gap-1.5">
-          <Badge variant="outline" className="h-6 gap-1 pr-1">
+          <Badge variant="outline" className="h-6 gap-1 pe-1">
             {INVOICE_STATUS_LABELS[filters.status]}
             <button
               type="button"
               onClick={() => onFiltersChange(EMPTY_INVOICE_FILTERS)}
-              aria-label={`Remove ${INVOICE_STATUS_LABELS[filters.status]} filter`}
+              aria-label={t("removeFilter", { status: INVOICE_STATUS_LABELS[filters.status] })}
               className="rounded-full p-0.5 hover:bg-muted"
             >
               <XIcon className="size-3" />

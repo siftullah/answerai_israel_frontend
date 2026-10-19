@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { TriangleAlertIcon } from "lucide-react";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Spinner } from "@/components/ui/spinner";
@@ -40,6 +41,8 @@ export function SlotTimePicker({
   error?: string;
   initialMode?: "slots" | "custom";
 }) {
+  const t = useTranslations("calendar.slotPicker");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const [mode, setMode] = useState<"slots" | "custom">(initialMode);
 
@@ -62,32 +65,28 @@ export function SlotTimePicker({
   return (
     <Field data-invalid={!!error || undefined}>
       <div className="flex items-center justify-between">
-        <FieldLabel htmlFor={`${idPrefix}-time`}>Time</FieldLabel>
+        <FieldLabel htmlFor={`${idPrefix}-time`}>{tc("labels.time")}</FieldLabel>
         <Tabs value={mode} onValueChange={(value) => changeMode(value as "slots" | "custom")}>
           <TabsList>
-            <TabsTrigger value="slots">Open slots</TabsTrigger>
-            <TabsTrigger value="custom">Custom</TabsTrigger>
+            <TabsTrigger value="slots">{t("openSlots")}</TabsTrigger>
+            <TabsTrigger value="custom">{t("custom")}</TabsTrigger>
           </TabsList>
         </Tabs>
       </div>
 
       {mode === "slots" ? (
         dateKey === "" ? (
-          <p className="text-sm text-muted-foreground">Pick a date to see open slots.</p>
+          <p className="text-sm text-muted-foreground">{t("pickDate")}</p>
         ) : slotsQuery.isPending ? (
           <div className="flex justify-center py-4">
             <Spinner className="size-4" />
           </div>
         ) : slotsQuery.isError ? (
-          <p className="text-sm text-destructive">
-            Couldn&apos;t load slots — switch to a custom time or try another day.
-          </p>
+          <p className="text-sm text-destructive">{t("loadError")}</p>
         ) : slotsQuery.data.length === 0 ? (
-          <p className="text-sm text-muted-foreground">
-            No open slots this day — try another day, or use a custom time.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("empty")}</p>
         ) : (
-          <div className="scrollbar-slim grid max-h-44 grid-cols-3 gap-1.5 overflow-y-auto pr-1 sm:grid-cols-4">
+          <div className="scrollbar-slim grid max-h-44 grid-cols-3 gap-1.5 overflow-y-auto pe-1 sm:grid-cols-4">
             {slotsQuery.data.map((slot) => {
               const selected = slot.starts_at === slotIso;
               return (
@@ -118,7 +117,7 @@ export function SlotTimePicker({
           />
           <p className="flex items-center gap-1.5 text-xs text-muted-foreground">
             <TriangleAlertIcon className="size-3.5 shrink-0 text-warning" aria-hidden />
-            Custom times skip the availability check — double-booking is allowed.
+            {t("customWarning")}
           </p>
         </div>
       )}

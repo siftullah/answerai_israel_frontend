@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -41,6 +43,8 @@ export function ScheduleJobDialog({
   onOpenChange: (open: boolean) => void;
   job: Job;
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const scheduleJob = useScheduleJob(business.id);
   const rescheduleJob = useRescheduleJob(business.id);
@@ -52,8 +56,10 @@ export function ScheduleJobDialog({
   const durationMinutes =
     job.estimated_minutes ?? settingsQuery.data?.default_estimated_minutes ?? 60;
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => scheduleJobSchema(tv), [tv]);
   const form = useForm<ScheduleJobValues>({
-    resolver: zodResolver(scheduleJobSchema),
+    resolver: zodResolver(schema),
     defaultValues: job.scheduled_start
       ? utcIsoToZonedFields(job.scheduled_start, business.timezone)
       : { date: "", time: "" },
@@ -69,8 +75,8 @@ export function ScheduleJobDialog({
         onSuccess: () => {
           toast.success(
             rescheduling
-              ? `${job.reference} rescheduled — the customer will be emailed`
-              : `${job.reference} booked in — the customer will be emailed`
+              ? t("toasts.rescheduled", { reference: job.reference })
+              : t("toasts.booked", { reference: job.reference })
           );
           onOpenChange(false);
         },
@@ -84,12 +90,14 @@ export function ScheduleJobDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {rescheduling ? `Reschedule ${job.reference}` : `Schedule ${job.reference}`}
+            {rescheduling
+              ? t("schedule.rescheduleTitle", { reference: job.reference })
+              : t("schedule.scheduleTitle", { reference: job.reference })}
           </DialogTitle>
           <DialogDescription>
             {rescheduling
-              ? "Pick a new visit time — the customer gets the update by email."
-              : "Book the visit — the customer gets a confirmation email."}
+              ? t("schedule.rescheduleDescription")
+              : t("schedule.scheduleDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -100,7 +108,7 @@ export function ScheduleJobDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={!!fieldState.error || undefined}>
-                  <FieldLabel htmlFor="schedule-job-date">Date</FieldLabel>
+                  <FieldLabel htmlFor="schedule-job-date">{tc("labels.date")}</FieldLabel>
                   <DatePicker
                     id="schedule-job-date"
                     ref={field.ref}
@@ -117,7 +125,7 @@ export function ScheduleJobDialog({
             />
 
             <Field data-invalid={!!form.formState.errors.time || undefined}>
-              <FieldLabel htmlFor="schedule-job-time">Start time</FieldLabel>
+              <FieldLabel htmlFor="schedule-job-time">{t("schedule.startTime")}</FieldLabel>
               <TimeInput
                 id="schedule-job-time"
                 {...form.register("time")}
@@ -131,11 +139,11 @@ export function ScheduleJobDialog({
 
           <FieldDescription>
             {rescheduling
-              ? "The visit keeps its current length."
-              : `The visit is booked for ${durationMinutes} minutes${
-                  job.estimated_minutes === null ? " (your module default)" : ""
-                }.`}{" "}
-            Times are in {business.timezone}.
+              ? t("schedule.keepsLength")
+              : job.estimated_minutes === null
+                ? t("schedule.bookedForDefault", { minutes: durationMinutes })
+                : t("schedule.bookedFor", { minutes: durationMinutes })}{" "}
+            {t("schedule.timezone", { timezone: business.timezone })}
           </FieldDescription>
 
           {mutation.isError && (
@@ -146,16 +154,16 @@ export function ScheduleJobDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
               {mutation.isPending
                 ? rescheduling
-                  ? "Rescheduling…"
-                  : "Booking…"
+                  ? t("schedule.rescheduling")
+                  : t("schedule.booking")
                 : rescheduling
-                  ? "Reschedule visit"
-                  : "Book visit"}
+                  ? t("schedule.reschedule")
+                  : t("schedule.book")}
             </Button>
           </DialogFooter>
         </form>

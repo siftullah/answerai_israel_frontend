@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -30,13 +31,13 @@ import type { ProductImportMapping, ProductImportPreview } from "@/lib/api/types
 const FILE_EXTENSIONS = [".csv", ".txt", ".xls", ".xlsx"];
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
-const IMPORT_FIELDS: { key: keyof ProductImportMapping; label: string; required?: boolean }[] = [
-  { key: "name", label: "Name", required: true },
-  { key: "description", label: "Description" },
-  { key: "price_dollars", label: "Price (single)" },
-  { key: "price_min_dollars", label: "Price minimum" },
-  { key: "price_max_dollars", label: "Price maximum" },
-  { key: "price_message", label: "Price message" },
+const IMPORT_FIELDS: { key: keyof ProductImportMapping; required?: boolean }[] = [
+  { key: "name", required: true },
+  { key: "description" },
+  { key: "price_dollars" },
+  { key: "price_min_dollars" },
+  { key: "price_max_dollars" },
+  { key: "price_message" },
 ];
 
 /**
@@ -52,9 +53,23 @@ export function ImportDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.products.import");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
   const previewMutation = useProductsImportPreview();
   const importMutation = useProductsImport(business.id);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const fieldLabels: Record<keyof ProductImportMapping, string> = {
+    name: tc("labels.name"),
+    description: tc("labels.description"),
+    price_dollars: t("fields.priceSingle"),
+    price_min_dollars: t("fields.priceMin"),
+    price_max_dollars: t("fields.priceMax"),
+    price_message: t("fields.priceMessage"),
+  };
+  const columnLabel = (column: { index: number; header: string }) =>
+    column.header || t("column", { number: column.index + 1 });
 
   const [preview, setPreview] = useState<ProductImportPreview | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -65,11 +80,11 @@ export function ImportDialog({
     if (!file) return;
     const name = file.name.toLowerCase();
     if (!FILE_EXTENSIONS.some((ext) => name.endsWith(ext))) {
-      setError("Use a CSV, TXT, XLS or XLSX file.");
+      setError(t("invalidFileType"));
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setError("The file must be 10 MB or smaller.");
+      setError(ts("fileTooLarge"));
       return;
     }
     setError(null);
@@ -113,14 +128,14 @@ export function ImportDialog({
       },
       {
         onSuccess: () => {
-          toast.success("Import started — you'll get a summary by email.");
+          toast.success(t("started"));
           onOpenChange(false);
         },
         onError: (apiError) => {
           if (apiError.errors?.token) {
             setPreview(null);
             setMapping({});
-            setError("The upload expired — choose the file again.");
+            setError(t("expired"));
           } else {
             setError(apiError.message);
           }
@@ -134,11 +149,9 @@ export function ImportDialog({
       <DialogContent className="gap-0 p-0 sm:max-w-2xl">
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="border-b px-6 py-4">
-            <DialogTitle>Import products</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
             <DialogDescription>
-              {preview
-                ? "Match your spreadsheet columns to product fields."
-                : "Upload a spreadsheet — CSV, TXT, XLS or XLSX, up to 10 MB."}
+              {preview ? t("mapDescription") : t("uploadDescription")}
             </DialogDescription>
           </DialogHeader>
 
@@ -168,21 +181,19 @@ export function ImportDialog({
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {previewMutation.isPending ? <Spinner /> : <UploadIcon />}
-                  Choose file
+                  {ts("chooseFile")}
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  Rows are matched to existing products by name.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("matchHint")}</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto rounded-xl border">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b bg-muted/50 text-left">
+                      <tr className="border-b bg-muted/50 text-start">
                         {preview.columns.map((column) => (
                           <th key={column.index} className="px-3 py-2 font-medium whitespace-nowrap">
-                            {column.header || `Column ${column.index + 1}`}
+                            {columnLabel(column)}
                           </th>
                         ))}
                       </tr>
@@ -211,7 +222,7 @@ export function ImportDialog({
                     onCheckedChange={(checked) => setHasHeaderRow(checked === true)}
                   />
                   <FieldLabel htmlFor="has-header-row" className="font-normal">
-                    The first row contains column headings
+                    {t("headerRow")}
                   </FieldLabel>
                 </Field>
 
@@ -222,18 +233,18 @@ export function ImportDialog({
                     // root knows the item labels — without this the trigger
                     // shows e.g. "none" or the column index.
                     const columnItems = [
-                      { value: "none", label: "Not imported" },
+                      { value: "none", label: t("notImported") },
                       ...preview.columns
                         .filter((column) => !taken.has(column.index))
                         .map((column) => ({
                           value: column.index.toString(),
-                          label: column.header || `Column ${column.index + 1}`,
+                          label: columnLabel(column),
                         })),
                     ];
                     return (
                       <Field key={field.key}>
                         <FieldLabel htmlFor={`import-${field.key}`}>
-                          {field.label}
+                          {fieldLabels[field.key]}
                           {field.required && <span className="text-destructive"> *</span>}
                         </FieldLabel>
                         <Select
@@ -264,11 +275,7 @@ export function ImportDialog({
                   })}
                 </div>
 
-                <p className="text-sm text-muted-foreground">
-                  One price column sets a fixed price; minimum + maximum make a range; a
-                  price message becomes a custom message. Imported products start enabled
-                  for all agents.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("priceHint")}</p>
               </>
             )}
           </div>
@@ -286,7 +293,7 @@ export function ImportDialog({
                     setError(null);
                   }}
                 >
-                  Back
+                  {tc("actions.back")}
                 </Button>
                 <Button
                   type="button"
@@ -294,12 +301,12 @@ export function ImportDialog({
                   disabled={mapping.name === undefined || importMutation.isPending}
                 >
                   {importMutation.isPending && <Spinner />}
-                  Import
+                  {tc("actions.import")}
                 </Button>
               </>
             ) : (
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
             )}
           </DialogFooter>

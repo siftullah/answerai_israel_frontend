@@ -1,4 +1,5 @@
 import type { BusinessModule, ModuleKey } from "@/lib/api/types";
+import { rt } from "@/lib/i18n/runtime";
 import { MODULE_CATALOG } from "@/lib/modules/catalog";
 
 /** Always-available tools — not gated behind any module. */
@@ -14,63 +15,120 @@ export const CORE_TOOLS: readonly string[] = [
  * Display copy per tenant-selectable tool. Keys mirror the backend
  * config/agent-tools.php catalog; unknown keys fall back to a prettified
  * slug so new backend tools render before this map learns about them.
+ * `label`/`description` are getters so they read in the active UI language.
  */
 export const TOOL_LABELS: Record<string, { label: string; description: string }> = {
   lookup_contact: {
-    label: "Look up caller",
-    description: "Check whether the caller is a known contact and greet them by name.",
+    get label() {
+      return rt("lib.tools.lookup_contact.label");
+    },
+    get description() {
+      return rt("lib.tools.lookup_contact.description");
+    },
   },
   save_contact_info: {
-    label: "Save contact info",
-    description: "Save the caller's name, email, or company to their contact record.",
+    get label() {
+      return rt("lib.tools.save_contact_info.label");
+    },
+    get description() {
+      return rt("lib.tools.save_contact_info.description");
+    },
   },
   add_to_dnc: {
-    label: "Do-not-call requests",
-    description: "Add the caller to the do-not-call list when they ask.",
+    get label() {
+      return rt("lib.tools.add_to_dnc.label");
+    },
+    get description() {
+      return rt("lib.tools.add_to_dnc.description");
+    },
   },
   get_current_time: {
-    label: "Current time",
-    description: "Tell the time and whether the business is open right now.",
+    get label() {
+      return rt("lib.tools.get_current_time.label");
+    },
+    get description() {
+      return rt("lib.tools.get_current_time.description");
+    },
   },
   get_call_history: {
-    label: "Call history",
-    description: "Recall the caller's previous calls with any of your agents, with notes and transcripts.",
+    get label() {
+      return rt("lib.tools.get_call_history.label");
+    },
+    get description() {
+      return rt("lib.tools.get_call_history.description");
+    },
   },
   schedule_callback: {
-    label: "Schedule callback",
-    description: "Book a future call back to the caller at a time they request.",
+    get label() {
+      return rt("lib.tools.schedule_callback.label");
+    },
+    get description() {
+      return rt("lib.tools.schedule_callback.description");
+    },
   },
   check_availability: {
-    label: "Check availability",
-    description: "Find open appointment slots on the calendar.",
+    get label() {
+      return rt("lib.tools.check_availability.label");
+    },
+    get description() {
+      return rt("lib.tools.check_availability.description");
+    },
   },
   book_appointment: {
-    label: "Book appointment",
-    description: "Book the caller into an open appointment slot.",
+    get label() {
+      return rt("lib.tools.book_appointment.label");
+    },
+    get description() {
+      return rt("lib.tools.book_appointment.description");
+    },
   },
   cancel_appointment: {
-    label: "Cancel appointment",
-    description: "Cancel an existing appointment for the caller.",
+    get label() {
+      return rt("lib.tools.cancel_appointment.label");
+    },
+    get description() {
+      return rt("lib.tools.cancel_appointment.description");
+    },
   },
   create_lead: {
-    label: "Create lead",
-    description: "Record a new sales lead from the conversation.",
+    get label() {
+      return rt("lib.tools.create_lead.label");
+    },
+    get description() {
+      return rt("lib.tools.create_lead.description");
+    },
   },
   request_quote: {
-    label: "Request quote",
-    description: "Log a quote request for work the caller wants priced; the team quotes it afterwards.",
+    get label() {
+      return rt("lib.tools.request_quote.label");
+    },
+    get description() {
+      return rt("lib.tools.request_quote.description");
+    },
   },
   create_job: {
-    label: "Create job",
-    description: "Log a new job request from the caller.",
+    get label() {
+      return rt("lib.tools.create_job.label");
+    },
+    get description() {
+      return rt("lib.tools.create_job.description");
+    },
   },
   check_job_availability: {
-    label: "Check job availability",
-    description: "Find open slots for scheduling a job visit.",
+    get label() {
+      return rt("lib.tools.check_job_availability.label");
+    },
+    get description() {
+      return rt("lib.tools.check_job_availability.description");
+    },
   },
   book_job: {
-    label: "Book job",
-    description: "Book a job visit into an open slot.",
+    get label() {
+      return rt("lib.tools.book_job.label");
+    },
+    get description() {
+      return rt("lib.tools.book_job.description");
+    },
   },
 };
 
@@ -93,7 +151,7 @@ export function toolLabel(tool: string): { label: string; description: string } 
 /** Checkbox groups for the Tools section: core first, then each module that contributes tools. */
 export function toolGroups(modules: BusinessModule[]): ToolGroup[] {
   return [
-    { key: "core", label: "Core", enabled: true, tools: [...CORE_TOOLS] },
+    { key: "core", label: rt("lib.toolGroups.core"), enabled: true, tools: [...CORE_TOOLS] },
     ...modules
       .filter((module) => module.tools.length > 0)
       .map((module) => ({

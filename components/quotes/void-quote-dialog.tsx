@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -24,13 +25,14 @@ export function VoidQuoteDialog({
   quote: Quote;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("quotes");
   const voidQuote = useVoidQuote(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
   // would unmount the mutation observer and skip these callbacks.
   const confirm = () => {
     voidQuote.mutate(quote.id, {
-      onSuccess: () => toast.success(`Quote ${quote.number} voided`),
+      onSuccess: () => toast.success(t("toasts.voided", { number: quote.number })),
       onError: (error) => toast.error(error.message),
       onSettled: () => onOpenChange(false),
     });
@@ -40,21 +42,22 @@ export function VoidQuoteDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Void quote {quote.number}?</AlertDialogTitle>
+          <AlertDialogTitle>{t("voidDialog.title", { number: quote.number })}</AlertDialogTitle>
           <AlertDialogDescription>
-            Withdraws the {formatCents(quote.total_cents, quote.currency)} quote for{" "}
-            {quote.contact?.name ?? "the customer"} — their link stops accepting. The quote stays
-            on record but can&apos;t be reopened.
+            {t("voidDialog.description", {
+              amount: formatCents(quote.total_cents, quote.currency),
+              customer: quote.contact?.name ?? t("theCustomer"),
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep quote</AlertDialogCancel>
+          <AlertDialogCancel>{t("actions.keepQuote")}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={voidQuote.isPending}
             onClick={confirm}
           >
-            {voidQuote.isPending ? "Voiding…" : "Void quote"}
+            {voidQuote.isPending ? t("actions.voiding") : t("actions.voidQuote")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -141,8 +142,12 @@ export function PlaceCallDialog({
 
   const [idempotencyKey, setIdempotencyKey] = useState(randomKey);
 
+  const t = useTranslations("calls");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => placeCallSchema(tv), [tv]);
   const form = useForm<PlaceCallValues>({
-    resolver: zodResolver(placeCallSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultPlaceCallValues(defaults),
   });
   const rootServerError = (
@@ -202,7 +207,7 @@ export function PlaceCallDialog({
       { payload: toPlaceCallPayload(values), idempotencyKey },
       {
         onSuccess: (call) => {
-          toast.success("Call queued — it'll dial shortly");
+          toast.success(t("toasts.callQueued"));
           onOpenChange(false);
           onPlaced(call);
         },
@@ -218,39 +223,37 @@ export function PlaceCallDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Place a call</DialogTitle>
-          <DialogDescription>
-            Your agent will dial the number and handle the conversation.
-          </DialogDescription>
+          <DialogTitle>{t("placeDialog.title")}</DialogTitle>
+          <DialogDescription>{t("placeDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <FormProvider {...form}>
         <form onSubmit={onSubmit} className="flex flex-col gap-4" noValidate>
           <SelectField
             name="agent_id"
-            label="Agent"
-            placeholder="Choose an agent"
+            label={t("labels.agent")}
+            placeholder={t("placeDialog.agentPlaceholder")}
             options={agents.map((agent) => ({ value: agent.id, label: agent.name }))}
-            emptyNote="No synced outbound agents yet — create one under Agents first."
+            emptyNote={t("placeDialog.noAgents")}
           />
           <SelectField
             name="from_phone_number_id"
-            label="Call from"
-            placeholder="Choose a number"
+            label={t("placeDialog.callFrom")}
+            placeholder={t("placeDialog.numberPlaceholder")}
             options={numbers.map((number) => ({
               value: number.id,
               label: number.friendly_name
                 ? `${number.friendly_name} (${formatE164(number.e164)})`
                 : formatE164(number.e164),
             }))}
-            emptyNote="No callable numbers — SIP numbers are inbound-only, so buy a platform number first."
+            emptyNote={t("placeDialog.noNumbers")}
           />
           <Field data-invalid={!!form.formState.errors.to_number || undefined}>
-            <FieldLabel htmlFor="place-call-to">Number to call</FieldLabel>
+            <FieldLabel htmlFor="place-call-to">{t("placeDialog.numberToCall")}</FieldLabel>
             <Input
               id="place-call-to"
               {...form.register("to_number")}
-              placeholder="0412 345 678"
+              placeholder={t("placeDialog.numberToCallPlaceholder")}
               autoComplete="off"
               aria-invalid={!!form.formState.errors.to_number}
             />
@@ -261,11 +264,7 @@ export function PlaceCallDialog({
 
           {pairs.length > 0 && (
             <div className="flex flex-col gap-3">
-              <p className="text-sm text-muted-foreground">
-                This agent needs a value for each variable below. Anything prefilled came from
-                the contact record or the variable&apos;s default, so check each one for this
-                call.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("placeDialog.variablesHint")}</p>
               {pairs.map((pair, index) => {
                 const error = form.formState.errors.dynamic_variables?.[index]?.value;
                 return (
@@ -294,10 +293,10 @@ export function PlaceCallDialog({
 
           <DialogFooter>
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={placeCall.isPending}>
-              {placeCall.isPending ? "Placing…" : "Place call"}
+              {placeCall.isPending ? t("actions.placing") : t("actions.placeCall")}
             </Button>
           </DialogFooter>
         </form>

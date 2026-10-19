@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRightIcon, PhoneOffIcon, UserRoundIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -24,6 +25,7 @@ export function CallDetailHeader({
   /** Present ⇒ the call is still cancelable. */
   onCancel?: () => void;
 }) {
+  const t = useTranslations("calls");
   const name = counterpartName(call);
   const number = formatE164(counterpartNumber(call));
   const showNumber = name !== number;
@@ -39,8 +41,8 @@ export function CallDetailHeader({
               variant="outline"
               render={<Link href={`/b/${businessUuid}/calls/campaigns/${call.campaign.id}`} />}
             >
-              Campaign: {call.campaign.name}
-              <ArrowUpRightIcon />
+              {t("detail.campaignBadge", { name: call.campaign.name })}
+              <ArrowUpRightIcon className="rtl:-scale-x-100" />
             </Badge>
           )}
           {call.callback && (
@@ -50,8 +52,8 @@ export function CallDetailHeader({
                 <Link href={`/b/${businessUuid}/calls/callbacks?callback=${call.callback.id}`} />
               }
             >
-              Callback
-              <ArrowUpRightIcon />
+              {t("labels.callback")}
+              <ArrowUpRightIcon className="rtl:-scale-x-100" />
             </Badge>
           )}
         </div>
@@ -71,13 +73,13 @@ export function CallDetailHeader({
             render={<Link href={`/b/${businessUuid}/contacts/${call.contact.id}`} />}
           >
             <UserRoundIcon />
-            View contact
+            {t("actions.viewContact")}
           </Button>
         )}
         {onCancel && (
           <Button variant="outline" size="sm" onClick={onCancel}>
             <PhoneOffIcon />
-            Cancel call
+            {t("actions.cancelCall")}
           </Button>
         )}
       </div>

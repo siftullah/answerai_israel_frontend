@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { api } from "@/lib/api/client";
 import { endpoints } from "@/lib/api/endpoints";
@@ -25,6 +26,7 @@ export function useVoices(businessUuid: string) {
  * for the component's lifetime.
  */
 export function useVoicePreview() {
+  const t = useTranslations("lib");
   const audioRef = useRef<HTMLAudioElement | null>(null);
   const urlsRef = useRef(new Map<string, string>());
   const [playingId, setPlayingId] = useState<string | null>(null);
@@ -61,19 +63,19 @@ export function useVoicePreview() {
         audio.onerror = () => {
           audioRef.current = null;
           setPlayingId(null);
-          toast.error("Couldn't play the voice preview.");
+          toast.error(t("voices.previewFailed"));
         };
         audioRef.current = audio;
         await audio.play();
         setPlayingId(voiceId);
       } catch {
-        toast.error("Couldn't play the voice preview.");
+        toast.error(t("voices.previewFailed"));
         stop();
       } finally {
         setLoadingId(null);
       }
     },
-    [playingId, stop]
+    [playingId, stop, t]
   );
 
   return { playingId, loadingId, toggle, stop };

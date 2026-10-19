@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -79,6 +80,8 @@ export function LeadFormDialog({
   lead?: Lead;
   onSaved?: (lead: Lead) => void;
 }) {
+  const t = useTranslations("leads");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const createLead = useCreateLead(business.id);
   const updateLead = useUpdateLead(business.id);
@@ -90,8 +93,10 @@ export function LeadFormDialog({
     lead?.contact ? contactStub(lead.contact) : null
   );
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => leadFormSchema(tv), [tv]);
   const form = useForm<LeadFormValues>({
-    resolver: zodResolver(leadFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: lead ? leadToFormValues(lead) : defaultLeadValues(),
   });
   const rootServerError = (
@@ -102,7 +107,7 @@ export function LeadFormDialog({
     (member) => member.has_account && member.user
   );
   const assigneeItems = [
-    { value: "", label: "Unassigned" },
+    { value: "", label: t("fields.unassigned") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -114,7 +119,7 @@ export function LeadFormDialog({
         { id: lead.id, payload: toUpdateLeadPayload(values) },
         {
           onSuccess: (updated) => {
-            toast.success("Lead updated");
+            toast.success(t("form.updated"));
             onSaved?.(updated);
             onOpenChange(false);
           },
@@ -126,7 +131,7 @@ export function LeadFormDialog({
 
     createLead.mutate(toStoreLeadPayload(values), {
       onSuccess: (created) => {
-        toast.success("Lead added");
+        toast.success(t("form.added"));
         onSaved?.(created);
         onOpenChange(false);
       },
@@ -138,11 +143,9 @@ export function LeadFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{editing ? "Edit lead" : "New lead"}</DialogTitle>
+          <DialogTitle>{editing ? t("form.editTitle") : t("form.newTitle")}</DialogTitle>
           <DialogDescription>
-            {editing
-              ? "Update the details — status changes happen from the lead's actions."
-              : "Log a sales enquiry for the team to follow up."}
+            {editing ? t("form.editDescription") : t("form.newDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -150,14 +153,14 @@ export function LeadFormDialog({
           id="lead-form"
           onSubmit={onSubmit}
           noValidate
-          className="scrollbar-slim -mr-2 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-2"
+          className="scrollbar-slim -me-2 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pe-2"
         >
           <Field data-invalid={!!form.formState.errors.title || undefined}>
-            <FieldLabel htmlFor="lead-title">Title</FieldLabel>
+            <FieldLabel htmlFor="lead-title">{t("form.title")}</FieldLabel>
             <Input
               id="lead-title"
               {...form.register("title")}
-              placeholder="What they're after, e.g. Kitchen rewire"
+              placeholder={t("form.titlePlaceholder")}
               aria-invalid={!!form.formState.errors.title}
             />
             {form.formState.errors.title?.message && (
@@ -170,7 +173,7 @@ export function LeadFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="lead-contact">Contact</FieldLabel>
+                <FieldLabel htmlFor="lead-contact">{t("fields.contact")}</FieldLabel>
                 <ContactCombobox
                   id="lead-contact"
                   selected={selectedContact}
@@ -191,7 +194,7 @@ export function LeadFormDialog({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Field data-invalid={!!form.formState.errors.value || undefined}>
-              <FieldLabel htmlFor="lead-value">Estimated value</FieldLabel>
+              <FieldLabel htmlFor="lead-value">{t("fields.estimatedValue")}</FieldLabel>
               <Input
                 id="lead-value"
                 {...form.register("value")}
@@ -202,7 +205,7 @@ export function LeadFormDialog({
               {form.formState.errors.value?.message ? (
                 <FieldError>{form.formState.errors.value.message}</FieldError>
               ) : (
-                <FieldDescription>Rough worth of the work, in dollars.</FieldDescription>
+                <FieldDescription>{t("form.valueHint")}</FieldDescription>
               )}
             </Field>
 
@@ -211,14 +214,14 @@ export function LeadFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={!!fieldState.error || undefined}>
-                  <FieldLabel htmlFor="lead-expected-close">Expected close</FieldLabel>
+                  <FieldLabel htmlFor="lead-expected-close">{t("fields.expectedClose")}</FieldLabel>
                   <DatePicker
                     id="lead-expected-close"
                     ref={field.ref}
                     value={field.value}
                     onChange={field.onChange}
                     clearable
-                    placeholder="No target date"
+                    placeholder={t("fields.noTargetDate")}
                     invalid={!!fieldState.error}
                   />
                   {fieldState.error?.message && (
@@ -234,7 +237,7 @@ export function LeadFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="lead-assignee">Assignee</FieldLabel>
+                <FieldLabel htmlFor="lead-assignee">{t("fields.assignee")}</FieldLabel>
                 <Select
                   items={assigneeItems}
                   value={field.value}
@@ -260,18 +263,18 @@ export function LeadFormDialog({
 
           {!editing && (
             <Field data-invalid={!!form.formState.errors.details || undefined}>
-              <FieldLabel htmlFor="lead-details">Notes</FieldLabel>
+              <FieldLabel htmlFor="lead-details">{tc("labels.notes")}</FieldLabel>
               <Textarea
                 id="lead-details"
                 {...form.register("details")}
                 rows={3}
-                placeholder="What they asked for, budget, timing… (optional)"
+                placeholder={t("form.notesPlaceholder")}
                 aria-invalid={!!form.formState.errors.details}
               />
               {form.formState.errors.details?.message ? (
                 <FieldError>{form.formState.errors.details.message}</FieldError>
               ) : (
-                <FieldDescription>Starts the lead&apos;s activity timeline.</FieldDescription>
+                <FieldDescription>{t("form.notesHint")}</FieldDescription>
               )}
             </Field>
           )}
@@ -285,10 +288,14 @@ export function LeadFormDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="submit" form="lead-form" disabled={saving}>
-            {saving ? "Saving…" : editing ? "Save changes" : "Add lead"}
+            {saving
+              ? tc("actions.saving")
+              : editing
+                ? tc("actions.saveChanges")
+                : t("form.submitAdd")}
           </Button>
         </DialogFooter>
       </DialogContent>

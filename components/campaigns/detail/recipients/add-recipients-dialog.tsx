@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -43,6 +44,8 @@ export function AddRecipientsDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("campaigns.recipients");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const addRecipients = useAddRecipients(business.id, campaign.id);
   const agentQuery = useAgent(business.id, agentId);
@@ -79,9 +82,7 @@ export function AddRecipientsDialog({
         },
         onError: (error) =>
           toast.error(
-            error.reason === "campaign_locked"
-              ? "This campaign has finished — recipients can no longer be added."
-              : error.message
+            error.reason === "campaign_locked" ? t("errors.locked") : error.message
           ),
       }
     );
@@ -91,11 +92,8 @@ export function AddRecipientsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[min(44rem,85dvh)] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
         <DialogHeader className="border-b px-6 py-4">
-          <DialogTitle>Add recipients</DialogTitle>
-          <DialogDescription>
-            Australian numbers only — anything else comes back as invalid. Numbers on
-            your do-not-call list are skipped automatically.
-          </DialogDescription>
+          <DialogTitle>{t("add")}</DialogTitle>
+          <DialogDescription>{t("addDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-6">
@@ -105,15 +103,15 @@ export function AddRecipientsDialog({
                 <div className="grid min-w-0 flex-1 gap-3 sm:grid-cols-2">
                   <Input
                     value={row.phone}
-                    placeholder="Phone, e.g. 0412 345 678"
-                    aria-label={`Recipient ${index + 1} phone`}
+                    placeholder={t("addDialog.phonePlaceholder")}
+                    aria-label={t("addDialog.rowPhone", { index: index + 1 })}
                     autoComplete="off"
                     onChange={(event) => patchRow(index, { phone: event.target.value })}
                   />
                   <Input
                     value={row.name}
-                    placeholder="Name (optional)"
-                    aria-label={`Recipient ${index + 1} name`}
+                    placeholder={t("addDialog.namePlaceholder")}
+                    aria-label={t("addDialog.rowName", { index: index + 1 })}
                     autoComplete="off"
                     onChange={(event) => patchRow(index, { name: event.target.value })}
                   />
@@ -123,7 +121,7 @@ export function AddRecipientsDialog({
                     type="button"
                     variant="ghost"
                     size="icon-sm"
-                    aria-label={`Remove recipient ${index + 1}`}
+                    aria-label={t("addDialog.removeRow", { index: index + 1 })}
                     onClick={() => setRows((current) => current.filter((_, i) => i !== index))}
                   >
                     <Trash2Icon />
@@ -138,7 +136,10 @@ export function AddRecipientsDialog({
                       key={variable.name}
                       value={row.variables[variable.name] ?? ""}
                       placeholder={`{{${variable.name}}}`}
-                      aria-label={`Recipient ${index + 1} ${variable.name}`}
+                      aria-label={t("addDialog.rowVariable", {
+                        index: index + 1,
+                        variable: variable.name,
+                      })}
                       autoComplete="off"
                       onChange={(event) =>
                         patchRow(index, {
@@ -161,19 +162,17 @@ export function AddRecipientsDialog({
               onClick={() => setRows((current) => [...current, EMPTY_ROW])}
             >
               <PlusIcon />
-              Add another
+              {t("addDialog.addAnother")}
             </Button>
             {rows.length >= MAX_ROWS && (
-              <p className="text-sm text-muted-foreground">
-                For bigger lists, use the CSV import.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("addDialog.bigListHint")}</p>
             )}
           </div>
         </div>
 
         <DialogFooter className="border-t px-6 py-4">
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             type="button"
@@ -181,8 +180,7 @@ export function AddRecipientsDialog({
             onClick={submit}
           >
             {addRecipients.isPending && <Spinner />}
-            Add {filledRows.length > 0 ? filledRows.length : ""}{" "}
-            {filledRows.length === 1 ? "recipient" : "recipients"}
+            {t("addDialog.submit", { count: filledRows.length })}
           </Button>
         </DialogFooter>
       </DialogContent>

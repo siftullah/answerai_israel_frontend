@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { CopyIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
@@ -45,6 +46,8 @@ function OwnFaqComposer({
   onSave: (row: PendingOwnFaq) => void;
   onCancel: () => void;
 }) {
+  const t = useTranslations("businessProfile.faqAttachment.composer");
+  const tc = useTranslations("common");
   const [question, setQuestion] = useState(initial?.question ?? "");
   const [answer, setAnswer] = useState(initial?.answer ?? "");
   const [error, setError] = useState<string | null>(null);
@@ -53,11 +56,11 @@ function OwnFaqComposer({
     const trimmedQuestion = question.trim();
     const trimmedAnswer = answer.trim();
     if (!trimmedQuestion || !trimmedAnswer) {
-      setError("Add both a question and an answer.");
+      setError(t("errors.bothRequired"));
       return;
     }
     if (trimmedQuestion.length > 500 || trimmedAnswer.length > 5000) {
-      setError("Keep the question under 500 and the answer under 5,000 characters.");
+      setError(t("errors.tooLong"));
       return;
     }
     onSave({ question: trimmedQuestion, answer: trimmedAnswer });
@@ -69,26 +72,26 @@ function OwnFaqComposer({
         id={`${idPrefix}-own-faq-question`}
         value={question}
         onChange={(event) => setQuestion(event.target.value)}
-        placeholder="Do you offer free quotes?"
+        placeholder={t("questionPlaceholder")}
         autoComplete="off"
-        aria-label="Question"
+        aria-label={t("question")}
       />
       <Textarea
         id={`${idPrefix}-own-faq-answer`}
         value={answer}
         onChange={(event) => setAnswer(event.target.value)}
         className="min-h-28"
-        placeholder="Yes — we quote most jobs within one business day…"
-        aria-label="Answer"
+        placeholder={t("answerPlaceholder")}
+        aria-label={t("answer")}
       />
       {error && <p className="text-sm text-destructive">{error}</p>}
       <div className="flex justify-end gap-2">
         <Button type="button" variant="ghost" size="sm" onClick={onCancel}>
-          Cancel
+          {tc("actions.cancel")}
         </Button>
         <Button type="button" size="sm" disabled={busy} onClick={save}>
           {busy && <Spinner />}
-          Save FAQ
+          {t("save")}
         </Button>
       </div>
     </div>
@@ -112,6 +115,8 @@ export function FaqAttachmentField({
   owner?: FaqOwner;
   allowPendingOwn?: boolean;
 }) {
+  const t = useTranslations("businessProfile.faqAttachment");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const faqsQuery = useFaqs(business.id);
   const ownedQuery = useFaqs(
@@ -176,9 +181,7 @@ export function FaqAttachmentField({
           // mirror that locally (inherit flips to custom-minus-one) so
           // saving doesn't re-attach it.
           applyChecked(checkedIds.filter((id) => id !== faqId));
-          toast.success(
-            `Copy created — it now belongs to this ${ownerNoun} and can be edited independently.`
-          );
+          toast.success(t("toasts.copyCreated", { owner: ownerNoun }));
         },
         onError: (error) => toast.error(error.message),
       }
@@ -214,7 +217,7 @@ export function FaqAttachmentField({
       },
       {
         onSuccess: () => {
-          toast.success(`FAQ added to this ${ownerNoun}`);
+          toast.success(t("toasts.faqAdded", { owner: ownerNoun }));
           setComposerIndex(null);
         },
         onError: (error) => toast.error(error.message),
@@ -235,11 +238,10 @@ export function FaqAttachmentField({
             <div className="flex items-start justify-between gap-2">
               <div>
                 <p className="text-base font-medium">
-                  This {ownerNoun}&apos;s own FAQs
+                  {t("own.title", { owner: ownerNoun })}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Only used when discussing this {ownerNoun} — they live here, not on
-                  the FAQs page.
+                  {t("own.description", { owner: ownerNoun })}
                 </p>
               </div>
               {!composerOpen && (
@@ -251,7 +253,7 @@ export function FaqAttachmentField({
                   onClick={() => setComposerIndex(-1)}
                 >
                   <PlusIcon />
-                  Add FAQ
+                  {t("own.add")}
                 </Button>
               )}
             </div>
@@ -268,7 +270,7 @@ export function FaqAttachmentField({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Edit ${faq.question}`}
+                      aria-label={t("own.editAria", { question: faq.question })}
                       onClick={() => setEditingOwned(faq)}
                     >
                       <PencilIcon />
@@ -277,7 +279,7 @@ export function FaqAttachmentField({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Delete ${faq.question}`}
+                      aria-label={t("own.deleteAria", { question: faq.question })}
                       onClick={() => setDeletingOwned(faq)}
                     >
                       <Trash2Icon />
@@ -299,7 +301,7 @@ export function FaqAttachmentField({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Edit ${row.question}`}
+                      aria-label={t("own.editAria", { question: row.question })}
                       onClick={() => setComposerIndex(index)}
                     >
                       <PencilIcon />
@@ -308,7 +310,7 @@ export function FaqAttachmentField({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Remove ${row.question}`}
+                      aria-label={t("own.removeAria", { question: row.question })}
                       onClick={() => removePendingRow(index)}
                     >
                       <Trash2Icon />
@@ -332,7 +334,7 @@ export function FaqAttachmentField({
               ownedFaqs.length === 0 &&
               pendingRows.length === 0 && (
                 <p className="text-sm text-muted-foreground">
-                  No own FAQs yet — add answers specific to this {ownerNoun}.
+                  {t("own.empty", { owner: ownerNoun })}
                 </p>
               )}
           </div>
@@ -343,17 +345,15 @@ export function FaqAttachmentField({
 
       <div className="flex flex-col gap-2.5">
         <div>
-          <p className="text-base font-medium">Business-wide FAQs</p>
+          <p className="text-base font-medium">{t("business.title")}</p>
           <p className="text-sm text-muted-foreground">
-            {mode === "inherit"
-              ? "All selected — new business FAQs apply automatically."
-              : "A custom selection — new business FAQs won't apply until you tick them."}
+            {mode === "inherit" ? t("business.inheritHint") : t("business.customHint")}
           </p>
         </div>
 
         {faqsQuery.isSuccess && businessFaqs.length === 0 ? (
           <p className="text-sm text-muted-foreground">
-            No business-wide FAQs yet — add them in the FAQs section.
+            {t("business.empty")}
           </p>
         ) : (
           <>
@@ -361,7 +361,7 @@ export function FaqAttachmentField({
               <Input
                 value={search}
                 onChange={(event) => setSearch(event.target.value)}
-                placeholder="Search FAQs"
+                placeholder={t("business.searchPlaceholder")}
                 autoComplete="off"
                 className="max-w-56"
               />
@@ -370,21 +370,21 @@ export function FaqAttachmentField({
                 className="text-sm font-medium text-primary hover:underline"
                 onClick={() => applyChecked(allIds)}
               >
-                Select all
+                {tc("actions.selectAll")}
               </button>
               <button
                 type="button"
                 className="text-sm font-medium text-primary hover:underline"
                 onClick={() => applyChecked([])}
               >
-                Select none
+                {t("business.selectNone")}
               </button>
             </div>
 
             <div className="flex max-h-64 flex-col overflow-y-auto rounded-2xl border">
               {visibleFaqs.length === 0 ? (
                 <p className="px-3 py-2.5 text-sm text-muted-foreground">
-                  {faqsQuery.isPending ? "Loading…" : "No FAQs match your search."}
+                  {faqsQuery.isPending ? tc("state.loading") : t("business.noMatch")}
                 </p>
               ) : (
                 visibleFaqs.map((faq, index) => (
@@ -407,8 +407,8 @@ export function FaqAttachmentField({
                         type="button"
                         variant="ghost"
                         size="icon-sm"
-                        title={`Make a copy just for this ${ownerNoun}`}
-                        aria-label={`Copy FAQ into this ${ownerNoun}`}
+                        title={t("business.copyTitle", { owner: ownerNoun })}
+                        aria-label={t("business.copyAria", { owner: ownerNoun })}
                         disabled={duplicate.isPending}
                         onClick={(event) => {
                           event.preventDefault();
@@ -444,25 +444,24 @@ export function FaqAttachmentField({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this FAQ?</AlertDialogTitle>
+            <AlertDialogTitle>{t("deleteDialog.title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Only this {ownerNoun}&apos;s own FAQ is removed — business-wide FAQs are
-              unaffected.
+              {t("deleteDialog.description", { owner: ownerNoun })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deletingOwned) return;
                 deleteFaq.mutate(deletingOwned.id, {
-                  onSuccess: () => toast.success("FAQ deleted"),
+                  onSuccess: () => toast.success(t("toasts.faqDeleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeletingOwned(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon, ChevronsUpDownIcon, UserRoundPlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,7 @@ export function ContactCombobox({
   requirePhone?: boolean;
   allowCreate?: boolean;
 }) {
+  const t = useTranslations("callbacks.contactPicker");
   const { business } = useBusiness();
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
@@ -65,7 +67,7 @@ export function ContactCombobox({
       className="border-t border-border text-primary data-[selected=true]:text-primary"
     >
       <UserRoundPlusIcon className="shrink-0" />
-      {q ? `New contact "${q}"` : "New contact"}
+      {q ? t("newContactNamed", { query: q }) : t("newContact")}
     </CommandItem>
   ) : null;
 
@@ -86,7 +88,9 @@ export function ContactCombobox({
         }
       >
         <span className="min-w-0 truncate">
-          {selected ? (selected.name ?? formatE164(selected.phones[0]?.e164 ?? "")) : "Choose a contact"}
+          {selected
+            ? (selected.name ?? formatE164(selected.phones[0]?.e164 ?? ""))
+            : t("placeholder")}
         </span>
         <ChevronsUpDownIcon className="shrink-0 text-muted-foreground" />
       </PopoverTrigger>
@@ -95,7 +99,7 @@ export function ContactCombobox({
           <CommandInput
             value={search}
             onValueChange={setSearch}
-            placeholder="Search contacts…"
+            placeholder={t("searchPlaceholder")}
           />
           <CommandList>
             {query.isPending ? (
@@ -104,7 +108,7 @@ export function ContactCombobox({
               </div>
             ) : contacts.length === 0 ? (
               <>
-                <CommandEmpty>No contacts match.</CommandEmpty>
+                <CommandEmpty>{t("noMatches")}</CommandEmpty>
                 {createItem}
               </>
             ) : (
@@ -124,11 +128,11 @@ export function ContactCombobox({
                       <div className="flex min-w-0 flex-1 flex-col">
                         <span className="flex items-center gap-2">
                           <span className="min-w-0 truncate font-medium">
-                            {contact.name ?? (phone ? formatE164(phone.e164) : "Unnamed contact")}
+                            {contact.name ?? (phone ? formatE164(phone.e164) : t("unnamed"))}
                           </span>
                           {contact.on_dnc && (
                             <Badge variant="warning" className="h-5 shrink-0">
-                              On DNC
+                              {t("onDnc")}
                             </Badge>
                           )}
                         </span>
@@ -140,7 +144,7 @@ export function ContactCombobox({
                               ]
                                 .filter(Boolean)
                                 .join(" · ") || formatE164(phone.e164)
-                            : "No phone number"}
+                            : t("noPhone")}
                         </span>
                       </div>
                       {selected?.id === contact.id && <CheckIcon className="shrink-0" />}
@@ -153,7 +157,7 @@ export function ContactCombobox({
                     onSelect={() => void query.fetchNextPage()}
                     className="justify-center text-sm text-muted-foreground"
                   >
-                    {query.isFetchingNextPage ? <Spinner className="size-4" /> : "Load more"}
+                    {query.isFetchingNextPage ? <Spinner className="size-4" /> : t("loadMore")}
                   </CommandItem>
                 )}
                 {createItem}

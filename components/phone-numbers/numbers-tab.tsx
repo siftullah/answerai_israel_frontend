@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   EllipsisVerticalIcon,
   PencilIcon,
@@ -60,17 +61,6 @@ import { formatE164 } from "@/lib/phone";
 import { cn } from "@/lib/utils";
 import type { PhoneNumber, PhoneNumberProvider, PhoneNumberType } from "@/lib/api/types";
 
-const PROVIDER_LABELS: Record<PhoneNumberProvider, string> = {
-  twilio: "Platform",
-  byo_sip: "BYO SIP",
-};
-
-const TYPE_LABELS: Record<PhoneNumberType, string> = {
-  local: "Local",
-  mobile: "Mobile",
-  toll_free: "Toll-free",
-};
-
 function NumberRowActions({
   number,
   onEdit,
@@ -82,6 +72,8 @@ function NumberRowActions({
   onRetry: () => void;
   onRelease: () => void;
 }) {
+  const t = useTranslations("phoneNumbers.numbers");
+  const tc = useTranslations("common");
   const canEdit = number.status === "active";
   const canRetry = number.status === "error" && number.provider === "twilio";
   const canRelease = number.status !== "releasing" && number.status !== "released";
@@ -95,7 +87,7 @@ function NumberRowActions({
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label={`Actions for ${formatE164(number.e164)}`}
+            aria-label={t("rowActions", { number: formatE164(number.e164) })}
           />
         }
       >
@@ -105,19 +97,19 @@ function NumberRowActions({
         {canEdit && (
           <DropdownMenuItem onClick={onEdit}>
             <PencilIcon />
-            Edit
+            {tc("actions.edit")}
           </DropdownMenuItem>
         )}
         {canRetry && (
           <DropdownMenuItem onClick={onRetry}>
             <RotateCcwIcon />
-            Retry purchase
+            {t("retryPurchase")}
           </DropdownMenuItem>
         )}
         {canRelease && (
           <DropdownMenuItem variant="destructive" onClick={onRelease}>
             <Trash2Icon />
-            Release
+            {t("release")}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>
@@ -146,11 +138,23 @@ export function NumbersTab({
   onBuy: () => void;
   onAddSip: () => void;
 }) {
+  const t = useTranslations("phoneNumbers");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
 
   const numbersQuery = usePhoneNumbers(business.id);
   const release = useReleasePhoneNumber(business.id);
   const retry = useRetryPhoneNumber(business.id);
+
+  const providerLabels: Record<PhoneNumberProvider, string> = {
+    twilio: t("provider.twilio"),
+    byo_sip: t("provider.byoSip"),
+  };
+  const typeLabels: Record<PhoneNumberType, string> = {
+    local: t("numberType.local"),
+    mobile: t("numberType.mobile"),
+    toll_free: t("numberType.tollFree"),
+  };
 
   const [viewMode, setViewMode] = useViewMode("phone-numbers");
   const [showReleased, setShowReleased] = useState(false);
@@ -164,7 +168,7 @@ export function NumbersTab({
 
   const handleRetry = (number: PhoneNumber) => {
     retry.mutate(number.id, {
-      onSuccess: () => toast.success("Retrying purchase"),
+      onSuccess: () => toast.success(t("toasts.retrying")),
       onError: (error) => toast.error(error.message),
     });
   };
@@ -187,7 +191,7 @@ export function NumbersTab({
   if (numbersQuery.isError) {
     return (
       <ErrorState
-        title="Couldn't load phone numbers"
+        title={t("numbers.loadError")}
         message={numbersQuery.error.message}
         onRetry={() => numbersQuery.refetch()}
       />
@@ -198,19 +202,17 @@ export function NumbersTab({
     return (
       <Empty className="border border-dashed">
         <EmptyHeader>
-          <EmptyTitle>Get your first phone number</EmptyTitle>
-          <EmptyDescription>
-            Buy a number for your AI to answer, or bring your own over a SIP trunk.
-          </EmptyDescription>
+          <EmptyTitle>{t("numbers.empty.title")}</EmptyTitle>
+          <EmptyDescription>{t("numbers.empty.description")}</EmptyDescription>
         </EmptyHeader>
         <div className="flex flex-wrap justify-center gap-2">
           <Button onClick={onBuy}>
             <PlusIcon />
-            Buy number
+            {t("page.buyNumber")}
           </Button>
           <Button variant="cta" onClick={onAddSip}>
             <PlusIcon />
-            Add SIP number
+            {t("page.addSipNumber")}
           </Button>
         </div>
       </Empty>
@@ -227,7 +229,7 @@ export function NumbersTab({
             onCheckedChange={(checked) => setShowReleased(checked === true)}
           />
           <Label htmlFor="show-released" className="text-sm text-muted-foreground">
-            Show released
+            {t("numbers.showReleased")}
           </Label>
         </div>
         <ViewModeToggle mode={viewMode} onChange={setViewMode} />
@@ -235,7 +237,7 @@ export function NumbersTab({
 
       {visible.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          All your numbers have been released.
+          {t("numbers.allReleased")}
         </p>
       ) : viewMode === "cards" ? (
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
@@ -257,12 +259,15 @@ export function NumbersTab({
                 />
               </div>
               <p className="text-sm text-muted-foreground">
-                In: {agentName(number, "inbound")} · Out: {agentName(number, "outbound")}
+                {t("numbers.agentsLine", {
+                  inbound: agentName(number, "inbound"),
+                  outbound: agentName(number, "outbound"),
+                })}
               </p>
               <div className="mt-auto flex flex-wrap items-center gap-2 border-t pt-3">
                 <NumberStatusBadge status={number.status} />
-                <Badge variant="outline">{PROVIDER_LABELS[number.provider]}</Badge>
-                <Badge variant="info">{TYPE_LABELS[number.number_type]}</Badge>
+                <Badge variant="outline">{providerLabels[number.provider]}</Badge>
+                <Badge variant="info">{typeLabels[number.number_type]}</Badge>
               </div>
             </div>
           ))}
@@ -272,12 +277,12 @@ export function NumbersTab({
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Number</TableHead>
-                <TableHead>Provider</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Inbound agent</TableHead>
-                <TableHead>Outbound agent</TableHead>
+                <TableHead>{t("numbers.columns.number")}</TableHead>
+                <TableHead>{t("numbers.columns.provider")}</TableHead>
+                <TableHead>{t("numbers.columns.type")}</TableHead>
+                <TableHead>{tc("labels.status")}</TableHead>
+                <TableHead>{t("agentSlot.inbound")}</TableHead>
+                <TableHead>{t("agentSlot.outbound")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -291,10 +296,10 @@ export function NumbersTab({
                     <NumberCell number={number} />
                   </TableCell>
                   <TableCell>
-                    <Badge variant="outline">{PROVIDER_LABELS[number.provider]}</Badge>
+                    <Badge variant="outline">{providerLabels[number.provider]}</Badge>
                   </TableCell>
                   <TableCell>
-                    <Badge variant="info">{TYPE_LABELS[number.number_type]}</Badge>
+                    <Badge variant="info">{typeLabels[number.number_type]}</Badge>
                   </TableCell>
                   <TableCell>
                     <NumberStatusBadge status={number.status} />
@@ -339,16 +344,18 @@ export function NumbersTab({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Release {releasing ? formatE164(releasing.e164) : "this number"}?
+              {t("release.title", {
+                number: releasing ? formatE164(releasing.e164) : t("release.thisNumber"),
+              })}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {releasing?.provider === "byo_sip"
-                ? "This unregisters the number from your trunk immediately. You can register it again later."
-                : "This permanently gives the number up. Callers who dial it won't reach you, and you may not be able to get it back."}
+                ? t("release.descriptionSip")
+                : t("release.descriptionPlatform")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
@@ -357,14 +364,14 @@ export function NumbersTab({
                 release.mutate(releasing.id, {
                   onSuccess: () =>
                     toast.success(
-                      provider === "byo_sip" ? "Number released" : "Releasing number"
+                      provider === "byo_sip" ? t("toasts.released") : t("toasts.releasing")
                     ),
                   onError: (error) => toast.error(error.message),
                 });
                 setReleasing(null);
               }}
             >
-              Release number
+              {t("release.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

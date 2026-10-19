@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { BotIcon, UserRoundIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
@@ -39,7 +40,8 @@ export function CallbackStatusBadge({ status }: { status: CallbackStatus }) {
 
 /** Rendered beside the status — overdue is a flag on top of `scheduled`, not a status. */
 export function OverdueBadge() {
-  return <Badge variant="warning">Overdue</Badge>;
+  const t = useTranslations("callbacks.badges");
+  return <Badge variant="warning">{t("overdue")}</Badge>;
 }
 
 export function CallbackTypeIcon({

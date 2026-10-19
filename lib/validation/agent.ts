@@ -8,6 +8,7 @@ import type {
   UpdateAgentPayload,
 } from "@/lib/api/types";
 import { AGENT_TEMPLATES, OVERRIDABLE_BUILTIN_VARIABLES } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 
 /** Platform-injected per-call variables — valid in prompts, never redeclarable. */
 export const BUILTIN_VARIABLES = [
@@ -34,13 +35,16 @@ const TEMPLATE_VALUES = AGENT_TEMPLATES.map((t) => t.value) as [
   ...AgentTemplate[],
 ];
 
-export const createAgentSchema = z.object({
-  template: z.enum(TEMPLATE_VALUES),
-  name: z.string().min(1, "Name is required").max(255),
-  purpose: z.enum(["inbound", "outbound"]),
-});
+/** Schema factories take a translator scoped to the `validation` namespace. */
+export function createAgentSchema(t: Translator) {
+  return z.object({
+    template: z.enum(TEMPLATE_VALUES),
+    name: z.string().min(1, t("common.nameRequired")).max(255),
+    purpose: z.enum(["inbound", "outbound"]),
+  });
+}
 
-export type CreateAgentValues = z.infer<typeof createAgentSchema>;
+export type CreateAgentValues = z.infer<ReturnType<typeof createAgentSchema>>;
 
 export function toCreateAgentPayload(values: CreateAgentValues): CreateAgentPayload {
   return {
@@ -51,14 +55,19 @@ export function toCreateAgentPayload(values: CreateAgentValues): CreateAgentPayl
   };
 }
 
-const dynamicVariableSchema = z.object({
-  name: z
-    .string()
-    .regex(/^[a-z0-9_]{1,40}$/, "Lowercase letters, digits and underscores only (max 40)")
-    .refine((name) => !RESERVED_VARIABLE_NAMES.includes(name), "This variable name is reserved"),
-  /** "" = no default. */
-  default_value: z.string(),
-});
+function dynamicVariableSchema(t: Translator) {
+  return z.object({
+    name: z
+      .string()
+      .regex(/^[a-z0-9_]{1,40}$/, t("agent.variableNameFormat", { max: 40 }))
+      .refine(
+        (name) => !RESERVED_VARIABLE_NAMES.includes(name),
+        t("agent.variableNameReserved")
+      ),
+    /** "" = no default. */
+    default_value: z.string(),
+  });
+}
 
 /**
  * Calendar overrides as the inputs hold them: strings, "" = inherit. The
@@ -77,83 +86,94 @@ const calendarFieldsSchema = z.object({
 });
 
 const CALENDAR_RANGES: ReadonlyArray<
-  [keyof z.infer<typeof calendarFieldsSchema> & string, number, number, string]
+  [keyof z.infer<typeof calendarFieldsSchema> & string, number, number, "minutes" | "days"]
 > = [
-  ["min_notice_minutes", 0, 10080, "Between 0 and 10,080 minutes"],
-  ["max_horizon_days", 1, 365, "Between 1 and 365 days"],
-  ["buffer_minutes", 0, 240, "Between 0 and 240 minutes"],
-  ["appointment_duration_minutes", 5, 1440, "Between 5 and 1,440 minutes"],
-  ["callback_duration_minutes", 5, 240, "Between 5 and 240 minutes"],
+  ["min_notice_minutes", 0, 10080, "minutes"],
+  ["max_horizon_days", 1, 365, "days"],
+  ["buffer_minutes", 0, 240, "minutes"],
+  ["appointment_duration_minutes", 5, 1440, "minutes"],
+  ["callback_duration_minutes", 5, 240, "minutes"],
 ];
 
-export const agentSettingsSchema = z
-  .object({
-    name: z.string().min(1, "Name is required").max(255),
-    description: z.string().max(500, "Keep the description under 500 characters"),
-    purpose: z.enum(["inbound", "outbound"]),
-    voice_id: z.string().min(1, "Pick a voice — the agent can't take calls without one."),
-    first_message: z.string().max(1000, "Keep the first message under 1,000 characters"),
-    prompt_text: z.string().max(30000, "Keep the prompt under 30,000 characters"),
-    rag_enabled: z.boolean(),
-    action_tools: z.array(z.string()),
-    dynamic_variables: z.array(dynamicVariableSchema).max(30, "Up to 30 variables"),
-    overridable_builtins: z.array(z.string()),
-    calendar: calendarFieldsSchema,
-  })
-  .superRefine((values, ctx) => {
-    const seen = new Set<string>();
-    values.dynamic_variables.forEach((variable, index) => {
-      if (seen.has(variable.name)) {
-        ctx.addIssue({
-          code: "custom",
-          path: ["dynamic_variables", index, "name"],
-          message: "Duplicate variable name",
-        });
-      }
-      seen.add(variable.name);
-    });
-
-    const known = new Set<string>([
-      ...BUILTIN_VARIABLES,
-      ...values.dynamic_variables.map((variable) => variable.name),
-    ]);
-    for (const field of ["first_message", "prompt_text"] as const) {
-      for (const match of values[field].matchAll(VARIABLE_TOKEN_REGEX)) {
-        const token = match[1];
-        if (token && !known.has(token)) {
+export function agentSettingsSchema(t: Translator) {
+  return z
+    .object({
+      name: z.string().min(1, t("common.nameRequired")).max(255),
+      description: z.string().max(500, t("length.description", { max: 500 })),
+      purpose: z.enum(["inbound", "outbound"]),
+      voice_id: z.string().min(1, t("agent.voiceRequired")),
+      first_message: z.string().max(1000, t("length.firstMessage", { max: 1000 })),
+      prompt_text: z.string().max(30000, t("length.prompt", { max: 30000 })),
+      rag_enabled: z.boolean(),
+      action_tools: z.array(z.string()),
+      dynamic_variables: z
+        .array(dynamicVariableSchema(t))
+        .max(30, t("count.variables", { max: 30 })),
+      overridable_builtins: z.array(z.string()),
+      calendar: calendarFieldsSchema,
+    })
+    .superRefine((values, ctx) => {
+      const seen = new Set<string>();
+      values.dynamic_variables.forEach((variable, index) => {
+        if (seen.has(variable.name)) {
           ctx.addIssue({
             code: "custom",
-            path: [field],
-            message: `Unknown variable {{${token}}} — declare it under Variables or use a built-in.`,
+            path: ["dynamic_variables", index, "name"],
+            message: t("agent.duplicateVariable"),
           });
-          break;
+        }
+        seen.add(variable.name);
+      });
+
+      const known = new Set<string>([
+        ...BUILTIN_VARIABLES,
+        ...values.dynamic_variables.map((variable) => variable.name),
+      ]);
+      for (const field of ["first_message", "prompt_text"] as const) {
+        for (const match of values[field].matchAll(VARIABLE_TOKEN_REGEX)) {
+          const token = match[1];
+          if (token && !known.has(token)) {
+            ctx.addIssue({
+              code: "custom",
+              path: [field],
+              message: t("agent.unknownVariable", { token: `{{${token}}}` }),
+            });
+            break;
+          }
         }
       }
-    }
 
-    const checkRange = (raw: string, min: number, max: number): boolean => {
-      const value = Number(raw);
-      return Number.isInteger(value) && value >= min && value <= max;
-    };
-    for (const [key, min, max, message] of CALENDAR_RANGES) {
-      const raw = values.calendar[key];
-      if (typeof raw === "string" && raw !== "" && !checkRange(raw, min, max)) {
-        ctx.addIssue({ code: "custom", path: ["calendar", key], message });
+      const checkRange = (raw: string, min: number, max: number): boolean => {
+        const value = Number(raw);
+        return Number.isInteger(value) && value >= min && value <= max;
+      };
+      for (const [key, min, max, unit] of CALENDAR_RANGES) {
+        const raw = values.calendar[key];
+        if (typeof raw === "string" && raw !== "" && !checkRange(raw, min, max)) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["calendar", key],
+            message:
+              unit === "days"
+                ? t("range.days", { min, max })
+                : t("range.minutes", { min, max }),
+          });
+        }
       }
-    }
-    if (
-      values.calendar.max_bookings_mode === "custom" &&
-      !checkRange(values.calendar.max_bookings_per_day, 1, 100)
-    ) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["calendar", "max_bookings_per_day"],
-        message: "Between 1 and 100 bookings",
-      });
-    }
-  });
+      if (
+        values.calendar.max_bookings_mode === "custom" &&
+        !checkRange(values.calendar.max_bookings_per_day, 1, 100)
+      ) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["calendar", "max_bookings_per_day"],
+          message: t("range.bookings", { min: 1, max: 100 }),
+        });
+      }
+    });
+}
 
-export type AgentSettingsValues = z.infer<typeof agentSettingsSchema>;
+export type AgentSettingsValues = z.infer<ReturnType<typeof agentSettingsSchema>>;
 
 function numberToField(value: number | undefined): string {
   return typeof value === "number" ? String(value) : "";

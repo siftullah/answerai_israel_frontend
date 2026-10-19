@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,12 +26,13 @@ export function CancelCallDialog({
   call: Call | null;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("calls");
   const cancelCall = useCancelCall(businessUuid);
 
   const confirm = () => {
     if (!call) return;
     cancelCall.mutate(call.id, {
-      onSuccess: () => toast.success("Call cancelled"),
+      onSuccess: () => toast.success(t("toasts.callCancelled")),
       onError: (error) => toast.error(error.message),
     });
     onOpenChange(false);
@@ -40,16 +42,14 @@ export function CancelCallDialog({
     <AlertDialog open={call !== null} onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Cancel this call?</AlertDialogTitle>
+          <AlertDialogTitle>{t("cancelDialog.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            {call
-              ? `The call to ${counterpartName(call)} hasn't connected yet and will be stopped.`
-              : ""}
+            {call ? t("cancelDialog.description", { name: counterpartName(call) }) : ""}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep calling</AlertDialogCancel>
-          <AlertDialogAction onClick={confirm}>Cancel call</AlertDialogAction>
+          <AlertDialogCancel>{t("cancelDialog.keepCalling")}</AlertDialogCancel>
+          <AlertDialogAction onClick={confirm}>{t("actions.cancelCall")}</AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { EllipsisVerticalIcon, RotateCcwIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -41,16 +42,8 @@ export function recipientIsRetryable(recipient: CampaignRecipient, campaign: Cam
   );
 }
 
-/** Short column labels for the contact built-ins a campaign may supply per recipient. */
-const BUILTIN_VARIABLE_LABELS: Record<string, string> = {
-  contact_name: "Name",
-  contact_email: "Email",
-  contact_company: "Company",
-  contact_address: "Address",
-};
-
-function variableLabel(name: string): string {
-  const known = BUILTIN_VARIABLE_LABELS[name];
+function variableLabel(name: string, builtinLabels: Record<string, string>): string {
+  const known = builtinLabels[name];
   if (known) return known;
   const spaced = name.replace(/[_-]+/g, " ").trim();
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
@@ -93,8 +86,17 @@ export function RecipientsTable({
   onRetry: (recipient: CampaignRecipient) => void;
   onDelete: (recipient: CampaignRecipient) => void;
 }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   // A campaign built from the contact book carries no variables — keep its table lean.
   const showVariables = recipients.some((recipient) => recipientVariables(recipient).length > 0);
+  /** Short column labels for the contact built-ins a campaign may supply per recipient. */
+  const builtinLabels: Record<string, string> = {
+    contact_name: tc("labels.name"),
+    contact_email: tc("labels.email"),
+    contact_company: t("recipients.table.company"),
+    contact_address: t("recipients.table.address"),
+  };
 
   return (
     <DataTableShell>
@@ -103,18 +105,18 @@ export function RecipientsTable({
           <TableRow>
             <TableHead className="w-10">
               <Checkbox
-                aria-label="Select all loaded recipients"
+                aria-label={t("recipients.table.selectAll")}
                 checked={selection.headerChecked}
                 indeterminate={selection.headerIndeterminate}
                 onCheckedChange={selection.onToggleAll}
               />
             </TableHead>
-            <TableHead>Phone</TableHead>
-            {showVariables && <TableHead>Variables</TableHead>}
-            <TableHead>Status</TableHead>
-            <TableHead>Attempts</TableHead>
-            <TableHead>Next attempt</TableHead>
-            <TableHead>Last result</TableHead>
+            <TableHead>{tc("labels.phone")}</TableHead>
+            {showVariables && <TableHead>{t("recipients.table.variables")}</TableHead>}
+            <TableHead>{tc("labels.status")}</TableHead>
+            <TableHead>{t("recipients.table.attempts")}</TableHead>
+            <TableHead>{t("recipients.table.nextAttempt")}</TableHead>
+            <TableHead>{t("recipients.table.lastResult")}</TableHead>
             <TableHead className="w-10" />
           </TableRow>
         </TableHeader>
@@ -126,7 +128,7 @@ export function RecipientsTable({
               <TableRow key={recipient.id}>
                 <TableCell>
                   <Checkbox
-                    aria-label={`Select ${formatE164(recipient.to_e164)}`}
+                    aria-label={t("a11y.selectItem", { name: formatE164(recipient.to_e164) })}
                     checked={selection.isSelected(recipient.id)}
                     onCheckedChange={() => selection.onToggleRow(recipient.id)}
                   />
@@ -141,7 +143,7 @@ export function RecipientsTable({
                         href={`/b/${businessUuid}/contacts/${recipient.contact.id}`}
                         className="max-w-44 truncate text-sm text-muted-foreground hover:underline"
                       >
-                        {recipient.contact.name ?? "Unnamed contact"}
+                        {recipient.contact.name ?? t("recipients.table.unnamedContact")}
                       </Link>
                     )}
                   </div>
@@ -155,7 +157,7 @@ export function RecipientsTable({
                         {variables.map(([name, value]) => (
                           <div key={name} className="flex min-w-0 gap-1.5">
                             <dt className="shrink-0 text-muted-foreground">
-                              {variableLabel(name)}
+                              {variableLabel(name, builtinLabels)}
                             </dt>
                             <dd className="min-w-0">
                               <Truncated text={value} className="block truncate" />
@@ -170,7 +172,10 @@ export function RecipientsTable({
                   <CampaignRecipientStatusBadge status={recipient.status} />
                 </TableCell>
                 <TableCell className="tabular-nums">
-                  {recipient.attempts} of {campaign.max_attempts}
+                  {t("recipients.table.attemptsOf", {
+                    attempts: recipient.attempts,
+                    max: campaign.max_attempts,
+                  })}
                 </TableCell>
                 <TableCell className="whitespace-nowrap text-muted-foreground">
                   {recipient.status === "retry_scheduled" && recipient.next_attempt_at
@@ -187,7 +192,9 @@ export function RecipientsTable({
                         <Button
                           variant="ghost"
                           size="icon-sm"
-                          aria-label={`Actions for ${formatE164(recipient.to_e164)}`}
+                          aria-label={t("a11y.actionsFor", {
+                            name: formatE164(recipient.to_e164),
+                          })}
                         />
                       }
                     >
@@ -197,7 +204,7 @@ export function RecipientsTable({
                       {recipientIsRetryable(recipient, campaign) && (
                         <DropdownMenuItem onClick={() => onRetry(recipient)}>
                           <RotateCcwIcon />
-                          Retry
+                          {tc("actions.retry")}
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem
@@ -205,7 +212,7 @@ export function RecipientsTable({
                         onClick={() => onDelete(recipient)}
                       >
                         <Trash2Icon />
-                        Remove
+                        {tc("actions.remove")}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>

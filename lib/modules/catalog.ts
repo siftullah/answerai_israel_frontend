@@ -8,6 +8,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import type { ModuleKey } from "@/lib/api/types";
+import { rt } from "@/lib/i18n/runtime";
 
 export interface ModuleInfo {
   label: string;
@@ -21,41 +22,61 @@ export interface ModuleInfo {
  * Presentation copy for the industry modules — the single source for module
  * labels across the portal (the agent tool catalog reads its group labels
  * from here). Enablement itself comes from the API; this only describes it.
+ * `label`/`description` are getters so they read in the active UI language.
  */
 export const MODULE_CATALOG: Record<ModuleKey, ModuleInfo> = {
   appointments: {
-    label: "Appointments",
-    description:
-      "Let your AI check the calendar and book callers into open slots, then manage those bookings.",
+    get label() {
+      return rt("lib.modules.appointments.label");
+    },
+    get description() {
+      return rt("lib.modules.appointments.description");
+    },
     icon: CalendarDaysIcon,
   },
   leads: {
-    label: "Leads",
-    description:
-      "Capture sales enquiries from calls as leads your team can follow up later.",
+    get label() {
+      return rt("lib.modules.leads.label");
+    },
+    get description() {
+      return rt("lib.modules.leads.description");
+    },
     icon: TargetIcon,
   },
   quotes: {
-    label: "Quotes",
-    description:
-      "Price up work, send quotes customers accept online, and log quote requests from calls.",
+    get label() {
+      return rt("lib.modules.quotes.label");
+    },
+    get description() {
+      return rt("lib.modules.quotes.description");
+    },
     icon: FileTextIcon,
   },
   jobs: {
-    label: "Jobs",
-    description:
-      "Log on-site work your AI takes over the phone and schedule the visit.",
+    get label() {
+      return rt("lib.modules.jobs.label");
+    },
+    get description() {
+      return rt("lib.modules.jobs.description");
+    },
     icon: WrenchIcon,
   },
   invoices: {
-    label: "Invoices",
-    description: "Raise invoices for completed work and track what's been paid.",
+    get label() {
+      return rt("lib.modules.invoices.label");
+    },
+    get description() {
+      return rt("lib.modules.invoices.description");
+    },
     icon: ReceiptTextIcon,
   },
   callbacks: {
-    label: "Callbacks",
-    description:
-      "Schedule a return call when your AI can't help the caller on the spot.",
+    get label() {
+      return rt("lib.modules.callbacks.label");
+    },
+    get description() {
+      return rt("lib.modules.callbacks.description");
+    },
     icon: PhoneCallIcon,
   },
 };

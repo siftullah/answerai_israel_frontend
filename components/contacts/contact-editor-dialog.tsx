@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray, useForm, type FieldError as RhfFieldError } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, Trash2Icon } from "lucide-react";
@@ -47,16 +49,6 @@ import {
   type ContactValues,
 } from "@/lib/validation/contact";
 
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the trigger shows e.g. "none".
-const LABEL_ITEMS: { value: "none" | PhoneLabel; label: string }[] = [
-  { value: "none", label: "No label" },
-  { value: "mobile", label: "Mobile" },
-  { value: "work", label: "Work" },
-  { value: "home", label: "Home" },
-  { value: "other", label: "Other" },
-];
-
 const MAX_ROWS = 10;
 
 /** Array-level errors (the exactly-one-primary rule) land on the array path;
@@ -81,13 +73,27 @@ export function ContactEditorDialog({
   source: Contact | null;
   onSaved?: (contact: Contact) => void;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const createContact = useCreateContact(business.id);
   const updateContact = useUpdateContact(business.id);
   const editing = source !== null;
 
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the trigger shows e.g. "none".
+  const labelItems: { value: "none" | PhoneLabel; label: string }[] = [
+    { value: "none", label: t("phoneLabels.none") },
+    { value: "mobile", label: t("phoneLabels.mobile") },
+    { value: "work", label: t("phoneLabels.work") },
+    { value: "home", label: t("phoneLabels.home") },
+    { value: "other", label: t("phoneLabels.other") },
+  ];
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => contactSchema(tv), [tv]);
   const form = useForm<ContactValues>({
-    resolver: zodResolver(contactSchema),
+    resolver: zodResolver(schema),
     defaultValues: toContactValues(source),
   });
   const { errors } = form.formState;
@@ -122,7 +128,7 @@ export function ContactEditorDialog({
     const payload = toContactPayload(values);
     const options = {
       onSuccess: (contact: Contact) => {
-        toast.success(editing ? "Contact saved" : "Contact added");
+        toast.success(editing ? t("editor.saved") : t("editor.added"));
         onOpenChange(false);
         onSaved?.(contact);
       },
@@ -140,10 +146,8 @@ export function ContactEditorDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[min(44rem,85dvh)] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
         <DialogHeader className="border-b px-6 py-5">
-          <DialogTitle>{editing ? "Edit contact" : "Add contact"}</DialogTitle>
-          <DialogDescription>
-            A contact needs at least a name, a company or a phone number.
-          </DialogDescription>
+          <DialogTitle>{editing ? t("editor.editTitle") : t("addContact")}</DialogTitle>
+          <DialogDescription>{t("editor.description")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} noValidate className="flex min-h-0 flex-1 flex-col">
@@ -157,10 +161,10 @@ export function ContactEditorDialog({
 
               <div className="grid gap-4 sm:grid-cols-2">
                 <Field data-invalid={!!errors.name || undefined}>
-                  <FieldLabel htmlFor="contact-name">Name</FieldLabel>
+                  <FieldLabel htmlFor="contact-name">{tc("labels.name")}</FieldLabel>
                   <Input
                     id="contact-name"
-                    placeholder="Jane Citizen"
+                    placeholder={t("editor.namePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.name}
                     {...form.register("name")}
@@ -168,10 +172,10 @@ export function ContactEditorDialog({
                   {errors.name && <FieldError>{errors.name.message}</FieldError>}
                 </Field>
                 <Field data-invalid={!!errors.company || undefined}>
-                  <FieldLabel htmlFor="contact-company">Company</FieldLabel>
+                  <FieldLabel htmlFor="contact-company">{t("fields.company")}</FieldLabel>
                   <Input
                     id="contact-company"
-                    placeholder="Acme Pty Ltd"
+                    placeholder={t("editor.companyPlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.company}
                     {...form.register("company")}
@@ -181,10 +185,10 @@ export function ContactEditorDialog({
               </div>
 
               <FieldSet className="gap-3">
-                <FieldLegend variant="label">Phone numbers</FieldLegend>
+                <FieldLegend variant="label">{t("fields.phoneNumbers")}</FieldLegend>
                 {phones.fields.length > 0 && (
                   <RadioGroup
-                    aria-label="Primary phone number"
+                    aria-label={t("editor.primaryPhone")}
                     className="flex w-full flex-col gap-2.5"
                     value={primaryIndex("phones")}
                     onValueChange={(value) => {
@@ -197,12 +201,12 @@ export function ContactEditorDialog({
                         <div key={row.id} className="flex items-start gap-2">
                           <Field className="flex-1" data-invalid={!!rowErrors?.e164 || undefined}>
                             <FieldLabel className="sr-only" htmlFor={`contact-phone-${index}`}>
-                              Phone number {index + 1}
+                              {t("editor.phoneNumber", { number: index + 1 })}
                             </FieldLabel>
                             <Input
                               id={`contact-phone-${index}`}
                               type="tel"
-                              placeholder="0412 345 678"
+                              placeholder={t("phonePlaceholder")}
                               autoComplete="off"
                               aria-invalid={!!rowErrors?.e164}
                               {...form.register(`phones.${index}.e164`)}
@@ -216,14 +220,14 @@ export function ContactEditorDialog({
                               className="sr-only"
                               htmlFor={`contact-phone-label-${index}`}
                             >
-                              Phone number {index + 1} label
+                              {t("editor.phoneNumberLabel", { number: index + 1 })}
                             </FieldLabel>
                             <Controller
                               control={form.control}
                               name={`phones.${index}.label`}
                               render={({ field }) => (
                                 <Select
-                                  items={LABEL_ITEMS}
+                                  items={labelItems}
                                   value={field.value}
                                   onValueChange={(value) =>
                                     field.onChange(
@@ -238,7 +242,7 @@ export function ContactEditorDialog({
                                     <SelectValue />
                                   </SelectTrigger>
                                   <SelectContent>
-                                    {LABEL_ITEMS.map((item) => (
+                                    {labelItems.map((item) => (
                                       <SelectItem key={item.value} value={item.value}>
                                         {item.label}
                                       </SelectItem>
@@ -252,15 +256,15 @@ export function ContactEditorDialog({
                             <label className="flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground transition-colors has-data-checked:text-foreground">
                               <RadioGroupItem
                                 value={String(index)}
-                                aria-label={`Make phone number ${index + 1} primary`}
+                                aria-label={t("editor.makePhonePrimary", { number: index + 1 })}
                               />
-                              <span className="max-sm:sr-only">Primary</span>
+                              <span className="max-sm:sr-only">{t("primary")}</span>
                             </label>
                             <Button
                               type="button"
                               variant="ghost"
                               size="icon-sm"
-                              aria-label="Remove phone number"
+                              aria-label={t("editor.removePhone")}
                               className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                               onClick={() => removeRow("phones", index)}
                             >
@@ -284,15 +288,15 @@ export function ContactEditorDialog({
                   onClick={() => phones.append(defaultContactPhone(phones.fields.length === 0))}
                 >
                   <PlusIcon data-icon="inline-start" />
-                  Add phone number
+                  {t("editor.addPhone")}
                 </Button>
               </FieldSet>
 
               <FieldSet className="gap-3">
-                <FieldLegend variant="label">Emails</FieldLegend>
+                <FieldLegend variant="label">{t("fields.emails")}</FieldLegend>
                 {emails.fields.length > 0 && (
                   <RadioGroup
-                    aria-label="Primary email"
+                    aria-label={t("editor.primaryEmail")}
                     className="flex w-full flex-col gap-2.5"
                     value={primaryIndex("emails")}
                     onValueChange={(value) => {
@@ -305,7 +309,7 @@ export function ContactEditorDialog({
                         <div key={row.id} className="flex items-start gap-2">
                           <Field className="flex-1" data-invalid={!!rowErrors?.email || undefined}>
                             <FieldLabel className="sr-only" htmlFor={`contact-email-${index}`}>
-                              Email {index + 1}
+                              {t("editor.email", { number: index + 1 })}
                             </FieldLabel>
                             <Input
                               id={`contact-email-${index}`}
@@ -324,11 +328,11 @@ export function ContactEditorDialog({
                               className="sr-only"
                               htmlFor={`contact-email-label-${index}`}
                             >
-                              Email {index + 1} label
+                              {t("editor.emailLabel", { number: index + 1 })}
                             </FieldLabel>
                             <Input
                               id={`contact-email-label-${index}`}
-                              placeholder="Label"
+                              placeholder={t("editor.emailLabelPlaceholder")}
                               autoComplete="off"
                               {...form.register(`emails.${index}.label`)}
                             />
@@ -337,15 +341,15 @@ export function ContactEditorDialog({
                             <label className="flex cursor-pointer items-center gap-1.5 text-sm text-muted-foreground transition-colors has-data-checked:text-foreground">
                               <RadioGroupItem
                                 value={String(index)}
-                                aria-label={`Make email ${index + 1} primary`}
+                                aria-label={t("editor.makeEmailPrimary", { number: index + 1 })}
                               />
-                              <span className="max-sm:sr-only">Primary</span>
+                              <span className="max-sm:sr-only">{t("primary")}</span>
                             </label>
                             <Button
                               type="button"
                               variant="ghost"
                               size="icon-sm"
-                              aria-label="Remove email"
+                              aria-label={t("editor.removeEmail")}
                               className="text-destructive hover:bg-destructive/10 hover:text-destructive"
                               onClick={() => removeRow("emails", index)}
                             >
@@ -369,16 +373,16 @@ export function ContactEditorDialog({
                   onClick={() => emails.append(defaultContactEmail(emails.fields.length === 0))}
                 >
                   <PlusIcon data-icon="inline-start" />
-                  Add email
+                  {t("editor.addEmail")}
                 </Button>
               </FieldSet>
 
               <Field data-invalid={!!errors.address || undefined}>
-                <FieldLabel htmlFor="contact-address">Address</FieldLabel>
+                <FieldLabel htmlFor="contact-address">{t("fields.address")}</FieldLabel>
                 <Textarea
                   id="contact-address"
                   rows={2}
-                  placeholder="123 Example St, Sydney NSW 2000"
+                  placeholder={t("editor.addressPlaceholder")}
                   autoComplete="off"
                   aria-invalid={!!errors.address}
                   {...form.register("address")}
@@ -387,7 +391,7 @@ export function ContactEditorDialog({
               </Field>
 
               <Field data-invalid={!!arrayError(errors.tags) || undefined}>
-                <FieldLabel htmlFor="contact-tags">Tags</FieldLabel>
+                <FieldLabel htmlFor="contact-tags">{t("fields.tags")}</FieldLabel>
                 <Controller
                   control={form.control}
                   name="tags"
@@ -398,8 +402,8 @@ export function ContactEditorDialog({
                       onChange={field.onChange}
                       max={30}
                       maxItemLength={40}
-                      placeholder="Type a tag and press Enter"
-                      limitPlaceholder="Tag limit reached"
+                      placeholder={t("editor.tagsPlaceholder")}
+                      limitPlaceholder={t("editor.tagLimit")}
                       invalid={!!arrayError(errors.tags)}
                     />
                   )}
@@ -411,11 +415,11 @@ export function ContactEditorDialog({
 
           <DialogFooter className="border-t px-6 py-4">
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={mutation.isPending}>
               {mutation.isPending && <Spinner data-icon="inline-start" />}
-              {editing ? "Save changes" : "Add contact"}
+              {editing ? tc("actions.saveChanges") : t("addContact")}
             </Button>
           </DialogFooter>
         </form>

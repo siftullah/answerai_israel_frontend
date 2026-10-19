@@ -1,0 +1,223 @@
+{
+  "meta": {
+    "title": "Plans"
+  },
+  "plans": {
+    "header": {
+      "backToBilling": "Back to billing",
+      "signOut": "Sign out",
+      "signingOut": "Signing out…"
+    },
+    "loadError": "Couldn't load plans",
+    "hero": {
+      "title": "Choose the right plan<br></br>for your business",
+      "subtitle": "Choose the perfect plan that fits your needs—whether you're a small business or a large established corporation."
+    },
+    "notes": {
+      "saveAnnual": "Save 10%",
+      "prices": "All prices are in ILS (₪), excluding VAT.",
+      "annual": "Annual plans pay the year up front; usage charges still bill monthly.",
+      "changes": "Upgrades apply immediately with credit for unused time; downgrades take effect at the end of the current period."
+    },
+    "setupFee": {
+      "limitedOffer": "Limited offer",
+      "promo": "One-time setup & onboarding fee <s>{was}</s> <strong>{now}</strong> + VAT",
+      "promoEnds": "One-time setup & onboarding fee <s>{was}</s> <strong>{now}</strong> + VAT — ends {date}",
+      "firstSubscription": "First subscriptions include a one-time {fee} + VAT setup & onboarding fee — never charged again, including on plan changes."
+    },
+    "alerts": {
+      "suspended": {
+        "title": "Your subscription is suspended",
+        "body": "A payment failed and service is paused. Update your card to retry the charge and restore service — plan changes come after that.",
+        "action": "Fix payment"
+      },
+      "pastDue": {
+        "title": "Your last payment failed",
+        "body": "We'll retry automatically, or <link>update your card</link> to retry now. You can still change plans in the meantime."
+      },
+      "pending": {
+        "title": "Almost there — add a card to activate",
+        "bodyWithPlan": "{plan} ({interval, select, monthly {monthly} other {annual}}) is reserved for you. Your subscription starts once a card is added.",
+        "body": "Your subscription starts once a card is added.",
+        "action": "Add card"
+      },
+      "cancellation": {
+        "title": "Cancellation scheduled",
+        "body": "Your subscription ends on {date}. You can resume it from the <link>billing page</link>.",
+        "bodyNoDate": "Your subscription ends on the current period's end. You can resume it from the <link>billing page</link>."
+      },
+      "planChange": {
+        "title": "Plan change scheduled",
+        "body": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Choosing a different plan below replaces this change.",
+        "bodyNoDate": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Choosing a different plan below replaces this change."
+      },
+      "viewOnly": {
+        "title": "View only",
+        "body": "Subscriptions are managed by the business owner and admins."
+      }
+    },
+    "currentPlan": "Current plan",
+    "mostPopular": "Most Popular",
+    "custom": "Custom",
+    "descriptions": {
+      "starter": "Essential coverage for small businesses",
+      "growth": "Most popular for growing businesses",
+      "scale": "Advanced capacity for busy teams",
+      "custom": "Tailored specifically for your business",
+      "fallback": "Flexible plan for your business"
+    },
+    "customTeaser": {
+      "description": "Tailored solution for your needs",
+      "pricing": "Contact us for pricing",
+      "contactSales": "Contact Sales"
+    },
+    "price": {
+      "perMonth": "/month",
+      "perYear": "({amount}/year)"
+    },
+    "cta": {
+      "scheduled": "Scheduled",
+      "activate": "Add card & activate",
+      "choose": "Choose {plan}",
+      "switchPlan": "Switch to {plan}",
+      "upgrade": "Upgrade to {plan}",
+      "downgrade": "Downgrade to {plan}",
+      "switchInterval": "Switch to {interval, select, monthly {monthly} other {annual}} billing"
+    },
+    "values": {
+      "perMonth": "{amount} / month",
+      "perMin": "{amount} / min",
+      "years": "{count, plural, one {# year} other {# years}}",
+      "days": "{count, plural, one {# day} other {# days}}"
+    },
+    "categories": {
+      "usage": "Included usage",
+      "capacity": "Capacity",
+      "features": "Features"
+    },
+    "features": {
+      "inboundMinutes": {
+        "label": "Inbound AI minutes",
+        "tooltip": "AI-answered inbound call minutes included every month. Overage rates apply beyond this allowance."
+      },
+      "inboundOverage": {
+        "label": "Inbound overage",
+        "tooltip": "Per-minute rate for inbound AI minutes beyond the monthly allowance."
+      },
+      "outbound": {
+        "label": "Outbound calls (PAYG)",
+        "tooltip": "Per-minute rate for AI outbound calls. Pay as you go — billed monthly for what you use, no allowance to buy."
+      },
+      "transferMinutes": {
+        "label": "Transfer minutes",
+        "tooltip": "Minutes of calls transferred to your team included every month."
+      },
+      "transferOverage": {
+        "label": "Transfer overage",
+        "tooltip": "Per-minute rate for transferred minutes beyond the monthly pool."
+      },
+      "agents": {
+        "label": "AI agents",
+        "tooltip": "How many AI receptionists you can run, each with its own number, script and hours."
+      },
+      "includedNumbers": {
+        "label": "Phone numbers included",
+        "tooltip": "Dedicated phone numbers included with the plan."
+      },
+      "extraNumbers": {
+        "label": "Extra phone numbers",
+        "tooltip": "Monthly price for each additional number beyond those included."
+      },
+      "seats": {
+        "label": "Team seats",
+        "tooltip": "Team member accounts that can access this business."
+      },
+      "answering": {
+        "label": "24/7 AI call answering",
+        "tooltip": "Your AI receptionist answers every inbound call around the clock — no missed calls, no voicemail."
+      },
+      "recordings": {
+        "label": "Call recordings & transcripts",
+        "tooltip": "Every call is recorded and transcribed so you can review conversations any time."
+      },
+      "booking": {
+        "label": "Appointment booking",
+        "tooltip": "The AI books appointments straight into your calendar during the call."
+      },
+      "leadCapture": {
+        "label": "Lead capture",
+        "tooltip": "Caller details and enquiries are captured automatically as leads."
+      },
+      "quotesJobsInvoices": {
+        "label": "Quotes, jobs & invoices",
+        "tooltip": "Turn calls into quotes, jobs and invoices without re-typing details."
+      },
+      "screenedTransfers": {
+        "label": "Screened transfers",
+        "tooltip": "The AI announces the caller and reason first, so your team can accept or decline before being connected."
+      },
+      "extraction": {
+        "label": "AI data extraction",
+        "tooltip": "Automatically pulls structured details — contact info, job requests, quote details — out of every call."
+      },
+      "retention": {
+        "label": "Recording retention",
+        "tooltip": "How long call recordings are kept before automatic deletion."
+      }
+    }
+  },
+  "subscribe": {
+    "title": "Subscribe to {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "description": "Nothing is charged yet — this first charge runs as soon as your card is added.",
+    "planLine": "{plan} plan ({interval, select, monthly {first month} other {first year}})",
+    "setupFeeLine": "One-time setup & onboarding",
+    "discountedUntil": "discounted until {date}",
+    "dueOnCard": "Due when your card is added",
+    "renewsMonthly": "Renews monthly. Usage beyond your included allowances is billed with each renewal.",
+    "renewsAnnually": "The plan renews yearly; usage beyond your included allowances is still billed monthly.",
+    "setupFeeOnce": "The setup fee is once per business — never charged again.",
+    "continue": "Continue to card details",
+    "toasts": {
+      "reserved": "{plan} reserved — add a card to start."
+    }
+  },
+  "change": {
+    "title": "Change to {plan} ({interval, select, monthly {monthly} other {annual}})",
+    "description": "Review what happens before anything changes.",
+    "calculating": "Calculating…",
+    "previewError": "Couldn't preview this change",
+    "chargedToday": "You'll be charged {amount} today.",
+    "lineQuantity": "({quantity} × {unit})",
+    "totalToday": "Total today",
+    "creditBanked": "{amount} of unused prepaid time becomes account credit and is applied to future charges automatically.",
+    "startsImmediately": "Your new plan and a fresh billing period start immediately.",
+    "noChargeToday": "No charge today.",
+    "scheduledOn": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. Until then everything stays on your current plan.",
+    "scheduledAtRenewal": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. Until then everything stays on your current plan.",
+    "confirmAndPay": "Confirm & pay {amount}",
+    "confirmChange": "Confirm change",
+    "toasts": {
+      "changed": "You're now on {plan}.",
+      "scheduled": "Plan change to {plan} scheduled."
+    }
+  },
+  "card": {
+    "titleActivate": "Add your card",
+    "titleUpdate": "Update card",
+    "descriptionActivate": "Card details go straight to Stripe's secure form — we never see the number. Saving the card starts your subscription.",
+    "descriptionRetry": "Saving a new card immediately retries the failed charge — service is restored as soon as it succeeds.",
+    "descriptionUpdate": "Card details go straight to Stripe's secure form — we never see the number. Future charges use the new card.",
+    "loadErrorTitle": "Couldn't open the payment form",
+    "loadFailed": "The payment form failed to load. Check your connection and try again.",
+    "processingTitle": "Payment is processing",
+    "processingBody": "Stripe is still confirming your card. Your subscription updates automatically the moment it settles — this can take a minute. It's safe to close this window.",
+    "saving": "Saving your card…",
+    "save": "Save card",
+    "toasts": {
+      "activated": "Card saved — starting your subscription.",
+      "updated": "Card updated.",
+      "declined": "The card was declined. Please try another card.",
+      "unexpected": "The payment form returned an unexpected result. Please try again."
+    }
+  }
+}

@@ -1,0 +1,287 @@
+{
+  "datetime": {
+    "today": "Today",
+    "yesterday": "Yesterday"
+  },
+  "money": {
+    "noPrice": "No price",
+    "customMessage": "Custom message",
+    "priceNotSet": "Price not set",
+    "perHour": "{price}/hour",
+    "perDay": "{price}/day",
+    "perWeek": "{price}/week",
+    "perMonth": "{price}/month",
+    "perYear": "{price}/year",
+    "duration": {
+      "hours": "{count, plural, one {# hr} other {# hrs}}",
+      "days": "{count, plural, one {# day} other {# days}}",
+      "weeks": "{count, plural, one {# wk} other {# wks}}",
+      "months": "{count, plural, one {# mth} other {# mths}}",
+      "years": "{count, plural, one {# yr} other {# yrs}}"
+    }
+  },
+  "tax": {
+    "defaultLabel": "VAT",
+    "line": "VAT ({rate}%)"
+  },
+  "endReason": {
+    "customer_ended_call": "Caller hung up",
+    "agent_ended_call": "Agent ended the call",
+    "transferred": "Transferred",
+    "no_conversation": "No conversation",
+    "no_answer": "No answer",
+    "busy": "Busy",
+    "canceled": "Cancelled",
+    "failed": "Failed",
+    "unknown": "Unknown"
+  },
+  "modules": {
+    "appointments": {
+      "label": "Appointments",
+      "description": "Let your AI check the calendar and book callers into open slots, then manage those bookings."
+    },
+    "leads": {
+      "label": "Leads",
+      "description": "Capture sales enquiries from calls as leads your team can follow up later."
+    },
+    "quotes": {
+      "label": "Quotes",
+      "description": "Price up work, send quotes customers accept online, and log quote requests from calls."
+    },
+    "jobs": {
+      "label": "Jobs",
+      "description": "Log on-site work your AI takes over the phone and schedule the visit."
+    },
+    "invoices": {
+      "label": "Invoices",
+      "description": "Raise invoices for completed work and track what's been paid."
+    },
+    "callbacks": {
+      "label": "Callbacks",
+      "description": "Schedule a return call when your AI can't help the caller on the spot."
+    }
+  },
+  "tools": {
+    "lookup_contact": {
+      "label": "Look up caller",
+      "description": "Check whether the caller is a known contact and greet them by name."
+    },
+    "save_contact_info": {
+      "label": "Save contact info",
+      "description": "Save the caller's name, email, or company to their contact record."
+    },
+    "add_to_dnc": {
+      "label": "Do-not-call requests",
+      "description": "Add the caller to the do-not-call list when they ask."
+    },
+    "get_current_time": {
+      "label": "Current time",
+      "description": "Tell the time and whether the business is open right now."
+    },
+    "get_call_history": {
+      "label": "Call history",
+      "description": "Recall the caller's previous calls with any of your agents, with notes and transcripts."
+    },
+    "schedule_callback": {
+      "label": "Schedule callback",
+      "description": "Book a future call back to the caller at a time they request."
+    },
+    "check_availability": {
+      "label": "Check availability",
+      "description": "Find open appointment slots on the calendar."
+    },
+    "book_appointment": {
+      "label": "Book appointment",
+      "description": "Book the caller into an open appointment slot."
+    },
+    "cancel_appointment": {
+      "label": "Cancel appointment",
+      "description": "Cancel an existing appointment for the caller."
+    },
+    "create_lead": {
+      "label": "Create lead",
+      "description": "Record a new sales lead from the conversation."
+    },
+    "request_quote": {
+      "label": "Request quote",
+      "description": "Log a quote request for work the caller wants priced; the team quotes it afterwards."
+    },
+    "create_job": {
+      "label": "Create job",
+      "description": "Log a new job request from the caller."
+    },
+    "check_job_availability": {
+      "label": "Check job availability",
+      "description": "Find open slots for scheduling a job visit."
+    },
+    "book_job": {
+      "label": "Book job",
+      "description": "Book a job visit into an open slot."
+    }
+  },
+  "toolGroups": {
+    "core": "Core"
+  },
+  "apiErrors": {
+    "sessionExpired": "Your session has expired. Please log in again.",
+    "subscriptionRequired": "An active subscription is required.",
+    "forbidden": "You are not allowed to do that.",
+    "notFound": "Not found.",
+    "linkInvalid": "This link is no longer valid.",
+    "tokenExpired": "Your session token expired. Please try again.",
+    "invalidData": "The given data was invalid.",
+    "tooManyAttempts": "Too many attempts. Please wait a minute and try again.",
+    "server": "Something went wrong on our end. Please try again.",
+    "generic": "Something went wrong. Please try again.",
+    "network": "Network error — please check your connection.",
+    "unknown": "Something went wrong."
+  },
+  "voices": {
+    "previewFailed": "Couldn't play the voice preview."
+  },
+  "agentTemplates": {
+    "blank": {
+      "label": "Start blank",
+      "description": "An empty agent you configure from scratch."
+    },
+    "receptionist": {
+      "label": "Receptionist",
+      "description": "Answers calls, handles questions, and takes messages."
+    },
+    "appointment_setter": {
+      "label": "Appointment setter",
+      "description": "Books, checks, and cancels appointments for callers."
+    },
+    "after_hours": {
+      "label": "After hours",
+      "description": "Covers calls outside business hours and captures details."
+    },
+    "outbound_caller": {
+      "label": "Outbound caller",
+      "description": "Dials contacts for campaigns, callbacks, and follow-ups."
+    },
+    "lead_qualifier": {
+      "label": "Lead qualifier",
+      "description": "Calls new leads, qualifies interest, and records details."
+    }
+  },
+  "overridableBuiltin": {
+    "contact_name": "The contact's name",
+    "contact_email": "The contact's primary email",
+    "contact_company": "The contact's company",
+    "contact_address": "The contact's address"
+  },
+  "appointmentStatus": {
+    "scheduled": "Scheduled",
+    "confirmed": "Confirmed",
+    "completed": "Completed",
+    "canceled": "Canceled",
+    "no_show": "No-show"
+  },
+  "appointmentSource": {
+    "manual": "Manual",
+    "agent_call": "Booked by AI on a call",
+    "api": "API"
+  },
+  "subscriptionStatus": {
+    "pending": "Pending",
+    "active": "Active",
+    "past_due": "Past due",
+    "suspended": "Suspended",
+    "cancelled": "Cancelled"
+  },
+  "billingInterval": {
+    "monthly": "Monthly",
+    "annual": "Annual"
+  },
+  "billingChargeStatus": {
+    "pending": "Processing",
+    "paid": "Paid",
+    "failed": "Failed"
+  },
+  "billingChargeType": {
+    "initial": "First charge",
+    "renewal": "Renewal",
+    "plan_change": "Plan change"
+  },
+  "callbackStatus": {
+    "scheduled": "Scheduled",
+    "queued": "Calling",
+    "in_progress": "In progress",
+    "completed": "Completed",
+    "no_answer": "No answer",
+    "failed": "Failed",
+    "canceled": "Canceled"
+  },
+  "callbackType": {
+    "agent": "AI agent",
+    "team_member": "Team member"
+  },
+  "callbackSource": {
+    "manual": "Manual",
+    "agent_call": "Agent call",
+    "api": "API"
+  },
+  "callbackOutcome": {
+    "reached": "Reached",
+    "voicemail": "Left voicemail",
+    "no_answer": "No answer",
+    "handled": "Handled"
+  },
+  "invoiceStatus": {
+    "draft": "Draft",
+    "sent": "Sent",
+    "paid": "Paid",
+    "overdue": "Overdue",
+    "void": "Void"
+  },
+  "lineItemKind": {
+    "labour": "Labour",
+    "material": "Material"
+  },
+  "jobStatus": {
+    "open": "Open",
+    "scheduled": "Scheduled",
+    "in_progress": "In progress",
+    "completed": "Completed",
+    "canceled": "Canceled"
+  },
+  "jobPriority": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High"
+  },
+  "jobSource": {
+    "manual": "Added manually",
+    "agent_call": "From a call",
+    "api": "Via the API",
+    "lead": "Converted from a lead",
+    "quote": "Converted from a quote"
+  },
+  "leadStatus": {
+    "new": "New",
+    "contacted": "Contacted",
+    "qualified": "Qualified",
+    "won": "Won",
+    "lost": "Lost"
+  },
+  "leadSource": {
+    "manual": "Added manually",
+    "agent_call": "From a call",
+    "api": "Via the API"
+  },
+  "quoteStatus": {
+    "draft": "Draft",
+    "sent": "Sent",
+    "accepted": "Accepted",
+    "declined": "Declined",
+    "expired": "Expired",
+    "void": "Void"
+  },
+  "hoursMode": {
+    "inherit": "Business hours",
+    "member": "Availability",
+    "custom": "Custom",
+    "bypass": "Always"
+  }
+}

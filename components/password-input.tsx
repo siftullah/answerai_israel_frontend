@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
 import { cn } from "@/lib/utils";
@@ -13,6 +14,7 @@ export function PasswordInput({
   className,
   ...props
 }: Omit<React.ComponentProps<typeof InputGroupInput>, "type">) {
+  const t = useTranslations("ui");
   const [visible, setVisible] = useState(false);
 
   return (
@@ -25,7 +27,7 @@ export function PasswordInput({
       <InputGroupAddon align="inline-end">
         <InputGroupButton
           type="button"
-          aria-label={visible ? "Hide password" : "Show password"}
+          aria-label={visible ? t("passwordInput.hide") : t("passwordInput.show")}
           onClick={() => setVisible((v) => !v)}
         >
           {visible ? <EyeOffIcon /> : <EyeIcon />}

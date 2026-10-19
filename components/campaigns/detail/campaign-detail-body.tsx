@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -32,6 +33,8 @@ import {
 import type { Campaign } from "@/lib/api/types";
 
 export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -78,16 +81,12 @@ export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
           startCampaign.mutate(campaign.id, {
             onSuccess: (started) =>
               toast.success(
-                started.status === "scheduled"
-                  ? "Campaign scheduled — dialing begins at the start time"
-                  : "Campaign started"
+                started.status === "scheduled" ? t("toasts.scheduled") : t("toasts.started")
               ),
             onError: (error) => {
               const message = campaignActionErrorMessage(error);
               if (error.reason === "campaign_no_recipients") {
-                toast.error(message, {
-                  description: "Add numbers, pick contacts, or import a spreadsheet below.",
-                });
+                toast.error(message, { description: t("toasts.noRecipientsHint") });
               } else {
                 toast.error(message);
               }
@@ -96,13 +95,13 @@ export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
         }
         onPause={() =>
           pauseCampaign.mutate(campaign.id, {
-            onSuccess: () => toast.success("Campaign paused"),
+            onSuccess: () => toast.success(t("toasts.paused")),
             onError: (error) => toast.error(campaignActionErrorMessage(error)),
           })
         }
         onResume={() =>
           resumeCampaign.mutate(campaign.id, {
-            onSuccess: () => toast.success("Campaign resumed"),
+            onSuccess: () => toast.success(t("toasts.resumed")),
             onError: (error) => toast.error(campaignActionErrorMessage(error)),
           })
         }
@@ -110,7 +109,7 @@ export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
         onDuplicate={() =>
           duplicateCampaign.mutate(campaign.id, {
             onSuccess: (copy) => {
-              toast.success("Campaign duplicated as a draft");
+              toast.success(t("toasts.duplicated"));
               router.push(`/b/${business.id}/calls/campaigns/${copy.id}`);
             },
             onError: (error) => toast.error(error.message),
@@ -133,24 +132,21 @@ export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
       <AlertDialog open={confirmingCancel} onOpenChange={setConfirmingCancel}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel {campaign.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Canceling stops dialing and cancels every queued call and remaining
-              recipient. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("cancelDialog.title", { name: campaign.name })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("cancelDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep running</AlertDialogCancel>
+            <AlertDialogCancel>{t("cancelDialog.keepRunning")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 cancelCampaign.mutate(campaign.id, {
-                  onSuccess: () => toast.success("Campaign canceled"),
+                  onSuccess: () => toast.success(t("toasts.canceled")),
                   onError: (error) => toast.error(campaignActionErrorMessage(error)),
                 });
                 setConfirmingCancel(false);
               }}
             >
-              Cancel campaign
+              {t("actions.cancelCampaign")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -159,19 +155,16 @@ export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
       <AlertDialog open={confirmingDelete} onOpenChange={setConfirmingDelete}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {campaign.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes the campaign and its recipient list. Calls it already made stay
-              in your call logs.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("deleteDialog.title", { name: campaign.name })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 deleteCampaign.mutate(campaign.id, {
                   onSuccess: () => {
-                    toast.success("Campaign deleted");
+                    toast.success(t("toasts.deleted"));
                     router.push(`/b/${business.id}/calls/campaigns`);
                   },
                   onError: (error) => toast.error(error.message),
@@ -179,7 +172,7 @@ export function CampaignDetailBody({ campaign }: { campaign: Campaign }) {
                 setConfirmingDelete(false);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

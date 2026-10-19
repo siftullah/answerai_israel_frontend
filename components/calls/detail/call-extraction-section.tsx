@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { CheckIcon, MinusIcon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -73,6 +74,7 @@ export function CallExtractionSection({
   callUuid: string;
   enabled: boolean;
 }) {
+  const t = useTranslations("calls.extraction");
   const extraction = useCallExtraction(businessUuid, callUuid, enabled);
 
   // No extraction configured/produced is the common case — stay quiet.
@@ -84,10 +86,7 @@ export function CallExtractionSection({
   if (extraction.data && entries.length === 0 && evaluations.length === 0) return null;
 
   return (
-    <DetailCard
-      title="Extracted details"
-      description="What the agent captured and how it scored against its goals."
-    >
+    <DetailCard title={t("title")} description={t("description")}>
       {extraction.isPending ? (
         <div className="flex flex-col gap-2">
           <Skeleton className="h-5 w-2/3" />
@@ -109,7 +108,7 @@ export function CallExtractionSection({
           )}
           {evaluations.length > 0 && (
             <div className="flex flex-col gap-1.5">
-              <p className="text-xs font-medium text-muted-foreground">Evaluation</p>
+              <p className="text-xs font-medium text-muted-foreground">{t("evaluation")}</p>
               <div className="flex flex-wrap gap-1.5">
                 {evaluations.map(([key, value]) => {
                   const result = evaluationResult(value);

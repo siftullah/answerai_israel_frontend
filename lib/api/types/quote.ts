@@ -1,5 +1,6 @@
 /** Mirrors app/Http/Resources/QuoteResource.php */
 
+import { labelMap } from "@/lib/i18n/label-map";
 import type { LineItemKind } from "./invoice";
 
 export const QUOTE_STATUSES = [
@@ -15,14 +16,10 @@ export type QuoteStatus = (typeof QUOTE_STATUSES)[number];
 /** The Open tab's status set — quotes still in play. */
 export const OPEN_QUOTE_STATUSES: readonly QuoteStatus[] = ["draft", "sent"];
 
-export const QUOTE_STATUS_LABELS: Record<QuoteStatus, string> = {
-  draft: "Draft",
-  sent: "Sent",
-  accepted: "Accepted",
-  declined: "Declined",
-  expired: "Expired",
-  void: "Void",
-};
+export const QUOTE_STATUS_LABELS: Record<QuoteStatus, string> = labelMap(
+  "lib.quoteStatus",
+  ["draft", "sent", "accepted", "declined", "expired", "void"]
+);
 
 export type QuoteDepositType = "percent" | "fixed";
 export type QuoteAcceptedVia = "portal" | "public_link";

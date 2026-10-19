@@ -5,6 +5,7 @@ import {
   type ServiceDraft,
   type ServicePayload,
 } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import {
   agentScopeFields,
   durationFields,
@@ -16,24 +17,27 @@ import {
   refinePrice,
 } from "@/lib/validation/knowledge";
 
-export const serviceSchema = z
-  .object({
-    name: z.string().min(1, "Name is required").max(120, "Keep the name under 120 characters"),
-    description: z.string().max(2000, "Keep the description under 2,000 characters"),
-    available: z.boolean(),
-    ...priceFields,
-    ...durationFields,
-    ...faqAttachmentFields,
-    ...pendingOwnFaqFields,
-    ...agentScopeFields,
-  })
-  .superRefine((values, ctx) => {
-    refinePrice(values, ctx);
-    refineDuration(values, ctx);
-    refineAgentScope(values, ctx);
-  });
+/** `t` is a translator scoped to the `validation` namespace. */
+export function serviceSchema(t: Translator) {
+  return z
+    .object({
+      name: z.string().min(1, t("common.nameRequired")).max(120, t("length.name", { max: 120 })),
+      description: z.string().max(2000, t("length.description", { max: 2000 })),
+      available: z.boolean(),
+      ...priceFields(t),
+      ...durationFields,
+      ...faqAttachmentFields,
+      ...pendingOwnFaqFields(t),
+      ...agentScopeFields,
+    })
+    .superRefine((values, ctx) => {
+      refinePrice(t, values, ctx);
+      refineDuration(t, values, ctx);
+      refineAgentScope(t, values, ctx);
+    });
+}
 
-export type ServiceValues = z.infer<typeof serviceSchema>;
+export type ServiceValues = z.infer<ReturnType<typeof serviceSchema>>;
 
 /** Accepts a saved Service, an extraction-draft payload, or null (create). */
 export function toServiceValues(source: Service | ServicePayload | null): ServiceValues {

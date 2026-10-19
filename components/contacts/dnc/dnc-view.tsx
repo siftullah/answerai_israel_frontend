@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   DownloadIcon,
   EllipsisVerticalIcon,
@@ -63,16 +64,18 @@ import { formatE164 } from "@/lib/phone";
 
 type SourceFilter = "all" | DncSource;
 
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the filter trigger shows e.g. "all".
-const SOURCE_ITEMS: { value: SourceFilter; label: string }[] = [
-  { value: "all", label: "All sources" },
-  { value: "manual", label: "Manual" },
-  { value: "ai", label: "Added by AI" },
-];
-
 export function DncView() {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
+
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the filter trigger shows e.g. "all".
+  const sourceItems: { value: SourceFilter; label: string }[] = [
+    { value: "all", label: t("allSources") },
+    { value: "manual", label: t("source.manual") },
+    { value: "ai", label: t("dnc.addedByAi") },
+  ];
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search.trim(), 300);
@@ -123,7 +126,7 @@ export function DncView() {
         `dnc-${new Date().toISOString().slice(0, 10)}.csv`
       );
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Export failed");
+      toast.error(error instanceof Error ? error.message : t("exportFailed"));
     } finally {
       setExporting(false);
     }
@@ -134,17 +137,17 @@ export function DncView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Do not call (DNC)"
-        description="Numbers your AI must never call."
+        title={t("dnc.title")}
+        description={t("dnc.description")}
         actions={
           <>
             <Button variant="outline" onClick={exportCsv} disabled={exporting}>
               {exporting ? <Spinner /> : <DownloadIcon />}
-              Export
+              {tc("actions.export")}
             </Button>
             <Button onClick={() => setAdding(true)}>
               <PlusIcon />
-              Add number
+              {t("dnc.addNumber")}
             </Button>
           </>
         }
@@ -152,33 +155,28 @@ export function DncView() {
 
       <Alert>
         <InfoIcon />
-        <AlertTitle>Blocks outbound calls only</AlertTitle>
-        <AlertDescription>
-          Single calls, campaigns and scheduled callbacks all check this list before
-          dialling; inbound calls aren&apos;t affected. Your AI agents add numbers here
-          automatically when a caller asks. This is your business&apos;s own list — it
-          doesn&apos;t register numbers on the national Do Not Call Register.
-        </AlertDescription>
+        <AlertTitle>{t("dnc.infoTitle")}</AlertTitle>
+        <AlertDescription>{t("dnc.infoDescription")}</AlertDescription>
       </Alert>
 
       <div className="flex flex-wrap items-center gap-2">
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search by number or reason"
+          placeholder={t("dnc.searchPlaceholder")}
           className="w-full sm:w-64"
           autoComplete="off"
         />
         <Select
-          items={SOURCE_ITEMS}
+          items={sourceItems}
           value={source}
           onValueChange={(value) => setSource((value as SourceFilter | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by source">
+          <SelectTrigger aria-label={t("filterBySource")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {SOURCE_ITEMS.map((item) => (
+            {sourceItems.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -195,27 +193,22 @@ export function DncView() {
         </div>
       ) : dncQuery.isError ? (
         <ErrorState
-          title="Couldn't load the do-not-call list"
+          title={t("dnc.loadError")}
           message={dncQuery.error.message}
           onRetry={() => dncQuery.refetch()}
         />
       ) : entries.length === 0 ? (
         hasFilters ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            No entries match your search.
-          </p>
+          <p className="py-8 text-center text-sm text-muted-foreground">{t("dnc.noMatch")}</p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>No blocked numbers</EmptyTitle>
-              <EmptyDescription>
-                Numbers on this list are never dialled by your AI. Add one manually, or
-                your agents will add callers who ask not to be contacted.
-              </EmptyDescription>
+              <EmptyTitle>{t("dnc.emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("dnc.emptyDescription")}</EmptyDescription>
             </EmptyHeader>
             <Button onClick={() => setAdding(true)}>
               <PlusIcon />
-              Add number
+              {t("dnc.addNumber")}
             </Button>
           </Empty>
         )
@@ -225,12 +218,12 @@ export function DncView() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Number</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Reason</TableHead>
-                  <TableHead>Source</TableHead>
-                  <TableHead>Added by</TableHead>
-                  <TableHead>Added</TableHead>
+                  <TableHead>{t("dnc.columns.number")}</TableHead>
+                  <TableHead>{t("dnc.columns.contact")}</TableHead>
+                  <TableHead>{t("dnc.columns.reason")}</TableHead>
+                  <TableHead>{t("fields.source")}</TableHead>
+                  <TableHead>{t("dnc.columns.addedBy")}</TableHead>
+                  <TableHead>{t("fields.added")}</TableHead>
                   <TableHead className="w-10" />
                 </TableRow>
               </TableHeader>
@@ -246,7 +239,7 @@ export function DncView() {
                           href={`/b/${business.id}/contacts/${entry.contact.id}`}
                           className="hover:underline"
                         >
-                          {entry.contact.name ?? "Unnamed contact"}
+                          {entry.contact.name ?? t("unnamed")}
                         </Link>
                       ) : (
                         <span className="text-muted-foreground">—</span>
@@ -259,7 +252,7 @@ export function DncView() {
                       <SourceBadge source={entry.source} />
                     </TableCell>
                     <TableCell className="text-muted-foreground">
-                      {entry.added_by ?? "AI agent"}
+                      {entry.added_by ?? t("dnc.aiAgent")}
                     </TableCell>
                     <TableCell className="whitespace-nowrap text-muted-foreground">
                       {formatDate(entry.created_at, business.timezone)}
@@ -271,7 +264,7 @@ export function DncView() {
                             <Button
                               variant="ghost"
                               size="icon-sm"
-                              aria-label={`Actions for ${formatE164(entry.e164)}`}
+                              aria-label={t("actionsFor", { name: formatE164(entry.e164) })}
                             />
                           }
                         >
@@ -283,7 +276,7 @@ export function DncView() {
                             onClick={() => setRemoving(entry)}
                           >
                             <Trash2Icon />
-                            Remove
+                            {tc("actions.remove")}
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>
@@ -320,26 +313,23 @@ export function DncView() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Remove {removing ? formatE164(removing.e164) : ""} from the list?
+              {t("dnc.removeTitle", { number: removing ? formatE164(removing.e164) : "" })}
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              This number becomes callable again — single calls, campaigns and callbacks
-              will all be able to dial it.
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t("dnc.removeDescription")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!removing) return;
                 removeEntry.mutate(removing.id, {
-                  onSuccess: () => toast.success("Number removed from the do-not-call list"),
+                  onSuccess: () => toast.success(t("dnc.removed")),
                   onError: (error) => toast.error(error.message),
                 });
                 setRemoving(null);
               }}
             >
-              Remove
+              {tc("actions.remove")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -39,28 +40,10 @@ import {
 } from "@/hooks/use-billing";
 import { formatCents } from "@/lib/money";
 import { formatDate, formatDateTime } from "@/lib/datetime";
-import {
-  BILLING_INTERVAL_LABELS,
-  PLAN_ENTITLEMENT_DEFAULTS,
-  type Subscription,
-} from "@/lib/api/types";
-
-function cancelDialogDescription(subscription: Subscription, timezone: string): string {
-  switch (subscription.status) {
-    case "pending":
-      return "This ends your subscription setup. Nothing has been charged, and you can start again any time.";
-    case "suspended":
-      return "Service is already paused; cancelling ends the subscription immediately. Any outstanding balance remains payable.";
-    default:
-      return `Your subscription stays active until ${
-        subscription.current_period_end
-          ? formatDate(subscription.current_period_end, timezone)
-          : "the end of the current period"
-      }. After that the AI stops answering calls and the portal locks until you resubscribe. You can resume any time before then.`;
-  }
-}
+import { PLAN_ENTITLEMENT_DEFAULTS, type Subscription } from "@/lib/api/types";
 
 export function BillingView() {
+  const t = useTranslations("settings.billing");
   const { business, membership } = useBusiness();
   const privileged =
     membership.role.slug === "owner" || membership.role.slug === "admin";
@@ -85,16 +68,29 @@ export function BillingView() {
 
   // Defence-in-depth: the sidebar hides this for members, but a deep link
   // shouldn't reach the billing controls either.
+  const cancelDialogDescription = (current: Subscription): string => {
+    switch (current.status) {
+      case "pending":
+        return t("cancelDialog.pending");
+      case "suspended":
+        return t("cancelDialog.suspended");
+      default:
+        return current.current_period_end
+          ? t("cancelDialog.active", {
+              date: formatDate(current.current_period_end, business.timezone),
+            })
+          : t("cancelDialog.activeNoDate");
+    }
+  };
+
   if (!privileged) {
     return (
       <div className="flex flex-col gap-6">
-        <PageHeader title="Billing" description="Manage your subscription and payment details." />
+        <PageHeader title={t("title")} description={t("descriptionMember")} />
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Not available</CardTitle>
-            <CardDescription>
-              Billing is managed by the business owner and admins.
-            </CardDescription>
+            <CardTitle>{t("notAvailable.title")}</CardTitle>
+            <CardDescription>{t("notAvailable.description")}</CardDescription>
           </CardHeader>
         </Card>
       </div>
@@ -104,7 +100,7 @@ export function BillingView() {
   if (billingQuery.isPending) {
     return (
       <div className="flex flex-col gap-6">
-        <PageHeader title="Billing" description="Your plan, usage and payment details." />
+        <PageHeader title={t("title")} description={t("description")} />
         <div className="grid gap-6 lg:grid-cols-2">
           <Skeleton className="h-56 rounded-xl" />
           <Skeleton className="h-56 rounded-xl" />
@@ -117,7 +113,7 @@ export function BillingView() {
   if (billingQuery.isError) {
     return (
       <ErrorState
-        title="Couldn't load billing"
+        title={t("loadError")}
         message={billingQuery.error.message}
         onRetry={() => billingQuery.refetch()}
       />
@@ -128,14 +124,16 @@ export function BillingView() {
     // Momentary while the redirect above lands.
     return (
       <div className="flex flex-col gap-6">
-        <PageHeader title="Billing" description="Your plan, usage and payment details." />
+        <PageHeader title={t("title")} description={t("description")} />
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>No subscription yet</CardTitle>
-            <CardDescription>Pick a plan to get your AI receptionist answering.</CardDescription>
+            <CardTitle>{t("noSubscription.title")}</CardTitle>
+            <CardDescription>{t("noSubscription.description")}</CardDescription>
           </CardHeader>
           <CardContent>
-            <Button render={<Link href={`/b/${business.id}/plans`} />}>Choose a plan</Button>
+            <Button render={<Link href={`/b/${business.id}/plans`} />}>
+              {t("choosePlan")}
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -155,8 +153,8 @@ export function BillingView() {
       onSuccess: (updated) =>
         toast.success(
           updated.status === "cancelled"
-            ? "Subscription cancelled."
-            : "Cancellation scheduled for the end of the period."
+            ? t("toasts.cancelled")
+            : t("toasts.cancelScheduled")
         ),
       onError: (error) => toast.error(error.message),
     });
@@ -165,30 +163,30 @@ export function BillingView() {
 
   const resume = () => {
     resumeSubscription.mutate(undefined, {
-      onSuccess: () => toast.success("Cancellation removed — your subscription continues."),
+      onSuccess: () => toast.success(t("toasts.resumed")),
       onError: (error) => toast.error(error.message),
     });
   };
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Billing" description="Your plan, usage and payment details." />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {subscription.status === "suspended" && (
         <Alert variant="destructive">
-          <AlertTitle>Service suspended — payment required</AlertTitle>
+          <AlertTitle>{t("alerts.suspended.title")}</AlertTitle>
           <AlertDescription className="flex flex-col gap-2">
             <span>
               {failedCharge
-                ? `A charge of ${formatCents(failedCharge.total_cents, failedCharge.currency)} couldn't be collected.`
-                : "A payment couldn't be collected."}{" "}
-              Inbound calls play a service-paused message and outbound calling is blocked.
-              Updating your card retries the charge immediately and restores service as soon as
-              it succeeds. Phone numbers are released after 30 days of suspension.
+                ? t("alerts.suspended.failedCharge", {
+                    amount: formatCents(failedCharge.total_cents, failedCharge.currency),
+                  })
+                : t("alerts.suspended.failedGeneric")}{" "}
+              {t("alerts.suspended.body")}
             </span>
             <span>
               <Button size="sm" variant="destructive" onClick={() => setCardOpen(true)}>
-                Update card
+                {t("updateCard")}
               </Button>
             </span>
           </AlertDescription>
@@ -197,20 +195,23 @@ export function BillingView() {
 
       {subscription.status === "past_due" && (
         <Alert variant="warning">
-          <AlertTitle>Payment failed</AlertTitle>
+          <AlertTitle>{t("alerts.pastDue.title")}</AlertTitle>
           <AlertDescription className="flex flex-col gap-2">
             <span>
               {failedCharge
-                ? `We couldn't charge ${formatCents(failedCharge.total_cents, failedCharge.currency)} to your card.`
-                : "We couldn't charge your card."}
+                ? t("alerts.pastDue.failedCharge", {
+                    amount: formatCents(failedCharge.total_cents, failedCharge.currency),
+                  })
+                : t("alerts.pastDue.failedGeneric")}
               {failedCharge?.next_retry_at &&
-                ` The next automatic retry is ${formatDateTime(failedCharge.next_retry_at, business.timezone)}.`}{" "}
-              Service continues for now, but repeated failures lead to suspension. Updating your
-              card retries the charge right away.
+                ` ${t("alerts.pastDue.nextRetry", {
+                  date: formatDateTime(failedCharge.next_retry_at, business.timezone),
+                })}`}{" "}
+              {t("alerts.pastDue.body")}
             </span>
             <span>
               <Button size="sm" variant="warning" onClick={() => setCardOpen(true)}>
-                Update card
+                {t("updateCard")}
               </Button>
             </span>
           </AlertDescription>
@@ -219,15 +220,16 @@ export function BillingView() {
 
       {subscription.status === "pending" && (
         <Alert variant="info">
-          <AlertTitle>Add a card to activate your subscription</AlertTitle>
+          <AlertTitle>{t("alerts.pending.title")}</AlertTitle>
           <AlertDescription className="flex flex-wrap items-center gap-2">
             <span>
-              {subscription.plan ? `${subscription.plan.name} is reserved. ` : ""}
-              Your first charge runs — and your AI starts answering — the moment a card is
-              saved.
+              {subscription.plan
+                ? `${t("alerts.pending.reserved", { plan: subscription.plan.name })} `
+                : ""}
+              {t("alerts.pending.body")}
             </span>
             <Button size="sm" onClick={() => setCardOpen(true)}>
-              Add card
+              {t("addCard")}
             </Button>
           </AlertDescription>
         </Alert>
@@ -235,14 +237,14 @@ export function BillingView() {
 
       {subscription.cancel_at_period_end && subscription.status !== "cancelled" && (
         <Alert variant="warning">
-          <AlertTitle>Cancellation scheduled</AlertTitle>
+          <AlertTitle>{t("alerts.cancellation.title")}</AlertTitle>
           <AlertDescription className="flex flex-wrap items-center gap-2">
             <span>
-              Your subscription ends on{" "}
               {subscription.current_period_end
-                ? formatDate(subscription.current_period_end, business.timezone)
-                : "the current period's end"}
-              . Service continues until then.
+                ? t("alerts.cancellation.body", {
+                    date: formatDate(subscription.current_period_end, business.timezone),
+                  })
+                : t("alerts.cancellation.bodyNoDate")}
             </span>
             <Button
               size="sm"
@@ -250,7 +252,7 @@ export function BillingView() {
               onClick={resume}
               disabled={resumeSubscription.isPending}
             >
-              Resume subscription
+              {t("alerts.cancellation.resume")}
             </Button>
           </AlertDescription>
         </Alert>
@@ -258,21 +260,34 @@ export function BillingView() {
 
       {subscription.pending_plan && (
         <Alert variant="info">
-          <AlertTitle>Plan change scheduled</AlertTitle>
+          <AlertTitle>{t("alerts.planChange.title")}</AlertTitle>
           <AlertDescription>
-            Your plan changes to {subscription.pending_plan.name} (
-            {BILLING_INTERVAL_LABELS[
-              subscription.pending_interval ?? subscription.interval
-            ].toLowerCase()}
-            ) on{" "}
             {subscription.current_period_end
-              ? formatDate(subscription.current_period_end, business.timezone)
-              : "the next renewal"}
-            . To keep your current plan instead, pick it again on the{" "}
-            <Link className="underline underline-offset-4" href={`/b/${business.id}/plans`}>
-              plans page
-            </Link>
-            .
+              ? t.rich("alerts.planChange.body", {
+                  plan: subscription.pending_plan.name,
+                  interval: subscription.pending_interval ?? subscription.interval,
+                  date: formatDate(subscription.current_period_end, business.timezone),
+                  link: (chunks) => (
+                    <Link
+                      className="underline underline-offset-4"
+                      href={`/b/${business.id}/plans`}
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })
+              : t.rich("alerts.planChange.bodyNoDate", {
+                  plan: subscription.pending_plan.name,
+                  interval: subscription.pending_interval ?? subscription.interval,
+                  link: (chunks) => (
+                    <Link
+                      className="underline underline-offset-4"
+                      href={`/b/${business.id}/plans`}
+                    >
+                      {chunks}
+                    </Link>
+                  ),
+                })}
           </AlertDescription>
         </Alert>
       )}
@@ -314,15 +329,13 @@ export function BillingView() {
       <AlertDialog open={cancelOpen} onOpenChange={setCancelOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel your subscription?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {cancelDialogDescription(subscription, business.timezone)}
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("cancelDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{cancelDialogDescription(subscription)}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep subscription</AlertDialogCancel>
+            <AlertDialogCancel>{t("cancelDialog.keep")}</AlertDialogCancel>
             <AlertDialogAction variant="destructive" onClick={confirmCancel}>
-              Cancel subscription
+              {t("cancelSubscription")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

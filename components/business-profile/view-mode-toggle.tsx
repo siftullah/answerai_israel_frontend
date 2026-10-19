@@ -1,13 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LayoutGridIcon, Rows3Icon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ViewMode } from "@/hooks/use-view-mode";
-
-const OPTIONS = [
-  { value: "table", icon: Rows3Icon, label: "Table" },
-  { value: "cards", icon: LayoutGridIcon, label: "Cards" },
-] as const;
 
 /** Segmented table⇄cards switch shown above every section list. */
 export function ViewModeToggle({
@@ -19,16 +15,23 @@ export function ViewModeToggle({
   onChange: (mode: ViewMode) => void;
   className?: string;
 }) {
+  const t = useTranslations("businessProfile.viewMode");
+
+  const options = [
+    { value: "table", icon: Rows3Icon, label: t("table") },
+    { value: "cards", icon: LayoutGridIcon, label: t("cards") },
+  ] as const;
+
   return (
     <div
       role="group"
-      aria-label="Change view"
+      aria-label={t("label")}
       className={cn(
         "flex shrink-0 items-center gap-0.5 rounded-full bg-muted p-1",
         className
       )}
     >
-      {OPTIONS.map(({ value, icon: Icon, label }) => (
+      {options.map(({ value, icon: Icon, label }) => (
         <button
           key={value}
           type="button"

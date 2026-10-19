@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useBusiness } from "@/components/business/business-provider";
 import { isNavActive, navHref } from "@/components/layout/nav-config";
 import {
@@ -18,6 +19,7 @@ import { cn } from "@/lib/utils";
 export function SectionNav() {
   const { business, membership } = useBusiness();
   const pathname = usePathname();
+  const t = useTranslations("layout");
 
   const privileged =
     membership.role.slug === "owner" || membership.role.slug === "admin";
@@ -36,7 +38,7 @@ export function SectionNav() {
 
   return (
     <>
-      <nav aria-label="Business profile sections" className="-mx-1 px-1 lg:hidden">
+      <nav aria-label={t("sectionNav.label")} className="-mx-1 px-1 lg:hidden">
         <ul className="flex gap-1.5 overflow-x-auto pb-2">
           {groups
             .flatMap((group) => group.items)
@@ -52,7 +54,7 @@ export function SectionNav() {
                   )}
                 >
                   <item.icon className="size-4 shrink-0" />
-                  {item.title}
+                  {t(`nav.${item.title}`)}
                 </Link>
               </li>
             ))}
@@ -60,17 +62,17 @@ export function SectionNav() {
       </nav>
 
       <nav
-        aria-label="Business profile sections"
+        aria-label={t("sectionNav.label")}
         className="hidden w-52 shrink-0 lg:sticky lg:top-6 lg:block lg:self-start"
       >
         <p className="px-3 pb-3 font-heading text-lg font-semibold">
-          Business profile
+          {t("nav.businessProfile")}
         </p>
         {groups.map((group, index) => (
           <div key={group.label ?? "top"} className={cn(index > 0 && "mt-5")}>
             {group.label && (
               <p className="px-3 pb-1.5 text-sm font-medium text-muted-foreground">
-                {group.label}
+                {t(`nav.${group.label}`)}
               </p>
             )}
             <ul className="flex flex-col gap-0.5">
@@ -86,7 +88,7 @@ export function SectionNav() {
                     )}
                   >
                     <item.icon className="size-4 shrink-0" />
-                    {item.title}
+                    {t(`nav.${item.title}`)}
                   </Link>
                 </li>
               ))}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -31,42 +33,18 @@ import {
   type RecipientRulesValues,
 } from "@/lib/validation/recipient-rules";
 
-const COPY: RecipientRulesCopy = {
-  enabledLabel: "Send call summary emails",
-  enabledDescription:
-    "When off, nothing is sent — your recipients and rules are kept for when you turn it back on.",
-  recipientsTitle: "Who receives them",
-  recipientsDescription:
-    "The people the assistant may write to. It decides who actually hears about each call from your rules and their roles — not everyone gets every call.",
-  customEmailsDescription: "Anyone else who should receive summaries, such as a shared inbox.",
-  rulesTitle: "Rules for the assistant",
-  rulesDescription:
-    "Plain-English instructions for who should hear about which calls, what each email should cover, and which calls to skip.",
-  rulesEmpty:
-    "No rules yet — the assistant will go by each person's role to decide who needs a call. Add rules to tell it how calls should be routed and written up.",
-  rulePlaceholders: [
-    "Send repair and maintenance requests to the property management team at pm@example.com",
-    "Skip the summary for wrong numbers and sales calls to us",
-    "Always include the property address when one is mentioned",
-  ],
-  rulesLimitNote: "Up to 20 rules per agent.",
-};
-
 /**
  * Standalone card: its own query, form and save — deliberately outside the
  * versioned agent config, so saving here never republishes to the voice
  * engine or dirties the page-level save bar.
  */
 export function CallSummarySection({ agent }: { agent: Agent }) {
+  const t = useTranslations("agents.sections.callSummary");
   const { business } = useBusiness();
   const settingsQuery = useAgentCallSummarySettings(business.id, agent.id);
 
   return (
-    <AgentSection
-      id="call-summary"
-      title="Call summary emails"
-      description="After each call, an AI assistant reads the transcript, decides who on your team needs to hear about it, and writes each of them an email tailored to what the call was about."
-    >
+    <AgentSection id="call-summary" title={t("title")} description={t("description")}>
       {settingsQuery.isPending ? (
         <div className="flex flex-col gap-3">
           <Skeleton className="h-6 w-56" />
@@ -75,7 +53,7 @@ export function CallSummarySection({ agent }: { agent: Agent }) {
         </div>
       ) : settingsQuery.isError ? (
         <ErrorState
-          title="Couldn't load call summary settings"
+          title={t("loadError")}
           message={settingsQuery.error.message}
           onRetry={() => settingsQuery.refetch()}
         />
@@ -100,8 +78,32 @@ function CallSummaryForm({
   const update = useUpdateAgentCallSummarySettings(businessUuid, agent.id);
   const sendTest = useSendCallSummaryTest(agent.id);
 
+  const t = useTranslations("agents.sections.callSummary");
+  const tc = useTranslations("common");
+  const copy = useMemo<RecipientRulesCopy>(
+    () => ({
+      enabledLabel: t("copy.enabledLabel"),
+      enabledDescription: t("copy.enabledDescription"),
+      recipientsTitle: t("copy.recipientsTitle"),
+      recipientsDescription: t("copy.recipientsDescription"),
+      customEmailsDescription: t("copy.customEmailsDescription"),
+      rulesTitle: t("copy.rulesTitle"),
+      rulesDescription: t("copy.rulesDescription"),
+      rulesEmpty: t("copy.rulesEmpty"),
+      rulePlaceholders: [
+        t("copy.rulePlaceholders.repairs"),
+        t("copy.rulePlaceholders.skip"),
+        t("copy.rulePlaceholders.address"),
+      ],
+      rulesLimitNote: t("copy.rulesLimitNote"),
+    }),
+    [t]
+  );
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => recipientRulesSchema(tv), [tv]);
   const form = useForm<RecipientRulesValues>({
-    resolver: zodResolver(recipientRulesSchema),
+    resolver: zodResolver(schema),
     defaultValues: toRecipientRulesValues(settings),
     disabled: archived,
   });
@@ -112,7 +114,7 @@ function CallSummaryForm({
     update.mutate(toRecipientRulesPayload(values), {
       onSuccess: (result) => {
         form.reset(toRecipientRulesValues(result));
-        toast.success("Call summary settings saved");
+        toast.success(t("toasts.saved"));
       },
       onError: (error) => {
         applyServerErrors(form, error, { mapKey: recipientRulesServerErrorKey });
@@ -125,14 +127,11 @@ function CallSummaryForm({
     sendTest.mutate(undefined, {
       onSuccess: (result) => {
         if (result.sent) {
-          const count = result.emails.length;
           toast.success(
-            `${count === 1 ? "Sample email" : `${count} sample emails`} sent to ${result.sent_to}`
+            t("toasts.sampleSent", { count: result.emails.length, email: result.sent_to })
           );
         } else {
-          toast.info(
-            result.reason ?? "The assistant decided nobody needed to hear about that call."
-          );
+          toast.info(result.reason ?? t("toasts.nobody"));
         }
       },
       onError: (error) => toast.error(error.message),
@@ -141,18 +140,18 @@ function CallSummaryForm({
 
   // Samples are built from the SAVED settings, so unsaved edits can't be previewed.
   const sampleTooltip = archived
-    ? "Restore the agent to send a sample."
+    ? t("sampleTooltip.archived")
     : !enabled
-      ? "Turn on call summary emails and save to send a sample."
+      ? t("sampleTooltip.disabled")
       : isDirty
-        ? "Save your changes first — samples use the saved settings."
+        ? t("sampleTooltip.unsaved")
         : null;
   const sampleDisabled = sampleTooltip !== null || update.isPending || sendTest.isPending;
 
   const sampleButton = (
     <Button type="button" variant="outline" disabled={sampleDisabled} onClick={sendSample}>
       {sendTest.isPending && <Spinner />}
-      Send me a sample
+      {t("sendSample")}
     </Button>
   );
 
@@ -168,7 +167,7 @@ function CallSummaryForm({
         form={form}
         idPrefix="call-summary"
         membersQuery={membersQuery}
-        copy={COPY}
+        copy={copy}
       />
 
       <div className="flex flex-wrap items-center justify-end gap-2">
@@ -187,12 +186,12 @@ function CallSummaryForm({
             disabled={update.isPending}
             onClick={() => form.reset()}
           >
-            Discard
+            {tc("actions.discard")}
           </Button>
         )}
         <Button type="submit" disabled={!isDirty || update.isPending}>
           {update.isPending && <Spinner />}
-          Save
+          {tc("actions.save")}
         </Button>
       </div>
     </form>

@@ -1,0 +1,268 @@
+{
+  "meta": {
+    "title": "Jobs"
+  },
+  "page": {
+    "title": "Jobs",
+    "description": "Work captured from calls or logged by your team — scheduled, delivered, and invoiced.",
+    "newJob": "New job"
+  },
+  "tabs": {
+    "unscheduled": "To schedule",
+    "completed": "Done"
+  },
+  "empty": {
+    "active": {
+      "title": "No active jobs",
+      "description": "Work your agent captures on calls, or that you log, shows up here."
+    },
+    "unscheduled": {
+      "title": "Nothing to schedule",
+      "description": "Every open job has a booked visit. New work lands here first."
+    },
+    "completed": {
+      "title": "No completed jobs yet",
+      "description": "Jobs you finish land here, ready to invoice."
+    },
+    "all": {
+      "title": "No jobs yet",
+      "description": "Log your first job, or let your agent capture them from calls."
+    },
+    "noMatch": {
+      "title": "No jobs match",
+      "description": "Try a different search or clear some filters."
+    }
+  },
+  "stats": {
+    "toSchedule": {
+      "label": "To schedule",
+      "allBooked": "Every job has a time",
+      "highPriority": "{count, plural, one {# high-priority job in play} other {# high-priority jobs in play}}",
+      "waiting": "Waiting to be booked in"
+    },
+    "visitsToday": {
+      "label": "Visits today",
+      "inProgress": "{count, plural, one {# job in progress} other {# jobs in progress}}",
+      "bookedAhead": "{count, plural, one {# visit booked ahead} other {# visits booked ahead}}"
+    },
+    "activeWork": {
+      "label": "Active work",
+      "across": "{count, plural, one {Across # active job} other {Across # active jobs}}",
+      "none": "No active jobs"
+    },
+    "completedThisMonth": {
+      "label": "Completed this month",
+      "allTime": "{count, plural, one {# job completed all time} other {# jobs completed all time}}"
+    }
+  },
+  "priorityBadge": {
+    "high": "High priority",
+    "low": "Low priority"
+  },
+  "fields": {
+    "customer": "Customer",
+    "priority": "Priority",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "siteAddress": "Site address",
+    "estimatedDuration": "Estimated duration"
+  },
+  "list": {
+    "loadError": "Couldn't load jobs"
+  },
+  "row": {
+    "completedOn": "Completed {date}",
+    "canceledOn": "Canceled {date}",
+    "startedBooked": "Started — booked {date}",
+    "wasBooked": "Was booked {date}",
+    "booked": "Booked {date}",
+    "capturedFromCall": "Captured from a call {date} — needs a time",
+    "added": "Added {date} — needs a time"
+  },
+  "filters": {
+    "searchPlaceholder": "Search title or contact…",
+    "searchLabel": "Search jobs by title or contact name",
+    "filterLabel": "Filter jobs",
+    "sort": "Sort",
+    "anyStatus": "Any status",
+    "anyPriority": "Any priority",
+    "anyone": "Anyone",
+    "sortOptions": {
+      "newest": "Newest first",
+      "scheduled_start": "Soonest visit",
+      "quote": "Highest value"
+    },
+    "priorityChip": "{priority} priority",
+    "removeFilter": "Remove {label} filter"
+  },
+  "form": {
+    "editTitle": "Edit {reference}",
+    "createDescription": "Log a piece of work to schedule and deliver. Price it up with line items after.",
+    "editDescription": "Update the details — status and times move from the job's actions.",
+    "title": "Title",
+    "titlePlaceholder": "The work to be done, e.g. Hot water system replacement",
+    "estimatedMinutes": "Estimated duration (minutes)",
+    "estimatedMinutesHint": "How long the visit takes — sets the booked window. Blank = your module default.",
+    "streetAddress": "Street address",
+    "unitLabel": "Unit or building",
+    "unitPlaceholder": "Unit, building (optional)",
+    "suburb": "Suburb",
+    "state": "State",
+    "postcode": "Postcode",
+    "descriptionPlaceholder": "Scope of the work, materials, access notes… (optional)",
+    "notesPlaceholder": "Anything else worth recording… (optional)",
+    "notesHint": "Starts the job's activity timeline.",
+    "submitCreate": "Add job"
+  },
+  "detail": {
+    "back": "All jobs",
+    "noSelection": {
+      "title": "No job selected",
+      "description": "Select a job to see its details and history."
+    },
+    "notFound": {
+      "title": "Job not found",
+      "description": "This job doesn't exist or was removed."
+    },
+    "loadError": "Couldn't load this job",
+    "invoicedAs": "Invoiced as {number}",
+    "viewContact": "View contact",
+    "actions": {
+      "scheduleVisit": "Schedule visit",
+      "startJob": "Start job",
+      "startNow": "Start now",
+      "completeJob": "Complete job",
+      "markCompleted": "Mark completed",
+      "reschedule": "Reschedule",
+      "viewInvoice": "View invoice",
+      "reopen": "Reopen"
+    },
+    "facts": {
+      "unnamedContact": "Unnamed contact",
+      "visit": "Visit",
+      "notBooked": "Not booked yet",
+      "quotedValue": "Quoted value",
+      "notPriced": "Not priced yet",
+      "source": "Source",
+      "durationMinutes": "{count, plural, other {# min}}",
+      "fromLead": "From lead",
+      "fromQuote": "From quote",
+      "quoteNumber": "Quote {number}",
+      "capturedOn": "Captured on",
+      "callOn": "Call {date}",
+      "created": "Created"
+    }
+  },
+  "lineItems": {
+    "title": "Line items",
+    "dialogTitle": "Line items — {reference}",
+    "dialogDescription": "Labour and materials for this job. VAT is applied when it's invoiced.",
+    "columns": {
+      "type": "Type",
+      "qty": "Qty",
+      "unit": "Unit",
+      "unitPrice": "Unit price",
+      "amount": "Amount"
+    },
+    "descriptionPlaceholder": "What will be done or supplied",
+    "aria": {
+      "description": "Line {line} description",
+      "type": "Line {line} type",
+      "quantity": "Line {line} quantity",
+      "unitPrice": "Line {line} unit price in dollars",
+      "remove": "Remove line {line}"
+    },
+    "addLine": "Add line",
+    "totalExTax": "Total (ex. tax)",
+    "save": "Save items",
+    "addItems": "Add items",
+    "editItems": "Edit items",
+    "emptyFromCall": "No line items yet — this job came in from a call. Price it up before invoicing.",
+    "empty": "No line items yet — add labour and materials to price the job."
+  },
+  "photos": {
+    "title": "Photos & files",
+    "loadError": "Couldn't load photos",
+    "empty": "No photos yet — site shots and paperwork live here with the job.",
+    "uploading": "Uploading…",
+    "add": "Add photo or file",
+    "openFile": "Open {name}",
+    "deleteFile": "Delete {name}",
+    "deleteTitle": "Delete {name}?",
+    "deleteDescription": "The file is removed from this job permanently.",
+    "keepFile": "Keep file",
+    "confirmDelete": "Delete file",
+    "sizeMb": "{size} MB",
+    "sizeKb": "{size} KB"
+  },
+  "activity": {
+    "title": "Activity",
+    "notePlaceholder": "Add a note — site access, parts ordered, what was done…",
+    "noteLabel": "Add a note to this job",
+    "adding": "Adding…",
+    "addNote": "Add note",
+    "loadError": "Couldn't load the timeline",
+    "empty": "Nothing yet — notes, bookings, and status changes will show up here."
+  },
+  "keepJob": "Keep job",
+  "schedule": {
+    "scheduleTitle": "Schedule {reference}",
+    "rescheduleTitle": "Reschedule {reference}",
+    "scheduleDescription": "Book the visit — the customer gets a confirmation email.",
+    "rescheduleDescription": "Pick a new visit time — the customer gets the update by email.",
+    "startTime": "Start time",
+    "keepsLength": "The visit keeps its current length.",
+    "bookedFor": "{minutes, plural, one {The visit is booked for # minute.} other {The visit is booked for # minutes.}}",
+    "bookedForDefault": "{minutes, plural, one {The visit is booked for # minute (your module default).} other {The visit is booked for # minutes (your module default).}}",
+    "timezone": "Times are in {timezone}.",
+    "booking": "Booking…",
+    "rescheduling": "Rescheduling…",
+    "book": "Book visit",
+    "reschedule": "Reschedule visit"
+  },
+  "cancel": {
+    "title": "Cancel {reference}?",
+    "descriptionBooked": "The booked visit is called off and the customer gets a cancellation email.",
+    "descriptionOpen": "The job is closed as canceled — it can be reopened later.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Customer postponed, no access… (optional)",
+    "reasonHint": "Kept on the job — and quoted in the customer email.",
+    "canceling": "Canceling…",
+    "confirm": "Cancel job"
+  },
+  "delete": {
+    "title": "Delete {reference}?",
+    "description": "“{title}” and its timeline disappear from the portal. A booked visit stops blocking the schedule. Invoices already raised from it are kept.",
+    "confirm": "Delete job"
+  },
+  "reopen": {
+    "title": "Reopen {reference}?",
+    "description": "The job goes back to open and unscheduled — any previous booking stays cleared, so schedule a fresh visit when you're ready. Its history is kept.",
+    "reopening": "Reopening…",
+    "confirm": "Reopen job"
+  },
+  "invoice": {
+    "title": "Invoice {reference}?",
+    "descriptionWithAmount": "Drafts an invoice for {amount} (plus tax) copying the job's line items, ready to review and send to {customer}. A job is invoiced once.",
+    "description": "Drafts an invoice copying the job's line items, ready to review and send to {customer}. A job is invoiced once.",
+    "theCustomer": "the customer",
+    "converting": "Converting…",
+    "confirm": "Create invoice"
+  },
+  "toasts": {
+    "updated": "Job updated",
+    "added": "{reference} added",
+    "deleted": "{reference} deleted",
+    "rescheduled": "{reference} rescheduled — the customer will be emailed",
+    "booked": "{reference} booked in — the customer will be emailed",
+    "canceled": "{reference} canceled",
+    "reopened": "{reference} reopened — book a new time when ready",
+    "started": "{reference} started",
+    "completed": "{reference} completed — ready to invoice",
+    "invoiceDrafted": "Invoice {number} drafted from {reference}",
+    "lineItemsSaved": "Line items saved",
+    "photoAdded": "Photo added",
+    "photoDeleted": "Photo deleted",
+    "fileTooLarge": "That file is over 10 MB — resize it and try again."
+  }
+}

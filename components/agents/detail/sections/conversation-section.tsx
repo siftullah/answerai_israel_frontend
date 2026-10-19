@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import { useTranslations } from "next-intl";
 import { useFormContext } from "react-hook-form";
 import { TriangleAlertIcon, XIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -17,10 +18,8 @@ import { VariableInserter } from "@/components/agents/detail/sections/variable-i
 import type { AgentConfigWarning } from "@/lib/api/types";
 import type { AgentSettingsValues } from "@/lib/validation/agent";
 
-const WARNING_FIELD_LABELS: Record<string, string> = {
-  first_message: "First message",
-  prompt_text: "Instructions",
-};
+const MAX_FIRST_MESSAGE_LENGTH = 1000;
+const MAX_PROMPT_LENGTH = 30000;
 
 export function ConversationSection({
   warnings,
@@ -29,8 +28,17 @@ export function ConversationSection({
   warnings: AgentConfigWarning[];
   onDismissWarnings: () => void;
 }) {
+  const t = useTranslations("agents.sections.conversation");
+  const ta = useTranslations("agents");
   const form = useFormContext<AgentSettingsValues>();
   const { errors, disabled } = form.formState;
+
+  const warningFieldLabel = (field: string) =>
+    field === "first_message"
+      ? t("firstMessageLabel")
+      : field === "prompt_text"
+        ? t("instructionsLabel")
+        : field;
 
   const firstMessageRef = useRef<HTMLTextAreaElement | null>(null);
   const promptRef = useRef<HTMLTextAreaElement | null>(null);
@@ -64,20 +72,19 @@ export function ConversationSection({
   const promptField = form.register("prompt_text");
 
   return (
-    <AgentSection
-      id="conversation"
-      title="Conversation"
-      description="What the agent says first, and the instructions it follows."
-    >
+    <AgentSection id="conversation" title={t("title")} description={t("description")}>
       {warnings.length > 0 && (
         <Alert variant="warning">
           <TriangleAlertIcon />
-          <AlertTitle>Saved with advisories</AlertTitle>
+          <AlertTitle>{t("advisories.title")}</AlertTitle>
           <AlertDescription>
-            <ul className="list-disc pl-4">
+            <ul className="list-disc ps-4">
               {warnings.map((warning, index) => (
                 <li key={index}>
-                  {WARNING_FIELD_LABELS[warning.field] ?? warning.field}: {warning.issue}
+                  {t("advisories.item", {
+                    field: warningFieldLabel(warning.field),
+                    issue: warning.issue,
+                  })}
                 </li>
               ))}
             </ul>
@@ -86,8 +93,8 @@ export function ConversationSection({
             type="button"
             variant="ghost"
             size="icon-xs"
-            aria-label="Dismiss advisories"
-            className="absolute top-2 right-2 text-warning hover:bg-warning/10 hover:text-warning"
+            aria-label={t("advisories.dismiss")}
+            className="absolute top-2 end-2 text-warning hover:bg-warning/10 hover:text-warning"
             onClick={onDismissWarnings}
           >
             <XIcon />
@@ -96,11 +103,14 @@ export function ConversationSection({
       )}
 
       <Field data-invalid={!!errors.first_message || undefined}>
-        <FieldLabel htmlFor="agent-first-message">First message</FieldLabel>
+        <FieldLabel htmlFor="agent-first-message">{t("firstMessageLabel")}</FieldLabel>
         <Textarea
           id="agent-first-message"
           rows={2}
-          placeholder="Thanks for calling {{business_name}}, this is {{agent_name}} — how can I help?"
+          placeholder={t("firstMessagePlaceholder", {
+            businessToken: "{{business_name}}",
+            agentToken: "{{agent_name}}",
+          })}
           aria-invalid={!!errors.first_message}
           {...firstMessageField}
           ref={(element) => {
@@ -113,18 +123,21 @@ export function ConversationSection({
           onInsert={(name) => insertVariable("first_message", firstMessageRef, name)}
         />
         <FieldDescription>
-          Spoken as the call connects. Leave empty to let the agent open naturally.{" "}
-          {firstMessage.length} / 1,000
+          {t("firstMessageHint")}{" "}
+          {ta("charCount", { count: firstMessage.length, max: MAX_FIRST_MESSAGE_LENGTH })}
         </FieldDescription>
         {errors.first_message && <FieldError>{errors.first_message.message}</FieldError>}
       </Field>
 
       <Field data-invalid={!!errors.prompt_text || undefined}>
-        <FieldLabel htmlFor="agent-prompt">Instructions</FieldLabel>
+        <FieldLabel htmlFor="agent-prompt">{t("instructionsLabel")}</FieldLabel>
         <Textarea
           id="agent-prompt"
           rows={14}
-          placeholder="You are {{agent_name}}, the friendly receptionist for {{business_name}}…"
+          placeholder={t("instructionsPlaceholder", {
+            businessToken: "{{business_name}}",
+            agentToken: "{{agent_name}}",
+          })}
           aria-invalid={!!errors.prompt_text}
           {...promptField}
           ref={(element) => {
@@ -137,8 +150,8 @@ export function ConversationSection({
           onInsert={(name) => insertVariable("prompt_text", promptRef, name)}
         />
         <FieldDescription>
-          The agent&apos;s personality, rules and job. {promptText.length.toLocaleString()} /
-          30,000
+          {t("instructionsHint")}{" "}
+          {ta("charCount", { count: promptText.length, max: MAX_PROMPT_LENGTH })}
         </FieldDescription>
         {errors.prompt_text && <FieldError>{errors.prompt_text.message}</FieldError>}
       </Field>

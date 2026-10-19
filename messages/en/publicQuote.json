@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "title": "Quote"
+  },
+  "status": {
+    "accepted": {
+      "title": "Quote accepted",
+      "bodyWithDate": "Accepted on {date}. {business} will be in touch to get things moving.",
+      "body": "{business} will be in touch to get things moving."
+    },
+    "declined": {
+      "title": "Quote declined",
+      "body": "You declined this quote. Changed your mind? Contact {business} for a fresh one."
+    },
+    "expired": {
+      "title": "This quote has expired",
+      "bodyWithDate": "It was valid until {date}. Contact {business} and they can re-issue it.",
+      "body": "Contact {business} and they can re-issue it."
+    },
+    "void": {
+      "title": "This quote has been withdrawn",
+      "body": "Contact {business} if you were expecting to accept it."
+    }
+  },
+  "accept": {
+    "title": "Accept this quote?",
+    "description": "You're accepting quote {number} from {business} for {total}. {business} will be notified right away.",
+    "descriptionWithDeposit": "You're accepting quote {number} from {business} for {total}, with {deposit} payable to commence. {business} will be notified right away.",
+    "notYet": "Not yet",
+    "accepting": "Accepting…",
+    "action": "Accept quote",
+    "toasts": {
+      "accepted": "Quote accepted — thank you!"
+    }
+  },
+  "decline": {
+    "title": "Decline this quote",
+    "description": "Lets {business} know you won't be going ahead with quote {number}.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Optional — helps them quote you better next time",
+    "reasonHint": "Optional.",
+    "declining": "Declining…",
+    "action": "Decline quote",
+    "button": "Decline",
+    "toasts": {
+      "declined": "No worries — the quote has been declined."
+    }
+  },
+  "deadLink": {
+    "title": "This quote link isn't valid",
+    "body": "The link may have been mistyped, or the quote is no longer available. Check the link in your email, or contact the business that sent it."
+  },
+  "document": {
+    "logoAlt": "{business} logo",
+    "quote": "Quote",
+    "preparedFor": "Prepared for",
+    "issued": "Issued",
+    "validUntil": "Valid until",
+    "qty": "Qty",
+    "unit": "Unit",
+    "amount": "Amount",
+    "deposit": "Deposit to commence",
+    "depositPercent": "Deposit to commence ({percent}%)",
+    "terms": "Terms",
+    "print": "Print or save PDF"
+  }
+}

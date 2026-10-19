@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { CircleCheckIcon, SparklesIcon, type LucideIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -28,13 +29,14 @@ function dataOrNull<T>(query: { data?: T; isError: boolean }): T | null {
   return query.isError || query.data === undefined ? null : query.data;
 }
 
+/** `title` is a message key under `layout.nav`, like section-nav-config. */
 const EXTRACT_SECTIONS: { title: string; segment: string }[] = [
-  { title: "Basic info", segment: "business-profile/basic-info" },
-  { title: "Services", segment: "business-profile/services" },
-  { title: "Products", segment: "business-profile/products" },
-  { title: "FAQs", segment: "business-profile/faqs" },
-  { title: "Policies", segment: "business-profile/policies" },
-  { title: "Docs", segment: "business-profile/docs" },
+  { title: "basicInfo", segment: "business-profile/basic-info" },
+  { title: "services", segment: "business-profile/services" },
+  { title: "products", segment: "business-profile/products" },
+  { title: "faqs", segment: "business-profile/faqs" },
+  { title: "policies", segment: "business-profile/policies" },
+  { title: "docs", segment: "business-profile/docs" },
 ];
 
 function StatTile({
@@ -46,6 +48,7 @@ function StatTile({
   tile: SectionTile;
   icon: LucideIcon;
 }) {
+  const tNav = useTranslations("layout");
   const isCount = tile.stat !== null && /^\d+$/.test(tile.stat);
   return (
     <Link
@@ -74,7 +77,7 @@ function StatTile({
       >
         {tile.stat ?? "—"}
       </span>
-      <span className="mt-1 text-base font-medium">{tile.title}</span>
+      <span className="mt-1 text-base font-medium">{tNav(`nav.${tile.title}`)}</span>
       <span
         className={cn(
           "mt-0.5 truncate text-sm",
@@ -89,6 +92,8 @@ function StatTile({
 
 export function OverviewView() {
   const { business } = useBusiness();
+  const t = useTranslations("businessProfile");
+  const tNav = useTranslations("layout");
 
   const profile = useBusinessProfile(business.id);
   const services = useServices(business.id);
@@ -124,7 +129,8 @@ export function OverviewView() {
   const labeledGroups = sectionGroups
     .filter((group) => group.label)
     .map((group) => ({
-      label: group.label as string,
+      key: group.label as string,
+      label: tNav(`nav.${group.label}`),
       tiles: group.items.flatMap((item) => {
         const tile = tileBySegment.get(item.segment);
         return tile ? [{ tile, icon: item.icon }] : [];
@@ -148,7 +154,7 @@ export function OverviewView() {
         )}
         <div className="flex flex-col gap-0.5">
           <h1 className="font-heading text-2xl font-semibold">{business.name}</h1>
-          <p className="text-sm text-muted-foreground">Business profile</p>
+          <p className="text-sm text-muted-foreground">{t("overview.subtitle")}</p>
         </div>
       </div>
 
@@ -158,14 +164,14 @@ export function OverviewView() {
         </p>
         <p className="text-sm text-muted-foreground">
           {percent === null
-            ? "Working out what's done…"
-            : `${progress.done} of ${progress.total} sections done`}
+            ? t("overview.computing")
+            : t("overview.progress", { done: progress.done, total: progress.total })}
         </p>
         <Progress value={percent ?? 0} className="mt-2 w-full max-w-md" />
       </div>
 
       {labeledGroups.map((group) => (
-        <section key={group.label} className="flex flex-col gap-3">
+        <section key={group.key} className="flex flex-col gap-3">
           <h2 className="text-base font-medium text-muted-foreground">{group.label}</h2>
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {group.tiles.map(({ tile, icon }) => (
@@ -187,14 +193,13 @@ export function OverviewView() {
               <SparklesIcon className="size-4.5" />
             </span>
             <div className="flex flex-col gap-0.5">
-              <p className="text-sm font-medium">Set up faster with AI</p>
+              <p className="text-sm font-medium">{t("overview.aiCard.title")}</p>
               <p className="text-sm text-muted-foreground">
-                Extract services, FAQs, policies and more from your website — you review
-                everything before it&apos;s saved.
+                {t("overview.aiCard.description")}
               </p>
             </div>
           </div>
-          <div className="flex flex-wrap gap-1.5 sm:pl-12">
+          <div className="flex flex-wrap gap-1.5 sm:ps-12">
             {EXTRACT_SECTIONS.map((section) => (
               <Button
                 key={section.segment}
@@ -203,7 +208,7 @@ export function OverviewView() {
                 className="rounded-full bg-background/60"
                 render={<Link href={`/b/${business.id}/${section.segment}`} />}
               >
-                {section.title}
+                {tNav(`nav.${section.title}`)}
               </Button>
             ))}
           </div>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { DatePicker } from "@/components/ui/date-picker";
@@ -19,16 +20,10 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { TimeInput } from "@/components/ui/time-input";
-import type { Agent, CampaignRetryReason, PhoneNumber } from "@/lib/api/types";
+import type { Agent, PhoneNumber } from "@/lib/api/types";
 import { CAMPAIGN_RETRY_REASONS } from "@/lib/api/types";
 import { formatE164 } from "@/lib/phone";
 import type { CampaignCreateValues } from "@/lib/validation/campaign";
-
-const RETRY_REASON_LABELS: Record<CampaignRetryReason, string> = {
-  no_answer: "No answer",
-  busy: "Busy",
-  failed: "Call failed",
-};
 
 /**
  * Field groups shared by the create modal and the settings tab. Both forms
@@ -48,6 +43,8 @@ export function CampaignBasicsFields({
   agentsLoading?: boolean;
   numbersLoading?: boolean;
 }) {
+  const t = useTranslations("campaigns.form");
+  const tc = useTranslations("common");
   const form = useFormContext<CampaignCreateValues>();
   const { errors } = form.formState;
 
@@ -62,10 +59,10 @@ export function CampaignBasicsFields({
   return (
     <>
       <Field data-invalid={!!errors.name || undefined}>
-        <FieldLabel htmlFor="campaign-name">Name</FieldLabel>
+        <FieldLabel htmlFor="campaign-name">{tc("labels.name")}</FieldLabel>
         <Input
           id="campaign-name"
-          placeholder="e.g. July follow-ups"
+          placeholder={t("namePlaceholder")}
           aria-invalid={!!errors.name}
           {...form.register("name")}
         />
@@ -73,7 +70,7 @@ export function CampaignBasicsFields({
       </Field>
 
       <Field data-invalid={!!errors.agent_id || undefined}>
-        <FieldLabel>Agent</FieldLabel>
+        <FieldLabel>{t("agent")}</FieldLabel>
         <Controller
           control={form.control}
           name="agent_id"
@@ -84,8 +81,8 @@ export function CampaignBasicsFields({
               onValueChange={(value) => field.onChange((value as string | null) ?? "")}
               disabled={agentItems.length === 0}
             >
-              <SelectTrigger aria-label="Agent" aria-invalid={!!errors.agent_id}>
-                <SelectValue placeholder="Pick an outbound agent" />
+              <SelectTrigger aria-label={t("agent")} aria-invalid={!!errors.agent_id}>
+                <SelectValue placeholder={t("agentPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {agentItems.map((item) => (
@@ -98,19 +95,15 @@ export function CampaignBasicsFields({
           )}
         />
         {!agentsLoading && agents.length === 0 ? (
-          <FieldDescription>
-            No outbound agents are ready — create one under Agents and publish it first.
-          </FieldDescription>
+          <FieldDescription>{t("noAgents")}</FieldDescription>
         ) : (
-          <FieldDescription>
-            Only active, published outbound agents can dial campaigns.
-          </FieldDescription>
+          <FieldDescription>{t("agentHint")}</FieldDescription>
         )}
         {errors.agent_id && <FieldError>{errors.agent_id.message}</FieldError>}
       </Field>
 
       <Field data-invalid={!!errors.caller_phone_number_id || undefined}>
-        <FieldLabel>Caller number</FieldLabel>
+        <FieldLabel>{t("callerNumber")}</FieldLabel>
         <Controller
           control={form.control}
           name="caller_phone_number_id"
@@ -121,8 +114,11 @@ export function CampaignBasicsFields({
               onValueChange={(value) => field.onChange((value as string | null) ?? "")}
               disabled={numberItems.length === 0}
             >
-              <SelectTrigger aria-label="Caller number" aria-invalid={!!errors.caller_phone_number_id}>
-                <SelectValue placeholder="Pick the number to call from" />
+              <SelectTrigger
+                aria-label={t("callerNumber")}
+                aria-invalid={!!errors.caller_phone_number_id}
+              >
+                <SelectValue placeholder={t("numberPlaceholder")} />
               </SelectTrigger>
               <SelectContent>
                 {numberItems.map((item) => (
@@ -135,12 +131,9 @@ export function CampaignBasicsFields({
           )}
         />
         {!numbersLoading && numbers.length === 0 ? (
-          <FieldDescription>
-            No eligible numbers — campaigns dial from your active Twilio numbers (SIP
-            numbers can&apos;t place campaign calls).
-          </FieldDescription>
+          <FieldDescription>{t("noNumbers")}</FieldDescription>
         ) : (
-          <FieldDescription>Recipients see this number on their caller ID.</FieldDescription>
+          <FieldDescription>{t("numberHint")}</FieldDescription>
         )}
         {errors.caller_phone_number_id && (
           <FieldError>{errors.caller_phone_number_id.message}</FieldError>
@@ -151,6 +144,7 @@ export function CampaignBasicsFields({
 }
 
 export function CampaignScheduleFields() {
+  const t = useTranslations("campaigns.form");
   const form = useFormContext<CampaignCreateValues>();
   const { errors } = form.formState;
 
@@ -158,7 +152,7 @@ export function CampaignScheduleFields() {
     <>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field data-invalid={!!errors.start_date || undefined}>
-          <FieldLabel htmlFor="campaign-start-date">Start date</FieldLabel>
+          <FieldLabel htmlFor="campaign-start-date">{t("startDate")}</FieldLabel>
           <Controller
             control={form.control}
             name="start_date"
@@ -176,7 +170,7 @@ export function CampaignScheduleFields() {
           {errors.start_date && <FieldError>{errors.start_date.message}</FieldError>}
         </Field>
         <Field data-invalid={!!errors.start_time || undefined}>
-          <FieldLabel htmlFor="campaign-start-time">Start time</FieldLabel>
+          <FieldLabel htmlFor="campaign-start-time">{t("startTime")}</FieldLabel>
           <TimeInput
             id="campaign-start-time"
             aria-invalid={!!errors.start_time}
@@ -187,7 +181,7 @@ export function CampaignScheduleFields() {
       </div>
       <div className="grid gap-4 sm:grid-cols-2">
         <Field data-invalid={!!errors.end_date || undefined}>
-          <FieldLabel htmlFor="campaign-end-date">End date</FieldLabel>
+          <FieldLabel htmlFor="campaign-end-date">{t("endDate")}</FieldLabel>
           <Controller
             control={form.control}
             name="end_date"
@@ -205,7 +199,7 @@ export function CampaignScheduleFields() {
           {errors.end_date && <FieldError>{errors.end_date.message}</FieldError>}
         </Field>
         <Field data-invalid={!!errors.end_time || undefined}>
-          <FieldLabel htmlFor="campaign-end-time">End time</FieldLabel>
+          <FieldLabel htmlFor="campaign-end-time">{t("endTime")}</FieldLabel>
           <TimeInput
             id="campaign-end-time"
             aria-invalid={!!errors.end_time}
@@ -214,15 +208,13 @@ export function CampaignScheduleFields() {
           {errors.end_time && <FieldError>{errors.end_time.message}</FieldError>}
         </Field>
       </div>
-      <FieldDescription>
-        Times are in your business timezone. Leave blank to start manually and run until
-        every recipient is done.
-      </FieldDescription>
+      <FieldDescription>{t("scheduleHint")}</FieldDescription>
     </>
   );
 }
 
 export function CampaignPacingFields() {
+  const t = useTranslations("campaigns.form");
   const form = useFormContext<CampaignCreateValues>();
   const { errors } = form.formState;
 
@@ -230,7 +222,7 @@ export function CampaignPacingFields() {
     <>
       <div className="grid gap-4 sm:grid-cols-3">
         <Field data-invalid={!!errors.max_concurrent || undefined}>
-          <FieldLabel htmlFor="campaign-max-concurrent">Calls at once</FieldLabel>
+          <FieldLabel htmlFor="campaign-max-concurrent">{t("maxConcurrent")}</FieldLabel>
           <Input
             id="campaign-max-concurrent"
             type="number"
@@ -242,7 +234,7 @@ export function CampaignPacingFields() {
           {errors.max_concurrent && <FieldError>{errors.max_concurrent.message}</FieldError>}
         </Field>
         <Field data-invalid={!!errors.max_attempts || undefined}>
-          <FieldLabel htmlFor="campaign-max-attempts">Attempts per person</FieldLabel>
+          <FieldLabel htmlFor="campaign-max-attempts">{t("maxAttempts")}</FieldLabel>
           <Input
             id="campaign-max-attempts"
             type="number"
@@ -254,7 +246,7 @@ export function CampaignPacingFields() {
           {errors.max_attempts && <FieldError>{errors.max_attempts.message}</FieldError>}
         </Field>
         <Field data-invalid={!!errors.retry_delay_minutes || undefined}>
-          <FieldLabel htmlFor="campaign-retry-delay">Retry after (minutes)</FieldLabel>
+          <FieldLabel htmlFor="campaign-retry-delay">{t("retryDelay")}</FieldLabel>
           <Input
             id="campaign-retry-delay"
             type="number"
@@ -270,7 +262,7 @@ export function CampaignPacingFields() {
       </div>
 
       <Field>
-        <FieldLabel>Retry when the call ends in</FieldLabel>
+        <FieldLabel>{t("retryOn")}</FieldLabel>
         <Controller
           control={form.control}
           name="retry_on"
@@ -288,15 +280,13 @@ export function CampaignPacingFields() {
                       )
                     }
                   />
-                  {RETRY_REASON_LABELS[reason]}
+                  {t(`retryReasons.${reason}`)}
                 </Label>
               ))}
             </div>
           )}
         />
-        <FieldDescription>
-          Anything else — answered calls, invalid numbers — is final after one attempt.
-        </FieldDescription>
+        <FieldDescription>{t("retryOnHint")}</FieldDescription>
       </Field>
     </>
   );

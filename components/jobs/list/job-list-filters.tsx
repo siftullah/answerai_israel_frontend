@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ListFilterIcon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -35,25 +36,6 @@ export const EMPTY_JOB_FILTERS: JobFilterState = {
   sort: "",
 };
 
-const SORT_LABELS: Record<Exclude<JobFilterState["sort"], "">, string> = {
-  scheduled_start: "Soonest visit",
-  quote: "Highest value",
-};
-
-const SORT_ITEMS = [
-  { value: "", label: "Newest first" },
-  { value: "scheduled_start", label: SORT_LABELS.scheduled_start },
-  { value: "quote", label: SORT_LABELS.quote },
-];
-
-const PRIORITY_ITEMS = [
-  { value: "", label: "Any priority" },
-  ...(["high", "normal", "low"] as const).map((priority) => ({
-    value: priority,
-    label: JOB_PRIORITY_LABELS[priority],
-  })),
-];
-
 /**
  * Filter head for the jobs rail: search plus a popover of status refine
  * (limited to the active tab's set), priority, assignee, and sort order.
@@ -72,6 +54,8 @@ export function JobListFilters({
   /** Refine options for the active tab; empty hides the status select. */
   statuses: readonly JobStatus[];
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const membersQuery = useMembers(business.id);
 
@@ -79,14 +63,30 @@ export function JobListFilters({
     (member) => member.has_account && member.user
   );
   const assigneeName = (userId: string) =>
-    assignees.find((member) => member.user?.id === userId)?.name ?? "Assignee";
+    assignees.find((member) => member.user?.id === userId)?.name ?? t("fields.assignee");
 
+  const sortLabels: Record<Exclude<JobFilterState["sort"], "">, string> = {
+    scheduled_start: t("filters.sortOptions.scheduled_start"),
+    quote: t("filters.sortOptions.quote"),
+  };
+  const sortItems = [
+    { value: "", label: t("filters.sortOptions.newest") },
+    { value: "scheduled_start", label: sortLabels.scheduled_start },
+    { value: "quote", label: sortLabels.quote },
+  ];
+  const priorityItems = [
+    { value: "", label: t("filters.anyPriority") },
+    ...(["high", "normal", "low"] as const).map((priority) => ({
+      value: priority,
+      label: JOB_PRIORITY_LABELS[priority],
+    })),
+  ];
   const statusItems = [
-    { value: "", label: "Any status" },
+    { value: "", label: t("filters.anyStatus") },
     ...statuses.map((status) => ({ value: status, label: JOB_STATUS_LABELS[status] })),
   ];
   const assigneeItems = [
-    { value: "", label: "Anyone" },
+    { value: "", label: t("filters.anyone") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -102,8 +102,8 @@ export function JobListFilters({
         <Input
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search title or contact…"
-          aria-label="Search jobs by title or contact name"
+          placeholder={t("filters.searchPlaceholder")}
+          aria-label={t("filters.searchLabel")}
         />
         <Popover>
           <PopoverTrigger
@@ -111,20 +111,20 @@ export function JobListFilters({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Filter jobs"
+                aria-label={t("filters.filterLabel")}
                 className="relative shrink-0"
               />
             }
           >
             <ListFilterIcon />
             {active && (
-              <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-primary" />
+              <span className="absolute -top-0.5 -end-0.5 size-2 rounded-full bg-primary" />
             )}
           </PopoverTrigger>
           <PopoverContent align="end" className="flex w-64 flex-col gap-3">
             {statuses.length > 0 && (
               <div className="flex flex-col gap-1.5">
-                <Label htmlFor="job-filter-status">Status</Label>
+                <Label htmlFor="job-filter-status">{tc("labels.status")}</Label>
                 <Select
                   items={statusItems}
                   value={filters.status}
@@ -146,9 +146,9 @@ export function JobListFilters({
               </div>
             )}
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="job-filter-priority">Priority</Label>
+              <Label htmlFor="job-filter-priority">{t("fields.priority")}</Label>
               <Select
-                items={PRIORITY_ITEMS}
+                items={priorityItems}
                 value={filters.priority}
                 onValueChange={(next) =>
                   onFiltersChange({ ...filters, priority: (next as JobPriority | null) ?? "" })
@@ -158,7 +158,7 @@ export function JobListFilters({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {PRIORITY_ITEMS.map((item) => (
+                  {priorityItems.map((item) => (
                     <SelectItem key={item.value} value={item.value}>
                       {item.label}
                     </SelectItem>
@@ -167,7 +167,7 @@ export function JobListFilters({
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="job-filter-assignee">Assignee</Label>
+              <Label htmlFor="job-filter-assignee">{t("fields.assignee")}</Label>
               <Select
                 items={assigneeItems}
                 value={filters.assignee_user_id}
@@ -188,9 +188,9 @@ export function JobListFilters({
               </Select>
             </div>
             <div className="flex flex-col gap-1.5">
-              <Label htmlFor="job-filter-sort">Sort</Label>
+              <Label htmlFor="job-filter-sort">{t("filters.sort")}</Label>
               <Select
-                items={SORT_ITEMS}
+                items={sortItems}
                 value={filters.sort}
                 onValueChange={(next) =>
                   onFiltersChange({
@@ -203,7 +203,7 @@ export function JobListFilters({
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {SORT_ITEMS.map((item) => (
+                  {sortItems.map((item) => (
                     <SelectItem key={item.value} value={item.value}>
                       {item.label}
                     </SelectItem>
@@ -225,7 +225,9 @@ export function JobListFilters({
           )}
           {filters.priority !== "" && (
             <FilterChip
-              label={`${JOB_PRIORITY_LABELS[filters.priority]} priority`}
+              label={t("filters.priorityChip", {
+                priority: JOB_PRIORITY_LABELS[filters.priority],
+              })}
               onRemove={() => onFiltersChange({ ...filters, priority: "" })}
             />
           )}
@@ -237,7 +239,7 @@ export function JobListFilters({
           )}
           {filters.sort !== "" && (
             <FilterChip
-              label={SORT_LABELS[filters.sort]}
+              label={sortLabels[filters.sort]}
               onRemove={() => onFiltersChange({ ...filters, sort: "" })}
             />
           )}
@@ -248,13 +250,14 @@ export function JobListFilters({
 }
 
 function FilterChip({ label, onRemove }: { label: string; onRemove: () => void }) {
+  const t = useTranslations("jobs.filters");
   return (
-    <Badge variant="outline" className="h-6 gap-1 pr-1">
+    <Badge variant="outline" className="h-6 gap-1 pe-1">
       {label}
       <button
         type="button"
         onClick={onRemove}
-        aria-label={`Remove ${label} filter`}
+        aria-label={t("removeFilter", { label })}
         className="rounded-full p-0.5 hover:bg-muted"
       >
         <XIcon className="size-3" />

@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { useTranslations } from "next-intl";
 import { PlusIcon, RotateCcwIcon, UploadIcon, UsersIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -57,28 +58,11 @@ import type {
   CampaignRecipientStatus,
   RecipientListFilters,
 } from "@/lib/api/types";
-import { TERMINAL_CAMPAIGN_STATUSES } from "@/lib/api/types";
+import { CAMPAIGN_RECIPIENT_STATUSES, TERMINAL_CAMPAIGN_STATUSES } from "@/lib/api/types";
 import { formatE164 } from "@/lib/phone";
 import { queryKeys } from "@/lib/query/keys";
 
 type StatusFilter = "all" | CampaignRecipientStatus;
-
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the filter trigger shows e.g. "all".
-const STATUS_ITEMS: { value: StatusFilter; label: string }[] = [
-  { value: "all", label: "All statuses" },
-  { value: "pending", label: "Pending" },
-  { value: "queued", label: "Queued" },
-  { value: "calling", label: "Calling" },
-  { value: "completed", label: "Completed" },
-  { value: "retry_scheduled", label: "Retry scheduled" },
-  { value: "failed", label: "Failed" },
-  { value: "max_attempts", label: "Max attempts" },
-  { value: "dnc_blocked", label: "On DNC" },
-  { value: "invalid", label: "Invalid" },
-  { value: "skipped", label: "Skipped" },
-  { value: "canceled", label: "Canceled" },
-];
 
 const IMPORT_SETTLE_MS = 120_000;
 
@@ -89,8 +73,23 @@ export function RecipientsTab({
   campaign: Campaign;
   onGoToSettings: () => void;
 }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const queryClient = useQueryClient();
+
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the filter trigger shows e.g. "all".
+  const statusItems = useMemo<{ value: StatusFilter; label: string }[]>(
+    () => [
+      { value: "all", label: t("filters.allStatuses") },
+      ...CAMPAIGN_RECIPIENT_STATUSES.map((value) => ({
+        value,
+        label: t(`recipientStatus.${value}`),
+      })),
+    ],
+    [t]
+  );
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search.trim(), 300);
@@ -186,19 +185,17 @@ export function RecipientsTab({
     campaign.stats.failed + campaign.stats.max_attempts + campaign.stats.skipped;
   const showRetryAllFailed = failedCount > 0 && campaign.status !== "canceled";
 
-  const plural = (n: number) => (n === 1 ? "recipient" : "recipients");
-
   const runRetry = (target: RetryTarget) => {
     setRetrying(null);
     if (target.kind === "single") {
       retryRecipient.mutate(target.recipient.id, {
-        onSuccess: () => toast.success("Recipient queued for another attempt"),
+        onSuccess: () => toast.success(t("recipients.toasts.retried")),
         onError: (error) =>
           toast.error(
             error.reason === "recipient_not_retryable"
-              ? "Only failed or skipped recipients can be retried."
+              ? t("recipients.errors.notRetryable")
               : error.reason === "campaign_locked"
-                ? "Canceled campaigns can't retry recipients."
+                ? t("recipients.errors.canceledNoRetry")
                 : error.message
           ),
       });
@@ -217,16 +214,16 @@ export function RecipientsTab({
     bulkRetry.mutate(payload, {
       onSuccess: ({ affected }) => {
         if (affected > 0) {
-          toast.success(`Requeued ${affected} ${plural(affected)}`);
+          toast.success(t("recipients.toasts.requeued", { count: affected }));
         } else {
-          toast.warning("Nothing to retry");
+          toast.warning(t("recipients.toasts.nothingToRetry"));
         }
         selectionApi.clear();
       },
       onError: (error) =>
         toast.error(
           error.reason === "campaign_locked"
-            ? "Canceled campaigns can't retry recipients."
+            ? t("recipients.errors.canceledNoRetry")
             : error.message
         ),
     });
@@ -238,20 +235,20 @@ export function RecipientsTab({
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search phone or name"
+          placeholder={t("recipients.searchPlaceholder")}
           className="w-full sm:w-64"
           autoComplete="off"
         />
         <Select
-          items={STATUS_ITEMS}
+          items={statusItems}
           value={status}
           onValueChange={(value) => setStatus((value as StatusFilter | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by status">
+          <SelectTrigger aria-label={t("filters.byStatus")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {STATUS_ITEMS.map((item) => (
+            {statusItems.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -259,7 +256,7 @@ export function RecipientsTab({
           </SelectContent>
         </Select>
 
-        <div className="ml-auto flex flex-wrap items-center gap-2">
+        <div className="ms-auto flex flex-wrap items-center gap-2">
           {showRetryAllFailed && (
             <Button
               variant="outline"
@@ -267,22 +264,22 @@ export function RecipientsTab({
               onClick={() => setRetrying({ kind: "all-failed" })}
             >
               <RotateCcwIcon />
-              Retry all failed or skipped
+              {t("recipients.retryAllFailed")}
             </Button>
           )}
           {!terminal && (
             <>
               <Button variant="outline" size="sm" onClick={() => setImportOpen(true)}>
                 <UploadIcon />
-                Import CSV
+                {t("recipients.importCsv")}
               </Button>
               <Button variant="cta" size="sm" onClick={() => setFromContactsOpen(true)}>
                 <UsersIcon />
-                From contacts
+                {t("recipients.fromContacts")}
               </Button>
               <Button size="sm" onClick={() => setAddOpen(true)}>
                 <PlusIcon />
-                Add recipients
+                {t("recipients.add")}
               </Button>
             </>
           )}
@@ -297,37 +294,34 @@ export function RecipientsTab({
         </div>
       ) : recipientsQuery.isError ? (
         <ErrorState
-          title="Couldn't load recipients"
+          title={t("recipients.loadError")}
           message={recipientsQuery.error.message}
           onRetry={() => recipientsQuery.refetch()}
         />
       ) : recipients.length === 0 ? (
         hasFilters ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No recipients match your filters.
+            {t("recipients.noMatches")}
           </p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>No recipients yet</EmptyTitle>
-              <EmptyDescription>
-                Add numbers by hand, pick people from your contacts, or import a
-                spreadsheet — then start the campaign.
-              </EmptyDescription>
+              <EmptyTitle>{t("recipients.emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("recipients.emptyDescription")}</EmptyDescription>
             </EmptyHeader>
             {!terminal && (
               <div className="flex flex-wrap justify-center gap-2">
                 <Button variant="outline" onClick={() => setImportOpen(true)}>
                   <UploadIcon />
-                  Import CSV
+                  {t("recipients.importCsv")}
                 </Button>
                 <Button variant="cta" onClick={() => setFromContactsOpen(true)}>
                   <UsersIcon />
-                  From contacts
+                  {t("recipients.fromContacts")}
                 </Button>
                 <Button onClick={() => setAddOpen(true)}>
                   <PlusIcon />
-                  Add recipients
+                  {t("recipients.add")}
                 </Button>
               </div>
             )}
@@ -414,31 +408,32 @@ export function RecipientsTab({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Remove {deleting ? formatE164(deleting.to_e164) : ""}?
+              {t("recipients.removeDialog.title", {
+                phone: deleting ? formatE164(deleting.to_e164) : "",
+              })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              They won&apos;t be called by this campaign. The number can be added again
-              later.
+              {t("recipients.removeDialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteRecipient.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Recipient removed"),
+                  onSuccess: () => toast.success(t("recipients.toasts.removed")),
                   onError: (error) =>
                     toast.error(
                       error.reason === "recipient_calling"
-                        ? "Can't remove a recipient who's on a call right now."
+                        ? t("recipients.errors.onCall")
                         : error.message
                     ),
                 });
                 setDeleting(null);
               }}
             >
-              Remove
+              {tc("actions.remove")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -448,26 +443,28 @@ export function RecipientsTab({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Remove {selectedIds.length} {plural(selectedIds.length)}?
+              {t("recipients.bulkRemoveDialog.title", { count: selectedIds.length })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              They won&apos;t be called by this campaign. Anyone currently on a call is
-              skipped.
+              {t("recipients.bulkRemoveDialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 bulkDelete.mutate(
                   { ids: selectedIds },
                   {
                     onSuccess: ({ affected, skipped_calling }) => {
-                      const skipped =
+                      toast.success(
                         skipped_calling > 0
-                          ? ` — ${skipped_calling} skipped (currently on a call)`
-                          : "";
-                      toast.success(`Removed ${affected} ${plural(affected)}${skipped}`);
+                          ? t("recipients.toasts.bulkRemovedWithSkipped", {
+                              count: affected,
+                              skipped: skipped_calling,
+                            })
+                          : t("recipients.toasts.bulkRemoved", { count: affected })
+                      );
                       selectionApi.clear();
                     },
                     onError: (error) => toast.error(error.message),
@@ -476,7 +473,7 @@ export function RecipientsTab({
                 setConfirmingBulkDelete(false);
               }}
             >
-              Remove
+              {tc("actions.remove")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

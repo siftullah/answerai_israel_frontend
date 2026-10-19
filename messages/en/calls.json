@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "inboundLogs": "Inbound logs",
+    "outboundLogs": "Outbound logs",
+    "call": "Call"
+  },
+  "labels": {
+    "agent": "Agent",
+    "callback": "Callback"
+  },
+  "actions": {
+    "placeCall": "Place call",
+    "placing": "Placing…",
+    "cancelCall": "Cancel call",
+    "viewContact": "View contact",
+    "viewTranscript": "View transcript",
+    "otherRecordings": "Other recordings",
+    "saveNotes": "Save notes"
+  },
+  "toasts": {
+    "callCancelled": "Call cancelled",
+    "callQueued": "Call queued — it'll dial shortly",
+    "notesSaved": "Notes saved"
+  },
+  "status": {
+    "queued": "Queued",
+    "initiating": "Initiating",
+    "ringing": "Ringing",
+    "inProgress": "In progress",
+    "completed": "Completed",
+    "busy": "Busy",
+    "noAnswer": "No answer",
+    "failed": "Failed",
+    "canceled": "Canceled"
+  },
+  "direction": {
+    "inbound": "Inbound call",
+    "outbound": "Outbound call"
+  },
+  "logs": {
+    "inbound": {
+      "title": "Inbound logs",
+      "description": "Every call your agents answered — transcripts, recordings and outcomes.",
+      "emptyTitle": "No inbound calls yet",
+      "emptyDescription": "Once a caller reaches one of your numbers, the call lands here."
+    },
+    "outbound": {
+      "title": "Outbound logs",
+      "description": "Calls your agents placed — one-off, campaign and callback calls.",
+      "emptyTitle": "No outbound calls yet",
+      "emptyDescription": "Place a call and your agent will dial and handle the conversation."
+    },
+    "loadFailed": "Couldn't load calls"
+  },
+  "errors": {
+    "notFoundTitle": "Call not found",
+    "notFoundMessage": "This call doesn't exist or was removed.",
+    "loadFailedTitle": "Couldn't load this call"
+  },
+  "resolver": {
+    "backToLogs": "Call logs"
+  },
+  "cancelDialog": {
+    "title": "Cancel this call?",
+    "description": "The call to {name} hasn't connected yet and will be stopped.",
+    "keepCalling": "Keep calling"
+  },
+  "placeDialog": {
+    "title": "Place a call",
+    "description": "Your agent will dial the number and handle the conversation.",
+    "agentPlaceholder": "Choose an agent",
+    "noAgents": "No synced outbound agents yet — create one under Agents first.",
+    "callFrom": "Call from",
+    "numberPlaceholder": "Choose a number",
+    "noNumbers": "No callable numbers — SIP numbers are inbound-only, so buy a platform number first.",
+    "numberToCall": "Number to call",
+    "numberToCallPlaceholder": "0412 345 678",
+    "variablesHint": "This agent needs a value for each variable below. Anything prefilled came from the contact record or the variable's default, so check each one for this call."
+  },
+  "detail": {
+    "backToList": "All calls",
+    "emptyTitle": "No call selected",
+    "emptyDescription": "Select a call to see its details.",
+    "receivedOn": "Received on",
+    "calledFrom": "Called from",
+    "started": "Started",
+    "duration": "Duration",
+    "endReason": "End reason",
+    "summary": "Summary",
+    "campaignBadge": "Campaign: {name}",
+    "recordingLoadFailed": "The recording couldn't be loaded right now.",
+    "recordingProcessing": "The recording is still processing — check back shortly.",
+    "recordingFailed": "The recording couldn't be captured for this call.",
+    "recordingDeleted": "This recording is no longer available."
+  },
+  "live": {
+    "queued": "Queued — waiting to dial",
+    "initiating": "Placing call…",
+    "ringing": "Ringing…",
+    "inProgress": "Call in progress"
+  },
+  "notes": {
+    "description": "Your own notes — never shown to callers.",
+    "placeholder": "Add your own notes about this call…",
+    "ariaLabel": "Call notes"
+  },
+  "extraction": {
+    "title": "Extracted details",
+    "description": "What the agent captured and how it scored against its goals.",
+    "evaluation": "Evaluation"
+  },
+  "related": {
+    "title": "Created from this call",
+    "description": "Records the agent created or fulfilled during this conversation.",
+    "appointments": "Appointments",
+    "leads": "Leads",
+    "jobs": "Jobs",
+    "invoices": "Invoices",
+    "callbacks": "Callbacks",
+    "fulfilledCallback": "Fulfilled a callback scheduled for {date}",
+    "scheduledFor": "Scheduled for {date}"
+  },
+  "transfer": {
+    "title": "Transfer recordings",
+    "description": "The consult and bridged legs of this handover.",
+    "recordingNotReady": "This recording isn't ready yet.",
+    "consultLoadFailed": "The consultation details couldn't be loaded right now.",
+    "type": "Type",
+    "warm": "Warm transfer",
+    "blind": "Blind transfer",
+    "transferredTo": "Transferred to",
+    "answeredBy": "Answered by",
+    "at": "At",
+    "outcome": "Outcome",
+    "relayMessage": "Message relayed to the caller",
+    "consultLeg": "Consultation leg",
+    "bridgedRecording": "Bridged call recording",
+    "state": {
+      "consultPending": "Consulting",
+      "accepted": "Accepted",
+      "bridged": "Connected",
+      "declined": "Declined",
+      "unavailable": "Unavailable",
+      "cancelled": "Cancelled"
+    },
+    "nextAction": {
+      "takeCallbackMessage": "Took a callback message",
+      "askToCallBackLater": "Asked the caller to call back later",
+      "redirect": "Redirected the caller",
+      "none": "No follow-up action"
+    }
+  },
+  "transcript": {
+    "title": "Transcript",
+    "caller": "Caller",
+    "loadFailed": "The transcript couldn't be loaded right now.",
+    "empty": "No transcript was produced for this call.",
+    "playFrom": "Play recording from {time}"
+  },
+  "filters": {
+    "searchPlaceholder": "Search name, number or words said…",
+    "searchAriaLabel": "Search calls by name, number, summary or transcript",
+    "filterAriaLabel": "Filter and sort calls",
+    "any": "Any",
+    "sortByDate": "Sort by date",
+    "newestFirst": "Newest first",
+    "oldestFirst": "Oldest first",
+    "phoneNumber": "Phone number",
+    "numberFallback": "Number",
+    "period": "Period",
+    "today": "Today",
+    "lastDays": "{count, plural, one {Last # day} other {Last # days}}",
+    "hasRecording": "Has recording",
+    "removeFilter": "Remove {label} filter",
+    "clearAll": "Clear all"
+  }
+}

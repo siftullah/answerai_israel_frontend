@@ -6,65 +6,71 @@ import type {
   UpdateInvoicePayload,
 } from "@/lib/api/types";
 import { LINE_ITEM_KINDS } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { dollarsToCents, centsToDollarsInput } from "@/lib/money";
 
 /**
  * Loose mirrors of Store/UpdateInvoiceRequest + ReplaceInvoiceItemsRequest.
  * Prices are edited in dollars and converted to integer cents at the payload
  * boundary; the VAT switch stands in for tax_rate_bp (checked = omit, so the
- * backend applies the business default rate; unchecked = 0).
+ * backend applies the business default rate; unchecked = 0). Schema
+ * factories take a translator scoped to the `validation` namespace.
  */
-const invoiceItemSchema = z.object({
-  kind: z.enum(LINE_ITEM_KINDS),
-  description: z
-    .string()
-    .trim()
-    .min(1, "Describe the work or part")
-    .max(300, "Keep the description under 300 characters"),
-  quantity: z.string().refine((value) => {
-    const quantity = Number(value);
-    return value.trim() !== "" && Number.isFinite(quantity) && quantity > 0 && quantity <= 99999;
-  }, "Enter a quantity above zero"),
-  unit_price: z
-    .string()
-    .refine((value) => dollarsToCents(value) !== null, "Enter a price like 180 or 180.50"),
-  gst: z.boolean(),
-});
-
-export type InvoiceItemFormValues = z.infer<typeof invoiceItemSchema>;
-
-export const invoiceFormSchema = z
-  .object({
-    contact_id: z.string().min(1, "Choose a contact"),
-    /** Calendar keys "YYYY-MM-DD", "" = set on send. */
-    issue_date: z.string(),
-    due_date: z.string(),
-    notes: z.string().max(5000, "Keep the notes under 5,000 characters"),
-    payment_instructions: z
+function invoiceItemSchema(t: Translator) {
+  return z.object({
+    kind: z.enum(LINE_ITEM_KINDS),
+    description: z
       .string()
-      .max(2000, "Keep the payment instructions under 2,000 characters"),
-    items: z.array(invoiceItemSchema).min(1, "Add at least one line item"),
-  })
-  .superRefine((values, ctx) => {
-    // The backend's after_or_equal:issue_date rejects a due date with no
-    // issue date, so mirror both constraints here.
-    if (values.due_date && !values.issue_date) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["due_date"],
-        message: "Set an issue date first, or leave both to fill on send",
-      });
-    }
-    if (values.issue_date && values.due_date && values.due_date < values.issue_date) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["due_date"],
-        message: "The due date can't be before the issue date",
-      });
-    }
+      .trim()
+      .min(1, t("lineItem.descriptionRequired"))
+      .max(300, t("length.description", { max: 300 })),
+    quantity: z.string().refine((value) => {
+      const quantity = Number(value);
+      return value.trim() !== "" && Number.isFinite(quantity) && quantity > 0 && quantity <= 99999;
+    }, t("lineItem.quantityInvalid")),
+    unit_price: z
+      .string()
+      .refine((value) => dollarsToCents(value) !== null, t("lineItem.unitPriceInvalid")),
+    gst: z.boolean(),
   });
+}
 
-export type InvoiceFormValues = z.infer<typeof invoiceFormSchema>;
+export type InvoiceItemFormValues = z.infer<ReturnType<typeof invoiceItemSchema>>;
+
+export function invoiceFormSchema(t: Translator) {
+  return z
+    .object({
+      contact_id: z.string().min(1, t("common.contactRequired")),
+      /** Calendar keys "YYYY-MM-DD", "" = set on send. */
+      issue_date: z.string(),
+      due_date: z.string(),
+      notes: z.string().max(5000, t("length.notes", { max: 5000 })),
+      payment_instructions: z
+        .string()
+        .max(2000, t("length.paymentInstructions", { max: 2000 })),
+      items: z.array(invoiceItemSchema(t)).min(1, t("lineItem.itemsRequired")),
+    })
+    .superRefine((values, ctx) => {
+      // The backend's after_or_equal:issue_date rejects a due date with no
+      // issue date, so mirror both constraints here.
+      if (values.due_date && !values.issue_date) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["due_date"],
+          message: t("common.issueDateFirst"),
+        });
+      }
+      if (values.issue_date && values.due_date && values.due_date < values.issue_date) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["due_date"],
+          message: t("invoice.dueBeforeIssue"),
+        });
+      }
+    });
+}
+
+export type InvoiceFormValues = z.infer<ReturnType<typeof invoiceFormSchema>>;
 
 export function emptyInvoiceItem(): InvoiceItemFormValues {
   return { kind: "labour", description: "", quantity: "1", unit_price: "", gst: true };

@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { Translator } from "@/lib/i18n/types";
 
 /**
  * Loose AU-only shape check shared by phone inputs after stripping spaces/
@@ -9,9 +10,6 @@ import { z } from "zod";
  */
 export const AU_PHONE_REGEX =
   /^(?:0\d{9}|1[38]00\d{6}|13\d{4}|\+61(?:\d{9}|1[38]00\d{6}|13\d{4}))$/;
-
-export const AU_PHONE_MESSAGE =
-  "Enter an Australian phone number, e.g. 0412 345 678";
 
 const strip = (value: string) => value.replace(/[\s()-]/g, "");
 
@@ -26,21 +24,24 @@ export function normalizeAuPhone(input: string): string {
   return stripped.startsWith("0") ? `+61${stripped.slice(1)}` : stripped;
 }
 
-/** Required AU phone form field: strip → loose AU shape gate. */
-export function auPhoneField(requiredMessage = "Enter a phone number") {
+/**
+ * Required AU phone form field: strip → loose AU shape gate. `t` is a
+ * translator scoped to the `validation` namespace.
+ */
+export function auPhoneField(t: Translator, requiredMessage = t("phone.required")) {
   return z
     .string()
     .min(1, requiredMessage)
     .transform(strip)
-    .pipe(z.string().regex(AU_PHONE_REGEX, AU_PHONE_MESSAGE));
+    .pipe(z.string().regex(AU_PHONE_REGEX, t("phone.invalid")));
 }
 
 /** Optional variant: "" passes through (payload mappers turn it into null). */
-export function optionalAuPhoneField() {
+export function optionalAuPhoneField(t: Translator) {
   return z
     .string()
     .transform(strip)
-    .pipe(z.union([z.literal(""), z.string().regex(AU_PHONE_REGEX, AU_PHONE_MESSAGE)]));
+    .pipe(z.union([z.literal(""), z.string().regex(AU_PHONE_REGEX, t("phone.invalid"))]));
 }
 
 /**

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
@@ -14,16 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { MoneyInput } from "@/components/business-profile/money-input";
 import { isUnitPriced, type PriceType } from "@/lib/api/types";
 
-const TYPE_LABELS: Record<PriceType, string> = {
-  fixed: "Fixed",
-  hourly: "Per hour",
-  daily: "Per day",
-  weekly: "Per week",
-  monthly: "Per month",
-  yearly: "Per year",
-  range: "Range",
-  custom_message: "Custom message",
-};
+const PRICE_MESSAGE_MAX = 500;
 
 /**
  * Flexible pricing block (has_price, ai_can_quote_price, price_type +
@@ -31,6 +23,8 @@ const TYPE_LABELS: Record<PriceType, string> = {
  * pass PRODUCT_PRICE_TYPES.
  */
 export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }) {
+  const t = useTranslations("businessProfile.priceEditor");
+  const ts = useTranslations("businessProfile.shared");
   const form = useFormContext();
   const hasPrice = useWatch({ name: "has_price" }) as boolean;
   const priceType = useWatch({ name: "price_type" }) as PriceType | "";
@@ -40,11 +34,32 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
   const errorOf = (name: string) =>
     (errors[name] as { message?: string } | undefined)?.message;
 
+  const typeLabels: Record<PriceType, string> = {
+    fixed: t("types.fixed"),
+    hourly: t("types.hourly"),
+    daily: t("types.daily"),
+    weekly: t("types.weekly"),
+    monthly: t("types.monthly"),
+    yearly: t("types.yearly"),
+    range: t("types.range"),
+    custom_message: t("types.customMessage"),
+  };
+
+  // Field label for the single-amount types ("Price", "Price per hour", …).
+  const amountLabels: Partial<Record<PriceType, string>> = {
+    fixed: t("amountLabels.fixed"),
+    hourly: t("amountLabels.hourly"),
+    daily: t("amountLabels.daily"),
+    weekly: t("amountLabels.weekly"),
+    monthly: t("amountLabels.monthly"),
+    yearly: t("amountLabels.yearly"),
+  };
+
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows e.g. "custom_message".
   const typeItems = priceTypes.map((type) => ({
     value: type,
-    label: TYPE_LABELS[type],
+    label: typeLabels[type],
   }));
 
   return (
@@ -58,7 +73,7 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
           )}
         />
         <FieldLabel htmlFor="has_price" className="font-normal">
-          Has a price
+          {t("hasPrice")}
         </FieldLabel>
       </Field>
 
@@ -78,16 +93,16 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
             />
             <div className="flex flex-col gap-0.5">
               <FieldLabel htmlFor="ai_can_quote_price" className="font-normal">
-                AI can quote the price
+                {t("aiCanQuote")}
               </FieldLabel>
               <p className="text-sm text-muted-foreground">
-                Off keeps the price for your records — it&apos;s never spoken on calls.
+                {t("aiCanQuoteHint")}
               </p>
             </div>
           </Field>
 
           <Field data-invalid={!!errorOf("price_type") || undefined}>
-            <FieldLabel htmlFor="price_type">Price type</FieldLabel>
+            <FieldLabel htmlFor="price_type">{t("priceType")}</FieldLabel>
             <Controller
               control={form.control}
               name="price_type"
@@ -102,7 +117,7 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
                     className="w-full"
                     aria-invalid={!!errorOf("price_type")}
                   >
-                    <SelectValue placeholder="Choose" />
+                    <SelectValue placeholder={t("choose")} />
                   </SelectTrigger>
                   <SelectContent>
                     {typeItems.map((item) => (
@@ -120,7 +135,7 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
           {isUnitPriced(priceType) && (
             <Field data-invalid={!!errorOf("price_cents") || undefined}>
               <FieldLabel htmlFor="price_cents">
-                {priceType === "fixed" ? "Price" : `Price ${TYPE_LABELS[priceType as PriceType].toLowerCase()}`}
+                {amountLabels[priceType as PriceType] ?? t("amountLabels.fixed")}
               </FieldLabel>
               <MoneyInput id="price_cents" name="price_cents" invalid={!!errorOf("price_cents")} />
               {errorOf("price_cents") && <FieldError>{errorOf("price_cents")}</FieldError>}
@@ -130,7 +145,7 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
           {priceType === "range" && (
             <div className="grid grid-cols-2 gap-4">
               <Field data-invalid={!!errorOf("price_min_cents") || undefined}>
-                <FieldLabel htmlFor="price_min_cents">Minimum</FieldLabel>
+                <FieldLabel htmlFor="price_min_cents">{t("minimum")}</FieldLabel>
                 <MoneyInput
                   id="price_min_cents"
                   name="price_min_cents"
@@ -141,7 +156,7 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
                 )}
               </Field>
               <Field data-invalid={!!errorOf("price_max_cents") || undefined}>
-                <FieldLabel htmlFor="price_max_cents">Maximum</FieldLabel>
+                <FieldLabel htmlFor="price_max_cents">{t("maximum")}</FieldLabel>
                 <MoneyInput
                   id="price_max_cents"
                   name="price_max_cents"
@@ -156,16 +171,16 @@ export function PriceEditor({ priceTypes }: { priceTypes: readonly PriceType[] }
 
           {priceType === "custom_message" && (
             <Field data-invalid={!!errorOf("price_message") || undefined}>
-              <FieldLabel htmlFor="price_message">What to say instead of a price</FieldLabel>
+              <FieldLabel htmlFor="price_message">{t("customMessageLabel")}</FieldLabel>
               <Textarea
                 id="price_message"
                 rows={3}
-                placeholder="Quoted after a free inspection."
+                placeholder={t("customMessagePlaceholder")}
                 aria-invalid={!!errorOf("price_message")}
                 {...form.register("price_message")}
               />
-              <p className="text-right text-sm text-muted-foreground">
-                {priceMessage.length} / 500
+              <p className="text-end text-sm text-muted-foreground">
+                {ts("charCount", { count: priceMessage.length, max: PRICE_MESSAGE_MAX })}
               </p>
               {errorOf("price_message") && <FieldError>{errorOf("price_message")}</FieldError>}
             </Field>

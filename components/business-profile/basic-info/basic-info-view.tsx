@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { ErrorState } from "@/components/error-state";
 import { PageHeader } from "@/components/layout/page-header";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -13,6 +14,7 @@ import { useBusinessProfile } from "@/hooks/use-business-profile";
 import type { BasicInfoDraft } from "@/lib/api/types";
 
 export function BasicInfoView() {
+  const t = useTranslations("businessProfile.basicInfo");
   const { business } = useBusiness();
   const profileQuery = useBusinessProfile(business.id);
   const [draft, setDraft] = useState<BasicInfoDraft | null>(null);
@@ -20,13 +22,13 @@ export function BasicInfoView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Basic info"
-        description="Contact details, description, location and logo your AI can share."
+        title={t("title")}
+        description={t("description")}
         actions={
           <ExtractionDialog
             target="basic_info"
-            title="Extract basic info"
-            description="Pull contact details, description, socials and location from your website or a document. You review everything before saving."
+            title={t("extractTitle")}
+            description={t("extractDescription")}
             onReady={(extraction) => setDraft(extraction.draft as BasicInfoDraft)}
           />
         }
@@ -40,7 +42,7 @@ export function BasicInfoView() {
         </div>
       ) : profileQuery.isError ? (
         <ErrorState
-          title="Couldn't load your business profile"
+          title={t("loadError")}
           message={profileQuery.error.message}
           onRetry={() => profileQuery.refetch()}
         />

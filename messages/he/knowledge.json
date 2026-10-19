@@ -1,0 +1,329 @@
+{
+  "shared": {
+    "allAgents": "כל סוכני ה-AI",
+    "selectedAgents": "{count, plural, one {# נבחר} other {# נבחרו}}",
+    "rowActions": "פעולות עבור {name}",
+    "toggleAvailability": "שינוי הזמינות של {name}",
+    "filterByAvailability": "סינון לפי זמינות",
+    "available": "זמין",
+    "unavailable": "לא זמין",
+    "price": "מחיר",
+    "agents": "סוכני AI",
+    "nothingExtracted": "לא חולץ מידע שימושי מהמקור הזה.",
+    "reviewDraft": "בדיקת הטיוטה",
+    "charCount": "{length} / {max}",
+    "descriptionPlaceholder": "מה כלול, למי זה מיועד, מה מייחד את זה…",
+    "faqAttachFailed": "לא ניתן להוסיף את השאלה הנפוצה \"{question}\": {message}",
+    "fileTooLarge": "גודל הקובץ חייב להיות 10 MB או פחות.",
+    "chooseFile": "בחירת קובץ",
+    "steps": {
+      "details": "פרטים",
+      "pricing": "תמחור",
+      "faqs": "שאלות נפוצות",
+      "agents": "סוכני AI",
+      "content": "תוכן"
+    }
+  },
+  "services": {
+    "title": "שירותים",
+    "description": "מה העסק שלכם מציע ואיך סוכן ה-AI שלכם מציג את זה.",
+    "extract": {
+      "title": "חילוץ שירותים",
+      "description": "חילוץ רשימת השירותים מאתר האינטרנט שלכם או ממסמך. תוכלו לבדוק כל שורה לפני שמשהו נוסף."
+    },
+    "add": "הוספת שירות",
+    "searchPlaceholder": "חיפוש שירותים",
+    "loadError": "לא ניתן לטעון את השירותים",
+    "noMatches": "לא נמצאו שירותים התואמים לחיפוש.",
+    "empty": {
+      "title": "הוספת השירות הראשון שלכם",
+      "description": "השירותים מלמדים את סוכן ה-AI שלכם מה העסק מציע, כמה זה עולה וכמה זמן זה לוקח."
+    },
+    "deleteDialog": {
+      "title": "למחוק את {name}?",
+      "description": "סוכן ה-AI שלכם כבר לא יכיר את השירות הזה. לא ניתן לבטל את הפעולה."
+    },
+    "review": {
+      "title": "בדיקת השירותים שחולצו",
+      "addCount": "{count, plural, =0 {Add} one {הוספת # שירות} other {הוספת # שירותים}}",
+      "addedCount": "{count, plural, one {נוסף שירות #} other {נוספו # שירותים}}"
+    },
+    "modal": {
+      "editTitle": "עריכת שירות",
+      "namePlaceholder": "ניקוי מרזבים",
+      "availableHint": "שירותים לא זמינים נשארים ברשימה כאן, אבל סוכן ה-AI שלכם לא יציע אותם."
+    },
+    "toasts": {
+      "added": "השירות נוסף",
+      "saved": "השירות נשמר",
+      "deleted": "השירות נמחק"
+    }
+  },
+  "products": {
+    "title": "מוצרים",
+    "description": "מוצרים שסוכן ה-AI שלכם יכול לדבר עליהם ולתת עבורם הצעת מחיר בשיחות.",
+    "extract": {
+      "title": "חילוץ מוצרים",
+      "description": "חילוץ רשימת המוצרים מאתר האינטרנט שלכם או ממסמך. תוכלו לבדוק כל שורה לפני שמשהו נוסף."
+    },
+    "add": "הוספת מוצר",
+    "searchPlaceholder": "חיפוש מוצרים",
+    "loadError": "לא ניתן לטעון את המוצרים",
+    "noMatches": "לא נמצאו מוצרים התואמים לחיפוש.",
+    "empty": {
+      "title": "הוספת המוצר הראשון",
+      "description": "המוצרים מספקים לסוכן ה-AI קטלוג שיוכל להציג ולתת עליו הצעות מחיר. הוסיפו אותם אחד-אחד או ייבאו גיליון אלקטרוני."
+    },
+    "deleteDialog": {
+      "title": "למחוק את {name}?",
+      "description": "סוכן ה-AI לא יכיר עוד את המוצר הזה. לא ניתן לבטל את הפעולה."
+    },
+    "review": {
+      "title": "בדיקת המוצרים שחולצו",
+      "addCount": "{count, plural, =0 {Add} one {הוספת # מוצר} other {הוספת # מוצרים}}",
+      "addedCount": "{count, plural, one {נוסף מוצר #} other {נוספו # מוצרים}}"
+    },
+    "modal": {
+      "editTitle": "עריכת מוצר",
+      "namePlaceholder": "מגן מרזב Colorbond",
+      "availableHint": "מוצרים לא זמינים יישארו ברשימה, אבל סוכן ה-AI לא יציע אותם."
+    },
+    "toasts": {
+      "added": "המוצר נוסף",
+      "saved": "המוצר נשמר",
+      "deleted": "המוצר נמחק"
+    },
+    "import": {
+      "title": "ייבוא מוצרים",
+      "mapDescription": "התאימו את העמודות בגיליון האלקטרוני לשדות המוצר.",
+      "uploadDescription": "העלו גיליון אלקטרוני — CSV, TXT, XLS או XLSX, עד 10 MB.",
+      "invalidFileType": "השתמשו בקובץ CSV, TXT, XLS או XLSX.",
+      "matchHint": "השורות מותאמות למוצרים קיימים לפי השם.",
+      "column": "עמודה {number}",
+      "headerRow": "השורה הראשונה מכילה כותרות עמודות",
+      "notImported": "לא יובא",
+      "priceHint": "עמודת מחיר אחת מגדירה מחיר קבוע; מינימום + מקסימום יוצרים טווח; הודעת מחיר הופכת להודעה מותאמת אישית. מוצרים מיובאים מופעלים כברירת מחדל לכל סוכני ה-AI.",
+      "started": "הייבוא התחיל — תקבלו סיכום באימייל.",
+      "expired": "תוקף ההעלאה פג — בחרו שוב את הקובץ.",
+      "fields": {
+        "priceSingle": "מחיר (יחיד)",
+        "priceMin": "מחיר מינימלי",
+        "priceMax": "מחיר מקסימלי",
+        "priceMessage": "הודעת מחיר"
+      }
+    }
+  },
+  "faqs": {
+    "title": "שאלות נפוצות",
+    "description": "שאלות ותשובות שסוכן ה-AI משתמש בהן כדי לעזור למתקשרים.",
+    "extract": {
+      "title": "חילוץ שאלות נפוצות",
+      "description": "חלצו שאלות ותשובות מאתר האינטרנט שלכם או ממסמך. תוכלו לבדוק כל שורה לפני הוספת הנתונים."
+    },
+    "add": "הוספת שאלה נפוצה",
+    "manageCategories": "ניהול קטגוריות",
+    "loadError": "לא ניתן לטעון את השאלות הנפוצות",
+    "noneInCategory": "אין שאלות נפוצות בקטגוריה הזו.",
+    "empty": {
+      "title": "הוספת השאלה הנפוצה הראשונה",
+      "description": "השאלות כאן חלות על העסק כולו. שאלות נפוצות שנוצרו בתוך שירות או מוצר נשארות משויכות לאותו פריט."
+    },
+    "noCategory": "ללא קטגוריה",
+    "question": "שאלה",
+    "answer": "תשובה",
+    "category": "קטגוריה",
+    "questionPlaceholder": "האם אתם נותנים הצעות מחיר בחינם?",
+    "answerPlaceholder": "כן — אנחנו נותנים הצעות מחיר לרוב העבודות תוך יום עסקים אחד…",
+    "deleteDialog": {
+      "title": "למחוק את השאלה הנפוצה הזו?",
+      "description": "סוכן ה-AI יפסיק להשתמש בתשובה הזו. לא ניתן לבטל את הפעולה."
+    },
+    "review": {
+      "title": "בדיקת השאלות הנפוצות שחולצו",
+      "addCount": "{count, plural, =0 {Add} one {הוספת # שאלה נפוצה} other {הוספת # שאלות נפוצות}}",
+      "addedCount": "{count, plural, one {נוספה שאלה נפוצה #} other {נוספו # שאלות נפוצות}}"
+    },
+    "modal": {
+      "editTitle": "עריכת שאלה נפוצה"
+    },
+    "owned": {
+      "description": "עותק זה שייך לפריט הזה בלבד."
+    },
+    "categories": {
+      "title": "קטגוריות של שאלות נפוצות",
+      "description": "קבצו שאלות נפוצות כדי להקל על הניהול שלהן.",
+      "newPlaceholder": "קטגוריה חדשה",
+      "saveName": "שמירת השם",
+      "cancelRename": "ביטול שינוי השם",
+      "rename": "שינוי השם של {name}",
+      "delete": "מחיקת {name}",
+      "empty": "אין עדיין קטגוריות.",
+      "deleteDialog": {
+        "title": "למחוק את {name}?",
+        "description": "התשובות לשאלות בקטגוריה הזו יישמרו, אך השאלות לא יהיו משויכות לקטגוריה."
+      }
+    },
+    "toasts": {
+      "added": "השאלה הנפוצה נוספה",
+      "saved": "השאלה הנפוצה נשמרה",
+      "deleted": "השאלה הנפוצה נמחקה",
+      "categoryDeleted": "הקטגוריה נמחקה"
+    }
+  },
+  "policies": {
+    "title": "מדיניות",
+    "description": "מדיניות העסק שסוכן ה-AI פועל לפיה ומסביר למתקשרים.",
+    "extract": {
+      "title": "חילוץ מדיניות",
+      "description": "חלצו מדיניות מהאתר שלכם או ממסמך. תוכלו לבדוק כל שורה לפני הוספתה."
+    },
+    "add": "הוספת מדיניות",
+    "loadError": "לא ניתן לטעון את המדיניות",
+    "empty": {
+      "title": "הוסיפו את המדיניות הראשונה שלכם",
+      "description": "ביטולים, החזרים, אחריות — הכללים שסוכן ה-AI צריך לפעול לפיהם ולהסביר."
+    },
+    "deleteDialog": {
+      "title": "למחוק את {name}?",
+      "description": "סוכן ה-AI יפסיק לפעול לפי המדיניות הזו. לא ניתן לבטל פעולה זו."
+    },
+    "review": {
+      "title": "בדיקת המדיניות שחולצה",
+      "addCount": "{count, plural, =0 {Add} one {הוספת # פריט מדיניות} other {הוספת # פריטי מדיניות}}",
+      "addedCount": "{count, plural, one {נוסף פריט מדיניות #} other {נוספו # פריטי מדיניות}}"
+    },
+    "modal": {
+      "editTitle": "עריכת מדיניות",
+      "namePlaceholder": "מדיניות ביטולים",
+      "content": "תוכן",
+      "contentPlaceholder": "ניתן לבטל הזמנות עד 24 שעות מראש ולקבל החזר מלא…"
+    },
+    "toasts": {
+      "added": "המדיניות נוספה",
+      "saved": "המדיניות נשמרה",
+      "deleted": "המדיניות נמחקה"
+    }
+  },
+  "docs": {
+    "title": "מסמכים",
+    "description": "מסמכים שמזינים את מאגר הידע של סוכן ה-AI.",
+    "add": "הוספת מסמך",
+    "loadError": "לא ניתן לטעון את המסמכים",
+    "empty": {
+      "title": "הוסיפו את המסמך הראשון שלכם",
+      "description": "העלו קובץ, הזינו כתובת של דף אינטרנט או הדביקו טקסט — סוכן ה-AI קורא הכל."
+    },
+    "source": {
+      "uploadedFile": "קובץ שהועלה",
+      "webPage": "דף אינטרנט",
+      "pastedText": "טקסט שהודבק",
+      "fromIntegrationFeed": "מתוך {provider} — {feed}",
+      "fromProvider": "מתוך {provider}",
+      "fromIntegration": "מתוך אינטגרציה"
+    },
+    "status": {
+      "ready": "מוכן",
+      "error": "שגיאה",
+      "uploading": "בהעלאה",
+      "processing": "בעיבוד"
+    },
+    "deleteDialog": {
+      "title": "למחוק את {name}?",
+      "description": "סוכן ה-AI שלכם יאבד את הידע הזה. לא ניתן לבטל את הפעולה."
+    },
+    "form": {
+      "namePlaceholder": "מדריך תמחור",
+      "descriptionOptional": "תיאור (אופציונלי)",
+      "descriptionPlaceholder": "מה המסמך כולל — עוזר לכם ולסוכן ה-AI שלכם למצוא אותו.",
+      "fileTypesHint": "PDF, DOCX, TXT, MD או HTML — עד 10 MB",
+      "invalidFileType": "השתמשו בקובץ PDF, DOCX, TXT, MD או HTML.",
+      "fileRequired": "בחרו קובץ להעלאה.",
+      "content": "תוכן"
+    },
+    "create": {
+      "sourceStep": "מקור",
+      "sources": {
+        "textTitle": "הדבקת טקסט",
+        "textDescription": "הקלידו או הדביקו את התוכן.",
+        "fileTitle": "העלאת קובץ",
+        "fileDescription": "PDF, DOCX, TXT, MD או HTML.",
+        "urlTitle": "חילוץ מכתובת URL",
+        "urlDescription": "AI קורא דף אינטרנט."
+      },
+      "pageUrl": "כתובת הדף",
+      "urlHint": "נטען את הדף וננקה אותו בעזרת AI — תוכלו לבדוק ולערוך את התוכן כשהוא יהיה מוכן.",
+      "text": "טקסט",
+      "textPlaceholder": "הדביקו את תוכן המסמך — סוכן ה-AI שלכם קורא את כולו."
+    },
+    "edit": {
+      "title": "עריכת מסמך",
+      "fileStep": "קובץ",
+      "urlPreparing": "התוכן עדיין בהכנה — תוכלו לערוך אותו כשהוא יהיה מוכן.",
+      "urlNotEditable": "תוכן המסמך נטען מכתובת המקור על ידי מנוע הקול ולא ניתן לערוך אותו כאן.",
+      "fileNotEditable": "לא ניתן לערוך את תוכן הקובץ ישירות — העלו גרסה חדשה כדי להחליף אותו.",
+      "chooseReplacement": "בחירת קובץ חלופי",
+      "replacesOnSave": "{name} — יחליף את הקובץ הקיים בשמירה"
+    },
+    "view": {
+      "integrationWithFeed": "מאת {provider} — {feed}. התוכן מתעדכן אוטומטית ומנוהל באזור האינטגרציות.",
+      "integrationNoFeed": "מאת {provider}. התוכן מתעדכן אוטומטית ומנוהל באזור האינטגרציות.",
+      "anIntegration": "אינטגרציה",
+      "urlPreparing": "אנחנו קוראים את הדף ומכינים את התוכן — בדקו שוב בעוד רגע.",
+      "urlNotStored": "המסמך נטען ישירות מהמקור על ידי מנוע הקול — התוכן שלו לא נשמר כאן. הוסיפו אותו שוב כדי לקבל עותק שניתן לעריכה.",
+      "openFile": "פתיחת קובץ",
+      "fileSize": {
+        "bytes": "{size} B",
+        "kilobytes": "{size} KB",
+        "megabytes": "{size} MB"
+      }
+    },
+    "toasts": {
+      "added": "המסמך נוסף — הוא יהיה מוכן בקרוב",
+      "saved": "המסמך נשמר",
+      "savedResyncing": "המסמך נשמר — מתבצע סנכרון מחדש",
+      "deleted": "המסמך נמחק"
+    }
+  },
+  "integrations": {
+    "title": "אינטגרציות",
+    "description": "חברו פלטפורמות חיצוניות שמזינות את מאגר הידע של סוכן ה-AI שלכם.",
+    "loadError": "לא ניתן לטעון את האינטגרציות",
+    "providerDescriptions": {
+      "realestateComAu": "קבלו מודעות נכסים להזנת סוכני ה-AI שלכם.",
+      "fallback": "מזינה את סוכן ה-AI שלכם במודעות ובנתונים ישירות מ-{name}."
+    },
+    "status": {
+      "notConnected": "לא מחובר",
+      "connecting": "בהתחברות",
+      "connectingHint": "הסנכרון הראשוני מסתיים — זה בדרך כלל לוקח כמה שניות.",
+      "error": "שגיאה",
+      "errorHint": "בדקו את ההגדרות תחת ניהול כדי לנסות שוב.",
+      "connected": "מחובר",
+      "lastSynced": "סונכרן לאחרונה {date}"
+    },
+    "actions": {
+      "manage": "ניהול",
+      "connect": "חיבור",
+      "disconnect": "ניתוק"
+    },
+    "disconnectDialog": {
+      "title": "לנתק את {name}?",
+      "description": "מודעות הנכסים שלו יוסרו ממאגר הידע של סוכן ה-AI והפידים שלו יפסיקו להתעדכן."
+    },
+    "dialog": {
+      "manageTitle": "ניהול {name}",
+      "connectTitle": "חיבור {name}",
+      "manageDescription": "שינויים מפעילים מחדש את הסנכרון מיד. מודעות מפידים שתבטלו את סימונם יוסרו ממאגר הידע של סוכן ה-AI.",
+      "connectDescription": "הזינו את מזהה הסוכנות ובחרו אילו פידים של מודעות נכסים ישמרו על סוכן ה-AI מעודכן.",
+      "agencyId": "מזהה סוכנות",
+      "agencyIdPlaceholder": "למשל XNWXYZ",
+      "agencyIdHint": "מזהה הסוכנות שלכם ב-realestate.com.au — מנהל הלקוח או מנהל המערכת של הסוכנות יכולים לספק אותו.",
+      "feeds": "פידים של מודעות נכסים",
+      "saveResync": "שמירה וסנכרון מחדש"
+    },
+    "toasts": {
+      "settingsSaved": "ההגדרות נשמרו — מתבצע סנכרון מחדש",
+      "connected": "{name} מחובר — מודעות הנכסים שלכם מסתנכרנות כעת"
+    }
+  }
+}

@@ -1,21 +1,25 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import type { PhoneNumberStatus } from "@/lib/api/types";
 
-const TRANSITIONAL_LABELS: Partial<Record<PhoneNumberStatus, string>> = {
-  purchasing: "Purchasing",
-  configuring: "Configuring",
-  releasing: "Releasing",
-};
-
 export function NumberStatusBadge({ status }: { status: PhoneNumberStatus }) {
-  if (status === "active") return <Badge variant="success">Active</Badge>;
-  if (status === "error") return <Badge variant="destructive">Error</Badge>;
-  if (status === "released") return <Badge variant="ghost">Released</Badge>;
+  const t = useTranslations("phoneNumbers.status");
+  const tc = useTranslations("common");
+
+  if (status === "active") return <Badge variant="success">{tc("labels.active")}</Badge>;
+  if (status === "error") return <Badge variant="destructive">{t("error")}</Badge>;
+  if (status === "released") return <Badge variant="ghost">{t("released")}</Badge>;
+
+  const transitionalLabels: Record<"purchasing" | "configuring" | "releasing", string> = {
+    purchasing: t("purchasing"),
+    configuring: t("configuring"),
+    releasing: t("releasing"),
+  };
   return (
     <Badge variant="info" className="gap-1.5">
       <Spinner className="size-3" />
-      {TRANSITIONAL_LABELS[status]}
+      {transitionalLabels[status]}
     </Badge>
   );
 }

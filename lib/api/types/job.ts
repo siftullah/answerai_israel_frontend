@@ -1,5 +1,6 @@
 /** Mirrors app/Http/Resources/BusinessJobResource.php (the API speaks "jobs"). */
 
+import { labelMap } from "@/lib/i18n/label-map";
 import type { LineItemKind } from "./invoice";
 
 export const JOB_STATUSES = [
@@ -14,32 +15,25 @@ export type JobStatus = (typeof JOB_STATUSES)[number];
 /** The Active tab's status set — jobs not yet closed. */
 export const ACTIVE_JOB_STATUSES: readonly JobStatus[] = ["open", "scheduled", "in_progress"];
 
-export const JOB_STATUS_LABELS: Record<JobStatus, string> = {
-  open: "Open",
-  scheduled: "Scheduled",
-  in_progress: "In progress",
-  completed: "Completed",
-  canceled: "Canceled",
-};
+export const JOB_STATUS_LABELS: Record<JobStatus, string> = labelMap(
+  "lib.jobStatus",
+  ["open", "scheduled", "in_progress", "completed", "canceled"]
+);
 
 export const JOB_PRIORITIES = ["low", "normal", "high"] as const;
 export type JobPriority = (typeof JOB_PRIORITIES)[number];
 
-export const JOB_PRIORITY_LABELS: Record<JobPriority, string> = {
-  low: "Low",
-  normal: "Normal",
-  high: "High",
-};
+export const JOB_PRIORITY_LABELS: Record<JobPriority, string> = labelMap(
+  "lib.jobPriority",
+  ["low", "normal", "high"]
+);
 
 export type JobSource = "manual" | "agent_call" | "api" | "lead" | "quote";
 
-export const JOB_SOURCE_LABELS: Record<JobSource, string> = {
-  manual: "Added manually",
-  agent_call: "From a call",
-  api: "Via the API",
-  lead: "Converted from a lead",
-  quote: "Converted from a quote",
-};
+export const JOB_SOURCE_LABELS: Record<JobSource, string> = labelMap(
+  "lib.jobSource",
+  ["manual", "agent_call", "api", "lead", "quote"]
+);
 
 export interface JobContactRef {
   id: string;

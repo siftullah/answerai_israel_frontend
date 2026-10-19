@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -50,6 +51,8 @@ export function BuyNumberDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("phoneNumbers");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const agentsQuery = useAgents(business.id);
   const purchase = usePurchasePhoneNumber(business.id);
@@ -73,8 +76,10 @@ export function BuyNumberDialog({
 
   const availability = useAvailablePhoneNumbers(business.id, contains);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => buyDetailsSchema(tv), [tv]);
   const form = useForm<BuyDetailsValues>({
-    resolver: zodResolver(buyDetailsSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultBuyDetailsValues(),
   });
   const { errors } = form.formState;
@@ -86,7 +91,7 @@ export function BuyNumberDialog({
     if (!selected) return;
     purchase.mutate(toPurchasePayload(selected.e164, values), {
       onSuccess: () => {
-        toast.success("Number purchase started — it'll be live shortly");
+        toast.success(t("toasts.purchaseStarted"));
         onOpenChange(false);
       },
       onError: (error) => {
@@ -94,7 +99,7 @@ export function BuyNumberDialog({
         if (error.status === 409) {
           setStep("pick");
           setSelected(null);
-          setPickError("That number was just taken — pick another.");
+          setPickError(t("buy.taken"));
           void availability.refetch();
           return;
         }
@@ -109,11 +114,9 @@ export function BuyNumberDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
-          <DialogTitle>Buy a number</DialogTitle>
+          <DialogTitle>{t("buy.title")}</DialogTitle>
           <DialogDescription>
-            {step === "pick"
-              ? "Pick an Australian local number for your AI to answer."
-              : "Confirm the details for your new number."}
+            {step === "pick" ? t("buy.pickDescription") : t("buy.detailsDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -122,16 +125,14 @@ export function BuyNumberDialog({
             <div className="flex flex-col gap-1.5">
               <Input
                 value={searchInput}
-                placeholder="e.g. 02 or 9955"
+                placeholder={t("buy.searchPlaceholder")}
                 autoComplete="off"
-                aria-label="Search numbers by digits"
+                aria-label={t("buy.searchLabel")}
                 onChange={(event) =>
                   setSearchInput(event.target.value.replace(/[^0-9+\s]/g, "").slice(0, 20))
                 }
               />
-              <p className="text-xs text-muted-foreground">
-                Start with an area code to match from the beginning, e.g. 02 for Sydney or 03 for Melbourne.
-              </p>
+              <p className="text-xs text-muted-foreground">{t("buy.searchHint")}</p>
             </div>
 
             {pickError && (
@@ -152,7 +153,7 @@ export function BuyNumberDialog({
               </Alert>
             ) : results.length === 0 ? (
               <p className="py-6 text-center text-sm text-muted-foreground">
-                No matches — try different digits.
+                {t("buy.noMatches")}
               </p>
             ) : (
               // The inset padding keeps the selected row's ring from being
@@ -164,7 +165,7 @@ export function BuyNumberDialog({
                     key={number.e164}
                     onClick={() => setSelected(number)}
                     className={cn(
-                      "flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-left transition-colors hover:bg-accent",
+                      "flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-start transition-colors hover:bg-accent",
                       selected?.e164 === number.e164 && "border-primary ring-1 ring-primary"
                     )}
                   >
@@ -181,10 +182,10 @@ export function BuyNumberDialog({
 
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button type="button" disabled={!selected} onClick={() => setStep("details")}>
-                Next
+                {tc("actions.next")}
               </Button>
             </DialogFooter>
           </>
@@ -208,10 +209,10 @@ export function BuyNumberDialog({
                 </div>
 
                 <Field data-invalid={!!errors.friendly_name || undefined}>
-                  <FieldLabel htmlFor="buy-friendly-name">Friendly name</FieldLabel>
+                  <FieldLabel htmlFor="buy-friendly-name">{t("form.friendlyName")}</FieldLabel>
                   <Input
                     id="buy-friendly-name"
-                    placeholder="Main line"
+                    placeholder={t("form.friendlyNamePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.friendly_name}
                     {...form.register("friendly_name")}
@@ -236,9 +237,7 @@ export function BuyNumberDialog({
                   optional
                 />
 
-                <p className="text-sm text-muted-foreground">
-                  You can assign or change agents any time after purchase.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("buy.agentsHint")}</p>
 
                 <DialogFooter>
                   <Button
@@ -247,11 +246,11 @@ export function BuyNumberDialog({
                     disabled={purchase.isPending}
                     onClick={() => setStep("pick")}
                   >
-                    Back
+                    {tc("actions.back")}
                   </Button>
                   <Button type="submit" disabled={purchase.isPending}>
                     {purchase.isPending && <Spinner />}
-                    Buy number
+                    {t("page.buyNumber")}
                   </Button>
                 </DialogFooter>
               </form>

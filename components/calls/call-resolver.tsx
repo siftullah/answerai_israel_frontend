@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowLeftIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ErrorState } from "@/components/error-state";
@@ -16,6 +17,7 @@ import { useCall } from "@/hooks/use-calls";
  * consult-leg details, which never appear in the lists.
  */
 export function CallResolver() {
+  const t = useTranslations("calls");
   const { callUuid } = useParams<{ businessUuid: string; callUuid: string }>();
   const { business } = useBusiness();
   const router = useRouter();
@@ -39,14 +41,12 @@ export function CallResolver() {
           size="sm"
           render={<Link href={`/b/${business.id}/calls/inbound-logs`} />}
         >
-          <ArrowLeftIcon />
-          Call logs
+          <ArrowLeftIcon className="rtl:-scale-x-100" />
+          {t("resolver.backToLogs")}
         </Button>
         <ErrorState
-          title={notFound ? "Call not found" : "Couldn't load this call"}
-          message={
-            notFound ? "This call doesn't exist or was removed." : callQuery.error.message
-          }
+          title={notFound ? t("errors.notFoundTitle") : t("errors.loadFailedTitle")}
+          message={notFound ? t("errors.notFoundMessage") : callQuery.error.message}
           onRetry={notFound ? undefined : () => callQuery.refetch()}
         />
       </div>

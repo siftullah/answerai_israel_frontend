@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { MegaphoneIcon, PhoneOffIcon, TagIcon, Trash2Icon, XIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -63,6 +64,8 @@ export function BulkActionBar({
   onSelectAllMatching: () => void;
   onClear: () => void;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const bulkAction = useBulkContactAction(business.id);
   const tagsQuery = useContactTags(business.id);
@@ -73,8 +76,8 @@ export function BulkActionBar({
 
   const allMatching = selection.mode === "all-matching";
   const label = allMatching
-    ? "Everything matching your filters selected"
-    : `${count} selected`;
+    ? t("bulk.allMatchingSelected")
+    : tc("pagination.selectedCount", { count: count ?? 0 });
 
   const targets: Pick<ContactBulkPayload, "ids" | "filters"> = allMatching
     ? { filters }
@@ -105,7 +108,6 @@ export function BulkActionBar({
 
   const existingTags = tagsQuery.data ?? [];
   const untagItems = existingTags.map((value) => ({ value, label: value }));
-  const plural = (n: number) => (n === 1 ? "contact" : "contacts");
 
   return (
     <>
@@ -113,13 +115,13 @@ export function BulkActionBar({
         <span className="px-1.5 text-sm font-medium whitespace-nowrap">{label}</span>
         {showSelectAllMatching && (
           <Button variant="link" size="sm" onClick={onSelectAllMatching}>
-            Select everything matching
+            {t("bulk.selectAllMatching")}
           </Button>
         )}
         <Separator orientation="vertical" className="mx-1 h-5" />
         <Button variant="ghost" size="sm" onClick={() => setDialog("tag")}>
           <TagIcon />
-          Tag
+          {t("bulk.tag")}
         </Button>
         <Button
           variant="ghost"
@@ -128,15 +130,15 @@ export function BulkActionBar({
           onClick={() => setDialog("untag")}
         >
           <TagIcon />
-          Untag
+          {t("bulk.untag")}
         </Button>
         <Button variant="ghost" size="sm" onClick={() => setDialog("campaign")}>
           <MegaphoneIcon />
-          Add to campaign
+          {t("addToCampaign")}
         </Button>
         <Button variant="ghost" size="sm" onClick={() => setDialog("dnc")}>
           <PhoneOffIcon />
-          Add to DNC
+          {t("addToDnc")}
         </Button>
         <Button
           variant="ghost"
@@ -145,10 +147,15 @@ export function BulkActionBar({
           onClick={() => setDialog("delete")}
         >
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </Button>
         <Separator orientation="vertical" className="mx-1 h-5" />
-        <Button variant="ghost" size="icon-sm" aria-label="Clear selection" onClick={onClear}>
+        <Button
+          variant="ghost"
+          size="icon-sm"
+          aria-label={t("bulk.clearSelection")}
+          onClick={onClear}
+        >
           <XIcon />
         </Button>
       </div>
@@ -162,23 +169,25 @@ export function BulkActionBar({
         >
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>{dialog === "tag" ? "Add a tag" : "Remove a tag"}</DialogTitle>
+              <DialogTitle>
+                {dialog === "tag" ? t("bulk.addTagTitle") : t("bulk.removeTagTitle")}
+              </DialogTitle>
               <DialogDescription>
                 {dialog === "tag"
-                  ? "The tag is added to every selected contact."
-                  : "The tag is removed from every selected contact that has it."}
+                  ? t("bulk.addTagDescription")
+                  : t("bulk.removeTagDescription")}
               </DialogDescription>
             </DialogHeader>
             <div className="flex flex-col gap-4">
               {dialog === "tag" ? (
                 <Field>
-                  <FieldLabel htmlFor="bulk-tag">Tag</FieldLabel>
+                  <FieldLabel htmlFor="bulk-tag">{t("fields.tag")}</FieldLabel>
                   <Input
                     id="bulk-tag"
                     value={tag}
                     maxLength={40}
                     autoComplete="off"
-                    placeholder="e.g. vip"
+                    placeholder={t("bulk.tagPlaceholder")}
                     onChange={(event) => setTag(event.target.value)}
                   />
                   {existingTags.length > 0 && (
@@ -195,14 +204,14 @@ export function BulkActionBar({
                 </Field>
               ) : (
                 <Field>
-                  <FieldLabel htmlFor="bulk-untag">Tag</FieldLabel>
+                  <FieldLabel htmlFor="bulk-untag">{t("fields.tag")}</FieldLabel>
                   <Select
                     items={untagItems}
                     value={tag || null}
                     onValueChange={(value) => setTag((value as string | null) ?? "")}
                   >
                     <SelectTrigger id="bulk-untag" className="w-full">
-                      <SelectValue placeholder="Choose a tag" />
+                      <SelectValue placeholder={t("bulk.chooseTag")} />
                     </SelectTrigger>
                     <SelectContent>
                       {untagItems.map((item) => (
@@ -217,7 +226,7 @@ export function BulkActionBar({
             </div>
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={closeDialog}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button
                 type="button"
@@ -225,15 +234,15 @@ export function BulkActionBar({
                 onClick={() =>
                   dialog === "tag"
                     ? run({ action: "tag", tag: tag.trim() }, (n) =>
-                        `Tagged ${n} ${plural(n)}`
+                        t("bulk.tagged", { count: n })
                       )
                     : run({ action: "untag", tag: tag.trim() }, (n) =>
-                        `Removed the tag from ${n} ${plural(n)}`
+                        t("bulk.untagged", { count: n })
                       )
                 }
               >
                 {bulkAction.isPending && <Spinner />}
-                {dialog === "tag" ? "Add tag" : "Remove tag"}
+                {dialog === "tag" ? t("bulk.addTag") : t("bulk.removeTag")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -264,25 +273,22 @@ export function BulkActionBar({
         >
           <DialogContent className="sm:max-w-md">
             <DialogHeader>
-              <DialogTitle>Add to the do-not-call list</DialogTitle>
-              <DialogDescription>
-                Each selected contact&apos;s primary number is blocked from outbound
-                calls. Contacts without a phone number are skipped.
-              </DialogDescription>
+              <DialogTitle>{t("bulk.dncTitle")}</DialogTitle>
+              <DialogDescription>{t("bulk.dncDescription")}</DialogDescription>
             </DialogHeader>
             <Field>
-              <FieldLabel htmlFor="bulk-dnc-reason">Reason (optional)</FieldLabel>
+              <FieldLabel htmlFor="bulk-dnc-reason">{t("reasonOptional")}</FieldLabel>
               <Textarea
                 id="bulk-dnc-reason"
                 rows={2}
                 value={reason}
-                placeholder="e.g. Bulk opt-out"
+                placeholder={t("bulk.dncPlaceholder")}
                 onChange={(event) => setReason(event.target.value)}
               />
             </Field>
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={closeDialog}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button
                 type="button"
@@ -290,12 +296,12 @@ export function BulkActionBar({
                 onClick={() =>
                   run(
                     { action: "dnc", ...(reason.trim() ? { reason: reason.trim() } : {}) },
-                    (n) => `Added ${n} ${plural(n)} to the do-not-call list`
+                    (n) => t("bulk.addedToDnc", { count: n })
                   )
                 }
               >
                 {bulkAction.isPending && <Spinner />}
-                Add to DNC
+                {t("addToDnc")}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -312,22 +318,18 @@ export function BulkActionBar({
           <AlertDialogHeader>
             <AlertDialogTitle>
               {allMatching
-                ? "Delete every contact matching your filters?"
-                : `Delete ${count} ${plural(count ?? 0)}?`}
+                ? t("bulk.deleteAllTitle")
+                : t("bulk.deleteTitle", { count: count ?? 0 })}
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes them from your contact book. Past call logs keep their names.
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t("bulk.deleteDescription")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               disabled={bulkAction.isPending}
-              onClick={() =>
-                run({ action: "delete" }, (n) => `Deleted ${n} ${plural(n)}`)
-              }
+              onClick={() => run({ action: "delete" }, (n) => t("bulk.deleted", { count: n }))}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

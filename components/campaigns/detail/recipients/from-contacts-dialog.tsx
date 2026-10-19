@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -45,6 +46,8 @@ export function FromContactsDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const addFromContacts = useAddRecipientsFromContacts(business.id, campaign.id);
   const tagsQuery = useContactTags(business.id);
@@ -73,10 +76,10 @@ export function FromContactsDialog({
 
   const tagItems = useMemo(
     () => [
-      { value: "all", label: "All tags" },
+      { value: "all", label: t("recipients.fromContactsDialog.allTags") },
       ...(tagsQuery.data ?? []).map((value) => ({ value, label: value })),
     ],
-    [tagsQuery.data]
+    [tagsQuery.data, t]
   );
 
   const explicitCount = selectionApi.count ?? 0;
@@ -95,7 +98,7 @@ export function FromContactsDialog({
       onError: (error) =>
         toast.error(
           error.reason === "campaign_locked"
-            ? "This campaign has finished — recipients can no longer be added."
+            ? t("recipients.errors.locked")
             : error.message
         ),
     });
@@ -105,11 +108,8 @@ export function FromContactsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[min(44rem,85dvh)] flex-col gap-0 overflow-hidden p-0 sm:max-w-2xl">
         <DialogHeader className="border-b px-6 py-4">
-          <DialogTitle>Add from contacts</DialogTitle>
-          <DialogDescription>
-            Each contact&apos;s primary number joins the campaign. Contacts without a
-            phone are skipped; do-not-call numbers are blocked automatically.
-          </DialogDescription>
+          <DialogTitle>{t("recipients.fromContactsDialog.title")}</DialogTitle>
+          <DialogDescription>{t("recipients.fromContactsDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-6">
@@ -117,7 +117,7 @@ export function FromContactsDialog({
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search name, company or phone"
+              placeholder={t("recipients.fromContactsDialog.searchPlaceholder")}
               className="w-full sm:w-64"
               autoComplete="off"
             />
@@ -126,7 +126,7 @@ export function FromContactsDialog({
               value={tag}
               onValueChange={(value) => setTag((value as string | null) ?? "all")}
             >
-              <SelectTrigger aria-label="Filter by tag">
+              <SelectTrigger aria-label={t("recipients.fromContactsDialog.filterByTag")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -149,21 +149,21 @@ export function FromContactsDialog({
             </p>
           ) : contacts.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">
-              No contacts match.
+              {t("recipients.fromContactsDialog.noMatches")}
             </p>
           ) : (
             <div className="flex flex-col rounded-xl border">
               <label className="flex cursor-pointer items-center gap-3 border-b bg-muted/50 px-3 py-2">
                 <Checkbox
-                  aria-label="Select all loaded contacts"
+                  aria-label={t("recipients.fromContactsDialog.selectAllLoaded")}
                   checked={allLoadedSelected}
                   indeterminate={!allLoadedSelected && selectionApi.active}
                   onCheckedChange={() => selectionApi.togglePage(loadedIds)}
                 />
                 <span className="text-sm font-medium">
                   {allMatching
-                    ? "Everything matching your filters selected"
-                    : `${explicitCount} selected`}
+                    ? t("recipients.fromContactsDialog.allMatchingSelected")
+                    : tc("pagination.selectedCount", { count: explicitCount })}
                 </span>
                 {allLoadedSelected && !allMatching && Boolean(contactsQuery.hasNextPage) && (
                   <Button
@@ -172,7 +172,7 @@ export function FromContactsDialog({
                     size="sm"
                     onClick={selectionApi.enterAllMatching}
                   >
-                    Select everything matching
+                    {t("recipients.fromContactsDialog.selectAllMatching")}
                   </Button>
                 )}
               </label>
@@ -185,16 +185,22 @@ export function FromContactsDialog({
                     className="flex cursor-pointer items-center gap-3 border-b px-3 py-2 last:border-0 hover:bg-muted/30"
                   >
                     <Checkbox
-                      aria-label={`Select ${contactDisplayName(contact)}`}
+                      aria-label={t("a11y.selectItem", { name: contactDisplayName(contact) })}
                       checked={selectionApi.isSelected(contact.id)}
                       onCheckedChange={() => selectionApi.toggle(contact.id, loadedIds)}
                     />
                     <span className="min-w-0 flex-1 truncate text-sm font-medium">
                       {contactDisplayName(contact)}
                     </span>
-                    {contact.on_dnc && <Badge variant="destructive">On DNC</Badge>}
+                    {contact.on_dnc && (
+                      <Badge variant="destructive">
+                        {t("recipients.fromContactsDialog.onDnc")}
+                      </Badge>
+                    )}
                     <span className="shrink-0 text-sm text-muted-foreground tabular-nums">
-                      {phone ? formatE164(phone.e164) : "No phone"}
+                      {phone
+                        ? formatE164(phone.e164)
+                        : t("recipients.fromContactsDialog.noPhone")}
                     </span>
                   </label>
                 );
@@ -210,7 +216,7 @@ export function FromContactsDialog({
                     onClick={() => void contactsQuery.fetchNextPage()}
                   >
                     {contactsQuery.isFetchingNextPage && <Spinner />}
-                    Load more
+                    {t("recipients.fromContactsDialog.loadMore")}
                   </Button>
                 </div>
               )}
@@ -219,15 +225,14 @@ export function FromContactsDialog({
 
           {overIdCap && (
             <p className="text-sm text-destructive">
-              Up to {MAX_EXPLICIT_IDS} individually-picked contacts per batch — use
-              &ldquo;Select everything matching&rdquo; with filters instead.
+              {t("recipients.fromContactsDialog.overCap", { max: MAX_EXPLICIT_IDS })}
             </p>
           )}
         </div>
 
         <DialogFooter className="border-t px-6 py-4">
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             type="button"
@@ -235,7 +240,9 @@ export function FromContactsDialog({
             onClick={submit}
           >
             {addFromContacts.isPending && <Spinner />}
-            {allMatching ? "Add all matching" : `Add ${explicitCount} to campaign`}
+            {allMatching
+              ? t("recipients.fromContactsDialog.addAllMatching")
+              : t("recipients.fromContactsDialog.addCount", { count: explicitCount })}
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -1,4 +1,5 @@
 import { isUnitPriced, type DurationUnit, type PriceType } from "@/lib/api/types";
+import { rt } from "@/lib/i18n/runtime";
 
 /**
  * Money is integer agorot everywhere in the API; inputs and summaries deal
@@ -29,12 +30,13 @@ export function formatCents(cents: number, currency = "ILS"): string {
   }).format(cents / 100);
 }
 
-const UNIT_SUFFIX: Partial<Record<PriceType, string>> = {
-  hourly: "/hour",
-  daily: "/day",
-  weekly: "/week",
-  monthly: "/month",
-  yearly: "/year",
+/** Per-unit price wording ("₪180/hour"); `fixed` renders the bare amount. */
+const UNIT_PRICE: Partial<Record<PriceType, (price: string) => string>> = {
+  hourly: (price) => rt("lib.money.perHour", { price }),
+  daily: (price) => rt("lib.money.perDay", { price }),
+  weekly: (price) => rt("lib.money.perWeek", { price }),
+  monthly: (price) => rt("lib.money.perMonth", { price }),
+  yearly: (price) => rt("lib.money.perYear", { price }),
 };
 
 export function priceSummary(item: {
@@ -44,17 +46,20 @@ export function priceSummary(item: {
   price_min_cents: number | null;
   price_max_cents: number | null;
 }): string {
-  if (!item.has_price || !item.price_type) return "No price";
-  if (item.price_type === "custom_message") return "Custom message";
+  if (!item.has_price || !item.price_type) return rt("lib.money.noPrice");
+  if (item.price_type === "custom_message") return rt("lib.money.customMessage");
   if (item.price_type === "range") {
-    if (item.price_min_cents === null || item.price_max_cents === null) return "Price not set";
+    if (item.price_min_cents === null || item.price_max_cents === null) {
+      return rt("lib.money.priceNotSet");
+    }
     return `${formatCents(item.price_min_cents)}–${formatCents(item.price_max_cents)}`;
   }
   if (isUnitPriced(item.price_type)) {
-    if (item.price_cents === null) return "Price not set";
-    return `${formatCents(item.price_cents)}${UNIT_SUFFIX[item.price_type] ?? ""}`;
+    if (item.price_cents === null) return rt("lib.money.priceNotSet");
+    const price = formatCents(item.price_cents);
+    return UNIT_PRICE[item.price_type]?.(price) ?? price;
   }
-  return "Price not set";
+  return rt("lib.money.priceNotSet");
 }
 
 /** priceSummary over a Partial payload (extraction drafts). */
@@ -74,12 +79,13 @@ export function payloadPriceSummary(p: {
   });
 }
 
-const DURATION_LABELS: Record<DurationUnit, [string, string]> = {
-  hours: ["hr", "hrs"],
-  days: ["day", "days"],
-  weeks: ["wk", "wks"],
-  months: ["mth", "mths"],
-  years: ["yr", "yrs"],
+/** "1 hr" / "3 hrs" — ICU plurals, so each language picks its own forms. */
+const DURATION_LABELS: Record<DurationUnit, (count: number) => string> = {
+  hours: (count) => rt("lib.money.duration.hours", { count }),
+  days: (count) => rt("lib.money.duration.days", { count }),
+  weeks: (count) => rt("lib.money.duration.weeks", { count }),
+  months: (count) => rt("lib.money.duration.months", { count }),
+  years: (count) => rt("lib.money.duration.years", { count }),
 };
 
 export function durationSummary(item: {
@@ -88,7 +94,5 @@ export function durationSummary(item: {
   duration_quantity: number | null;
 }): string | null {
   if (!item.has_duration || !item.duration_unit || item.duration_quantity === null) return null;
-  const quantity = item.duration_quantity;
-  const [singular, plural] = DURATION_LABELS[item.duration_unit];
-  return `${quantity} ${quantity === 1 ? singular : plural}`;
+  return DURATION_LABELS[item.duration_unit](item.duration_quantity);
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -39,8 +41,12 @@ export function RescheduleCallbackDialog({
   const { business } = useBusiness();
   const reschedule = useRescheduleCallback(businessUuid);
 
+  const t = useTranslations("callbacks");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => rescheduleCallbackSchema(tv), [tv]);
   const form = useForm<RescheduleCallbackValues>({
-    resolver: zodResolver(rescheduleCallbackSchema),
+    resolver: zodResolver(schema),
     defaultValues: utcIsoToZonedFields(callback.scheduled_at, business.timezone),
   });
   const rootServerError = (
@@ -52,7 +58,7 @@ export function RescheduleCallbackDialog({
       { id: callback.id, ...toReschedulePayload(values, business.timezone) },
       {
         onSuccess: () => {
-          toast.success("Callback rescheduled");
+          toast.success(t("toasts.rescheduled"));
           onOpenChange(false);
         },
         onError: (error) => applyCallbackServerErrors(form, error),
@@ -64,11 +70,8 @@ export function RescheduleCallbackDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Reschedule callback</DialogTitle>
-          <DialogDescription>
-            Pick a new time. Call attempts restart, and the assignee&apos;s reminder will be
-            sent again for the new time.
-          </DialogDescription>
+          <DialogTitle>{t("rescheduleDialog.title")}</DialogTitle>
+          <DialogDescription>{t("rescheduleDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <FormProvider {...form}>
@@ -87,10 +90,10 @@ export function RescheduleCallbackDialog({
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button type="submit" disabled={reschedule.isPending}>
-                {reschedule.isPending ? "Rescheduling…" : "Reschedule"}
+                {reschedule.isPending ? t("actions.rescheduling") : t("actions.reschedule")}
               </Button>
             </DialogFooter>
           </form>

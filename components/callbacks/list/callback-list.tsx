@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import {
   Empty,
   EmptyDescription,
@@ -36,6 +37,7 @@ export function CallbackList({
   emptyDescription: string;
   emptyAction?: React.ReactNode;
 }) {
+  const t = useTranslations("callbacks.list");
   const { business } = useBusiness();
   const query = useCallbacksInfinite(businessUuid, filters);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ export function CallbackList({
   if (query.isError) {
     return (
       <ErrorState
-        title="Couldn't load callbacks"
+        title={t("loadFailed")}
         message={query.error.message}
         onRetry={() => query.refetch()}
       />

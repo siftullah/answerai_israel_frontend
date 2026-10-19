@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   BanIcon,
   CopyIcon,
@@ -38,6 +39,8 @@ export function CampaignRowActions({
   businessUuid: string;
   actions: CampaignActionHandlers;
 }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   const { status } = campaign;
   const canStart = status === "draft" || status === "scheduled";
   const canCancel = status === "scheduled" || status === "running" || status === "paused";
@@ -49,7 +52,11 @@ export function CampaignRowActions({
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${campaign.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("a11y.actionsFor", { name: campaign.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -59,40 +66,40 @@ export function CampaignRowActions({
           render={<Link href={`/b/${businessUuid}/calls/campaigns/${campaign.id}`} />}
         >
           <EyeIcon />
-          Open
+          {tc("actions.open")}
         </DropdownMenuItem>
         {canStart && (
           <DropdownMenuItem onClick={() => actions.onStart(campaign)}>
             <PlayIcon />
-            {status === "scheduled" ? "Start now" : "Start"}
+            {status === "scheduled" ? t("actions.startNow") : t("actions.start")}
           </DropdownMenuItem>
         )}
         {status === "running" && (
           <DropdownMenuItem onClick={() => actions.onPause(campaign)}>
             <PauseIcon />
-            Pause
+            {t("actions.pause")}
           </DropdownMenuItem>
         )}
         {status === "paused" && (
           <DropdownMenuItem onClick={() => actions.onResume(campaign)}>
             <PlayIcon />
-            Resume
+            {t("actions.resume")}
           </DropdownMenuItem>
         )}
         <DropdownMenuItem onClick={() => actions.onDuplicate(campaign)}>
           <CopyIcon />
-          Duplicate
+          {t("actions.duplicate")}
         </DropdownMenuItem>
         {canCancel && (
           <DropdownMenuItem variant="destructive" onClick={() => actions.onCancel(campaign)}>
             <BanIcon />
-            Cancel campaign
+            {t("actions.cancelCampaign")}
           </DropdownMenuItem>
         )}
         {canDelete && (
           <DropdownMenuItem variant="destructive" onClick={() => actions.onDelete(campaign)}>
             <Trash2Icon />
-            Delete
+            {tc("actions.delete")}
           </DropdownMenuItem>
         )}
       </DropdownMenuContent>

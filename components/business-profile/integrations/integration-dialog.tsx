@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -51,14 +53,18 @@ export function IntegrationDialog({
   provider: IntegrationProviderInfo;
 }) {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.integrations");
+  const tc = useTranslations("common");
   const connect = useConnectIntegration(business.id);
   const update = useUpdateIntegration(business.id);
 
   const connection = provider.connection;
   const editing = Boolean(connection && connection.status !== "disconnected");
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => integrationSettingsSchema(tv), [tv]);
   const form = useForm<IntegrationSettingsValues>({
-    resolver: zodResolver(integrationSettingsSchema),
+    resolver: zodResolver(schema),
     defaultValues: toIntegrationSettingsValues(
       connection,
       provider.feeds.map((feed) => feed.key)
@@ -82,7 +88,7 @@ export function IntegrationDialog({
         { id: connection.id, payload: { settings } },
         {
           onSuccess: () => {
-            toast.success("Settings saved — re-syncing now");
+            toast.success(t("toasts.settingsSaved"));
             onOpenChange(false);
           },
           onError,
@@ -93,7 +99,7 @@ export function IntegrationDialog({
         { provider: provider.key, settings },
         {
           onSuccess: () => {
-            toast.success(`${provider.name} connected — syncing your listings now`);
+            toast.success(t("toasts.connected", { name: provider.name }));
             onOpenChange(false);
           },
           onError,
@@ -107,12 +113,12 @@ export function IntegrationDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {editing ? `Manage ${provider.name}` : `Connect ${provider.name}`}
+            {editing
+              ? t("dialog.manageTitle", { name: provider.name })
+              : t("dialog.connectTitle", { name: provider.name })}
           </DialogTitle>
           <DialogDescription>
-            {editing
-              ? "Changes re-run the sync straight away. Feeds you untick have their listings removed from your AI's knowledge."
-              : "Enter your agency ID and choose which listing feeds keep your AI up to date."}
+            {editing ? t("dialog.manageDescription") : t("dialog.connectDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -124,24 +130,21 @@ export function IntegrationDialog({
           )}
 
           <Field data-invalid={!!errors.agency_id || undefined}>
-            <FieldLabel htmlFor="integration-agency-id">Agency ID</FieldLabel>
+            <FieldLabel htmlFor="integration-agency-id">{t("dialog.agencyId")}</FieldLabel>
             <Input
               id="integration-agency-id"
-              placeholder="e.g. XNWXYZ"
+              placeholder={t("dialog.agencyIdPlaceholder")}
               autoComplete="off"
               maxLength={50}
               aria-invalid={!!errors.agency_id}
               {...form.register("agency_id")}
             />
-            <FieldDescription>
-              Your realestate.com.au agency identifier — your account manager or Agency
-              Admin can provide it.
-            </FieldDescription>
+            <FieldDescription>{t("dialog.agencyIdHint")}</FieldDescription>
             {errors.agency_id && <FieldError>{errors.agency_id.message}</FieldError>}
           </Field>
 
           <Field data-invalid={!!errors.feeds || undefined}>
-            <FieldLabel>Listing feeds</FieldLabel>
+            <FieldLabel>{t("dialog.feeds")}</FieldLabel>
             <Controller
               control={form.control}
               name="feeds"
@@ -180,11 +183,11 @@ export function IntegrationDialog({
 
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={pending}>
               {pending && <Spinner />}
-              {editing ? "Save & re-sync" : "Connect"}
+              {editing ? t("dialog.saveResync") : t("actions.connect")}
             </Button>
           </DialogFooter>
         </form>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   EllipsisVerticalIcon,
   PencilIcon,
@@ -83,14 +84,6 @@ import { draftToProductPayload } from "@/lib/validation/product";
 
 type Availability = "all" | "available" | "unavailable";
 
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the filter trigger shows e.g. "all".
-const AVAILABILITY_ITEMS: { value: Availability; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "available", label: "Available" },
-  { value: "unavailable", label: "Unavailable" },
-];
-
 function ProductRowActions({
   product,
   onEdit,
@@ -100,11 +93,17 @@ function ProductRowActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${product.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={ts("rowActions", { name: product.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -112,11 +111,11 @@ function ProductRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -125,6 +124,17 @@ function ProductRowActions({
 
 export function ProductsView() {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.products");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
+
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the filter trigger shows e.g. "all".
+  const availabilityItems: { value: Availability; label: string }[] = [
+    { value: "all", label: tc("labels.all") },
+    { value: "available", label: ts("available") },
+    { value: "unavailable", label: ts("unavailable") },
+  ];
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search.trim(), 300);
@@ -153,7 +163,7 @@ export function ProductsView() {
       (item) => item.name
     );
     if (items.length === 0) {
-      toast.info("Nothing usable was extracted from that source.");
+      toast.info(ts("nothingExtracted"));
       return;
     }
     setDraftRows(toDraftRows(items.map(draftToProductPayload)));
@@ -162,23 +172,23 @@ export function ProductsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Products"
-        description="Products your AI can discuss and quote on calls."
+        title={t("title")}
+        description={t("description")}
         actions={
           <>
             <ExtractionDialog
               target="products"
-              title="Extract products"
-              description="Pull your product list from your website or a document. You review every row before anything is added."
+              title={t("extract.title")}
+              description={t("extract.description")}
               onReady={(extraction) => onExtractionReady(extraction.draft)}
             />
             <Button variant="outline" onClick={() => setImportOpen(true)}>
               <UploadIcon />
-              Import
+              {tc("actions.import")}
             </Button>
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add product
+              {t("add")}
             </Button>
           </>
         }
@@ -188,27 +198,27 @@ export function ProductsView() {
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search products"
+          placeholder={t("searchPlaceholder")}
           className="w-full sm:w-64"
           autoComplete="off"
         />
         <Select
-          items={AVAILABILITY_ITEMS}
+          items={availabilityItems}
           value={availability}
           onValueChange={(value) => setAvailability((value as Availability | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by availability">
+          <SelectTrigger aria-label={ts("filterByAvailability")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {AVAILABILITY_ITEMS.map((item) => (
+            {availabilityItems.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ml-auto" />
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ms-auto" />
       </div>
 
       {productsQuery.isPending ? (
@@ -219,32 +229,29 @@ export function ProductsView() {
         </div>
       ) : productsQuery.isError ? (
         <ErrorState
-          title="Couldn't load products"
+          title={t("loadError")}
           message={productsQuery.error.message}
           onRetry={() => productsQuery.refetch()}
         />
       ) : productsQuery.data.length === 0 ? (
         hasFilters ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No products match your search.
+            {t("noMatches")}
           </p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>Add your first product</EmptyTitle>
-              <EmptyDescription>
-                Products give your AI the catalog it can discuss and quote. Add them one
-                by one or import a spreadsheet.
-              </EmptyDescription>
+              <EmptyTitle>{t("empty.title")}</EmptyTitle>
+              <EmptyDescription>{t("empty.description")}</EmptyDescription>
             </EmptyHeader>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setImportOpen(true)}>
                 <UploadIcon />
-                Import
+                {tc("actions.import")}
               </Button>
               <Button onClick={() => setEditor({ source: null })}>
                 <PlusIcon />
-                Add product
+                {t("add")}
               </Button>
             </div>
           </Empty>
@@ -274,16 +281,18 @@ export function ProductsView() {
               <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                 <span>{priceSummary(product)}</span>
                 {product.agent_scope === "all" ? (
-                  <span>· All agents</span>
+                  <span>· {ts("allAgents")}</span>
                 ) : (
-                  <Badge variant="secondary">{product.agent_ids.length} selected</Badge>
+                  <Badge variant="secondary">
+                    {ts("selectedAgents", { count: product.agent_ids.length })}
+                  </Badge>
                 )}
               </div>
               <div className="mt-auto flex items-center justify-between border-t pt-3">
-                <span className="text-sm text-muted-foreground">Available</span>
+                <span className="text-sm text-muted-foreground">{ts("available")}</span>
                 <Switch
                   checked={product.available}
-                  aria-label={`Toggle availability of ${product.name}`}
+                  aria-label={ts("toggleAvailability", { name: product.name })}
                   onCheckedChange={(checked) =>
                     updateProduct.mutate(
                       { id: product.id, payload: { available: checked } },
@@ -300,10 +309,10 @@ export function ProductsView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Agents</TableHead>
-                <TableHead>Available</TableHead>
+                <TableHead>{tc("labels.name")}</TableHead>
+                <TableHead>{ts("price")}</TableHead>
+                <TableHead>{ts("agents")}</TableHead>
+                <TableHead>{ts("available")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -325,15 +334,17 @@ export function ProductsView() {
                   </TableCell>
                   <TableCell>
                     {product.agent_scope === "all" ? (
-                      <span className="text-muted-foreground">All agents</span>
+                      <span className="text-muted-foreground">{ts("allAgents")}</span>
                     ) : (
-                      <Badge variant="secondary">{product.agent_ids.length} selected</Badge>
+                      <Badge variant="secondary">
+                        {ts("selectedAgents", { count: product.agent_ids.length })}
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
                     <Switch
                       checked={product.available}
-                      aria-label={`Toggle availability of ${product.name}`}
+                      aria-label={ts("toggleAvailability", { name: product.name })}
                       onCheckedChange={(checked) =>
                         updateProduct.mutate(
                           { id: product.id, payload: { available: checked } },
@@ -383,24 +394,24 @@ export function ProductsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your AI will no longer know about this product. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteProduct.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Product deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -412,8 +423,9 @@ export function ProductsView() {
           onOpenChange={(next) => {
             if (!next) setDraftRows(null);
           }}
-          title="Review extracted products"
-          itemNoun="product"
+          title={t("review.title")}
+          addLabel={(count) => t("review.addCount", { count })}
+          addedLabel={(count) => t("review.addedCount", { count })}
           rows={draftRows}
           onRowsChange={setDraftRows}
           summary={(item) => ({

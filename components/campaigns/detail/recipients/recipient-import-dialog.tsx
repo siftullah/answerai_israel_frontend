@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -54,6 +55,8 @@ export function RecipientImportDialog({
   /** Fired on the 202 — the tab starts its settling poll. */
   onImported: () => void;
 }) {
+  const t = useTranslations("campaigns.recipients.importDialog");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const previewMutation = useRecipientsImportPreview(campaign.id);
   const importMutation = useRecipientsImport(business.id, campaign.id);
@@ -78,11 +81,11 @@ export function RecipientImportDialog({
     if (!file) return;
     const name = file.name.toLowerCase();
     if (!FILE_EXTENSIONS.some((ext) => name.endsWith(ext))) {
-      setError("Use a CSV, TXT, XLS or XLSX file.");
+      setError(t("invalidType"));
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setError("The file must be 10 MB or smaller.");
+      setError(t("tooLarge"));
       return;
     }
     setError(null);
@@ -123,12 +126,12 @@ export function RecipientImportDialog({
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows e.g. "none" or an index.
   const columnItems = (current: number | null | undefined) => [
-    { value: "none", label: "Not imported" },
+    { value: "none", label: t("notImported") },
     ...(preview?.columns ?? [])
       .filter((column) => column.index === current || !usedIndexes.includes(column.index))
       .map((column) => ({
         value: column.index.toString(),
-        label: column.header || `Column ${column.index + 1}`,
+        label: column.header || t("columnNumber", { number: column.index + 1 }),
       })),
   ];
 
@@ -147,7 +150,7 @@ export function RecipientImportDialog({
       },
       {
         onSuccess: () => {
-          toast.success("Import started — rows appear as they're processed.");
+          toast.success(t("started"));
           onImported();
           onOpenChange(false);
         },
@@ -155,7 +158,7 @@ export function RecipientImportDialog({
           if (apiError.errors?.token) {
             setPreview(null);
             resetMapping();
-            setError("The upload expired — choose the file again.");
+            setError(t("expired"));
           } else {
             setError(apiError.message);
           }
@@ -205,11 +208,9 @@ export function RecipientImportDialog({
       <DialogContent className="gap-0 p-0 sm:max-w-2xl">
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="border-b px-6 py-4">
-            <DialogTitle>Import recipients</DialogTitle>
+            <DialogTitle>{t("title")}</DialogTitle>
             <DialogDescription>
-              {preview
-                ? "Match your spreadsheet columns to the campaign fields."
-                : "Upload a spreadsheet — CSV, TXT, XLS or XLSX, up to 10 MB."}
+              {preview ? t("mappingDescription") : t("uploadDescription")}
             </DialogDescription>
           </DialogHeader>
 
@@ -239,24 +240,22 @@ export function RecipientImportDialog({
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {previewMutation.isPending ? <Spinner /> : <UploadIcon />}
-                  Choose file
+                  {t("chooseFile")}
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  Rows are matched to your contacts by phone number.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("matchHint")}</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto rounded-xl border">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b bg-muted/50 text-left">
+                      <tr className="border-b bg-muted/50 text-start">
                         {preview.columns.map((column) => (
                           <th
                             key={column.index}
                             className="px-3 py-2 font-medium whitespace-nowrap"
                           >
-                            {column.header || `Column ${column.index + 1}`}
+                            {column.header || t("columnNumber", { number: column.index + 1 })}
                           </th>
                         ))}
                       </tr>
@@ -285,21 +284,21 @@ export function RecipientImportDialog({
                     onCheckedChange={(checked) => setHasHeaderRow(checked === true)}
                   />
                   <FieldLabel htmlFor="recipients-has-header-row" className="font-normal">
-                    The first row contains column headings
+                    {t("hasHeaderRow")}
                   </FieldLabel>
                 </Field>
 
                 <div className="grid gap-4 sm:grid-cols-2">
                   {renderColumnSelect(
                     "import-phone-column",
-                    "Phone column",
+                    t("phoneColumn"),
                     true,
                     phoneColumn,
                     setPhoneColumn
                   )}
                   {renderColumnSelect(
                     "import-name-column",
-                    "Name column",
+                    t("nameColumn"),
                     false,
                     nameColumn,
                     setNameColumn
@@ -308,10 +307,8 @@ export function RecipientImportDialog({
 
                 {declaredVariables.length > 0 && (
                   <div className="flex flex-col gap-2">
-                    <p className="text-sm font-medium">Variables</p>
-                    <p className="text-sm text-muted-foreground">
-                      Fill the agent&apos;s placeholders per recipient from a column.
-                    </p>
+                    <p className="text-sm font-medium">{t("variables")}</p>
+                    <p className="text-sm text-muted-foreground">{t("variablesHint")}</p>
                     <div className="grid gap-4 sm:grid-cols-2">
                       {declaredVariables.map((variable) =>
                         renderColumnSelect(
@@ -335,10 +332,7 @@ export function RecipientImportDialog({
                   </div>
                 )}
 
-                <p className="text-sm text-muted-foreground">
-                  Invalid and do-not-call numbers still appear in the list with their
-                  reason, so nothing disappears silently. Duplicates are skipped.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("footnote")}</p>
               </>
             )}
           </div>
@@ -356,7 +350,7 @@ export function RecipientImportDialog({
                     setError(null);
                   }}
                 >
-                  Back
+                  {tc("actions.back")}
                 </Button>
                 <Button
                   type="button"
@@ -364,12 +358,12 @@ export function RecipientImportDialog({
                   disabled={phoneColumn === null || importMutation.isPending}
                 >
                   {importMutation.isPending && <Spinner />}
-                  Import
+                  {tc("actions.import")}
                 </Button>
               </>
             ) : (
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
             )}
           </DialogFooter>

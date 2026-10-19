@@ -1,5 +1,7 @@
 /** Mirrors app/Http/Resources/CallbackResource.php */
 
+import { labelMap } from "@/lib/i18n/label-map";
+
 export const CALLBACK_STATUSES = [
   "scheduled",
   "queued",
@@ -29,42 +31,34 @@ export const TERMINAL_CALLBACK_STATUSES: readonly CallbackStatus[] = [
 /** Statuses the list keeps polling for — the dispatcher is mid-flight. */
 export const ACTIVE_CALLBACK_STATUSES: readonly CallbackStatus[] = ["queued", "in_progress"];
 
-export const CALLBACK_STATUS_LABELS: Record<CallbackStatus, string> = {
-  scheduled: "Scheduled",
-  queued: "Calling",
-  in_progress: "In progress",
-  completed: "Completed",
-  no_answer: "No answer",
-  failed: "Failed",
-  canceled: "Canceled",
-};
+export const CALLBACK_STATUS_LABELS: Record<CallbackStatus, string> = labelMap(
+  "lib.callbackStatus",
+  ["scheduled", "queued", "in_progress", "completed", "no_answer", "failed", "canceled"]
+);
 
 export const CALLBACK_TYPES = ["agent", "team_member"] as const;
 export type CallbackType = (typeof CALLBACK_TYPES)[number];
 
-export const CALLBACK_TYPE_LABELS: Record<CallbackType, string> = {
-  agent: "AI agent",
-  team_member: "Team member",
-};
+export const CALLBACK_TYPE_LABELS: Record<CallbackType, string> = labelMap(
+  "lib.callbackType",
+  ["agent", "team_member"]
+);
 
 export const CALLBACK_SOURCES = ["manual", "agent_call", "api"] as const;
 export type CallbackSource = (typeof CALLBACK_SOURCES)[number];
 
-export const CALLBACK_SOURCE_LABELS: Record<CallbackSource, string> = {
-  manual: "Manual",
-  agent_call: "Agent call",
-  api: "API",
-};
+export const CALLBACK_SOURCE_LABELS: Record<CallbackSource, string> = labelMap(
+  "lib.callbackSource",
+  ["manual", "agent_call", "api"]
+);
 
 export const CALLBACK_OUTCOMES = ["reached", "voicemail", "no_answer", "handled"] as const;
 export type CallbackOutcome = (typeof CALLBACK_OUTCOMES)[number];
 
-export const CALLBACK_OUTCOME_LABELS: Record<CallbackOutcome, string> = {
-  reached: "Reached",
-  voicemail: "Left voicemail",
-  no_answer: "No answer",
-  handled: "Handled",
-};
+export const CALLBACK_OUTCOME_LABELS: Record<CallbackOutcome, string> = labelMap(
+  "lib.callbackOutcome",
+  ["reached", "voicemail", "no_answer", "handled"]
+);
 
 export interface CallbackRef {
   id: string;

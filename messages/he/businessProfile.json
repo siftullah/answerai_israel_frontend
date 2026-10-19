@@ -1,0 +1,657 @@
+{
+  "meta": {
+    "overview": "פרופיל העסק",
+    "basicInfo": "פרטים בסיסיים",
+    "calendar": "יומן",
+    "docs": "מסמכים",
+    "faqs": "שאלות נפוצות",
+    "integrations": "אינטגרציות",
+    "modules": "מודולים",
+    "policies": "מדיניות",
+    "products": "מוצרים",
+    "services": "שירותים",
+    "team": "צוות",
+    "transfers": "העברת שיחות"
+  },
+  "shared": {
+    "charCount": "{count, number} / {max, number}",
+    "discardChanges": "ביטול השינויים"
+  },
+  "overview": {
+    "subtitle": "פרופיל העסק",
+    "computing": "בודקים מה הושלם…",
+    "progress": "{done} מתוך {total} סעיפים הושלמו",
+    "aiCard": {
+      "title": "הגדרה מהירה יותר עם AI",
+      "description": "חילוץ שירותים, שאלות נפוצות, מדיניות ועוד מהאתר שלכם — תוכלו לבדוק הכל לפני השמירה."
+    },
+    "tiles": {
+      "basicInfo": {
+        "set": "הוגדר",
+        "summary": "הפרטים הוגדרו",
+        "cta": "הוספת פרטי העסק"
+      },
+      "services": {
+        "summary": "{count, plural, one {# שירות} two {# שירותים} other {# שירותים}}",
+        "cta": "הוספת שירות"
+      },
+      "products": {
+        "summary": "{count, plural, one {# מוצר} two {# מוצרים} other {# מוצרים}}",
+        "cta": "הוספת מוצר"
+      },
+      "faqs": {
+        "summary": "{count, plural, one {# שאלה נפוצה} two {# שאלות נפוצות} other {# שאלות נפוצות}}",
+        "cta": "הוספת שאלה נפוצה"
+      },
+      "policies": {
+        "summary": "{count, plural, one {# פריט מדיניות} two {# פריטי מדיניות} other {# פריטי מדיניות}}",
+        "cta": "הוספת מדיניות"
+      },
+      "docs": {
+        "summary": "{count, plural, one {# מסמך} two {# מסמכים} other {# מסמכים}}",
+        "cta": "הוספת מסמך"
+      },
+      "team": {
+        "summary": "{count, plural, one {# חבר צוות} two {# חברי צוות} other {# חברי צוות}}",
+        "cta": "הוספת הצוות"
+      },
+      "transfers": {
+        "summary": "{count, plural, one {# יעד להעברת שיחה} two {# יעדים להעברת שיחה} other {# יעדים להעברת שיחה}}",
+        "cta": "הוספת יעד להעברת שיחה"
+      },
+      "calendar": {
+        "stat": "{minutes} דק׳",
+        "summary": "משבצות זמן של {minutes} דק׳",
+        "cta": "בדיקת ברירות המחדל"
+      },
+      "integrations": {
+        "connected": "מחובר",
+        "connecting": "מתחבר",
+        "optional": "אופציונלי"
+      }
+    }
+  },
+  "agentScope": {
+    "title": "גישת סוכני AI",
+    "description": "אילו סוכני AI יכולים להשתמש בזה.",
+    "noAgents": "אין עדיין סוכני AI — צרו קודם סוכן AI, ואז בחרו אותו כאן.",
+    "purpose": {
+      "inbound": "שיחות נכנסות",
+      "outbound": "שיחות יוצאות",
+      "consult": "ייעוץ"
+    },
+    "scope": {
+      "all": "כל סוכני ה-AI",
+      "allDescription": "סוכני AI קיימים ועתידיים יוכלו להשתמש בזה.",
+      "selected": "סוכני AI נבחרים",
+      "selectedDescription": "בחרו בדיוק אילו סוכני AI יקבלו את המידע."
+    }
+  },
+  "durationEditor": {
+    "hasDuration": "יש משך זמן קבוע",
+    "duration": "משך זמן",
+    "durationPlaceholder": "2",
+    "unit": "יחידה",
+    "choose": "בחרו",
+    "units": {
+      "hours": "שעות",
+      "days": "ימים",
+      "weeks": "שבועות",
+      "months": "חודשים",
+      "years": "שנים"
+    }
+  },
+  "entityModal": {
+    "discardDialog": {
+      "title": "לבטל את השינויים?",
+      "description": "השינויים שלכם לא נשמרו."
+    }
+  },
+  "faqAttachment": {
+    "composer": {
+      "question": "שאלה",
+      "questionPlaceholder": "האם אתם נותנים הצעות מחיר בחינם?",
+      "answer": "תשובה",
+      "answerPlaceholder": "כן — אנחנו נותנים הצעות מחיר לרוב העבודות תוך יום עסקים אחד…",
+      "save": "שמירת שאלה נפוצה",
+      "errors": {
+        "bothRequired": "הוסיפו גם שאלה וגם תשובה.",
+        "tooLong": "הקפידו על פחות מ-500 תווים בשאלה ופחות מ-5,000 תווים בתשובה."
+      }
+    },
+    "own": {
+      "title": "{owner, select, service {שאלות נפוצות ייעודיות לשירות הזה} other {שאלות נפוצות ייעודיות למוצר הזה}}",
+      "description": "{owner, select, service {משמשות רק בשיחות על השירות הזה — הן נשמרות כאן, ולא בעמוד השאלות הנפוצות.} other {משמשות רק בשיחות על המוצר הזה — הן נשמרות כאן, ולא בעמוד השאלות הנפוצות.}}",
+      "add": "הוספת שאלה נפוצה",
+      "editAria": "עריכת {question}",
+      "deleteAria": "מחיקת {question}",
+      "removeAria": "הסרת {question}",
+      "empty": "{owner, select, service {עדיין אין שאלות נפוצות ייעודיות — הוסיפו תשובות ספציפיות לשירות הזה.} other {עדיין אין שאלות נפוצות ייעודיות — הוסיפו תשובות ספציפיות למוצר הזה.}}"
+    },
+    "business": {
+      "title": "שאלות נפוצות לכל העסק",
+      "inheritHint": "כל השאלות נבחרו — שאלות נפוצות חדשות של העסק יחולו אוטומטית.",
+      "customHint": "בחירה מותאמת אישית — שאלות נפוצות חדשות של העסק לא יחולו עד שתסמנו אותן.",
+      "empty": "עדיין אין שאלות נפוצות לכל העסק — הוסיפו אותן באזור השאלות הנפוצות.",
+      "searchPlaceholder": "חיפוש שאלות נפוצות",
+      "selectNone": "ביטול כל הבחירות",
+      "noMatch": "לא נמצאו שאלות נפוצות התואמות לחיפוש.",
+      "copyTitle": "{owner, select, service {יצירת עותק רק לשירות הזה} other {יצירת עותק רק למוצר הזה}}",
+      "copyAria": "{owner, select, service {העתקת שאלה נפוצה לשירות הזה} other {העתקת שאלה נפוצה למוצר הזה}}"
+    },
+    "deleteDialog": {
+      "title": "למחוק את השאלה הנפוצה הזו?",
+      "description": "{owner, select, service {רק השאלה הנפוצה הייעודית לשירות הזה תוסר — השאלות הנפוצות של כלל העסק לא יושפעו.} other {רק השאלה הנפוצה הייעודית למוצר הזה תוסר — השאלות הנפוצות של כלל העסק לא יושפעו.}}"
+    },
+    "toasts": {
+      "copyCreated": "{owner, select, service {נוצר עותק — הוא משויך כעת לשירות הזה וניתן לערוך אותו בנפרד.} other {נוצר עותק — הוא משויך כעת למוצר הזה וניתן לערוך אותו בנפרד.}}",
+      "faqAdded": "{owner, select, service {נוספה שאלה נפוצה לשירות הזה} other {נוספה שאלה נפוצה למוצר הזה}}",
+      "faqDeleted": "השאלה הנפוצה נמחקה"
+    }
+  },
+  "priceEditor": {
+    "hasPrice": "יש מחיר",
+    "aiCanQuote": "סוכן AI יכול לציין את המחיר",
+    "aiCanQuoteHint": "כשהאפשרות כבויה, המחיר נשמר לתיעוד בלבד — הוא לעולם לא ייאמר בשיחות.",
+    "priceType": "סוג מחיר",
+    "choose": "בחרו",
+    "types": {
+      "fixed": "קבוע",
+      "hourly": "לשעה",
+      "daily": "ליום",
+      "weekly": "לשבוע",
+      "monthly": "לחודש",
+      "yearly": "לשנה",
+      "range": "טווח",
+      "customMessage": "הודעה מותאמת אישית"
+    },
+    "amountLabels": {
+      "fixed": "מחיר",
+      "hourly": "מחיר לשעה",
+      "daily": "מחיר ליום",
+      "weekly": "מחיר לשבוע",
+      "monthly": "מחיר לחודש",
+      "yearly": "מחיר לשנה"
+    },
+    "minimum": "מינימום",
+    "maximum": "מקסימום",
+    "customMessageLabel": "מה לומר במקום מחיר",
+    "customMessagePlaceholder": "הצעת מחיר לאחר בדיקה ללא עלות."
+  },
+  "viewMode": {
+    "label": "שינוי תצוגה",
+    "table": "טבלה",
+    "cards": "כרטיסים"
+  },
+  "weeklyHours": {
+    "availableOn": "זמינות ב{day}",
+    "windowStart": "תחילת חלון זמן {number} ב{day}",
+    "windowEnd": "סיום חלון זמן {number} ב{day}",
+    "to": "עד",
+    "removeWindow": "הסרת חלון זמן",
+    "addWindow": "הוספת חלון זמן",
+    "unavailable": "אין זמינות"
+  },
+  "basicInfo": {
+    "title": "פרטים בסיסיים",
+    "description": "פרטי קשר, תיאור, מיקום ולוגו שסוכן ה-AI יכול לשתף.",
+    "extractTitle": "חילוץ פרטים בסיסיים",
+    "extractDescription": "חילוץ פרטי קשר, תיאור, רשתות חברתיות ומיקום מאתר האינטרנט שלכם או ממסמך. תוכלו לבדוק הכל לפני השמירה.",
+    "loadError": "לא ניתן לטעון את פרופיל העסק"
+  },
+  "address": {
+    "placeholder": "התחילו להקליד כתובת",
+    "notConfigured": "חיפוש כתובות לא מוגדר — הזינו את הכתובת ידנית.",
+    "unavailable": "חיפוש כתובות אינו זמין כרגע — הזינו את הכתובת ידנית.",
+    "searching": "בחיפוש…",
+    "noMatches": "לא נמצאו התאמות — המשיכו להקליד או הזינו את הכתובת ידנית."
+  },
+  "businessDetails": {
+    "loadError": "לא ניתן לטעון את שעות הפעילות",
+    "title": "פרטי העסק",
+    "description": "שם העסק, אזור הזמן ושעות הפעילות.",
+    "name": "שם העסק",
+    "namePlaceholder": "יוסי אינסטלציה",
+    "timezone": "אזור זמן",
+    "timezoneHint": "השעות ברחבי הפורטל מוצגות לפי אזור זמן זה.",
+    "tradingHours": "שעות פעילות",
+    "tradingHoursHint": "השעות שבהן העסק פתוח — העברת שיחות וקמפיינים שהוגדרו לפעול בשעות הפעילות יפעלו לפי לוח הזמנים השבועי הזה.",
+    "toasts": {
+      "saved": "פרטי העסק נשמרו"
+    }
+  },
+  "categories": {
+    "placeholder": "הקלידו קטגוריה ולחצו על Enter",
+    "limitReached": "הגעתם למגבלת הקטגוריות"
+  },
+  "logo": {
+    "title": "לוגו",
+    "description": "JPEG, PNG, WebP או SVG, עד 2 MB.",
+    "alt": "לוגו העסק",
+    "replace": "החלפה",
+    "upload": "העלאת לוגו",
+    "removeDialog": {
+      "title": "להסיר את הלוגו?",
+      "description": "אפשר להעלות לוגו חדש בכל עת."
+    },
+    "toasts": {
+      "invalidType": "השתמשו בתמונה בפורמט JPEG, PNG, WebP או SVG.",
+      "tooLarge": "גודל הלוגו חייב להיות עד 2 MB.",
+      "updated": "הלוגו עודכן",
+      "removed": "הלוגו הוסר"
+    }
+  },
+  "timezone": {
+    "pick": "בחרו אזור זמן",
+    "searchPlaceholder": "חיפוש אזורי זמן…",
+    "empty": "לא נמצא אזור זמן תואם."
+  },
+  "profileForm": {
+    "draft": {
+      "title": "הפרטים שחולצו מולאו",
+      "description": "בדקו את הערכים המודגשים למטה, תקנו את מה שצריך ושמרו.",
+      "discard": "ביטול הטיוטה"
+    },
+    "contact": {
+      "title": "פרטי קשר",
+      "description": "איך לקוחות — וסוכן ה-AI שלכם — יכולים ליצור קשר עם העסק.",
+      "email": "אימייל לפרסום",
+      "emailPlaceholder": "hello@yourbusiness.com.au",
+      "phone": "טלפון לפרסום",
+      "phonePlaceholder": "(02) 5550 1234",
+      "website": "אתר אינטרנט",
+      "websitePlaceholder": "https://yourbusiness.com.au"
+    },
+    "about": {
+      "title": "על העסק",
+      "description": "מה סוכן ה-AI שלכם אומר כשמתקשרים שואלים במה העסק עוסק.",
+      "descriptionPlaceholder": "ספרו למתקשרים במה אתם עוסקים, למי אתם נותנים שירות ומה הופך אתכם לבחירה הנכונה…",
+      "categories": "קטגוריות",
+      "yearFounded": "שנת הקמה",
+      "yearFoundedPlaceholder": "2015",
+      "country": "מדינה",
+      "currency": "מטבע"
+    },
+    "countries": {
+      "IL": "ישראל",
+      "AU": "אוסטרליה",
+      "NZ": "ניו זילנד",
+      "GB": "הממלכה המאוחדת",
+      "US": "ארצות הברית"
+    },
+    "currencies": {
+      "ILS": "ILS — שקל חדש",
+      "AUD": "AUD — דולר אוסטרלי",
+      "NZD": "NZD — דולר ניו זילנדי",
+      "GBP": "GBP — לירה שטרלינג",
+      "USD": "USD — דולר אמריקאי",
+      "EUR": "EUR — אירו"
+    },
+    "socials": {
+      "title": "פרופילים ברשתות חברתיות",
+      "description": "פרופילים מקושרים שסוכן ה-AI שלכם יכול להפנות אליהם מתקשרים."
+    },
+    "location": {
+      "title": "מיקום",
+      "description": "היכן אתם פועלים — משמש להוראות הגעה ולשאלות על נסיעות.",
+      "fixed": "מיקום קבוע",
+      "fixedHint": "הלקוחות מגיעים לבית העסק.",
+      "mobile": "נייד",
+      "mobileHint": "אתם מגיעים ללקוחות.",
+      "online": "באינטרנט בלבד",
+      "onlineHint": "אין מיקום פיזי.",
+      "address": "כתובת",
+      "landmark": "נקודת ציון (אופציונלי)",
+      "landmarkPlaceholder": "ליד סניף הדואר",
+      "baseLocation": "מיקום בסיס",
+      "baseLocationPlaceholder": "ניוקאסל NSW",
+      "travelRadius": "רדיוס נסיעה (ק״מ)",
+      "travelRadiusPlaceholder": "50"
+    },
+    "toasts": {
+      "saved": "הפרופיל נשמר"
+    }
+  },
+  "calendar": {
+    "title": "יומן",
+    "description": "ברירות מחדל לקביעת פגישות ושיחות חוזרות. חברי צוות יכולים להגדיר העדפות משלהם.",
+    "loadError": "לא ניתן לטעון את הגדרות היומן",
+    "intervalMinutes": "{count, plural, one {# דקה} other {# דקות}}",
+    "bookingRules": {
+      "title": "כללים לקביעת מועדים",
+      "description": "איך מוצעות משבצות זמן כשסוכן ה-AI קובע מועדים למתקשרים.",
+      "slotInterval": "מרווח בין משבצות זמן",
+      "minNotice": "זמן מינימלי מראש (דקות)",
+      "minNoticePlaceholder": "120",
+      "minNoticeHint": "שעתיים = 120.",
+      "horizon": "טווח לקביעת מועדים מראש (ימים)",
+      "horizonPlaceholder": "60",
+      "buffer": "זמן פנוי בין מועדים (דקות)",
+      "bufferPlaceholder": "15",
+      "limitBookings": "הגבלת מספר המועדים ביום",
+      "maxPerDay": "מקסימום ליום",
+      "maxPerDayPlaceholder": "8"
+    },
+    "durations": {
+      "title": "משכי זמן",
+      "description": "משכי זמן כברירת מחדל למשבצות זמן שסוכן ה-AI קובע.",
+      "appointment": "פגישה (דקות)",
+      "appointmentPlaceholder": "30",
+      "callback": "שיחה חוזרת (דקות)",
+      "callbackPlaceholder": "15"
+    },
+    "toasts": {
+      "saved": "הגדרות היומן נשמרו"
+    }
+  },
+  "extraction": {
+    "trigger": "חילוץ נתונים בעזרת AI",
+    "running": "חילוץ הנתונים מתבצע… זה עשוי לקחת דקה או שתיים. אפשר להשאיר את החלון פתוח או לבטל.",
+    "sourceUrl": "עמוד באתר אינטרנט",
+    "sourceFile": "מסמך (PDF, DOCX, TXT, MD — עד 10 MB)",
+    "urlPlaceholder": "https://yourbusiness.com.au",
+    "chooseFile": "בחירת קובץ",
+    "noFile": "לא נבחר קובץ",
+    "start": "התחלת חילוץ נתונים",
+    "errors": {
+      "fileType": "השתמשו בקובץ PDF, DOCX, TXT או MD.",
+      "fileSize": "גודל הקובץ חייב להיות 10 MB או פחות.",
+      "failed": "חילוץ הנתונים נכשל. נסו מקור אחר.",
+      "invalidUrl": "הזינו כתובת URL מלאה, כולל https://",
+      "noFile": "בחרו קובץ לחילוץ נתונים."
+    }
+  },
+  "draftReview": {
+    "description": "בטלו את הסימון של פריטים לא רצויים, או ערכו שורה תחילה. אפשר לערוך הכל גם לאחר ההוספה.",
+    "include": "הכללת {name}",
+    "added": "נוסף"
+  },
+  "modules": {
+    "title": "מודולים",
+    "description": "הפעלה או השבתה של תכונות לעסק הזה. כל מודול מוסיף מסכים משלו ומעניק לסוכן ה-AI שלכם יכולות חדשות בשיחות.",
+    "notAvailable": {
+      "title": "לא זמין",
+      "description": "המודולים מנוהלים על ידי בעלי העסק ומנהלי המערכת."
+    },
+    "on": "פעיל",
+    "off": "מושבת",
+    "switchAria": "מודול {label}",
+    "addsTools": "מוסיף את הכלים הבאים לסוכן",
+    "turnOff": "השבתה",
+    "disableDialog": {
+      "title": "להשבית את {label}?",
+      "keeps": "שום דבר לא נמחק — כל מה שכבר תועד נשמר, ואפשר להפעיל מחדש את {label} בכל עת.",
+      "toolsLost": "{count, plural, one {סוכני ה-AI שלכם יאבדו גישה ל-# כלי שהמודול מוסיף ויפורסמו מחדש אוטומטית.} other {סוכני ה-AI שלכם יאבדו גישה ל-# כלים שהמודול מוסיף ויפורסמו מחדש אוטומטית.}}",
+      "sidebar": "המודול {label} ייעלם גם מסרגל הצד לכל המשתמשים בעסק הזה."
+    },
+    "toasts": {
+      "turnedOn": "המודול {label} הופעל",
+      "turnedOff": "המודול {label} הושבת"
+    }
+  },
+  "moduleSettings": {
+    "billing": {
+      "title": "ברירות מחדל לחיוב",
+      "description": "משמשות בכל יצירה של הצעת מחיר או חשבונית — עדיין אפשר לשנות אותן בכל מסמך בנפרד."
+    },
+    "leadCapture": {
+      "title": "קליטת לידים",
+      "description": "איך לידים נרשמים משיחות של הסוכן שלכם."
+    },
+    "jobScheduling": {
+      "title": "תזמון עבודות",
+      "description": "איך נקבעים ביקורי עבודה, בשיחות ובפורטל."
+    },
+    "tax": {
+      "description": "שיעור המס שמוחל כברירת מחדל על פריטים חדשים בהצעות מחיר ובחשבוניות.",
+      "name": "שם המס",
+      "namePlaceholder": "מע\"מ",
+      "rate": "שיעור המס (%)",
+      "ratePlaceholder": "18",
+      "rateHint": "מע\"מ בשיעור 18% לרוב העסקים בישראל.",
+      "errors": {
+        "rate": "הזינו שיעור מס בין 0 ל-100, למשל 10 או 12.5",
+        "name": "הזינו שם קצר למס, למשל מע\"מ"
+      },
+      "save": "שמירת ברירות מחדל למס",
+      "toasts": {
+        "saved": "ברירות המחדל למס נשמרו"
+      }
+    },
+    "leads": {
+      "title": "לידים",
+      "description": "איך נקלטים לידים משיחות נכנסות.",
+      "autoCreate": "יצירה אוטומטית משיחות נכנסות",
+      "autoCreateHint": "לאחר שיחה נכנסת, אם אין ליד פתוח למתקשר, יירשם ליד חדש אוטומטית. הסוכן שלכם תמיד יכול לרשום לידים באמצעות הכלי create_lead.",
+      "save": "שמירת הגדרות לידים",
+      "toasts": {
+        "saved": "הגדרות הלידים נשמרו"
+      }
+    },
+    "jobs": {
+      "title": "עבודות",
+      "description": "איך נקבעים ביקורי עבודה.",
+      "allowScheduling": "לאפשר לסוכן לקבוע ביקורים בשיחות",
+      "allowSchedulingHint": "הסוכן שלכם מציע משבצות זמן פנויות וקובע ביקורי עבודה באמצעות הכלים check_job_availability ו-book_job. כשהאפשרות מושבתת, הוא עדיין רושם עבודות, אבל הצוות מאשר את המועד.",
+      "defaultMinutes": "משך ביקור כברירת מחדל (דקות)",
+      "defaultMinutesHint": "משמש כשאין הערכת משך לעבודה — למשבצות זמן מוצעות ולחלונות זמן שנקבעו.",
+      "errors": {
+        "minutes": "הזינו מספר שלם של דקות בין 1 ל-1440"
+      },
+      "save": "שמירת הגדרות עבודות",
+      "toasts": {
+        "saved": "הגדרות העבודות נשמרו"
+      }
+    },
+    "quotes": {
+      "title": "הצעות מחיר",
+      "description": "ברירות מחדל להצעות מחיר חדשות.",
+      "validDays": "תוקף (ימים)",
+      "validDaysHint": "כמה זמן הצעת מחיר שנשלחה נשארת פתוחה לפני שתוקפה פג.",
+      "errors": {
+        "validDays": "הזינו מספר שלם של ימים בין 1 ל-365"
+      },
+      "terms": "תנאי ברירת מחדל",
+      "termsPlaceholder": "היקף העבודה, החרגות, תנאי תשלום…",
+      "termsHint": "מופיעים אוטומטית בכל הצעת מחיר חדשה; ניתנים לעריכה בכל הצעה.",
+      "fromDetails": "פרטי השולח",
+      "fromDetailsPlaceholder": "מספר חברה (ח.פ.), שם מסחרי, כתובת — יוצגו בתחתית הצעת המחיר",
+      "save": "שמירת הגדרות הצעות מחיר",
+      "toasts": {
+        "saved": "הגדרות הצעות המחיר נשמרו"
+      }
+    },
+    "invoices": {
+      "title": "חשבוניות",
+      "description": "ברירות מחדל לחשבוניות חדשות.",
+      "netDays": "תנאי תשלום (ימים)",
+      "netDaysHint": "בשליחת חשבונית, התאריך לתשלום נקבע לפי מספר הימים הזה ממועד ההנפקה.",
+      "errors": {
+        "netDays": "הזינו מספר שלם של ימים בין 0 ל-365"
+      },
+      "paymentInstructions": "הוראות תשלום",
+      "paymentInstructionsPlaceholder": "העברה בנקאית — BSB, מספר חשבון, אסמכתה…",
+      "paymentInstructionsHint": "מופיעות אוטומטית בכל חשבונית חדשה; ניתנות לעריכה בכל חשבונית.",
+      "fromDetails": "פרטי השולח",
+      "fromDetailsPlaceholder": "מספר חברה (ח.פ.), שם מסחרי, כתובת — יוצגו בתחתית החשבונית",
+      "save": "שמירת הגדרות חשבוניות",
+      "toasts": {
+        "saved": "הגדרות החשבוניות נשמרו"
+      }
+    }
+  },
+  "team": {
+    "title": "צוות",
+    "description": "האנשים בעסק שלכם, התפקידים וההזמנות שלהם.",
+    "addMember": "הוספת חבר צוות",
+    "loadError": "לא ניתן לטעון את הצוות",
+    "actionsFor": "פעולות עבור {name}",
+    "resendInvite": "שליחת הזמנה מחדש",
+    "revokeInvite": "ביטול הזמנה",
+    "inviteToCreate": "הזמנה ליצירת חשבון",
+    "status": {
+      "accountExists": "קיים חשבון",
+      "invited": "נשלחה הזמנה",
+      "inviteExpires": "תוקף ההזמנה יפוג ב-{date}",
+      "noAccount": "אין חשבון",
+      "calendarConnected": "היומן מחובר",
+      "calendar": "יומן"
+    },
+    "columns": {
+      "contact": "איש קשר",
+      "role": "תפקיד"
+    },
+    "removeDialog": {
+      "title": "להסיר את {name}?",
+      "description": "הגישה של חבר הצוות לעסק תבוטל. יעדים להעברת שיחה שמפנים אליו יפסיקו לפעול.",
+      "keepAppointments": "השארת הפגישות העתידיות משויכות לחבר הצוות",
+      "unassignAppointments": "ביטול שיוך הפגישות העתידיות לחבר הצוות"
+    },
+    "revokeDialog": {
+      "title": "לבטל את ההזמנה הזו?",
+      "description": "הקישור יפסיק לפעול מיד.",
+      "confirm": "ביטול הזמנה"
+    },
+    "toasts": {
+      "resent": "ההזמנה נשלחה מחדש",
+      "removed": "חבר הצוות הוסר",
+      "revoked": "ההזמנה בוטלה"
+    }
+  },
+  "invite": {
+    "title": "הזמנת {name}",
+    "description": "יישלח באימייל קישור ליצירת חשבון שישויך לחבר הצוות הזה.",
+    "role": "תפקיד",
+    "chooseRole": "בחרו תפקיד",
+    "send": "שליחת הזמנה",
+    "toasts": {
+      "sent": "ההזמנה נשלחה"
+    }
+  },
+  "member": {
+    "editTitle": "עריכת חבר צוות",
+    "addTitle": "הוספת חבר צוות",
+    "descriptionLocked": "השם והאימייל מנוהלים דרך החשבון של חבר הצוות.",
+    "descriptionEdit": "פרטי חבר הצוות ברשימת הצוות.",
+    "descriptionAdd": "הוסיפו חבר לרשימת הצוות — אפשר גם להזמין אותו ליצור חשבון.",
+    "submitAddInvite": "הוספה ושליחת הזמנה",
+    "submitAdd": "הוספת חבר צוות",
+    "steps": {
+      "details": "פרטים",
+      "availability": "זמינות"
+    },
+    "firstName": "שם פרטי",
+    "firstNamePlaceholder": "סם",
+    "lastName": "שם משפחה",
+    "lastNamePlaceholder": "ריברה",
+    "emailPlaceholder": "sam@yourbusiness.com.au",
+    "phonePlaceholder": "0412 345 678",
+    "position": "תפקיד",
+    "positionPlaceholder": "מנהל אתר",
+    "role": "תפקיד במערכת",
+    "roles": {
+      "owner": "בעלים",
+      "memberDefault": "חבר צוות (ברירת מחדל)"
+    },
+    "sendInvite": "שליחת הזמנה ליצירת חשבון",
+    "sendInviteHint": "חבר הצוות יקבל באימייל קישור ליצירת חשבון שישויך אליו.",
+    "availability": {
+      "title": "זמינות לשיחות",
+      "description": "מתי סוכן ה-AI יכול להעביר שיחות לחבר הצוות.",
+      "inherit": "שעות פעילות",
+      "inheritHint": "זהות לשעות הפעילות של העסק.",
+      "custom": "שעות מותאמות אישית",
+      "customHint": "הגדירו ימים ושעות ספציפיים לחבר הצוות."
+    },
+    "toasts": {
+      "saved": "פרטי חבר הצוות נשמרו",
+      "added": "חבר הצוות נוסף",
+      "addedInviteFailed": "חבר הצוות נוסף, אבל לא ניתן היה לשלוח את ההזמנה",
+      "retryHint": "כדי לנסות שוב, בחרו באפשרות \"הזמנה ליצירת חשבון\" אצל חבר הצוות.",
+      "addedAndInvited": "חבר הצוות נוסף וההזמנה נשלחה"
+    }
+  },
+  "transfers": {
+    "title": "העברת שיחות",
+    "description": "לאן וכיצד סוכן ה-AI מעביר שיחות פעילות.",
+    "addTarget": "הוספת יעד",
+    "mode": {
+      "title": "מצב העברת שיחות",
+      "description": "חל על כל היעדים ברשימה — אי אפשר לשלב בין שני המצבים.",
+      "blind": "העברה עיוורת",
+      "blindHint": "חיבור המתקשר ישירות ליעד.",
+      "screened": "העברה עם תדרוך",
+      "screenedHint": "סוכן ה-AI מתדרך קודם את מקבל השיחה, ואז מחבר את המתקשר."
+    },
+    "loadError": "לא ניתן היה לטעון את היעדים להעברת שיחה",
+    "empty": {
+      "title": "הוסיפו יעד ראשון להעברת שיחה",
+      "description": "היעדים מגדירים לסוכן ה-AI למי אפשר להעביר מתקשרים בזמן שיחה, ומתי."
+    },
+    "columns": {
+      "destination": "יעד",
+      "when": "מתי",
+      "hours": "שעות"
+    },
+    "memberFallback": "חבר צוות",
+    "overrides": "{number} (במקום {name})",
+    "actionsFor": "פעולות עבור {name}",
+    "switchDialog": {
+      "title": "{mode, select, screened {להעביר את כל היעדים למצב העברה עם סינון?} other {להעביר את כל היעדים למצב העברה עיוורת?}}",
+      "description": "הפעולה תשנה את אופן העברת השיחות לכל היעדים ברשימה זו ({count, plural, one {יעד #} other {# יעדים}}).",
+      "confirm": "שינוי מצב"
+    },
+    "deleteDialog": {
+      "title": "למחוק את {name}?",
+      "description": "סוכן ה-AI שלכם לא יעביר עוד שיחות ליעד זה."
+    },
+    "toasts": {
+      "deleted": "היעד להעברת שיחה נמחק"
+    }
+  },
+  "transferTarget": {
+    "editTitle": "עריכת יעד להעברת שיחה",
+    "addTitle": "הוספת יעד להעברת שיחה",
+    "submitAdd": "הוספת יעד",
+    "steps": {
+      "details": "פרטים",
+      "availability": "זמינות"
+    },
+    "kinds": {
+      "member": "חבר צוות",
+      "memberHint": "מישהו מרשימת הצוות שלכם.",
+      "other": "מישהו אחר",
+      "otherHint": "כל מספר טלפון אחר."
+    },
+    "namePlaceholder": "מנהל אתר",
+    "member": "חבר צוות",
+    "alreadyTarget": "כבר מוגדר כיעד",
+    "phone": "מספר טלפון",
+    "phonePlaceholder": "0412 345 678",
+    "memberPhoneHint": "מולא מראש מפרטי חבר הצוות — ערכו כדי להחליף, או נקו כדי להשתמש במספר השמור שלו.",
+    "otherPhoneHint": "מספרים אוסטרליים בלבד, למשל 0412 345 678.",
+    "postDial": "ספרות לחיוג לאחר מענה (אופציונלי)",
+    "postDialPlaceholder": "w123#",
+    "postDialHint": "נשלחות לאחר מענה — ספרות, * ו-#; w ממתין חצי שנייה.",
+    "condition": "מתי להעביר שיחה",
+    "conditionPlaceholder": "המתקשר מבקש הצעת מחיר לעבודה מסחרית.",
+    "availability": {
+      "title": "זמינות",
+      "description": "מתי אפשר להעביר שיחות ליעד זה?"
+    },
+    "hoursModes": {
+      "member": "שעות זמינות",
+      "memberHint": "העברת שיחות רק בשעות הזמינות של חבר הצוות",
+      "inherit": "שעות פעילות",
+      "inheritHint": "העברת שיחות רק בשעות הפעילות של העסק",
+      "custom": "שעות מותאמות אישית",
+      "customHint": "הגדירו ימים ושעות ספציפיים.",
+      "bypass": "בכל זמן",
+      "bypassHint": "בכל שעה, ביום או בלילה."
+    },
+    "toasts": {
+      "saved": "היעד להעברת שיחה נשמר",
+      "added": "היעד להעברת שיחה נוסף"
+    }
+  }
+}

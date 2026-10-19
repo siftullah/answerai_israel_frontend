@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,6 +40,8 @@ export function ReassignAppointmentDialog({
   /** Current assignee user uuid ("" = unassigned). */
   memberId: string;
 }) {
+  const t = useTranslations("calendar");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const membersQuery = useMembers(business.id);
   const reassign = useReassignAppointment(business.id);
@@ -48,7 +51,7 @@ export function ReassignAppointmentDialog({
     (member) => member.has_account && member.user
   );
   const items = [
-    { value: "", label: "Unassigned (shared pool)" },
+    { value: "", label: t("assign.unassignedPool") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -57,7 +60,7 @@ export function ReassignAppointmentDialog({
       { id: appointmentUuid, member_id: selected === "" ? null : selected },
       {
         onSuccess: () => {
-          toast.success("Appointment reassigned");
+          toast.success(t("reassignDialog.toasts.reassigned"));
           onOpenChange(false);
         },
         onError: (error) => toast.error(error.message),
@@ -69,15 +72,12 @@ export function ReassignAppointmentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Reassign appointment</DialogTitle>
-          <DialogDescription>
-            The booking keeps its time — the synced calendar copy moves to the new
-            assignee.
-          </DialogDescription>
+          <DialogTitle>{t("reassignDialog.title")}</DialogTitle>
+          <DialogDescription>{t("reassignDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <Field>
-          <FieldLabel htmlFor="reassign-appointment-member">Assign to</FieldLabel>
+          <FieldLabel htmlFor="reassign-appointment-member">{t("assign.label")}</FieldLabel>
           <Select
             items={items}
             value={selected}
@@ -98,14 +98,14 @@ export function ReassignAppointmentDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             type="button"
             onClick={confirm}
             disabled={reassign.isPending || selected === memberId}
           >
-            {reassign.isPending ? "Reassigning…" : "Reassign"}
+            {reassign.isPending ? t("reassignDialog.reassigning") : t("reassignDialog.reassign")}
           </Button>
         </DialogFooter>
       </DialogContent>

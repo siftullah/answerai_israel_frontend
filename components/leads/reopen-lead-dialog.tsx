@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -24,6 +25,8 @@ export function ReopenLeadDialog({
   lead: Lead;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("leads.reopen");
+  const tc = useTranslations("common");
   const updateLead = useUpdateLead(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
@@ -32,7 +35,7 @@ export function ReopenLeadDialog({
     updateLead.mutate(
       { id: lead.id, payload: { status: "contacted" } },
       {
-        onSuccess: () => toast.success("Lead reopened"),
+        onSuccess: () => toast.success(t("toast")),
         onError: (error) => toast.error(error.message),
         onSettled: () => onOpenChange(false),
       }
@@ -43,16 +46,17 @@ export function ReopenLeadDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Reopen this lead?</AlertDialogTitle>
+          <AlertDialogTitle>{t("title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Puts &ldquo;{lead.title}&rdquo; back in the pipeline as Contacted
-            {lead.status === "won" ? " and removes it from the won totals" : ""}.
+            {lead.status === "won"
+              ? t("descriptionWon", { title: lead.title })
+              : t("description", { title: lead.title })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={updateLead.isPending} onClick={confirm}>
-            {updateLead.isPending ? "Saving…" : "Reopen lead"}
+            {updateLead.isPending ? tc("actions.saving") : t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

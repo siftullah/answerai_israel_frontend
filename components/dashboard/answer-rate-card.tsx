@@ -1,6 +1,7 @@
 "use client";
 
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Label, PolarAngleAxis, PolarRadiusAxis, RadialBar, RadialBarChart } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart";
@@ -8,10 +9,6 @@ import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/u
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
 import type { DashboardCalls } from "@/lib/api/types";
-
-const chartConfig = {
-  answered: { label: "Answered" },
-} satisfies ChartConfig;
 
 /** The gauge doubles as a status read: green is healthy, amber is slipping. */
 function rateColor(pct: number): string {
@@ -28,9 +25,15 @@ export function AnswerRateCard({
   calls: DashboardCalls | undefined;
   className?: string;
 }) {
+  const t = useTranslations("dashboard.answerRate");
+
   if (!calls) {
     return <Skeleton className={cn("h-full min-h-[280px] rounded-2xl", className)} />;
   }
+
+  const chartConfig = {
+    answered: { label: t("seriesAnswered") },
+  } satisfies ChartConfig;
 
   const total = calls.last_7_days;
   const pct = total > 0 ? Math.round((calls.answered_last_7 / total) * 100) : 0;
@@ -44,15 +47,15 @@ export function AnswerRateCard({
   return (
     <Card className={cn("h-full", className)}>
       <CardHeader>
-        <CardTitle>Answer rate</CardTitle>
-        <CardDescription>Last 7 days</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("period")}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col items-center justify-center gap-2">
         {total === 0 ? (
           <Empty className="w-full flex-1 border border-dashed py-10">
             <EmptyHeader>
-              <EmptyTitle>No calls this week</EmptyTitle>
-              <EmptyDescription>The gauge fills in once calls come through.</EmptyDescription>
+              <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (
@@ -88,7 +91,7 @@ export function AnswerRateCard({
                             {pct}%
                           </tspan>
                           <tspan x={cx} y={cy + 18} className="fill-muted-foreground text-xs">
-                            answered
+                            {t("gaugeCaption")}
                           </tspan>
                         </text>
                       );
@@ -98,7 +101,7 @@ export function AnswerRateCard({
               </RadialBarChart>
             </ChartContainer>
             <p className="text-xs text-muted-foreground tabular-nums">
-              {calls.answered_last_7} of {total} call{total === 1 ? "" : "s"} answered
+              {t("summary", { answered: calls.answered_last_7, total })}
             </p>
             {deltaPts !== null && (
               <span
@@ -114,8 +117,7 @@ export function AnswerRateCard({
                 ) : (
                   <TrendingDownIcon className="size-3" />
                 )}
-                {deltaPts >= 0 ? "+" : ""}
-                {deltaPts} pts vs prior week
+                {t("delta", { sign: deltaPts >= 0 ? "+" : "", points: deltaPts })}
               </span>
             )}
           </>

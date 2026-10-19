@@ -1,39 +1,57 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { JobPriorityBadge, JobStatusBadge } from "@/components/jobs/job-status-badge";
 import { formatDate, formatDateAndTime } from "@/lib/datetime";
+import type { Translator } from "@/lib/i18n/types";
 import { formatCents } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { Job } from "@/lib/api/types";
+import { JOB_STATUS_LABELS } from "@/lib/api/types";
 
 /** The row's third line: where this job is in its life, visit-first. */
-function dateLine(job: Job, timeZone: string, nowMs: number): { text: string; warn: boolean } {
+function dateLine(
+  job: Job,
+  timeZone: string,
+  nowMs: number,
+  t: Translator
+): { text: string; warn: boolean } {
   switch (job.status) {
     case "completed":
       return {
-        text: job.completed_at ? `Completed ${formatDate(job.completed_at, timeZone)}` : "Completed",
+        text: job.completed_at
+          ? t("completedOn", { date: formatDate(job.completed_at, timeZone) })
+          : JOB_STATUS_LABELS.completed,
         warn: false,
       };
     case "canceled":
       return {
-        text: job.canceled_at ? `Canceled ${formatDate(job.canceled_at, timeZone)}` : "Canceled",
+        text: job.canceled_at
+          ? t("canceledOn", { date: formatDate(job.canceled_at, timeZone) })
+          : JOB_STATUS_LABELS.canceled,
         warn: false,
       };
     case "in_progress":
       return {
         text: job.scheduled_start
-          ? `Started — booked ${formatDateAndTime(job.scheduled_start, timeZone)}`
-          : "In progress",
+          ? t("startedBooked", { date: formatDateAndTime(job.scheduled_start, timeZone) })
+          : JOB_STATUS_LABELS.in_progress,
         warn: false,
       };
     case "scheduled": {
       // A booked window that has already passed without the job moving on.
       const overdue =
         job.scheduled_end !== null && new Date(job.scheduled_end).getTime() < nowMs;
+      const booked = job.scheduled_start
+        ? formatDateAndTime(job.scheduled_start, timeZone)
+        : null;
       return {
-        text: job.scheduled_start
-          ? `${overdue ? "Was booked" : "Booked"} ${formatDateAndTime(job.scheduled_start, timeZone)}`
-          : "Scheduled",
+        text:
+          booked === null
+            ? JOB_STATUS_LABELS.scheduled
+            : overdue
+              ? t("wasBooked", { date: booked })
+              : t("booked", { date: booked }),
         warn: overdue,
       };
     }
@@ -41,8 +59,8 @@ function dateLine(job: Job, timeZone: string, nowMs: number): { text: string; wa
       return {
         text:
           job.source === "agent_call"
-            ? `Captured from a call ${formatDate(job.created_at, timeZone)} — needs a time`
-            : `Added ${formatDate(job.created_at, timeZone)} — needs a time`,
+            ? t("capturedFromCall", { date: formatDate(job.created_at, timeZone) })
+            : t("added", { date: formatDate(job.created_at, timeZone) }),
         warn: job.priority === "high",
       };
   }
@@ -61,7 +79,8 @@ export function JobListRow({
   nowMs: number;
   onSelect: () => void;
 }) {
-  const line = dateLine(job, timeZone, nowMs);
+  const t = useTranslations("jobs.row");
+  const line = dateLine(job, timeZone, nowMs, t);
 
   return (
     <button
@@ -69,7 +88,7 @@ export function JobListRow({
       onClick={onSelect}
       aria-current={selected || undefined}
       className={cn(
-        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-left outline-none transition-colors focus-visible:bg-muted",
+        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-start outline-none transition-colors focus-visible:bg-muted",
         selected
           ? "bg-primary/[0.07]"
           : line.warn

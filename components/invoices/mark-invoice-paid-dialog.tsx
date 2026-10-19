@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -30,6 +31,8 @@ export function MarkInvoicePaidDialog({
   businessUuid: string;
   invoice: Invoice;
 }) {
+  const t = useTranslations("invoices");
+  const tc = useTranslations("common");
   const markPaid = useMarkInvoicePaid(businessUuid);
   const [reference, setReference] = useState("");
   const [serverError, setServerError] = useState<string | null>(null);
@@ -40,7 +43,7 @@ export function MarkInvoicePaidDialog({
       { id: invoice.id, ...(trimmed !== "" ? { payment_reference: trimmed } : {}) },
       {
         onSuccess: () => {
-          toast.success(`Invoice ${invoice.number} marked as paid`);
+          toast.success(t("toasts.markedPaid", { number: invoice.number }));
           onOpenChange(false);
         },
         onError: (error) => setServerError(error.message),
@@ -52,24 +55,28 @@ export function MarkInvoicePaidDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Mark invoice {invoice.number} as paid</DialogTitle>
+          <DialogTitle>{t("markPaidDialog.title", { number: invoice.number })}</DialogTitle>
           <DialogDescription>
-            Records {formatCents(invoice.total_cents, invoice.currency)} from{" "}
-            {invoice.contact?.name ?? "the customer"} as received.
+            {t("markPaidDialog.description", {
+              amount: formatCents(invoice.total_cents, invoice.currency),
+              customer: invoice.contact?.name ?? t("theCustomer"),
+            })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <Field>
-            <FieldLabel htmlFor="mark-paid-reference">Payment reference</FieldLabel>
+            <FieldLabel htmlFor="mark-paid-reference">
+              {t("markPaidDialog.referenceLabel")}
+            </FieldLabel>
             <Input
               id="mark-paid-reference"
               value={reference}
               onChange={(event) => setReference(event.target.value)}
               maxLength={200}
-              placeholder="Bank transfer #88213"
+              placeholder={t("markPaidDialog.referencePlaceholder")}
             />
-            <FieldDescription>Optional — how the payment arrived.</FieldDescription>
+            <FieldDescription>{t("markPaidDialog.referenceHint")}</FieldDescription>
           </Field>
 
           {serverError && (
@@ -81,11 +88,11 @@ export function MarkInvoicePaidDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="button" onClick={submit} disabled={markPaid.isPending}>
             <CheckIcon />
-            {markPaid.isPending ? "Saving…" : "Mark as paid"}
+            {markPaid.isPending ? tc("actions.saving") : t("actions.markPaid")}
           </Button>
         </DialogFooter>
       </DialogContent>

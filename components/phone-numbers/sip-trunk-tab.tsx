@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -38,11 +39,8 @@ import {
 import { formatDate } from "@/lib/datetime";
 import type { SipCredentials } from "@/lib/api/types";
 
-const SETUP_STEPS = [
-  "We create digest credentials for you on our shared SIP domain.",
-  "Point a trunk on your PBX or carrier at your destination URI.",
-  "Register the numbers that trunk carries and route each to an agent.",
-];
+/** The literal token the destination URI template carries — data, not copy. */
+const NUMBER_PLACEHOLDER = "{your_number_e164}";
 
 function DetailRow({ label, value }: { label: string; value: string }) {
   return (
@@ -54,7 +52,15 @@ function DetailRow({ label, value }: { label: string; value: string }) {
 }
 
 export function SipTrunkTab() {
+  const t = useTranslations("phoneNumbers");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
+
+  const setupSteps = [
+    t("sip.setup.stepCredentials"),
+    t("sip.setup.stepPointTrunk"),
+    t("sip.setup.stepRegister"),
+  ];
 
   const sipQuery = useSipConnection(business.id);
   const numbersQuery = usePhoneNumbers(business.id);
@@ -88,7 +94,7 @@ export function SipTrunkTab() {
   if (sipQuery.isError) {
     return (
       <ErrorState
-        title="Couldn't load your SIP connection"
+        title={t("sip.loadError")}
         message={sipQuery.error.message}
         onRetry={() => sipQuery.refetch()}
       />
@@ -102,14 +108,12 @@ export function SipTrunkTab() {
       {connection === null ? (
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Bring your own SIP trunk</CardTitle>
-            <CardDescription>
-              Keep your existing numbers and carrier — route their calls to your AI.
-            </CardDescription>
+            <CardTitle>{t("sip.setup.title")}</CardTitle>
+            <CardDescription>{t("sip.setup.description")}</CardDescription>
           </CardHeader>
           <CardContent>
             <ol className="flex flex-col gap-3">
-              {SETUP_STEPS.map((step, index) => (
+              {setupSteps.map((step, index) => (
                 <li key={step} className="flex items-start gap-3">
                   <span className="flex size-6 shrink-0 items-center justify-center rounded-full border text-xs font-medium text-muted-foreground">
                     {index + 1}
@@ -122,7 +126,7 @@ export function SipTrunkTab() {
           <CardFooter>
             <Button onClick={handleConnect} disabled={connect.isPending}>
               {connect.isPending && <Spinner />}
-              Connect SIP trunk
+              {t("sip.setup.connect")}
             </Button>
           </CardFooter>
         </Card>
@@ -130,35 +134,33 @@ export function SipTrunkTab() {
         <Card className="max-w-2xl">
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
-              <CardTitle>SIP trunk</CardTitle>
-              <Badge variant="success">Active</Badge>
+              <CardTitle>{t("tabs.sip")}</CardTitle>
+              <Badge variant="success">{tc("labels.active")}</Badge>
             </div>
-            <CardDescription>
-              Your PBX authenticates against our shared SIP domain with these details.
-            </CardDescription>
+            <CardDescription>{t("sip.activeDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
-            <DetailRow label="Username" value={connection.username} />
-            <DetailRow label="SIP domain" value={connection.domain} />
+            <DetailRow label={t("sipFields.username")} value={connection.username} />
+            <DetailRow label={t("sipFields.domain")} value={connection.domain} />
             <DetailRow
-              label="Connected"
+              label={t("sip.connected")}
               value={formatDate(connection.connected_at, business.timezone)}
             />
             <DetailRow
-              label="Last rotated"
+              label={t("sip.lastRotated")}
               value={
                 connection.last_rotated_at
                   ? formatDate(connection.last_rotated_at, business.timezone)
-                  : "Never"
+                  : t("sip.never")
               }
             />
             <div className="pt-2">
               {/* Derived from the domain — mirrors the backend's
                   destination_uri_format from the connect response. */}
               <CopyField
-                label="Destination URI"
-                value={`sip:{your_number_e164}@${connection.domain}`}
-                hint="Replace {your_number_e164} with each number you register."
+                label={t("sipFields.destinationUri")}
+                value={`sip:${NUMBER_PLACEHOLDER}@${connection.domain}`}
+                hint={t("sipFields.destinationHint", { placeholder: NUMBER_PLACEHOLDER })}
               />
             </div>
           </CardContent>
@@ -169,7 +171,7 @@ export function SipTrunkTab() {
               disabled={rotate.isPending}
             >
               {rotate.isPending && <Spinner />}
-              Rotate password
+              {t("sip.rotatePassword")}
             </Button>
             <Button
               variant="ghost"
@@ -178,12 +180,11 @@ export function SipTrunkTab() {
               disabled={liveSipCount > 0 || disconnect.isPending}
             >
               {disconnect.isPending && <Spinner />}
-              Disconnect
+              {t("sip.disconnect")}
             </Button>
             {liveSipCount > 0 && (
               <p className="w-full text-sm text-muted-foreground">
-                Release your {liveSipCount} SIP{" "}
-                {liveSipCount === 1 ? "number" : "numbers"} before disconnecting.
+                {t("sip.releaseFirst", { count: liveSipCount })}
               </p>
             )}
           </CardFooter>
@@ -192,17 +193,15 @@ export function SipTrunkTab() {
         <Card className="max-w-2xl">
           <CardHeader>
             <div className="flex items-center justify-between gap-2">
-              <CardTitle>SIP trunk</CardTitle>
-              <Badge variant="secondary">Disconnected</Badge>
+              <CardTitle>{t("tabs.sip")}</CardTitle>
+              <Badge variant="secondary">{t("sip.disconnected")}</Badge>
             </div>
-            <CardDescription>
-              Reconnecting issues fresh credentials — your old password will not come back.
-            </CardDescription>
+            <CardDescription>{t("sip.disconnectedDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-2">
             {connection.disconnected_at && (
               <DetailRow
-                label="Disconnected"
+                label={t("sip.disconnected")}
                 value={formatDate(connection.disconnected_at, business.timezone)}
               />
             )}
@@ -210,7 +209,7 @@ export function SipTrunkTab() {
           <CardFooter>
             <Button onClick={handleConnect} disabled={connect.isPending}>
               {connect.isPending && <Spinner />}
-              Reconnect
+              {t("sip.reconnect")}
             </Button>
           </CardFooter>
         </Card>
@@ -227,14 +226,11 @@ export function SipTrunkTab() {
       <AlertDialog open={confirmRotate} onOpenChange={setConfirmRotate}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Rotate the SIP password?</AlertDialogTitle>
-            <AlertDialogDescription>
-              The current password stops working immediately — update your PBX with the
-              new one straight away.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("sip.rotateDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("sip.rotateDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               className="bg-cta text-cta-foreground hover:bg-cta/90"
               onClick={() => {
@@ -246,7 +242,7 @@ export function SipTrunkTab() {
                 });
               }}
             >
-              Rotate password
+              {t("sip.rotatePassword")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -255,25 +251,22 @@ export function SipTrunkTab() {
       <AlertDialog open={confirmDisconnect} onOpenChange={setConfirmDisconnect}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disconnect SIP trunk?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your trunk credentials stop working immediately. You can reconnect later —
-              you&apos;ll get fresh credentials.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("sip.disconnectDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("sip.disconnectDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
                 setConfirmDisconnect(false);
                 disconnect.mutate(undefined, {
-                  onSuccess: () => toast.success("SIP trunk disconnected"),
+                  onSuccess: () => toast.success(t("toasts.sipDisconnected")),
                   onError: (error) => toast.error(error.message),
                 });
               }}
             >
-              Disconnect
+              {t("sip.disconnect")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

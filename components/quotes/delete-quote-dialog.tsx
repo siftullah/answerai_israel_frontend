@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,6 +26,8 @@ export function DeleteQuoteDialog({
   onOpenChange: (open: boolean) => void;
   onDeleted?: () => void;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const deleteQuote = useDeleteQuote(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
@@ -32,7 +35,7 @@ export function DeleteQuoteDialog({
   const confirm = () => {
     deleteQuote.mutate(quote.id, {
       onSuccess: () => {
-        toast.success(`Draft ${quote.number} deleted`);
+        toast.success(t("toasts.draftDeleted", { number: quote.number }));
         onDeleted?.();
       },
       onError: (error) => toast.error(error.message),
@@ -44,19 +47,17 @@ export function DeleteQuoteDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete draft {quote.number}?</AlertDialogTitle>
-          <AlertDialogDescription>
-            The draft and its line items are removed for good. This can&apos;t be undone.
-          </AlertDialogDescription>
+          <AlertDialogTitle>{t("deleteDialog.title", { number: quote.number })}</AlertDialogTitle>
+          <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep draft</AlertDialogCancel>
+          <AlertDialogCancel>{t("actions.keepDraft")}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={deleteQuote.isPending}
             onClick={confirm}
           >
-            {deleteQuote.isPending ? "Deleting…" : "Delete draft"}
+            {deleteQuote.isPending ? tc("actions.deleting") : t("actions.deleteDraft")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

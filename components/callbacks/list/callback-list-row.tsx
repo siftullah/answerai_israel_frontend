@@ -31,7 +31,7 @@ export function CallbackListRow({
       onClick={onSelect}
       aria-current={selected || undefined}
       className={cn(
-        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-left outline-none transition-colors focus-visible:bg-muted",
+        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-start outline-none transition-colors focus-visible:bg-muted",
         selected
           ? "bg-primary/[0.07]"
           : callback.overdue

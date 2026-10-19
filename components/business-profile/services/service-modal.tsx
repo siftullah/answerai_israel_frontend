@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -18,6 +20,7 @@ import { useCreateFaq } from "@/hooks/use-faqs";
 import { useCreateService, useUpdateService } from "@/hooks/use-services";
 import type { ApiError } from "@/lib/api/errors";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { PRICE_TYPES, type Service, type ServicePayload } from "@/lib/api/types";
 import {
   serviceSchema,
@@ -47,12 +50,26 @@ export function ServiceModal({
   const update = useUpdateService(business.id);
   const createFaq = useCreateFaq(business.id);
 
-  const editing = Boolean(source && "id" in source);
-  const title = onSubmitOverride ? "Review draft" : editing ? "Edit service" : "Add service";
-  const submitLabel = onSubmitOverride ? "Apply" : editing ? "Save changes" : "Add service";
+  const t = useTranslations("knowledge.services");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
+  const editing = Boolean(source && "id" in source);
+  const title = onSubmitOverride
+    ? ts("reviewDraft")
+    : editing
+      ? t("modal.editTitle")
+      : t("add");
+  const submitLabel = onSubmitOverride
+    ? tc("actions.apply")
+    : editing
+      ? tc("actions.saveChanges")
+      : t("add");
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => serviceSchema(tv), [tv]);
   const form = useForm<ServiceValues>({
-    resolver: zodResolver(serviceSchema),
+    resolver: zodResolver(schema),
     defaultValues: toServiceValues(source),
   });
   const { errors } = form.formState;
@@ -70,7 +87,7 @@ export function ServiceModal({
         { id: (source as Service).id, payload },
         {
           onSuccess: () => {
-            toast.success("Service saved");
+            toast.success(t("toasts.saved"));
             onOpenChange(false);
           },
           onError: (error) => applyServerErrors(form, error),
@@ -91,11 +108,14 @@ export function ServiceModal({
           });
         } catch (error) {
           toast.error(
-            `Couldn't add FAQ "${row.question.slice(0, 40)}": ${(error as ApiError).message}`
+            ts("faqAttachFailed", {
+              question: row.question.slice(0, 40),
+              message: (error as ApiError).message,
+            })
           );
         }
       }
-      toast.success("Service added");
+      toast.success(t("toasts.added"));
       onOpenChange(false);
     } catch (error) {
       applyServerErrors(form, error as ApiError);
@@ -114,15 +134,15 @@ export function ServiceModal({
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Details",
+            title: ts("steps.details"),
             fields: ["name", "description", "available"],
             content: (
               <>
                 <Field data-invalid={!!errors.name || undefined}>
-                  <FieldLabel htmlFor="service-name">Name</FieldLabel>
+                  <FieldLabel htmlFor="service-name">{tc("labels.name")}</FieldLabel>
                   <Input
                     id="service-name"
-                    placeholder="Gutter cleaning"
+                    placeholder={t("modal.namePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.name}
                     {...form.register("name")}
@@ -131,16 +151,21 @@ export function ServiceModal({
                 </Field>
 
                 <Field data-invalid={!!errors.description || undefined}>
-                  <FieldLabel htmlFor="service-description">Description</FieldLabel>
+                  <FieldLabel htmlFor="service-description">
+                    {tc("labels.description")}
+                  </FieldLabel>
                   <Textarea
                     id="service-description"
                     className="min-h-32"
-                    placeholder="What's included, who it's for, what makes it different…"
+                    placeholder={ts("descriptionPlaceholder")}
                     aria-invalid={!!errors.description}
                     {...form.register("description")}
                   />
-                  <p className="text-right text-sm text-muted-foreground">
-                    {descriptionLength.toLocaleString()} / 2,000
+                  <p className="text-end text-sm text-muted-foreground">
+                    {ts("charCount", {
+                      length: descriptionLength.toLocaleString(displayLocale()),
+                      max: (2000).toLocaleString(displayLocale()),
+                    })}
                   </p>
                   {errors.description && (
                     <FieldError>{errors.description.message}</FieldError>
@@ -161,11 +186,10 @@ export function ServiceModal({
                   />
                   <div className="flex flex-col gap-0.5">
                     <FieldLabel htmlFor="service-available" className="font-normal">
-                      Available
+                      {ts("available")}
                     </FieldLabel>
                     <p className="text-sm text-muted-foreground">
-                      Unavailable services stay listed here but your AI won&apos;t offer
-                      them.
+                      {t("modal.availableHint")}
                     </p>
                   </div>
                 </Field>
@@ -173,7 +197,7 @@ export function ServiceModal({
             ),
           },
           {
-            title: "Pricing",
+            title: ts("steps.pricing"),
             fields: [
               "has_price",
               "ai_can_quote_price",
@@ -195,7 +219,7 @@ export function ServiceModal({
             ),
           },
           {
-            title: "FAQs",
+            title: ts("steps.faqs"),
             fields: ["faq_mode", "faq_ids"],
             content: (
               <FaqAttachmentField
@@ -210,7 +234,7 @@ export function ServiceModal({
             ),
           },
           {
-            title: "Agents",
+            title: ts("steps.agents"),
             fields: ["agent_scope", "agent_ids"],
             content: <AgentScopeField idPrefix="service" />,
           },

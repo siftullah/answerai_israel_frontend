@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -29,8 +31,12 @@ export function CreateAgentModal({
   const { business } = useBusiness();
   const createAgent = useCreateAgent(business.id);
 
+  const t = useTranslations("agents");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => createAgentSchema(tv), [tv]);
   const form = useForm<CreateAgentValues>({
-    resolver: zodResolver(createAgentSchema),
+    resolver: zodResolver(schema),
     defaultValues: { template: "blank", name: "", purpose: "inbound" },
   });
   const { errors } = form.formState;
@@ -38,7 +44,7 @@ export function CreateAgentModal({
   const onSubmit = form.handleSubmit((values) => {
     createAgent.mutate(toCreateAgentPayload(values), {
       onSuccess: (agent) => {
-        toast.success("Agent created — publishing to the voice engine…");
+        toast.success(t("create.toasts.created"));
         onOpenChange(false);
         router.push(`/b/${business.id}/agents/${agent.id}`);
       },
@@ -51,15 +57,15 @@ export function CreateAgentModal({
       <EntityModal
         open={open}
         onOpenChange={onOpenChange}
-        title="New agent"
-        description="Start from a template, or build one from scratch."
-        submitLabel="Create agent"
+        title={t("create.title")}
+        description={t("create.description")}
+        submitLabel={t("create.submit")}
         pending={createAgent.isPending}
         isDirty={form.formState.isDirty}
         onSubmit={onSubmit}
         steps={[
           {
-            title: "Template",
+            title: t("create.steps.template"),
             fields: ["template"],
             content: (
               <Controller
@@ -86,22 +92,22 @@ export function CreateAgentModal({
             ),
           },
           {
-            title: "Details",
+            title: t("create.steps.details"),
             fields: ["name", "purpose"],
             content: (
               <>
                 <Field data-invalid={!!errors.name || undefined}>
-                  <FieldLabel htmlFor="agent-name">Name</FieldLabel>
+                  <FieldLabel htmlFor="agent-name">{tc("labels.name")}</FieldLabel>
                   <Input
                     id="agent-name"
-                    placeholder="e.g. Front desk"
+                    placeholder={t("create.namePlaceholder")}
                     aria-invalid={!!errors.name}
                     {...form.register("name")}
                   />
                   {errors.name && <FieldError>{errors.name.message}</FieldError>}
                 </Field>
                 <Field>
-                  <FieldLabel>Purpose</FieldLabel>
+                  <FieldLabel>{t("purpose.label")}</FieldLabel>
                   <Controller
                     control={form.control}
                     name="purpose"
@@ -112,21 +118,19 @@ export function CreateAgentModal({
                         options={[
                           {
                             value: "inbound",
-                            label: "Inbound",
-                            description: "Answers calls to your numbers.",
+                            label: t("purpose.inbound.label"),
+                            description: t("purpose.inbound.description"),
                           },
                           {
                             value: "outbound",
-                            label: "Outbound",
-                            description: "Makes calls — campaigns and callbacks.",
+                            label: t("purpose.outbound.label"),
+                            description: t("purpose.outbound.description"),
                           },
                         ]}
                       />
                     )}
                   />
-                  <FieldDescription>
-                    Purpose decides which phone-number slots this agent can fill.
-                  </FieldDescription>
+                  <FieldDescription>{t("create.purposeHint")}</FieldDescription>
                 </Field>
               </>
             ),

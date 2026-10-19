@@ -1,0 +1,53 @@
+{
+  "breadcrumb": {
+    "label": "breadcrumb"
+  },
+  "sidebar": {
+    "title": "Sidebar",
+    "description": "Displays the mobile sidebar.",
+    "toggle": "Toggle Sidebar"
+  },
+  "command": {
+    "title": "Command Palette",
+    "description": "Search for a command to run..."
+  },
+  "datePicker": {
+    "placeholder": "Pick a date",
+    "clear": "Clear date"
+  },
+  "calendar": {
+    "nextMonth": "Go to the Next Month",
+    "previousMonth": "Go to the Previous Month",
+    "chooseMonth": "Choose the Month",
+    "chooseYear": "Choose the Year",
+    "weekNumberHeader": "Week Number",
+    "weekNumber": "Week {number}",
+    "dayToday": "Today, {date}",
+    "daySelected": "{date}, selected",
+    "dayTodaySelected": "Today, {date}, selected"
+  },
+  "chipInput": {
+    "limitReached": "Limit reached",
+    "remove": "Remove {item}"
+  },
+  "spinner": {
+    "loading": "Loading"
+  },
+  "passwordInput": {
+    "show": "Show password",
+    "hide": "Hide password"
+  },
+  "audioPlayer": {
+    "failed": "The recording couldn't be played. Try reloading the page.",
+    "back": "Back 10 seconds",
+    "forward": "Forward 10 seconds",
+    "play": "Play recording",
+    "pause": "Pause recording",
+    "seek": "Seek recording",
+    "speed": "Playback speed {speed}x",
+    "download": "Download recording"
+  },
+  "unsavedChanges": {
+    "title": "Unsaved changes"
+  }
+}

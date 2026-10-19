@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { useParams, useSelectedLayoutSegment } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ErrorState } from "@/components/error-state";
@@ -28,6 +29,8 @@ import {
 function BusinessGate({ children }: { children: React.ReactNode }) {
   const { businessUuid } = useParams<{ businessUuid: string }>();
   const { data } = useMe();
+  const t = useTranslations("business");
+  const tc = useTranslations("common");
 
   // Plans is a standalone full-page screen with its own header — every other
   // segment renders inside the shell. Auth/membership gating is unaffected.
@@ -55,13 +58,13 @@ function BusinessGate({ children }: { children: React.ReactNode }) {
       <div className="flex min-h-screen flex-1 items-center justify-center p-6">
         <Card className="w-full max-w-sm text-center">
           <CardHeader>
-            <CardTitle>No access to this business</CardTitle>
-            <CardDescription>
-              It may have been removed, or you&apos;re no longer a member.
-            </CardDescription>
+            <CardTitle>{t("gate.noAccessTitle")}</CardTitle>
+            <CardDescription>{t("gate.noAccessDescription")}</CardDescription>
           </CardHeader>
           <CardContent className="justify-center">
-            <Button render={<Link href="/select-business" />}>Choose a business</Button>
+            <Button render={<Link href="/select-business" />}>
+              {tc("actions.chooseBusiness")}
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -88,7 +91,7 @@ function BusinessGate({ children }: { children: React.ReactNode }) {
 
     return (
       <ErrorState
-        title="Couldn't load this business"
+        title={t("gate.loadErrorTitle")}
         message={modulesQuery.error.message}
         onRetry={() => modulesQuery.refetch()}
       />

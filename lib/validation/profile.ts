@@ -1,21 +1,31 @@
 import { z } from "zod";
 import type { Membership, UpdateProfilePayload, User } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
 
 /**
  * Form-facing schema for the signed-in user's own profile. Text inputs hold
  * "" for unset values (the payload builder converts phone/position to null).
+ * `t` is a translator scoped to the `validation` namespace.
  */
-export const profileSchema = z.object({
-  first_name: z.string().min(1, "First name is required").max(100, "Keep the first name under 100 characters"),
-  last_name: z.string().min(1, "Last name is required").max(100, "Keep the last name under 100 characters"),
-  email: z.email("Enter a valid email address"),
-  // Loose AU shape gate; the backend's Phone rule stays the authority.
-  phone_e164: optionalAuPhoneField(),
-  position: z.string().max(150, "Keep the position under 150 characters"),
-});
+export function profileSchema(t: Translator) {
+  return z.object({
+    first_name: z
+      .string()
+      .min(1, t("common.firstNameRequired"))
+      .max(100, t("length.firstName", { max: 100 })),
+    last_name: z
+      .string()
+      .min(1, t("common.lastNameRequired"))
+      .max(100, t("length.lastName", { max: 100 })),
+    email: z.email(t("common.emailInvalid")),
+    // Loose AU shape gate; the backend's Phone rule stays the authority.
+    phone_e164: optionalAuPhoneField(t),
+    position: z.string().max(150, t("length.position", { max: 150 })),
+  });
+}
 
-export type ProfileValues = z.infer<typeof profileSchema>;
+export type ProfileValues = z.infer<ReturnType<typeof profileSchema>>;
 
 export function toProfileValues(user: User, membership: Membership): ProfileValues {
   return {

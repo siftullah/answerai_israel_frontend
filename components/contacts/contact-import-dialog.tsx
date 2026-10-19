@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { PlusIcon, Trash2Icon, UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -32,13 +33,6 @@ const MAX_FILE_BYTES = 10 * 1024 * 1024;
 
 type ScalarKey = "name" | "company" | "address" | "tags";
 
-const SCALAR_FIELDS: { key: ScalarKey; label: string }[] = [
-  { key: "name", label: "Name" },
-  { key: "company", label: "Company" },
-  { key: "address", label: "Address" },
-  { key: "tags", label: "Tags" },
-];
-
 /**
  * Spreadsheet import wizard: upload → column mapping → queued import (summary
  * arrives by email; there's no progress endpoint). Unlike products, phones and
@@ -52,8 +46,17 @@ export function ContactImportDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const previewMutation = useContactsImportPreview();
+
+  const scalarFields: { key: ScalarKey; label: string }[] = [
+    { key: "name", label: tc("labels.name") },
+    { key: "company", label: t("fields.company") },
+    { key: "address", label: t("fields.address") },
+    { key: "tags", label: t("fields.tags") },
+  ];
   const importMutation = useContactsImport(business.id);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -74,11 +77,11 @@ export function ContactImportDialog({
     if (!file) return;
     const name = file.name.toLowerCase();
     if (!FILE_EXTENSIONS.some((ext) => name.endsWith(ext))) {
-      setError("Use a CSV, TXT, XLS or XLSX file.");
+      setError(t("import.invalidType"));
       return;
     }
     if (file.size > MAX_FILE_BYTES) {
-      setError("The file must be 10 MB or smaller.");
+      setError(t("import.tooLarge"));
       return;
     }
     setError(null);
@@ -120,12 +123,12 @@ export function ContactImportDialog({
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows e.g. "none" or an index.
   const columnItems = (current: number | null | undefined) => [
-    { value: "none", label: "Not imported" },
+    { value: "none", label: t("import.notImported") },
     ...(preview?.columns ?? [])
       .filter((column) => column.index === current || !usedIndexes.includes(column.index))
       .map((column) => ({
         value: column.index.toString(),
-        label: column.header || `Column ${column.index + 1}`,
+        label: column.header || t("import.column", { number: column.index + 1 }),
       })),
   ];
 
@@ -144,14 +147,14 @@ export function ContactImportDialog({
       { token: preview.token, has_header_row: hasHeaderRow, mapping },
       {
         onSuccess: () => {
-          toast.success("Import started — you'll get a summary by email.");
+          toast.success(t("import.started"));
           onOpenChange(false);
         },
         onError: (apiError) => {
           if (apiError.errors?.token) {
             setPreview(null);
             resetMapping();
-            setError("The upload expired — choose the file again.");
+            setError(t("import.expired"));
           } else {
             setError(apiError.message);
           }
@@ -168,7 +171,7 @@ export function ContactImportDialog({
     <div className="flex flex-col gap-2">
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium">
-          {kind === "phones" ? "Phone columns" : "Email columns"}
+          {kind === "phones" ? t("import.phoneColumns") : t("import.emailColumns")}
           {kind === "phones" && <span className="text-destructive"> *</span>}
         </p>
         <Button
@@ -179,11 +182,11 @@ export function ContactImportDialog({
           onClick={() => setSlots([...slots, null])}
         >
           <PlusIcon />
-          Add column
+          {t("import.addColumn")}
         </Button>
       </div>
       {slots.length === 0 ? (
-        <p className="text-sm text-muted-foreground">No columns mapped.</p>
+        <p className="text-sm text-muted-foreground">{t("import.noColumns")}</p>
       ) : (
         slots.map((slot, index) => {
           const items = columnItems(slot);
@@ -199,7 +202,11 @@ export function ContactImportDialog({
                 }}
               >
                 <SelectTrigger
-                  aria-label={`${kind === "phones" ? "Phone" : "Email"} column ${index + 1}`}
+                  aria-label={
+                    kind === "phones"
+                      ? t("import.phoneColumn", { number: index + 1 })
+                      : t("import.emailColumn", { number: index + 1 })
+                  }
                   className="w-full"
                 >
                   <SelectValue />
@@ -216,7 +223,11 @@ export function ContactImportDialog({
                 type="button"
                 variant="ghost"
                 size="icon-sm"
-                aria-label={`Remove ${kind === "phones" ? "phone" : "email"} column ${index + 1}`}
+                aria-label={
+                  kind === "phones"
+                    ? t("import.removePhoneColumn", { number: index + 1 })
+                    : t("import.removeEmailColumn", { number: index + 1 })
+                }
                 onClick={() => setSlots(slots.filter((_, slotIndex) => slotIndex !== index))}
               >
                 <Trash2Icon />
@@ -233,11 +244,9 @@ export function ContactImportDialog({
       <DialogContent className="gap-0 p-0 sm:max-w-2xl">
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="border-b px-6 py-4">
-            <DialogTitle>Import contacts</DialogTitle>
+            <DialogTitle>{t("import.title")}</DialogTitle>
             <DialogDescription>
-              {preview
-                ? "Match your spreadsheet columns to contact fields."
-                : "Upload a spreadsheet — CSV, TXT, XLS or XLSX, up to 10 MB."}
+              {preview ? t("import.mapDescription") : t("import.uploadDescription")}
             </DialogDescription>
           </DialogHeader>
 
@@ -267,21 +276,19 @@ export function ContactImportDialog({
                   onClick={() => fileInputRef.current?.click()}
                 >
                   {previewMutation.isPending ? <Spinner /> : <UploadIcon />}
-                  Choose file
+                  {t("import.chooseFile")}
                 </Button>
-                <p className="text-sm text-muted-foreground">
-                  Rows are matched to existing contacts by phone number.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("import.matchHint")}</p>
               </div>
             ) : (
               <>
                 <div className="overflow-x-auto rounded-xl border">
                   <table className="w-full text-sm">
                     <thead>
-                      <tr className="border-b bg-muted/50 text-left">
+                      <tr className="border-b bg-muted/50 text-start">
                         {preview.columns.map((column) => (
                           <th key={column.index} className="px-3 py-2 font-medium whitespace-nowrap">
-                            {column.header || `Column ${column.index + 1}`}
+                            {column.header || t("import.column", { number: column.index + 1 })}
                           </th>
                         ))}
                       </tr>
@@ -310,7 +317,7 @@ export function ContactImportDialog({
                     onCheckedChange={(checked) => setHasHeaderRow(checked === true)}
                   />
                   <FieldLabel htmlFor="has-header-row" className="font-normal">
-                    The first row contains column headings
+                    {t("import.headerRow")}
                   </FieldLabel>
                 </Field>
 
@@ -320,7 +327,7 @@ export function ContactImportDialog({
                 </div>
 
                 <div className="grid gap-4 sm:grid-cols-2">
-                  {SCALAR_FIELDS.map((field) => {
+                  {scalarFields.map((field) => {
                     const items = columnItems(scalarMapping[field.key]);
                     return (
                       <Field key={field.key}>
@@ -356,11 +363,7 @@ export function ContactImportDialog({
                   })}
                 </div>
 
-                <p className="text-sm text-muted-foreground">
-                  Rows matching an existing contact by phone enrich it — new phones, emails
-                  and tags are added, blanks are filled, and nothing is overwritten. A tags
-                  column can hold several tags separated by commas.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("import.enrichHint")}</p>
               </>
             )}
           </div>
@@ -378,7 +381,7 @@ export function ContactImportDialog({
                     setError(null);
                   }}
                 >
-                  Back
+                  {tc("actions.back")}
                 </Button>
                 <Button
                   type="button"
@@ -386,12 +389,12 @@ export function ContactImportDialog({
                   disabled={mappedPhones.length === 0 || importMutation.isPending}
                 >
                   {importMutation.isPending && <Spinner />}
-                  Import
+                  {tc("actions.import")}
                 </Button>
               </>
             ) : (
               <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
             )}
           </DialogFooter>

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,6 +26,8 @@ export function DeleteInvoiceDialog({
   onOpenChange: (open: boolean) => void;
   onDeleted?: () => void;
 }) {
+  const t = useTranslations("invoices");
+  const tc = useTranslations("common");
   const deleteInvoice = useDeleteInvoice(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
@@ -32,7 +35,7 @@ export function DeleteInvoiceDialog({
   const confirm = () => {
     deleteInvoice.mutate(invoice.id, {
       onSuccess: () => {
-        toast.success(`Draft ${invoice.number} deleted`);
+        toast.success(t("toasts.draftDeleted", { number: invoice.number }));
         onDeleted?.();
       },
       onError: (error) => toast.error(error.message),
@@ -44,19 +47,19 @@ export function DeleteInvoiceDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete draft {invoice.number}?</AlertDialogTitle>
-          <AlertDialogDescription>
-            The draft and its line items are removed for good. This can&apos;t be undone.
-          </AlertDialogDescription>
+          <AlertDialogTitle>
+            {t("deleteDialog.title", { number: invoice.number })}
+          </AlertDialogTitle>
+          <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep draft</AlertDialogCancel>
+          <AlertDialogCancel>{t("actions.keepDraft")}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={deleteInvoice.isPending}
             onClick={confirm}
           >
-            {deleteInvoice.isPending ? "Deleting…" : "Delete draft"}
+            {deleteInvoice.isPending ? tc("actions.deleting") : t("actions.deleteDraft")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

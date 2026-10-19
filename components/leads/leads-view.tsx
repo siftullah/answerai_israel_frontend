@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,30 +42,6 @@ const TAB_REFINE: Record<LeadTab, readonly LeadStatus[]> = {
   all: LEAD_STATUSES,
 };
 
-const COPY: Record<LeadTab, { emptyTitle: string; emptyDescription: string }> = {
-  open: {
-    emptyTitle: "No open leads",
-    emptyDescription: "Sales enquiries your agent captures on calls will show up here.",
-  },
-  won: {
-    emptyTitle: "No won leads yet",
-    emptyDescription: "Leads that turn into work land here.",
-  },
-  lost: {
-    emptyTitle: "Nothing lost",
-    emptyDescription: "Leads that don't work out land here.",
-  },
-  all: {
-    emptyTitle: "No leads yet",
-    emptyDescription: "Log your first lead, or let your agent capture them from calls.",
-  },
-};
-
-const NO_MATCH_COPY = {
-  emptyTitle: "No leads match",
-  emptyDescription: "Try a different search or clear some filters.",
-};
-
 /**
  * Master-detail shell mirroring the quotes page: list rail + detail pane on
  * one divider, with the pipeline stat strip above. Only the selected lead
@@ -72,6 +49,8 @@ const NO_MATCH_COPY = {
  * link lands on the default tab but the pane still renders any uuid.
  */
 export function LeadsView() {
+  const t = useTranslations("leads");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -117,17 +96,24 @@ export function LeadsView() {
   const newLeadButton = (
     <Button onClick={() => setCreating(true)}>
       <PlusIcon />
-      New lead
+      {t("page.newLead")}
     </Button>
   );
 
-  const copy = hasActiveFilters ? NO_MATCH_COPY : COPY[tab];
+  const emptyCopy: Record<LeadTab | "noMatch", { title: string; description: string }> = {
+    open: { title: t("empty.open.title"), description: t("empty.open.description") },
+    won: { title: t("empty.won.title"), description: t("empty.won.description") },
+    lost: { title: t("empty.lost.title"), description: t("empty.lost.description") },
+    all: { title: t("empty.all.title"), description: t("empty.all.description") },
+    noMatch: { title: t("empty.noMatch.title"), description: t("empty.noMatch.description") },
+  };
+  const copy = emptyCopy[hasActiveFilters ? "noMatch" : tab];
 
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Leads"
-        description="Sales enquiries captured from calls or logged by your team, tracked to won or lost."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={newLeadButton}
       />
 
@@ -136,23 +122,23 @@ export function LeadsView() {
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
           <Tabs value={tab} onValueChange={(value) => changeTab(value as LeadTab)}>
             <TabsList className="w-full">
               <TabsTrigger value="open">
-                Open
+                {t("tabs.open")}
                 {counts !== undefined && counts.open > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.open}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="won">Won</TabsTrigger>
-              <TabsTrigger value="lost">Lost</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="won">{t("tabs.won")}</TabsTrigger>
+              <TabsTrigger value="lost">{t("tabs.lost")}</TabsTrigger>
+              <TabsTrigger value="all">{tc("labels.all")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -164,14 +150,14 @@ export function LeadsView() {
             statuses={TAB_REFINE[tab]}
           />
 
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <LeadList
               businessUuid={business.id}
               filters={apiFilters}
               selectedId={selectedId}
               onSelect={select}
-              emptyTitle={copy.emptyTitle}
-              emptyDescription={copy.emptyDescription}
+              emptyTitle={copy.title}
+              emptyDescription={copy.description}
               emptyAction={hasActiveFilters ? undefined : newLeadButton}
             />
           </div>
@@ -181,7 +167,7 @@ export function LeadsView() {
           // Keyed so switching leads starts the pane back at the top.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

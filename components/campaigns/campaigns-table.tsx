@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   Table,
   TableBody,
@@ -33,17 +34,19 @@ export function CampaignsTable({
   timeZone,
   actions,
 }: CampaignListProps) {
+  const t = useTranslations("campaigns.table");
+  const tc = useTranslations("common");
   return (
     <DataTableShell>
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Agent</TableHead>
-            <TableHead>Caller number</TableHead>
-            <TableHead>Progress</TableHead>
-            <TableHead>Created</TableHead>
+            <TableHead>{tc("labels.name")}</TableHead>
+            <TableHead>{tc("labels.status")}</TableHead>
+            <TableHead>{t("agent")}</TableHead>
+            <TableHead>{t("callerNumber")}</TableHead>
+            <TableHead>{t("progress")}</TableHead>
+            <TableHead>{t("created")}</TableHead>
             <TableHead className="w-10" />
           </TableRow>
         </TableHeader>

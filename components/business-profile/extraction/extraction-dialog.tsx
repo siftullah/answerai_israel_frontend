@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { SparklesIcon, UploadIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -56,6 +57,8 @@ export function ExtractionDialog({
   description: string;
   onReady: (extraction: Extraction) => void;
 }) {
+  const t = useTranslations("businessProfile.extraction");
+  const tc = useTranslations("common");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const [open, setOpen] = useState(false);
@@ -93,11 +96,11 @@ export function ExtractionDialog({
     if (!picked) return;
     const name = picked.name.toLowerCase();
     if (!FILE_EXTENSIONS.some((ext) => name.endsWith(ext))) {
-      setError("Use a PDF, DOCX, TXT or MD file.");
+      setError(t("errors.fileType"));
       return;
     }
     if (picked.size > MAX_FILE_BYTES) {
-      setError("The file must be 10 MB or smaller.");
+      setError(t("errors.fileSize"));
       return;
     }
     setError(null);
@@ -123,7 +126,7 @@ export function ExtractionDialog({
         setOpen(false);
         setPhase("source");
       } else {
-        setError(extraction.error ?? "The extraction failed. Try a different source.");
+        setError(extraction.error ?? t("errors.failed"));
         setPhase("failed");
       }
     } catch (caught) {
@@ -137,13 +140,13 @@ export function ExtractionDialog({
     if (sourceType === "url") {
       const trimmed = url.trim();
       if (!/^https?:\/\/.+\..+/i.test(trimmed)) {
-        setError("Enter a full URL, including https://");
+        setError(t("errors.invalidUrl"));
         return;
       }
       void run({ target, source_type: "url", source_url: trimmed });
     } else {
       if (!file) {
-        setError("Choose a file to extract from.");
+        setError(t("errors.noFile"));
         return;
       }
       void run({ target, source_type: "file", file });
@@ -158,7 +161,7 @@ export function ExtractionDialog({
         }
       >
         <SparklesIcon />
-        Extract with AI
+        {t("trigger")}
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -170,7 +173,7 @@ export function ExtractionDialog({
           <div className="flex flex-col items-center gap-3 py-6 text-center">
             <Spinner className="size-6" />
             <p className="text-sm text-muted-foreground">
-              Extracting… this can take a minute or two. You can keep this open or cancel.
+              {t("running")}
             </p>
             <Button
               type="button"
@@ -180,7 +183,7 @@ export function ExtractionDialog({
                 setOpen(false);
               }}
             >
-              Cancel
+              {tc("actions.cancel")}
             </Button>
           </div>
         ) : (
@@ -199,13 +202,13 @@ export function ExtractionDialog({
               <Field orientation="horizontal">
                 <RadioGroupItem id={`extract-${target}-url`} value="url" />
                 <FieldLabel htmlFor={`extract-${target}-url`} className="font-normal">
-                  Website page
+                  {t("sourceUrl")}
                 </FieldLabel>
               </Field>
               <Field orientation="horizontal">
                 <RadioGroupItem id={`extract-${target}-file`} value="file" />
                 <FieldLabel htmlFor={`extract-${target}-file`} className="font-normal">
-                  Document (PDF, DOCX, TXT, MD — up to 10 MB)
+                  {t("sourceFile")}
                 </FieldLabel>
               </Field>
             </RadioGroup>
@@ -215,7 +218,7 @@ export function ExtractionDialog({
                 type="url"
                 value={url}
                 onChange={(event) => setUrl(event.target.value)}
-                placeholder="https://yourbusiness.com.au"
+                placeholder={t("urlPlaceholder")}
                 autoComplete="off"
               />
             ) : (
@@ -236,18 +239,18 @@ export function ExtractionDialog({
                   onClick={() => fileInputRef.current?.click()}
                 >
                   <UploadIcon />
-                  Choose file
+                  {t("chooseFile")}
                 </Button>
                 <span className="truncate text-sm text-muted-foreground">
-                  {file ? file.name : "No file chosen"}
+                  {file ? file.name : t("noFile")}
                 </span>
               </div>
             )}
 
             <DialogFooter>
-              <DialogClose render={<Button variant="ghost" />}>Cancel</DialogClose>
+              <DialogClose render={<Button variant="ghost" />}>{tc("actions.cancel")}</DialogClose>
               <Button type="button" onClick={start}>
-                {phase === "failed" ? "Try again" : "Start extraction"}
+                {phase === "failed" ? tc("actions.tryAgain") : t("start")}
               </Button>
             </DialogFooter>
           </>

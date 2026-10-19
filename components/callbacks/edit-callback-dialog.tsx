@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -50,8 +52,12 @@ export function EditCallbackDialog({
   const membersQuery = useMembers(businessUuid);
   const updateCallback = useUpdateCallback(businessUuid);
 
+  const t = useTranslations("callbacks");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => editCallbackSchema(tv), [tv]);
   const form = useForm<EditCallbackValues>({
-    resolver: zodResolver(editCallbackSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       topic: callback.topic ?? "",
       notes: callback.notes ?? "",
@@ -79,7 +85,7 @@ export function EditCallbackDialog({
       { id: callback.id, payload: toUpdateCallbackPayload(values, callback.type) },
       {
         onSuccess: () => {
-          toast.success("Callback updated");
+          toast.success(t("toasts.updated"));
           onOpenChange(false);
         },
         onError: (error) => applyCallbackServerErrors(form, error),
@@ -91,10 +97,8 @@ export function EditCallbackDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Edit callback</DialogTitle>
-          <DialogDescription>
-            Update the topic, notes or who handles the callback.
-          </DialogDescription>
+          <DialogTitle>{t("editDialog.title")}</DialogTitle>
+          <DialogDescription>{t("editDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <FormProvider {...form}>
@@ -107,14 +111,16 @@ export function EditCallbackDialog({
                   {
                     value: "",
                     label:
-                      callback.type === "agent" ? "Choose an outbound agent" : "Choose a team member",
+                      callback.type === "agent"
+                        ? t("placeholders.agent")
+                        : t("placeholders.assignee"),
                   },
                   ...reassignOptions,
                 ];
                 return (
                   <Field data-invalid={!!fieldState.error || undefined}>
                     <FieldLabel htmlFor="edit-callback-reassign">
-                      {callback.type === "agent" ? "Agent" : "Assignee"}
+                      {callback.type === "agent" ? t("labels.agent") : t("labels.assignee")}
                     </FieldLabel>
                     <Select
                       items={items}
@@ -145,7 +151,7 @@ export function EditCallbackDialog({
             />
 
             <Field data-invalid={!!form.formState.errors.topic || undefined}>
-              <FieldLabel htmlFor="edit-callback-topic">Topic</FieldLabel>
+              <FieldLabel htmlFor="edit-callback-topic">{t("labels.topic")}</FieldLabel>
               <Input
                 id="edit-callback-topic"
                 {...form.register("topic")}
@@ -157,7 +163,7 @@ export function EditCallbackDialog({
             </Field>
 
             <Field data-invalid={!!form.formState.errors.notes || undefined}>
-              <FieldLabel htmlFor="edit-callback-notes">Notes</FieldLabel>
+              <FieldLabel htmlFor="edit-callback-notes">{tc("labels.notes")}</FieldLabel>
               <Textarea
                 id="edit-callback-notes"
                 {...form.register("notes")}
@@ -177,10 +183,10 @@ export function EditCallbackDialog({
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button type="submit" disabled={updateCallback.isPending}>
-                {updateCallback.isPending ? "Saving…" : "Save changes"}
+                {updateCallback.isPending ? tc("actions.saving") : tc("actions.saveChanges")}
               </Button>
             </DialogFooter>
           </form>

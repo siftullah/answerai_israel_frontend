@@ -1,7 +1,9 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { CircleCheckBigIcon, FunnelIcon, TrophyIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { formatCents } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { LeadCounts } from "@/lib/api/types";
@@ -41,10 +43,6 @@ function StatTile({
   );
 }
 
-function plural(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`;
-}
-
 /** The pipeline-at-a-glance strip: what's in play, what landed, how often you win. */
 export function LeadStatTiles({
   counts,
@@ -53,6 +51,8 @@ export function LeadStatTiles({
   counts: LeadCounts | undefined;
   className?: string;
 }) {
+  const t = useTranslations("leads.stats");
+
   if (!counts) {
     return (
       <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", className)}>
@@ -64,38 +64,45 @@ export function LeadStatTiles({
   }
 
   const decided = counts.won_90d + counts.lost_90d;
-  const winRate = decided > 0 ? Math.round((counts.won_90d / decided) * 100) : null;
+  const winRate = decided > 0 ? counts.won_90d / decided : null;
 
   return (
     <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", className)}>
       <StatTile
         icon={FunnelIcon}
-        label="Pipeline"
+        label={t("pipeline")}
         value={formatCents(counts.pipeline_value_cents)}
         detail={
           counts.open > 0
-            ? `${plural(counts.open, "open lead")}${
-                counts.new > 0 ? ` · ${counts.new} new` : ""
-              }`
-            : "No open leads"
+            ? counts.new > 0
+              ? t("openLeadsWithNew", { count: counts.open, newCount: counts.new })
+              : t("openLeads", { count: counts.open })
+            : t("noOpenLeads")
         }
         tone="info"
       />
       <StatTile
         icon={CircleCheckBigIcon}
-        label="Won this month"
+        label={t("wonThisMonth")}
         value={formatCents(counts.won_this_month_cents)}
-        detail={`${plural(counts.won, "lead")} won all time`}
+        detail={t("wonAllTime", { count: counts.won })}
         tone="success"
       />
       <StatTile
         icon={TrophyIcon}
-        label="Win rate"
-        value={winRate !== null ? `${winRate}%` : "—"}
+        label={t("winRate")}
+        value={
+          winRate !== null
+            ? new Intl.NumberFormat(displayLocale(), {
+                style: "percent",
+                maximumFractionDigits: 0,
+              }).format(winRate)
+            : "—"
+        }
         detail={
           winRate !== null
-            ? `${counts.won_90d} of ${plural(decided, "closed lead")}, last 90 days`
-            : "No closed leads in the last 90 days"
+            ? t("winRateDetail", { won: counts.won_90d, decided })
+            : t("noClosedLeads")
         }
         tone="cta"
       />

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 
 /**
@@ -31,20 +32,22 @@ const PIXELS: Array<{
   { size: 10, top: 70, left: 86, duration: 9, delay: 3.9, opacity: 0.14 },
 ];
 
-// A looping snippet of what the product does: a caller and the AI agent.
-const CONVERSATION = [
-  { from: "caller", text: "Hi, are you open tomorrow?" },
-  { from: "agent", text: "We are, from 9am. Would you like to book a time?" },
-  { from: "caller", text: "Yes, 10:30 please." },
-  { from: "agent", text: "Done! You're booked for 10:30. See you then." },
-] as const;
-
 // Symmetric-ish waveform silhouette (bar heights in px).
 const WAVE_BARS = [
   10, 16, 24, 34, 46, 32, 20, 28, 42, 54, 38, 26, 18, 26, 38, 54, 42, 28, 20, 32, 46, 34, 24, 16, 10,
 ];
 
 export function BrandPanel() {
+  const t = useTranslations("auth.brand");
+
+  // A looping snippet of what the product does: a caller and the AI agent.
+  const conversation = [
+    { from: "caller", text: t("conversation.callerAsk") },
+    { from: "agent", text: t("conversation.agentOffer") },
+    { from: "caller", text: t("conversation.callerPick") },
+    { from: "agent", text: t("conversation.agentConfirm") },
+  ] as const;
+
   return (
     <div className="absolute inset-0 flex flex-col justify-end overflow-hidden bg-linear-135 from-brand-blue to-brand-teal p-12">
       {/* drifting logo pixels */}
@@ -90,12 +93,12 @@ export function BrandPanel() {
       {/* the call: caller speaks above the waveform, the agent replies below */}
       <div aria-hidden className="absolute inset-0 flex items-center">
         <div className="grid w-full -translate-y-32 justify-items-start px-10">
-          {CONVERSATION.filter((m) => m.from === "caller").map((message, i) => (
+          {conversation.filter((m) => m.from === "caller").map((message, i) => (
             <div
               key={i}
               className={cn(
                 `call-bubble-${i * 2 + 1}`,
-                "max-w-[280px] rounded-2xl rounded-bl-sm bg-white/15 px-3.5 py-2 text-sm text-white shadow-sm backdrop-blur-sm [grid-area:1/1]"
+                "max-w-[280px] rounded-2xl rounded-es-sm bg-white/15 px-3.5 py-2 text-sm text-white shadow-sm backdrop-blur-sm [grid-area:1/1]"
               )}
             >
               {message.text}
@@ -105,12 +108,12 @@ export function BrandPanel() {
       </div>
       <div aria-hidden className="absolute inset-0 flex items-center">
         <div className="grid w-full translate-y-8 justify-items-end px-10">
-          {CONVERSATION.filter((m) => m.from === "agent").map((message, i) => (
+          {conversation.filter((m) => m.from === "agent").map((message, i) => (
             <div
               key={i}
               className={cn(
                 `call-bubble-${i * 2 + 2}`,
-                "max-w-[280px] rounded-2xl rounded-br-sm bg-white px-3.5 py-2 text-sm text-neutral-900 shadow-sm [grid-area:1/1]"
+                "max-w-[280px] rounded-2xl rounded-ee-sm bg-white px-3.5 py-2 text-sm text-neutral-900 shadow-sm [grid-area:1/1]"
               )}
             >
               {message.text}
@@ -120,11 +123,8 @@ export function BrandPanel() {
       </div>
 
       <div className="relative flex flex-col gap-3 text-white">
-        <h2 className="font-heading text-3xl font-semibold">Every call answered.</h2>
-        <p className="max-w-md text-base/relaxed text-white/85">
-          AI voice agents that pick up the phone, answer queries and capture
-          leads for your business — around the clock.
-        </p>
+        <h2 className="font-heading text-3xl font-semibold">{t("headline")}</h2>
+        <p className="max-w-md text-base/relaxed text-white/85">{t("description")}</p>
       </div>
     </div>
   );

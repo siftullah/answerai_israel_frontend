@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import {
   Empty,
   EmptyDescription,
@@ -36,6 +37,7 @@ export function InvoiceList({
   emptyDescription: string;
   emptyAction?: React.ReactNode;
 }) {
+  const t = useTranslations("invoices.list");
   const { business } = useBusiness();
   const query = useInvoicesInfinite(businessUuid, filters);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -71,7 +73,7 @@ export function InvoiceList({
   if (query.isError) {
     return (
       <ErrorState
-        title="Couldn't load invoices"
+        title={t("loadError")}
         message={query.error.message}
         onRetry={() => query.refetch()}
       />

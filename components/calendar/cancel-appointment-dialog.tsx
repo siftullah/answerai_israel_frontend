@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ export function CancelAppointmentDialog({
   onOpenChange: (open: boolean) => void;
   appointmentUuid: string;
 }) {
+  const t = useTranslations("calendar.cancelDialog");
   const { business } = useBusiness();
   const cancelAppointment = useCancelAppointment(business.id);
   const [reason, setReason] = useState("");
@@ -35,7 +37,7 @@ export function CancelAppointmentDialog({
       { id: appointmentUuid, reason: reason.trim() || undefined },
       {
         onSuccess: () => {
-          toast.success("Appointment canceled");
+          toast.success(t("toasts.canceled"));
           onOpenChange(false);
         },
         onError: (error) => toast.error(error.message),
@@ -47,27 +49,24 @@ export function CancelAppointmentDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Cancel this appointment?</DialogTitle>
-          <DialogDescription>
-            The slot frees up, the synced calendar copy is removed, and the contact is
-            emailed a cancellation.
-          </DialogDescription>
+          <DialogTitle>{t("title")}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
         <Field>
-          <FieldLabel htmlFor="cancel-appointment-reason">Reason</FieldLabel>
+          <FieldLabel htmlFor="cancel-appointment-reason">{t("reason")}</FieldLabel>
           <Input
             id="cancel-appointment-reason"
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             maxLength={200}
-            placeholder="Shared with the contact (optional)"
+            placeholder={t("reasonPlaceholder")}
           />
         </Field>
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Keep appointment
+            {t("keep")}
           </Button>
           <Button
             type="button"
@@ -75,7 +74,7 @@ export function CancelAppointmentDialog({
             onClick={confirm}
             disabled={cancelAppointment.isPending}
           >
-            {cancelAppointment.isPending ? "Canceling…" : "Cancel appointment"}
+            {cancelAppointment.isPending ? t("canceling") : t("confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

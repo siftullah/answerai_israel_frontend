@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -30,27 +31,6 @@ export type CallbackTab = "open" | "due_today" | "history";
 const OPEN_STATUSES = OPEN_CALLBACK_STATUSES.join(",");
 const TERMINAL_STATUSES = TERMINAL_CALLBACK_STATUSES.join(",");
 
-const COPY: Record<CallbackTab, { emptyTitle: string; emptyDescription: string }> = {
-  open: {
-    emptyTitle: "No open callbacks",
-    emptyDescription:
-      "Call-backs your agents promise to callers — and ones you schedule yourself — will show up here.",
-  },
-  due_today: {
-    emptyTitle: "Nothing due today",
-    emptyDescription: "Open callbacks scheduled for today will appear here.",
-  },
-  history: {
-    emptyTitle: "No callback history yet",
-    emptyDescription: "Completed, missed and canceled callbacks land here.",
-  },
-};
-
-const NO_MATCH_COPY = {
-  emptyTitle: "No callbacks match",
-  emptyDescription: "Try a different search or clear some filters.",
-};
-
 /**
  * Master-detail shell mirroring the call logs: list rail + detail pane on one
  * divider. Only the selected callback lives in the URL (?callback=…); the tab
@@ -58,6 +38,7 @@ const NO_MATCH_COPY = {
  * pane still renders any uuid.
  */
 export function CallbacksView() {
+  const t = useTranslations("callbacks");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -128,31 +109,49 @@ export function CallbacksView() {
   const newCallbackButton = (
     <Button onClick={() => setCreating(true)}>
       <PlusIcon />
-      New callback
+      {t("actions.newCallback")}
     </Button>
   );
 
-  const copy = hasActiveFilters ? NO_MATCH_COPY : COPY[tab];
+  const copy = hasActiveFilters
+    ? {
+        emptyTitle: t("view.empty.noMatch.title"),
+        emptyDescription: t("view.empty.noMatch.description"),
+      }
+    : tab === "open"
+      ? {
+          emptyTitle: t("view.empty.open.title"),
+          emptyDescription: t("view.empty.open.description"),
+        }
+      : tab === "due_today"
+        ? {
+            emptyTitle: t("view.empty.dueToday.title"),
+            emptyDescription: t("view.empty.dueToday.description"),
+          }
+        : {
+            emptyTitle: t("view.empty.history.title"),
+            emptyDescription: t("view.empty.history.description"),
+          };
 
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Callbacks"
-        description="Call-backs promised to callers — dialed by your agents or handled by your team."
+        title={t("view.title")}
+        description={t("view.description")}
         actions={newCallbackButton}
       />
 
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
           <Tabs value={tab} onValueChange={(value) => changeTab(value as CallbackTab)}>
             <TabsList className="w-full">
               <TabsTrigger value="open">
-                Open
+                {t("view.tabs.open")}
                 {counts !== undefined && counts.open > 0 && (
                   <Badge variant={counts.overdue > 0 ? "warning" : "outline"} className="h-5">
                     {counts.open}
@@ -160,14 +159,14 @@ export function CallbacksView() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="due_today">
-                Due today
+                {t("view.tabs.dueToday")}
                 {counts !== undefined && counts.due_today > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.due_today}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
+              <TabsTrigger value="history">{t("view.tabs.history")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -181,7 +180,7 @@ export function CallbacksView() {
             members={membersQuery.data}
           />
 
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <CallbackList
               businessUuid={business.id}
               filters={apiFilters}
@@ -198,7 +197,7 @@ export function CallbacksView() {
           // Keyed so switching callbacks starts the pane back at the top.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -68,11 +69,17 @@ function PolicyRowActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${policy.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={ts("rowActions", { name: policy.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -80,11 +87,11 @@ function PolicyRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -93,6 +100,9 @@ function PolicyRowActions({
 
 export function PoliciesView() {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.policies");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
   const policiesQuery = useBusinessPolicies(business.id);
   const createPolicy = useCreateBusinessPolicy(business.id);
@@ -110,7 +120,7 @@ export function PoliciesView() {
       (item) => item.name && item.content
     );
     if (items.length === 0) {
-      toast.info("Nothing usable was extracted from that source.");
+      toast.info(ts("nothingExtracted"));
       return;
     }
     setDraftRows(
@@ -130,19 +140,19 @@ export function PoliciesView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Policies"
-        description="Business policies your AI follows and explains to callers."
+        title={t("title")}
+        description={t("description")}
         actions={
           <>
             <ExtractionDialog
               target="policies"
-              title="Extract policies"
-              description="Pull policies from your website or a document. You review every row before anything is added."
+              title={t("extract.title")}
+              description={t("extract.description")}
               onReady={(extraction) => onExtractionReady(extraction.draft)}
             />
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add policy
+              {t("add")}
             </Button>
           </>
         }
@@ -155,22 +165,19 @@ export function PoliciesView() {
         </div>
       ) : policiesQuery.isError ? (
         <ErrorState
-          title="Couldn't load policies"
+          title={t("loadError")}
           message={policiesQuery.error.message}
           onRetry={() => policiesQuery.refetch()}
         />
       ) : policiesQuery.data.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>
-            <EmptyTitle>Add your first policy</EmptyTitle>
-            <EmptyDescription>
-              Cancellations, refunds, warranties — the rules your AI should follow and
-              explain.
-            </EmptyDescription>
+            <EmptyTitle>{t("empty.title")}</EmptyTitle>
+            <EmptyDescription>{t("empty.description")}</EmptyDescription>
           </EmptyHeader>
           <Button onClick={() => setEditor({ source: null })}>
             <PlusIcon />
-            Add policy
+            {t("add")}
           </Button>
         </Empty>
       ) : (
@@ -198,10 +205,10 @@ export function PoliciesView() {
                   </p>
                   <div className="mt-auto flex items-center gap-2 border-t pt-3 text-sm text-muted-foreground">
                     {policy.agent_scope === "all" ? (
-                      <span>All agents</span>
+                      <span>{ts("allAgents")}</span>
                     ) : (
                       <Badge variant="secondary">
-                        {policy.agent_ids.length} selected
+                        {ts("selectedAgents", { count: policy.agent_ids.length })}
                       </Badge>
                     )}
                   </div>
@@ -213,8 +220,8 @@ export function PoliciesView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Agents</TableHead>
+                <TableHead>{tc("labels.name")}</TableHead>
+                <TableHead>{ts("agents")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -231,9 +238,11 @@ export function PoliciesView() {
                   </TableCell>
                   <TableCell>
                     {policy.agent_scope === "all" ? (
-                      <span className="text-muted-foreground">All agents</span>
+                      <span className="text-muted-foreground">{ts("allAgents")}</span>
                     ) : (
-                      <Badge variant="secondary">{policy.agent_ids.length} selected</Badge>
+                      <Badge variant="secondary">
+                        {ts("selectedAgents", { count: policy.agent_ids.length })}
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -270,24 +279,24 @@ export function PoliciesView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your AI will stop following this policy. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deletePolicy.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Policy deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -299,9 +308,9 @@ export function PoliciesView() {
           onOpenChange={(next) => {
             if (!next) setDraftRows(null);
           }}
-          title="Review extracted policies"
-          itemNoun="policy"
-          itemNounPlural="policies"
+          title={t("review.title")}
+          addLabel={(count) => t("review.addCount", { count })}
+          addedLabel={(count) => t("review.addedCount", { count })}
           rows={draftRows}
           onRowsChange={setDraftRows}
           summary={(item) => ({

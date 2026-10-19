@@ -1,37 +1,45 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LeadStatusBadge } from "@/components/leads/lead-status-badge";
 import { dayKey, formatDate, formatDateKey } from "@/lib/datetime";
+import type { Translator } from "@/lib/i18n/types";
 import { formatCents } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { Lead } from "@/lib/api/types";
 
-/** The row's third line: where this lead is in its life, date-first. */
-function dateLine(lead: Lead, timeZone: string): { text: string; warn: boolean } {
+/** The row's third line: where this lead is in its life, date-first.
+ * `t` is scoped to `leads.row`. */
+function dateLine(lead: Lead, timeZone: string, t: Translator): { text: string; warn: boolean } {
   switch (lead.status) {
     case "won":
       return {
-        text: lead.closed_at ? `Won ${formatDate(lead.closed_at, timeZone)}` : "Won",
+        text: lead.closed_at
+          ? t("wonOn", { date: formatDate(lead.closed_at, timeZone) })
+          : t("won"),
         warn: false,
       };
     case "lost":
       return {
-        text: lead.closed_at ? `Lost ${formatDate(lead.closed_at, timeZone)}` : "Lost",
+        text: lead.closed_at
+          ? t("lostOn", { date: formatDate(lead.closed_at, timeZone) })
+          : t("lost"),
         warn: false,
       };
     default: {
       if (lead.expected_close_date) {
         const overdue = lead.expected_close_date < dayKey(new Date().toISOString(), timeZone);
         return {
-          text: `Close expected ${formatDateKey(lead.expected_close_date)}`,
+          text: t("closeExpected", { date: formatDateKey(lead.expected_close_date) }),
           warn: overdue,
         };
       }
+      const date = formatDate(lead.created_at, timeZone);
       return {
         text:
           lead.source === "agent_call"
-            ? `Captured from a call ${formatDate(lead.created_at, timeZone)}`
-            : `Added ${formatDate(lead.created_at, timeZone)}`,
+            ? t("capturedFromCall", { date })
+            : t("addedOn", { date }),
         warn: false,
       };
     }
@@ -49,7 +57,8 @@ export function LeadListRow({
   timeZone: string;
   onSelect: () => void;
 }) {
-  const line = dateLine(lead, timeZone);
+  const t = useTranslations("leads.row");
+  const line = dateLine(lead, timeZone, t);
 
   return (
     <button
@@ -57,7 +66,7 @@ export function LeadListRow({
       onClick={onSelect}
       aria-current={selected || undefined}
       className={cn(
-        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-left outline-none transition-colors focus-visible:bg-muted",
+        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-start outline-none transition-colors focus-visible:bg-muted",
         selected
           ? "bg-primary/[0.07]"
           : line.warn

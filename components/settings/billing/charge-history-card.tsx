@@ -1,6 +1,7 @@
 "use client";
 
 import { Fragment, useState } from "react";
+import { useTranslations } from "next-intl";
 import { ChevronDownIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -27,9 +28,12 @@ import { useBillingChargesInfinite } from "@/hooks/use-billing";
 import { cn } from "@/lib/utils";
 import { formatCents } from "@/lib/money";
 import { formatDate, formatDateTime } from "@/lib/datetime";
-import { BILLING_CHARGE_TYPE_LABELS, TAX_LINE_LABEL, type BillingCharge } from "@/lib/api/types";
+import { displayLocale } from "@/lib/i18n/runtime";
+import { BILLING_CHARGE_TYPE_LABELS, taxLineLabel, type BillingCharge } from "@/lib/api/types";
 
 function ChargeDetails({ charge, timezone }: { charge: BillingCharge; timezone: string }) {
+  const t = useTranslations("settings.billing.charges");
+  const tc = useTranslations("common");
   return (
     <div className="flex max-w-xl flex-col gap-1.5 py-1 text-sm">
       {charge.line_items.map((line, index) => (
@@ -37,27 +41,30 @@ function ChargeDetails({ charge, timezone }: { charge: BillingCharge; timezone: 
           <span className={line.amount_cents < 0 ? "text-success" : undefined}>
             {line.description}
             {line.quantity > 1 &&
-              ` (${line.quantity.toLocaleString()} × ${formatCents(line.unit_cents, charge.currency)})`}
+              ` ${t("lineQuantity", {
+                quantity: line.quantity.toLocaleString(displayLocale()),
+                unit: formatCents(line.unit_cents, charge.currency),
+              })}`}
           </span>
           <span className="tabular-nums">{formatCents(line.amount_cents, charge.currency)}</span>
         </div>
       ))}
       <Separator className="my-1" />
       <div className="flex items-center justify-between gap-4 text-muted-foreground">
-        <span>Subtotal</span>
+        <span>{tc("labels.subtotal")}</span>
         <span className="tabular-nums">{formatCents(charge.subtotal_cents, charge.currency)}</span>
       </div>
       <div className="flex items-center justify-between gap-4 text-muted-foreground">
-        <span>{TAX_LINE_LABEL}</span>
+        <span>{taxLineLabel()}</span>
         <span className="tabular-nums">{formatCents(charge.tax_cents, charge.currency)}</span>
       </div>
       <div className="flex items-center justify-between gap-4 font-medium">
-        <span>Total</span>
+        <span>{tc("labels.total")}</span>
         <span className="tabular-nums">{formatCents(charge.total_cents, charge.currency)}</span>
       </div>
       {charge.gateway_fee_cents !== null && charge.gateway_fee_cents > 0 && (
         <div className="flex items-center justify-between gap-4 text-muted-foreground">
-          <span>Card surcharge (added by the payment provider)</span>
+          <span>{t("cardSurcharge")}</span>
           <span className="tabular-nums">
             {formatCents(charge.gateway_fee_cents, charge.currency)}
           </span>
@@ -65,15 +72,19 @@ function ChargeDetails({ charge, timezone }: { charge: BillingCharge; timezone: 
       )}
       {charge.receipt_number && (
         <p className="pt-1 text-xs text-muted-foreground">
-          Receipt {charge.receipt_number}
-          {charge.paid_at && ` · paid ${formatDateTime(charge.paid_at, timezone)}`}
+          {charge.paid_at
+            ? t("receiptPaid", {
+                number: charge.receipt_number,
+                date: formatDateTime(charge.paid_at, timezone),
+              })
+            : t("receipt", { number: charge.receipt_number })}
         </p>
       )}
       {charge.status === "failed" && (
         <p className="pt-1 text-xs text-destructive">
-          {charge.failure_reason ?? "The charge failed."}
+          {charge.failure_reason ?? t("failed")}
           {charge.next_retry_at &&
-            ` Next automatic retry ${formatDateTime(charge.next_retry_at, timezone)}.`}
+            ` ${t("nextRetry", { date: formatDateTime(charge.next_retry_at, timezone) })}`}
         </p>
       )}
     </div>
@@ -87,6 +98,8 @@ export function ChargeHistoryCard({
   businessUuid: string;
   timezone: string;
 }) {
+  const t = useTranslations("settings.billing.charges");
+  const tc = useTranslations("common");
   const chargesQuery = useBillingChargesInfinite(businessUuid);
   const [expanded, setExpanded] = useState<ReadonlySet<string>>(new Set());
 
@@ -104,10 +117,8 @@ export function ChargeHistoryCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Charge history</CardTitle>
-        <CardDescription>
-          Every subscription charge, with its full tax-invoice breakdown. Amounts in ILS (₪).
-        </CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-4">
         {chargesQuery.isPending && (
@@ -120,24 +131,24 @@ export function ChargeHistoryCard({
 
         {chargesQuery.isError && (
           <Alert variant="destructive">
-            <AlertTitle>Couldn&apos;t load charges</AlertTitle>
+            <AlertTitle>{t("loadError")}</AlertTitle>
             <AlertDescription>{chargesQuery.error.message}</AlertDescription>
           </Alert>
         )}
 
         {chargesQuery.isSuccess && charges.length === 0 && (
-          <p className="text-sm text-muted-foreground">No charges yet.</p>
+          <p className="text-sm text-muted-foreground">{t("empty")}</p>
         )}
 
         {charges.length > 0 && (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead className="max-md:hidden">Receipt</TableHead>
-                <TableHead className="text-right">Total</TableHead>
+                <TableHead>{tc("labels.date")}</TableHead>
+                <TableHead>{tc("labels.description")}</TableHead>
+                <TableHead>{tc("labels.status")}</TableHead>
+                <TableHead className="max-md:hidden">{t("receiptColumn")}</TableHead>
+                <TableHead className="text-end">{tc("labels.total")}</TableHead>
                 <TableHead className="w-8" />
               </TableRow>
             </TableHeader>
@@ -164,7 +175,7 @@ export function ChargeHistoryCard({
                       <TableCell className="text-muted-foreground max-md:hidden">
                         {charge.receipt_number ?? "—"}
                       </TableCell>
-                      <TableCell className="text-right tabular-nums">
+                      <TableCell className="text-end tabular-nums">
                         {formatCents(charge.total_cents, charge.currency)}
                       </TableCell>
                       <TableCell>
@@ -198,7 +209,7 @@ export function ChargeHistoryCard({
               disabled={chargesQuery.isFetchingNextPage}
             >
               {chargesQuery.isFetchingNextPage && <Spinner data-icon="inline-start" />}
-              Load more
+              {t("loadMore")}
             </Button>
           </div>
         )}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ExternalLinkIcon, FileIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,12 +14,21 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { DocStatusBadge } from "@/components/business-profile/docs/doc-status-badge";
 import { useBusiness } from "@/components/business/business-provider";
 import { useDocument } from "@/hooks/use-documents";
+import { displayLocale } from "@/lib/i18n/runtime";
 import type { KnowledgeDocument, KnowledgeDocumentDetail } from "@/lib/api/types";
 
-function formatBytes(bytes: number): string {
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(0)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+function useFormatBytes(): (bytes: number) => string {
+  const t = useTranslations("knowledge.docs.view.fileSize");
+  return (bytes) => {
+    const format = (value: number, digits: number) =>
+      value.toLocaleString(displayLocale(), {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits,
+      });
+    if (bytes < 1024) return t("bytes", { size: format(bytes, 0) });
+    if (bytes < 1024 * 1024) return t("kilobytes", { size: format(bytes / 1024, 0) });
+    return t("megabytes", { size: format(bytes / (1024 * 1024), 1) });
+  };
 }
 
 function SourceLink({ url }: { url: string }) {
@@ -40,7 +50,10 @@ function DocBody({ body }: { body: string }) {
 }
 
 function DocViewContent({ detail }: { detail: KnowledgeDocumentDetail }) {
+  const t = useTranslations("knowledge.docs.view");
+  const formatBytes = useFormatBytes();
   const preparing = detail.status === "uploading" || detail.status === "processing";
+  const integrationProvider = detail.integration?.provider_name ?? t("anIntegration");
 
   return (
     <div className="flex flex-col gap-4">
@@ -54,10 +67,12 @@ function DocViewContent({ detail }: { detail: KnowledgeDocumentDetail }) {
       {detail.source_type === "integration" && (
         <>
           <p className="text-sm text-muted-foreground">
-            From {detail.integration?.provider_name ?? "an integration"}
-            {detail.integration?.feed_name ? ` — ${detail.integration.feed_name}` : ""}.
-            Content refreshes automatically and is managed from the Integrations
-            section.
+            {detail.integration?.feed_name
+              ? t("integrationWithFeed", {
+                  provider: integrationProvider,
+                  feed: detail.integration.feed_name,
+                })
+              : t("integrationNoFeed", { provider: integrationProvider })}
           </p>
           {detail.body !== null && <DocBody body={detail.body} />}
         </>
@@ -73,16 +88,9 @@ function DocViewContent({ detail }: { detail: KnowledgeDocumentDetail }) {
           {detail.body !== null ? (
             <DocBody body={detail.body} />
           ) : preparing ? (
-            <p className="text-sm text-muted-foreground">
-              We&apos;re reading the page and preparing the content — check back in
-              a moment.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("urlPreparing")}</p>
           ) : (
-            <p className="text-sm text-muted-foreground">
-              This doc is fetched directly from the source by the voice engine —
-              its content isn&apos;t stored here. Add it again to get an editable
-              copy.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("urlNotStored")}</p>
           )}
         </>
       )}
@@ -107,7 +115,7 @@ function DocViewContent({ detail }: { detail: KnowledgeDocumentDetail }) {
             }
           >
             <ExternalLinkIcon />
-            Open file
+            {t("openFile")}
           </Button>
         </div>
       )}
@@ -125,6 +133,7 @@ export function DocViewModal({
   onOpenChange: (open: boolean) => void;
 }) {
   const { business } = useBusiness();
+  const tc = useTranslations("common");
   const detailQuery = useDocument(business.id, open ? doc.id : null);
 
   return (
@@ -144,7 +153,7 @@ export function DocViewModal({
             <div className="flex flex-col items-start gap-3">
               <p className="text-sm text-destructive">{detailQuery.error.message}</p>
               <Button variant="outline" size="sm" onClick={() => detailQuery.refetch()}>
-                Try again
+                {tc("actions.tryAgain")}
               </Button>
             </div>
           ) : (

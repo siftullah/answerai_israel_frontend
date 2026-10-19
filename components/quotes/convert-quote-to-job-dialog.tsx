@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -30,6 +31,8 @@ export function ConvertQuoteToJobDialog({
   quote: Quote;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const router = useRouter();
   const createJob = useCreateJobFromQuote(businessUuid);
 
@@ -40,7 +43,9 @@ export function ConvertQuoteToJobDialog({
       { quote_id: quote.id },
       {
         onSuccess: (job) => {
-          toast.success(`${job.reference} created from quote ${quote.number} — book it in`);
+          toast.success(
+            t("toasts.convertedToJob", { job: job.reference, quote: quote.number })
+          );
           router.push(`/b/${businessUuid}/jobs?job=${job.id}`);
         },
         onError: (error) => toast.error(error.message),
@@ -53,18 +58,20 @@ export function ConvertQuoteToJobDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Convert quote {quote.number} to a job?</AlertDialogTitle>
+          <AlertDialogTitle>
+            {t("convertToJobDialog.title", { number: quote.number })}
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Creates a job worth {formatCents(quote.subtotal_cents, quote.currency)} (ex. tax) with
-            the same line items, ready to schedule for{" "}
-            {quote.contact?.name ?? "the customer"}. A quote converts once — the quote stays here
-            with its history.
+            {t("convertToJobDialog.description", {
+              amount: formatCents(quote.subtotal_cents, quote.currency),
+              customer: quote.contact?.name ?? t("theCustomer"),
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={createJob.isPending} onClick={confirm}>
-            {createJob.isPending ? "Converting…" : "Create job"}
+            {createJob.isPending ? t("actions.converting") : t("convertToJobDialog.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

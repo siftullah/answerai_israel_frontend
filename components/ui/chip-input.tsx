@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -14,7 +15,7 @@ export function ChipInput({
   max,
   maxItemLength,
   placeholder,
-  limitPlaceholder = "Limit reached",
+  limitPlaceholder,
   invalid,
   disabled,
 }: {
@@ -28,6 +29,7 @@ export function ChipInput({
   invalid?: boolean;
   disabled?: boolean;
 }) {
+  const t = useTranslations("ui");
   const [input, setInput] = useState("");
 
   const add = () => {
@@ -45,11 +47,11 @@ export function ChipInput({
       {value.length > 0 && (
         <div className="flex flex-wrap gap-1.5">
           {value.map((item) => (
-            <Badge key={item} variant="secondary" className="gap-1 pr-1">
+            <Badge key={item} variant="secondary" className="gap-1 pe-1">
               {item}
               <button
                 type="button"
-                aria-label={`Remove ${item}`}
+                aria-label={t("chipInput.remove", { item })}
                 className="rounded-full p-0.5 hover:bg-foreground/10"
                 onClick={() => onChange(value.filter((v) => v !== item))}
                 disabled={disabled}
@@ -71,7 +73,7 @@ export function ChipInput({
           }
         }}
         onBlur={add}
-        placeholder={atLimit ? limitPlaceholder : placeholder}
+        placeholder={atLimit ? (limitPlaceholder ?? t("chipInput.limitReached")) : placeholder}
         disabled={disabled || atLimit}
         aria-invalid={invalid}
       />

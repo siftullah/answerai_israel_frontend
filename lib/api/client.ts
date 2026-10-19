@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { ensureCsrfCookie } from "./csrf";
 import { normalizeApiError } from "./errors";
 import { API_URL } from "./endpoints";
+import { runtimeLocale } from "@/lib/i18n/runtime";
 
 const MUTATING_METHODS = ["post", "put", "patch", "delete"];
 
@@ -37,6 +38,9 @@ api.interceptors.request.use(async (config) => {
   if (MUTATING_METHODS.includes(method)) {
     await ensureCsrfCookie();
   }
+
+  // Lets the API localize its own messages once it supports it.
+  config.headers.set("Accept-Language", runtimeLocale());
 
   if (!config.headers.has("X-Business-Identifier")) {
     const match = window.location.pathname.match(BUSINESS_PATH);

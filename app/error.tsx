@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ErrorState } from "@/components/error-state";
 
 export default function Error({
@@ -9,9 +10,10 @@ export default function Error({
   error: Error & { digest?: string };
   unstable_retry: () => void;
 }) {
+  const tc = useTranslations("common");
   return (
     <ErrorState
-      message={error.message || "An unexpected error occurred."}
+      message={error.message || tc("state.unexpectedError")}
       onRetry={() => unstable_retry()}
     />
   );

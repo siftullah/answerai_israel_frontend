@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,13 +26,19 @@ export function AcceptQuoteDialog({
   quote: Quote;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const acceptQuote = useAcceptQuote(businessUuid);
+  const descriptionValues = {
+    customer: quote.contact?.name ?? t("theCustomer"),
+    amount: formatCents(quote.total_cents, quote.currency),
+  };
 
   // The dialog stays mounted until the request settles — closing immediately
   // would unmount the mutation observer and skip these callbacks.
   const confirm = () => {
     acceptQuote.mutate(quote.id, {
-      onSuccess: () => toast.success(`Quote ${quote.number} accepted`),
+      onSuccess: () => toast.success(t("toasts.accepted", { number: quote.number })),
       onError: (error) => toast.error(error.message),
       onSettled: () => onOpenChange(false),
     });
@@ -41,18 +48,17 @@ export function AcceptQuoteDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Mark quote {quote.number} as accepted?</AlertDialogTitle>
+          <AlertDialogTitle>{t("acceptDialog.title", { number: quote.number })}</AlertDialogTitle>
           <AlertDialogDescription>
-            Records that {quote.contact?.name ?? "the customer"} accepted the{" "}
-            {formatCents(quote.total_cents, quote.currency)} quote
-            {quote.status === "expired" ? " (even though it had expired)" : ""}. You can then
-            convert it to an invoice.
+            {quote.status === "expired"
+              ? t("acceptDialog.descriptionExpired", descriptionValues)
+              : t("acceptDialog.description", descriptionValues)}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={acceptQuote.isPending} onClick={confirm}>
-            {acceptQuote.isPending ? "Saving…" : "Mark as accepted"}
+            {acceptQuote.isPending ? tc("actions.saving") : t("acceptDialog.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

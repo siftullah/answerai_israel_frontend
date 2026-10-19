@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   ArrowUpRightIcon,
@@ -45,10 +46,11 @@ import {
 } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("callbacks.detail");
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All callbacks
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("backToList")}
     </Button>
   );
 }
@@ -71,21 +73,22 @@ function MetaBand({
   callback: Callback;
   timeZone: string;
 }) {
+  const t = useTranslations("callbacks");
   const terminal = TERMINAL_CALLBACK_STATUSES.includes(callback.status);
 
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label="Scheduled for">
+      <Meta label={t("detail.scheduledFor")}>
         {formatDateTime(callback.scheduled_at, timeZone)}
         {callback.timezone !== timeZone && (
           <span className="block text-xs font-normal text-muted-foreground">
-            requested in {callback.timezone}
+            {t("detail.requestedIn", { timezone: callback.timezone })}
           </span>
         )}
       </Meta>
-      <Meta label="Type">{CALLBACK_TYPE_LABELS[callback.type]}</Meta>
+      <Meta label={t("labels.type")}>{CALLBACK_TYPE_LABELS[callback.type]}</Meta>
       {callback.type === "agent" ? (
-        <Meta label="Agent">
+        <Meta label={t("labels.agent")}>
           {callback.agent ? (
             <Link
               href={`/b/${businessUuid}/agents/${callback.agent.id}`}
@@ -98,56 +101,63 @@ function MetaBand({
           )}
         </Meta>
       ) : (
-        <Meta label="Assignee">{callback.assignee?.name ?? "—"}</Meta>
+        <Meta label={t("labels.assignee")}>{callback.assignee?.name ?? "—"}</Meta>
       )}
-      <Meta label="Number to call">
+      <Meta label={t("detail.numberToCall")}>
         <span className="tabular-nums">{formatE164(callback.to_e164)}</span>
       </Meta>
       {callback.type === "agent" && (
-        <Meta label="Dial from">
+        <Meta label={t("detail.dialFrom")}>
           {callback.caller_phone_number ? (
             <span className="tabular-nums">
               {callback.caller_phone_number.friendly_name ??
                 formatE164(callback.caller_phone_number.e164)}
             </span>
           ) : (
-            "Auto-selected"
+            t("detail.autoSelected")
           )}
         </Meta>
       )}
       {callback.type === "agent" && (
-        <Meta label="Attempts">
-          {callback.attempts} of {callback.max_attempts}
+        <Meta label={t("detail.attempts")}>
+          {t("detail.attemptsValue", {
+            attempts: callback.attempts,
+            max: callback.max_attempts,
+          })}
           {callback.next_attempt_at && (
             <span className="block text-xs font-normal text-muted-foreground">
-              next {formatDateTime(callback.next_attempt_at, timeZone)}
+              {t("detail.nextAttempt", {
+                date: formatDateTime(callback.next_attempt_at, timeZone),
+              })}
             </span>
           )}
         </Meta>
       )}
       {callback.type === "team_member" && callback.reminder_sent_at && (
-        <Meta label="Reminder emailed">
+        <Meta label={t("detail.reminderEmailed")}>
           {formatDateTime(callback.reminder_sent_at, timeZone)}
         </Meta>
       )}
       {terminal && callback.outcome && (
-        <Meta label="Outcome">{CALLBACK_OUTCOME_LABELS[callback.outcome]}</Meta>
+        <Meta label={t("labels.outcome")}>{CALLBACK_OUTCOME_LABELS[callback.outcome]}</Meta>
       )}
       {terminal && callback.completed_at && (
-        <Meta label={callback.status === "canceled" ? "Closed" : "Completed"}>
+        <Meta
+          label={callback.status === "canceled" ? t("detail.closed") : t("detail.completed")}
+        >
           {formatDateTime(callback.completed_at, timeZone)}
           {callback.completed_by && (
             <span className="block text-xs font-normal text-muted-foreground">
-              by {callback.completed_by.name}
+              {t("detail.byName", { name: callback.completed_by.name })}
             </span>
           )}
         </Meta>
       )}
-      <Meta label="Created">
+      <Meta label={t("detail.created")}>
         {formatDateTime(callback.created_at, timeZone)}
         {callback.created_by && (
           <span className="block text-xs font-normal text-muted-foreground">
-            by {callback.created_by.name}
+            {t("detail.byName", { name: callback.created_by.name })}
           </span>
         )}
       </Meta>
@@ -173,7 +183,7 @@ function LinkedCallRow({
         <PhoneForwardedIcon className="size-4 shrink-0 text-muted-foreground" />
         <span className="truncate font-medium">{label}</span>
       </span>
-      <ArrowUpRightIcon className="size-4 shrink-0 text-muted-foreground" />
+      <ArrowUpRightIcon className="size-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
     </Link>
   );
 }
@@ -195,6 +205,8 @@ export function CallbackDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("callbacks");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const callbackQuery = useCallbackDetail(businessUuid, callbackUuid);
   const [rescheduling, setRescheduling] = useState(false);
@@ -209,8 +221,8 @@ export function CallbackDetailPane({
           <EmptyMedia variant="icon">
             <PhoneForwardedIcon />
           </EmptyMedia>
-          <EmptyTitle>No callback selected</EmptyTitle>
-          <EmptyDescription>Select a callback to see its details.</EmptyDescription>
+          <EmptyTitle>{t("detail.emptyTitle")}</EmptyTitle>
+          <EmptyDescription>{t("detail.emptyDescription")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -236,12 +248,8 @@ export function CallbackDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Callback not found" : "Couldn't load this callback"}
-          message={
-            notFound
-              ? "This callback doesn't exist or was removed."
-              : callbackQuery.error.message
-          }
+          title={notFound ? t("detail.notFoundTitle") : t("detail.loadFailedTitle")}
+          message={notFound ? t("detail.notFoundMessage") : callbackQuery.error.message}
           onRetry={notFound ? onClearSelection : () => callbackQuery.refetch()}
         />
       </div>
@@ -257,7 +265,7 @@ export function CallbackDetailPane({
     <div key={callback.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           <div className="flex flex-col gap-4 pb-6">
             {/* Identity + status */}
@@ -284,7 +292,7 @@ export function CallbackDetailPane({
                   render={<Link href={`/b/${businessUuid}/contacts/${callback.contact.id}`} />}
                 >
                   <UserRoundIcon />
-                  View contact
+                  {t("actions.viewContact")}
                 </Button>
               )}
             </div>
@@ -299,7 +307,7 @@ export function CallbackDetailPane({
               <div className="flex flex-wrap gap-2">
                 <Button size="sm" onClick={() => setRescheduling(true)}>
                   <CalendarClockIcon />
-                  Reschedule
+                  {t("actions.reschedule")}
                 </Button>
                 {callback.type === "team_member" && (
                   <Button
@@ -309,12 +317,12 @@ export function CallbackDetailPane({
                     onClick={() => setCompleting(true)}
                   >
                     <CheckIcon />
-                    Complete
+                    {t("actions.complete")}
                   </Button>
                 )}
                 <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
                   <PencilIcon />
-                  Edit
+                  {tc("actions.edit")}
                 </Button>
                 <Button
                   size="sm"
@@ -323,32 +331,32 @@ export function CallbackDetailPane({
                   onClick={() => setCancelling(callback)}
                 >
                   <XIcon />
-                  Cancel
+                  {tc("actions.cancel")}
                 </Button>
               </div>
             )}
           </div>
 
           {callback.topic && (
-            <DetailCard title="Topic" accent>
+            <DetailCard title={t("labels.topic")} accent>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{callback.topic}</p>
             </DetailCard>
           )}
 
           {callback.notes && (
-            <DetailCard title="Notes">
+            <DetailCard title={tc("labels.notes")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{callback.notes}</p>
             </DetailCard>
           )}
 
           {(callback.origin_call_id || callback.result_call_id) && (
-            <DetailCard title="Linked calls">
+            <DetailCard title={t("detail.linkedCalls")}>
               <div className="flex flex-col gap-2">
                 {callback.origin_call_id && (
                   <LinkedCallRow
                     businessUuid={businessUuid}
                     callId={callback.origin_call_id}
-                    label="Promised during a call"
+                    label={t("detail.promisedDuringCall")}
                   />
                 )}
                 {callback.result_call_id && (
@@ -357,8 +365,8 @@ export function CallbackDetailPane({
                     callId={callback.result_call_id}
                     label={
                       callback.status === "completed"
-                        ? "Fulfilled by this call"
-                        : "Latest attempt"
+                        ? t("detail.fulfilledByCall")
+                        : t("detail.latestAttempt")
                     }
                   />
                 )}

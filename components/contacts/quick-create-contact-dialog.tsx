@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -21,23 +23,28 @@ import { useCreateContact } from "@/hooks/use-contacts";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
 import { normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
 import type { Contact } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 
 /**
  * The slim create path for pickers (quote/invoice customer combobox): name plus
  * optional email/phone, so raising a document for someone new never detours
  * through the Contacts page. The full editor stays the place for everything else.
+ * `tv` is a translator scoped to the `validation` namespace; `nameRequired` is
+ * the dialog's own copy for an empty name.
  */
-const quickCreateSchema = z.object({
-  name: z
-    .string()
-    .trim()
-    .min(1, "Give the contact a name")
-    .max(255, "Keep the name under 255 characters"),
-  email: z.union([z.literal(""), z.email("Enter a valid email address")]),
-  phone: optionalAuPhoneField(),
-});
+function quickCreateSchema(tv: Translator, nameRequired: string) {
+  return z.object({
+    name: z
+      .string()
+      .trim()
+      .min(1, nameRequired)
+      .max(255, tv("length.name", { max: 255 })),
+    email: z.union([z.literal(""), z.email(tv("common.emailInvalid"))]),
+    phone: optionalAuPhoneField(tv),
+  });
+}
 
-type QuickCreateValues = z.infer<typeof quickCreateSchema>;
+type QuickCreateValues = z.infer<ReturnType<typeof quickCreateSchema>>;
 
 export function QuickCreateContactDialog({
   open,
@@ -51,11 +58,16 @@ export function QuickCreateContactDialog({
   /** Prefill from whatever was typed into the picker's search box. */
   initialName?: string;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const createContact = useCreateContact(business.id);
 
+  const tv = useTranslations("validation");
+  const nameRequired = t("quickCreate.nameRequired");
+  const schema = useMemo(() => quickCreateSchema(tv, nameRequired), [tv, nameRequired]);
   const form = useForm<QuickCreateValues>({
-    resolver: zodResolver(quickCreateSchema),
+    resolver: zodResolver(schema),
     defaultValues: { name: initialName, email: "", phone: "" },
   });
   const rootServerError = (
@@ -74,7 +86,7 @@ export function QuickCreateContactDialog({
       },
       {
         onSuccess: (contact) => {
-          toast.success(`Contact ${contact.name} created`);
+          toast.success(t("quickCreate.created", { name: contact.name ?? "" }));
           onCreated(contact);
           onOpenChange(false);
         },
@@ -92,20 +104,17 @@ export function QuickCreateContactDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>New contact</DialogTitle>
-          <DialogDescription>
-            Just enough to raise the document — add company, address and more from the Contacts
-            page later.
-          </DialogDescription>
+          <DialogTitle>{t("quickCreate.title")}</DialogTitle>
+          <DialogDescription>{t("quickCreate.description")}</DialogDescription>
         </DialogHeader>
 
         <form id="quick-create-contact" onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
           <Field data-invalid={!!form.formState.errors.name || undefined}>
-            <FieldLabel htmlFor="quick-contact-name">Name</FieldLabel>
+            <FieldLabel htmlFor="quick-contact-name">{tc("labels.name")}</FieldLabel>
             <Input
               id="quick-contact-name"
               {...form.register("name")}
-              placeholder="Sam Taylor"
+              placeholder={t("quickCreate.namePlaceholder")}
               aria-invalid={!!form.formState.errors.name}
               autoFocus
             />
@@ -115,7 +124,7 @@ export function QuickCreateContactDialog({
           </Field>
 
           <Field data-invalid={!!form.formState.errors.email || undefined}>
-            <FieldLabel htmlFor="quick-contact-email">Email</FieldLabel>
+            <FieldLabel htmlFor="quick-contact-email">{tc("labels.email")}</FieldLabel>
             <Input
               id="quick-contact-email"
               type="email"
@@ -126,23 +135,23 @@ export function QuickCreateContactDialog({
             {form.formState.errors.email?.message ? (
               <FieldError>{form.formState.errors.email.message}</FieldError>
             ) : (
-              <FieldDescription>Optional — where quotes and invoices get sent.</FieldDescription>
+              <FieldDescription>{t("quickCreate.emailHint")}</FieldDescription>
             )}
           </Field>
 
           <Field data-invalid={!!form.formState.errors.phone || undefined}>
-            <FieldLabel htmlFor="quick-contact-phone">Phone</FieldLabel>
+            <FieldLabel htmlFor="quick-contact-phone">{tc("labels.phone")}</FieldLabel>
             <Input
               id="quick-contact-phone"
               type="tel"
               {...form.register("phone")}
-              placeholder="0412 345 678"
+              placeholder={t("phonePlaceholder")}
               aria-invalid={!!form.formState.errors.phone}
             />
             {form.formState.errors.phone?.message ? (
               <FieldError>{form.formState.errors.phone.message}</FieldError>
             ) : (
-              <FieldDescription>Optional.</FieldDescription>
+              <FieldDescription>{t("quickCreate.phoneHint")}</FieldDescription>
             )}
           </Field>
 
@@ -155,10 +164,10 @@ export function QuickCreateContactDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="submit" form="quick-create-contact" disabled={createContact.isPending}>
-            {createContact.isPending ? "Creating…" : "Create contact"}
+            {createContact.isPending ? t("quickCreate.creating") : t("quickCreate.submit")}
           </Button>
         </DialogFooter>
       </DialogContent>

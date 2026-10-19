@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   BanIcon,
   CopyIcon,
@@ -43,6 +44,8 @@ export function CampaignDetailHeader({
   onDuplicate: () => void;
   onDelete: () => void;
 }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   const { status } = campaign;
   const canStart = status === "draft" || status === "scheduled";
   const canCancel = status === "scheduled" || status === "running" || status === "paused";
@@ -50,12 +53,16 @@ export function CampaignDetailHeader({
 
   const subline = [
     campaign.agent?.name,
-    campaign.caller_number ? `from ${formatE164(campaign.caller_number.e164)}` : null,
+    campaign.caller_number
+      ? t("detail.subline.from", { number: formatE164(campaign.caller_number.e164) })
+      : null,
     campaign.start_at && status === "scheduled"
-      ? `starts ${formatDateTime(campaign.start_at, timeZone)}`
+      ? t("detail.subline.starts", { date: formatDateTime(campaign.start_at, timeZone) })
       : null,
     campaign.completed_at && status === "completed"
-      ? `finished ${formatDateTime(campaign.completed_at, timeZone)}`
+      ? t("detail.subline.finished", {
+          date: formatDateTime(campaign.completed_at, timeZone),
+        })
       : null,
   ]
     .filter(Boolean)
@@ -75,31 +82,31 @@ export function CampaignDetailHeader({
         {canStart && (
           <Button onClick={onStart} disabled={busy}>
             {busy ? <Spinner /> : <PlayIcon />}
-            {status === "scheduled" ? "Start now" : "Start"}
+            {status === "scheduled" ? t("actions.startNow") : t("actions.start")}
           </Button>
         )}
         {status === "running" && (
           <Button variant="cta" onClick={onPause} disabled={busy}>
             {busy ? <Spinner /> : <PauseIcon />}
-            Pause
+            {t("actions.pause")}
           </Button>
         )}
         {status === "paused" && (
           <Button variant="cta" onClick={onResume} disabled={busy}>
             {busy ? <Spinner /> : <PlayIcon />}
-            Resume
+            {t("actions.resume")}
           </Button>
         )}
         {canCancel && (
           <Button variant="destructive" onClick={onCancel} disabled={busy}>
             <BanIcon />
-            Cancel
+            {tc("actions.cancel")}
           </Button>
         )}
         <DropdownMenu>
           <DropdownMenuTrigger
             render={
-              <Button variant="ghost" size="icon-sm" aria-label="More campaign actions" />
+              <Button variant="ghost" size="icon-sm" aria-label={t("detail.moreActions")} />
             }
           >
             <EllipsisVerticalIcon />
@@ -107,12 +114,12 @@ export function CampaignDetailHeader({
           <DropdownMenuContent align="end">
             <DropdownMenuItem onClick={onDuplicate}>
               <CopyIcon />
-              Duplicate
+              {t("actions.duplicate")}
             </DropdownMenuItem>
             {canDelete && (
               <DropdownMenuItem variant="destructive" onClick={onDelete}>
                 <Trash2Icon />
-                Delete
+                {tc("actions.delete")}
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>

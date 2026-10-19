@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { PhoneIcon, Settings2Icon, UsersIcon, type LucideIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,7 +41,7 @@ const TAB_TONE: Record<
 // Card-sized triggers doubling as a summary. Overrides ride the default variant
 // so twMerge dedupes the base pill recipe; the ring/shadow only show when active.
 const BASE_TRIGGER = cn(
-  "h-auto min-w-0 flex-row items-center justify-start gap-3 rounded-2xl border-border bg-card p-4 text-left whitespace-normal shadow-xs transition-all",
+  "h-auto min-w-0 flex-row items-center justify-start gap-3 rounded-2xl border-border bg-card p-4 text-start whitespace-normal shadow-xs transition-all",
   "hover:bg-muted/40 hover:shadow-sm",
   "after:hidden",
   "data-active:ring-1 data-active:shadow-sm"
@@ -104,6 +105,8 @@ export function CampaignTabs({
   calls: React.ReactNode;
   settings: React.ReactNode;
 }) {
+  const t = useTranslations("campaigns.tabs");
+  const tc = useTranslations("common");
   return (
     <Tabs
       value={tab}
@@ -113,8 +116,8 @@ export function CampaignTabs({
       <TabsList className="grid w-full grid-cols-3 gap-3 rounded-none bg-transparent p-0 group-data-horizontal/tabs:h-auto">
         <TabCard
           value="recipients"
-          label="Recipients"
-          subtitle="Everyone this campaign calls"
+          label={t("recipients")}
+          subtitle={t("recipientsSubtitle")}
           icon={UsersIcon}
           tone="primary"
           active={tab === "recipients"}
@@ -122,16 +125,16 @@ export function CampaignTabs({
         />
         <TabCard
           value="calls"
-          label="Calls"
-          subtitle="Every dial this campaign has made"
+          label={t("calls")}
+          subtitle={t("callsSubtitle")}
           icon={PhoneIcon}
           tone="cta"
           active={tab === "calls"}
         />
         <TabCard
           value="settings"
-          label="Settings"
-          subtitle="Schedule, pacing, hours and variables"
+          label={tc("labels.settings")}
+          subtitle={t("settingsSubtitle")}
           icon={Settings2Icon}
           tone="neutral"
           active={tab === "settings"}

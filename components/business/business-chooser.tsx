@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,8 @@ function ChooserContent() {
   const { data } = useMe();
   const router = useRouter();
   const logout = useLogout();
+  const t = useTranslations("business");
+  const tc = useTranslations("common");
 
   if (!data) return null;
 
@@ -30,9 +33,9 @@ function ChooserContent() {
     <AuthShell>
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <h1 className="font-heading text-2xl font-semibold">Choose a business</h1>
+          <h1 className="font-heading text-2xl font-semibold">{tc("actions.chooseBusiness")}</h1>
           <p className="text-sm text-muted-foreground">
-            You&apos;re signed in as {data.user.email}
+            {t("chooser.signedInAs", { email: data.user.email })}
           </p>
         </div>
 
@@ -42,7 +45,7 @@ function ChooserContent() {
               key={membership.id}
               type="button"
               onClick={() => select(membership.business.id)}
-              className="group flex w-full items-center gap-3 rounded-xl border bg-card p-4 text-left outline-none transition hover:border-primary/40 hover:bg-muted/40 hover:shadow-sm focus-visible:ring-[3px] focus-visible:ring-ring/50"
+              className="group flex w-full items-center gap-3 rounded-xl border bg-card p-4 text-start outline-none transition hover:border-primary/40 hover:bg-muted/40 hover:shadow-sm focus-visible:ring-[3px] focus-visible:ring-ring/50"
             >
               <span
                 className={cn(
@@ -65,7 +68,7 @@ function ChooserContent() {
                   <Badge variant="outline">{membership.business.status}</Badge>
                 )}
                 <Badge variant="secondary">{membership.role.name}</Badge>
-                <ChevronRightIcon className="size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground" />
+                <ChevronRightIcon className="size-4 text-muted-foreground transition group-hover:translate-x-0.5 group-hover:text-foreground rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
               </span>
             </button>
           ))}
@@ -77,15 +80,15 @@ function ChooserContent() {
               trigger={
                 <button
                   type="button"
-                  className="flex w-full items-center gap-3 rounded-xl border border-dashed p-4 text-left outline-none transition hover:border-primary/40 hover:bg-muted/40 focus-visible:ring-[3px] focus-visible:ring-ring/50"
+                  className="flex w-full items-center gap-3 rounded-xl border border-dashed p-4 text-start outline-none transition hover:border-primary/40 hover:bg-muted/40 focus-visible:ring-[3px] focus-visible:ring-ring/50"
                 >
                   <span className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted text-muted-foreground">
                     <PlusIcon className="size-5" />
                   </span>
                   <span className="flex flex-col">
-                    <span className="font-medium">Create a business</span>
+                    <span className="font-medium">{t("chooser.createTitle")}</span>
                     <span className="text-xs text-muted-foreground">
-                      Set up your business on AnswerAI
+                      {t("chooser.createDescription")}
                     </span>
                   </span>
                 </button>
@@ -101,7 +104,7 @@ function ChooserContent() {
           disabled={logout.isPending}
         >
           {logout.isPending && <Spinner />}
-          Log out
+          {tc("actions.logOut")}
         </Button>
       </div>
     </AuthShell>

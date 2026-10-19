@@ -1,0 +1,164 @@
+{
+  "meta": {
+    "title": "חשבוניות"
+  },
+  "page": {
+    "title": "חשבוניות",
+    "description": "הפיקו חשבוניות על עבודות שהושלמו ועקבו אחר התשלומים שהתקבלו."
+  },
+  "newInvoice": "חשבונית חדשה",
+  "theCustomer": "הלקוח",
+  "thisContact": "איש הקשר הזה",
+  "tabs": {
+    "open": "פתוחות",
+    "overdue": "באיחור",
+    "paid": "שולם"
+  },
+  "empty": {
+    "open": {
+      "title": "אין חשבוניות פתוחות",
+      "description": "טיוטות וחשבוניות שממתינות לתשלום יופיעו כאן."
+    },
+    "overdue": {
+      "title": "אין חשבוניות באיחור",
+      "description": "חשבוניות שלא שולמו עד לתאריך לתשלום יופיעו כאן."
+    },
+    "paid": {
+      "title": "עדיין אין חשבוניות ששולמו",
+      "description": "חשבוניות שתסמנו כשולמו יופיעו כאן."
+    },
+    "all": {
+      "title": "עדיין אין חשבוניות",
+      "description": "הפיקו חשבונית ראשונה על עבודה שהושלמה."
+    },
+    "noMatch": {
+      "title": "אין חשבוניות תואמות",
+      "description": "נסו חיפוש אחר או הסירו חלק מהמסננים."
+    }
+  },
+  "stats": {
+    "outstanding": "יתרה לתשלום",
+    "awaitingPayment": "{count, plural, =0 {אין חשבוניות שממתינות לתשלום} one {# חשבונית ממתינה לתשלום} other {# חשבוניות ממתינות לתשלום}}",
+    "overdue": "באיחור",
+    "pastDue": "{count, plural, =0 {אין חשבוניות באיחור} one {# חשבונית באיחור} other {# חשבוניות באיחור}}",
+    "paidThisMonth": "שולם החודש",
+    "paidAllTime": "{count, plural, one {# חשבונית ששולמה בסך הכול} other {# חשבוניות ששולמו בסך הכול}}"
+  },
+  "list": {
+    "loadError": "לא ניתן לטעון את החשבוניות",
+    "searchPlaceholder": "חיפוש לפי מספר או איש קשר…",
+    "searchLabel": "חיפוש חשבוניות לפי מספר או שם איש קשר",
+    "filterLabel": "סינון חשבוניות",
+    "anyStatus": "כל סטטוס",
+    "removeFilter": "הסרת המסנן {status}"
+  },
+  "row": {
+    "draft": "טיוטה — עדיין לא נשלחה",
+    "due": "לתשלום עד {date}",
+    "wasDue": "המועד לתשלום היה ב-{date}",
+    "paid": "שולם ב-{date}",
+    "voided": "בוטל ב-{date}"
+  },
+  "labels": {
+    "customer": "לקוח",
+    "lineItems": "פריטים",
+    "type": "סוג",
+    "qty": "כמות",
+    "unit": "יחידה",
+    "unitPrice": "מחיר ליחידה",
+    "amount": "סכום",
+    "paymentInstructions": "הוראות תשלום",
+    "setOnSend": "ייקבע בשליחה",
+    "taxLine": "{label} ({rate}%)"
+  },
+  "actions": {
+    "send": "שליחת חשבונית",
+    "sending": "בשליחה…",
+    "markPaid": "סימון כשולם",
+    "duplicate": "שכפול",
+    "void": "ביטול",
+    "voidInvoice": "ביטול חשבונית",
+    "voiding": "ביטול מתבצע…",
+    "keepInvoice": "השארת החשבונית",
+    "deleteDraft": "מחיקת טיוטה",
+    "keepDraft": "השארת הטיוטה",
+    "createDraft": "יצירת טיוטה",
+    "viewContact": "הצגת איש קשר"
+  },
+  "detail": {
+    "back": "כל החשבוניות",
+    "noneSelected": {
+      "title": "לא נבחרה חשבונית",
+      "description": "בחרו חשבונית כדי לראות את פרטיה."
+    },
+    "notFound": {
+      "title": "החשבונית לא נמצאה",
+      "description": "החשבונית הזו לא קיימת או הוסרה."
+    },
+    "loadError": "לא ניתן לטעון את החשבונית הזו",
+    "title": "חשבונית {number}",
+    "fromJobBadge": "מתוך {reference}",
+    "fields": {
+      "fromJob": "מתוך עבודה",
+      "issued": "תאריך הנפקה",
+      "due": "תאריך לתשלום",
+      "sent": "נשלח",
+      "paid": "שולם",
+      "voided": "בוטל",
+      "created": "נוצר"
+    }
+  },
+  "form": {
+    "editTitle": "עריכת חשבונית {number}",
+    "editDescription": "אפשר לערוך טיוטות עד לשליחתן.",
+    "newDescription": "צרו טיוטה ושלחו אותה כשתהיו מוכנים.",
+    "issueDate": "תאריך הנפקה",
+    "dueDate": "תאריך לתשלום",
+    "dueDateHint": "אם השדה יישאר ריק, התאריך לתשלום ייקבע בעת השליחה ל-{days, plural, one {# יום} other {# ימים}} אחרי תאריך ההנפקה.",
+    "addLine": "הוספת פריט",
+    "descriptionPlaceholder": "מה בוצע או סופק",
+    "lineDescription": "תיאור פריט {line}",
+    "lineType": "סוג פריט {line}",
+    "lineQuantity": "כמות פריט {line}",
+    "lineUnitPrice": "מחיר ליחידה בדולרים לפריט {line}",
+    "lineTax": "פריט {line} חייב ב-{tax}",
+    "removeLine": "הסרת פריט {line}",
+    "notesPlaceholder": "יוצג באימייל עם החשבונית (לא חובה)",
+    "paymentInstructionsPlaceholder": "העברה בנקאית — BSB, מספר חשבון, אסמכתה…"
+  },
+  "sendDialog": {
+    "title": "שליחת חשבונית {number}",
+    "description": "שליחת חשבונית בסך {amount} אל {customer} באימייל. {dates}",
+    "datesIssuedDue": "תאריך הנפקה {issued}, תאריך לתשלום {due}.",
+    "datesIssuedNoDue": "תאריך הנפקה {issued}, לתשלום {days, plural, one {# יום לאחר מכן} other {# ימים לאחר מכן}}.",
+    "datesUnset": "תאריך ההנפקה ייקבע להיום והתאריך לתשלום ייקבע ל-{days, plural, one {# יום לאחר מכן} other {# ימים לאחר מכן}}.",
+    "emailLabel": "שליחה לאימייל",
+    "emailHint": "השאירו ריק כדי לשלוח אל {email}.",
+    "invalidEmail": "הזינו כתובת אימייל תקינה",
+    "noEmailError": "לאיש הקשר הזה אין אימייל — הזינו כתובת לשליחה",
+    "noEmailAlert": "לא רשומה כתובת אימייל עבור {name}. הזינו כתובת למעלה, אחרת החשבונית תסומן כנשלחה בלי לשלוח אימייל לאף אחד."
+  },
+  "markPaidDialog": {
+    "title": "סימון חשבונית {number} כשולמה",
+    "description": "רישום קבלת תשלום בסך {amount} מ-{customer}.",
+    "referenceLabel": "אסמכתה לתשלום",
+    "referencePlaceholder": "העברה בנקאית #88213",
+    "referenceHint": "אופציונלי — איך התקבל התשלום."
+  },
+  "voidDialog": {
+    "title": "ביטול חשבונית {number}?",
+    "description": "החוב של {customer} בסך {amount} לא ייכלל עוד ביתרה לתשלום. החשבונית תישאר ברשומות, אך לא ניתן יהיה לפתוח אותה מחדש."
+  },
+  "deleteDialog": {
+    "title": "מחיקת טיוטה {number}?",
+    "description": "הטיוטה והפריטים שלה יימחקו לצמיתות. לא ניתן לבטל את הפעולה."
+  },
+  "toasts": {
+    "draftCreated": "טיוטה {number} נוצרה",
+    "draftDeleted": "טיוטה {number} נמחקה",
+    "updated": "חשבונית {number} עודכנה",
+    "sent": "חשבונית {number} נשלחה",
+    "markedPaid": "חשבונית {number} סומנה כ\"שולם\"",
+    "voided": "חשבונית {number} בוטלה"
+  }
+}

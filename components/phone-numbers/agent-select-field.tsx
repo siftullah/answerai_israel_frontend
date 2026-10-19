@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import {
@@ -11,8 +12,6 @@ import {
 } from "@/components/ui/select";
 import { eligibleAgents } from "@/lib/validation/phone-number";
 import type { Agent, PhoneNumberAgentRef } from "@/lib/api/types";
-
-const SLOT_LABELS = { inbound: "Inbound agent", outbound: "Outbound agent" } as const;
 
 /**
  * Single-agent picker for a number's inbound/outbound slot. Options are the
@@ -36,8 +35,12 @@ export function AgentSelectField({
   /** Appends "(optional)" to the label — for the create flows. */
   optional?: boolean;
 }) {
+  const t = useTranslations("phoneNumbers.agentSlot");
+  const tc = useTranslations("common");
   const form = useFormContext();
   const error = form.formState.errors[name] as { message?: string } | undefined;
+
+  const slotLabel = slot === "inbound" ? t("inbound") : t("outbound");
 
   const eligible = eligibleAgents(agents, slot).map(({ id: agentId, name: agentName }) => ({
     id: agentId,
@@ -51,15 +54,14 @@ export function AgentSelectField({
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows the agent's uuid.
   const items = [
-    { value: "none", label: "None" },
+    { value: "none", label: tc("labels.none") },
     ...options.map((agent) => ({ value: agent.id, label: agent.name })),
   ];
 
   return (
     <Field data-invalid={!!error || undefined}>
       <FieldLabel htmlFor={id}>
-        {SLOT_LABELS[slot]}
-        {optional ? " (optional)" : ""}
+        {optional ? t("optional", { label: slotLabel }) : slotLabel}
       </FieldLabel>
       <Controller
         control={form.control}
@@ -86,9 +88,7 @@ export function AgentSelectField({
         )}
       />
       {eligible.length === 0 && (
-        <p className="text-sm text-muted-foreground">
-          No synced {slot} agents yet — you can assign one later.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("noneEligible", { slot })}</p>
       )}
       {error?.message && <FieldError>{error.message}</FieldError>}
     </Field>

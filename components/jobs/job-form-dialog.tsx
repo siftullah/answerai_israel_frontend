@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -63,11 +64,6 @@ function mapJobErrorKey(key: string): string {
   return key.startsWith("service_address.") ? key.replace("service_address.", "address_") : key;
 }
 
-const PRIORITY_ITEMS = JOB_PRIORITIES.map((priority) => ({
-  value: priority,
-  label: JOB_PRIORITY_LABELS[priority],
-}));
-
 /**
  * Create + edit share this dialog. `details` only exists on create — it seeds
  * the first timeline note; edits add notes through the timeline instead.
@@ -85,6 +81,8 @@ export function JobFormDialog({
   job?: Job;
   onSaved?: (job: Job) => void;
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const createJob = useCreateJob(business.id);
   const updateJob = useUpdateJob(business.id);
@@ -92,12 +90,20 @@ export function JobFormDialog({
 
   const editing = job !== undefined;
 
+  // Built per render so the labels follow the active locale.
+  const priorityItems = JOB_PRIORITIES.map((priority) => ({
+    value: priority,
+    label: JOB_PRIORITY_LABELS[priority],
+  }));
+
   const [selectedContact, setSelectedContact] = useState<Contact | null>(
     job?.contact ? contactStub(job.contact) : null
   );
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => jobFormSchema(tv), [tv]);
   const form = useForm<JobFormValues>({
-    resolver: zodResolver(jobFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: job ? jobToFormValues(job) : defaultJobValues(),
   });
   const rootServerError = (
@@ -108,7 +114,7 @@ export function JobFormDialog({
     (member) => member.has_account && member.user
   );
   const assigneeItems = [
-    { value: "", label: "Unassigned" },
+    { value: "", label: t("fields.unassigned") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -120,7 +126,7 @@ export function JobFormDialog({
         { id: job.id, payload: toUpdateJobPayload(values) },
         {
           onSuccess: (updated) => {
-            toast.success("Job updated");
+            toast.success(t("toasts.updated"));
             onSaved?.(updated);
             onOpenChange(false);
           },
@@ -132,7 +138,7 @@ export function JobFormDialog({
 
     createJob.mutate(toStoreJobPayload(values), {
       onSuccess: (created) => {
-        toast.success(`${created.reference} added`);
+        toast.success(t("toasts.added", { reference: created.reference }));
         onSaved?.(created);
         onOpenChange(false);
       },
@@ -144,11 +150,11 @@ export function JobFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>{editing ? `Edit ${job.reference}` : "New job"}</DialogTitle>
+          <DialogTitle>
+            {editing ? t("form.editTitle", { reference: job.reference }) : t("page.newJob")}
+          </DialogTitle>
           <DialogDescription>
-            {editing
-              ? "Update the details — status and times move from the job's actions."
-              : "Log a piece of work to schedule and deliver. Price it up with line items after."}
+            {editing ? t("form.editDescription") : t("form.createDescription")}
           </DialogDescription>
         </DialogHeader>
 
@@ -156,14 +162,14 @@ export function JobFormDialog({
           id="job-form"
           onSubmit={onSubmit}
           noValidate
-          className="scrollbar-slim -mr-2 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pr-2"
+          className="scrollbar-slim -me-2 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto pe-2"
         >
           <Field data-invalid={!!form.formState.errors.title || undefined}>
-            <FieldLabel htmlFor="job-title">Title</FieldLabel>
+            <FieldLabel htmlFor="job-title">{t("form.title")}</FieldLabel>
             <Input
               id="job-title"
               {...form.register("title")}
-              placeholder="The work to be done, e.g. Hot water system replacement"
+              placeholder={t("form.titlePlaceholder")}
               aria-invalid={!!form.formState.errors.title}
             />
             {form.formState.errors.title?.message && (
@@ -176,7 +182,7 @@ export function JobFormDialog({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="job-contact">Customer</FieldLabel>
+                <FieldLabel htmlFor="job-contact">{t("fields.customer")}</FieldLabel>
                 <ContactCombobox
                   id="job-contact"
                   selected={selectedContact}
@@ -201,9 +207,9 @@ export function JobFormDialog({
               control={form.control}
               render={({ field }) => (
                 <Field>
-                  <FieldLabel htmlFor="job-priority">Priority</FieldLabel>
+                  <FieldLabel htmlFor="job-priority">{t("fields.priority")}</FieldLabel>
                   <Select
-                    items={PRIORITY_ITEMS}
+                    items={priorityItems}
                     value={field.value}
                     onValueChange={(next) => field.onChange((next as JobPriority | null) ?? "normal")}
                   >
@@ -211,7 +217,7 @@ export function JobFormDialog({
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {PRIORITY_ITEMS.map((item) => (
+                      {priorityItems.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
@@ -227,7 +233,7 @@ export function JobFormDialog({
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={!!fieldState.error || undefined}>
-                  <FieldLabel htmlFor="job-assignee">Assignee</FieldLabel>
+                  <FieldLabel htmlFor="job-assignee">{t("fields.assignee")}</FieldLabel>
                   <Select
                     items={assigneeItems}
                     value={field.value}
@@ -253,7 +259,7 @@ export function JobFormDialog({
           </div>
 
           <Field data-invalid={!!form.formState.errors.estimated_minutes || undefined}>
-            <FieldLabel htmlFor="job-estimated-minutes">Estimated duration (minutes)</FieldLabel>
+            <FieldLabel htmlFor="job-estimated-minutes">{t("form.estimatedMinutes")}</FieldLabel>
             <Input
               id="job-estimated-minutes"
               {...form.register("estimated_minutes")}
@@ -265,22 +271,20 @@ export function JobFormDialog({
             {form.formState.errors.estimated_minutes?.message ? (
               <FieldError>{form.formState.errors.estimated_minutes.message}</FieldError>
             ) : (
-              <FieldDescription>
-                How long the visit takes — sets the booked window. Blank = your module default.
-              </FieldDescription>
+              <FieldDescription>{t("form.estimatedMinutesHint")}</FieldDescription>
             )}
           </Field>
 
           <div className="flex flex-col gap-3">
-            <span className="text-sm font-medium">Site address</span>
+            <span className="text-sm font-medium">{t("fields.siteAddress")}</span>
             <Field data-invalid={!!form.formState.errors.address_line1 || undefined}>
               <FieldLabel htmlFor="job-address-line1" className="sr-only">
-                Street address
+                {t("form.streetAddress")}
               </FieldLabel>
               <Input
                 id="job-address-line1"
                 {...form.register("address_line1")}
-                placeholder="Street address"
+                placeholder={t("form.streetAddress")}
                 aria-invalid={!!form.formState.errors.address_line1}
               />
               {form.formState.errors.address_line1?.message && (
@@ -289,23 +293,23 @@ export function JobFormDialog({
             </Field>
             <Field>
               <FieldLabel htmlFor="job-address-line2" className="sr-only">
-                Unit or building
+                {t("form.unitLabel")}
               </FieldLabel>
               <Input
                 id="job-address-line2"
                 {...form.register("address_line2")}
-                placeholder="Unit, building (optional)"
+                placeholder={t("form.unitPlaceholder")}
               />
             </Field>
             <div className="grid gap-3 sm:grid-cols-3">
               <Field data-invalid={!!form.formState.errors.address_city || undefined}>
                 <FieldLabel htmlFor="job-address-city" className="sr-only">
-                  Suburb
+                  {t("form.suburb")}
                 </FieldLabel>
                 <Input
                   id="job-address-city"
                   {...form.register("address_city")}
-                  placeholder="Suburb"
+                  placeholder={t("form.suburb")}
                   aria-invalid={!!form.formState.errors.address_city}
                 />
                 {form.formState.errors.address_city?.message && (
@@ -314,34 +318,34 @@ export function JobFormDialog({
               </Field>
               <Field>
                 <FieldLabel htmlFor="job-address-region" className="sr-only">
-                  State
+                  {t("form.state")}
                 </FieldLabel>
                 <Input
                   id="job-address-region"
                   {...form.register("address_region")}
-                  placeholder="State"
+                  placeholder={t("form.state")}
                 />
               </Field>
               <Field>
                 <FieldLabel htmlFor="job-address-postal-code" className="sr-only">
-                  Postcode
+                  {t("form.postcode")}
                 </FieldLabel>
                 <Input
                   id="job-address-postal-code"
                   {...form.register("address_postal_code")}
-                  placeholder="Postcode"
+                  placeholder={t("form.postcode")}
                 />
               </Field>
             </div>
           </div>
 
           <Field data-invalid={!!form.formState.errors.description || undefined}>
-            <FieldLabel htmlFor="job-description">Description</FieldLabel>
+            <FieldLabel htmlFor="job-description">{tc("labels.description")}</FieldLabel>
             <Textarea
               id="job-description"
               {...form.register("description")}
               rows={3}
-              placeholder="Scope of the work, materials, access notes… (optional)"
+              placeholder={t("form.descriptionPlaceholder")}
               aria-invalid={!!form.formState.errors.description}
             />
             {form.formState.errors.description?.message && (
@@ -351,18 +355,18 @@ export function JobFormDialog({
 
           {!editing && (
             <Field data-invalid={!!form.formState.errors.details || undefined}>
-              <FieldLabel htmlFor="job-details">Notes</FieldLabel>
+              <FieldLabel htmlFor="job-details">{tc("labels.notes")}</FieldLabel>
               <Textarea
                 id="job-details"
                 {...form.register("details")}
                 rows={3}
-                placeholder="Anything else worth recording… (optional)"
+                placeholder={t("form.notesPlaceholder")}
                 aria-invalid={!!form.formState.errors.details}
               />
               {form.formState.errors.details?.message ? (
                 <FieldError>{form.formState.errors.details.message}</FieldError>
               ) : (
-                <FieldDescription>Starts the job&apos;s activity timeline.</FieldDescription>
+                <FieldDescription>{t("form.notesHint")}</FieldDescription>
               )}
             </Field>
           )}
@@ -376,10 +380,14 @@ export function JobFormDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="submit" form="job-form" disabled={saving}>
-            {saving ? "Saving…" : editing ? "Save changes" : "Add job"}
+            {saving
+              ? tc("actions.saving")
+              : editing
+                ? tc("actions.saveChanges")
+                : t("form.submitCreate")}
           </Button>
         </DialogFooter>
       </DialogContent>

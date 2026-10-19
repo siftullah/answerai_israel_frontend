@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon, PencilIcon, PlusIcon, Trash2Icon, XIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -40,6 +41,8 @@ export function ManageCategoriesDialog({
   onOpenChange: (open: boolean) => void;
 }) {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.faqs");
+  const tc = useTranslations("common");
   const categoriesQuery = useFaqCategories(business.id);
   const create = useCreateFaqCategory(business.id);
   const update = useUpdateFaqCategory(business.id);
@@ -79,8 +82,8 @@ export function ManageCategoriesDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle>FAQ categories</DialogTitle>
-            <DialogDescription>Group FAQs so they&apos;re easier to manage.</DialogDescription>
+            <DialogTitle>{t("categories.title")}</DialogTitle>
+            <DialogDescription>{t("categories.description")}</DialogDescription>
           </DialogHeader>
 
           <div className="flex gap-2">
@@ -93,17 +96,17 @@ export function ManageCategoriesDialog({
                   add();
                 }
               }}
-              placeholder="New category"
+              placeholder={t("categories.newPlaceholder")}
               maxLength={100}
               autoComplete="off"
             />
             <Button
               type="button"
-                onClick={add}
+              onClick={add}
               disabled={create.isPending || newName.trim() === ""}
             >
               {create.isPending ? <Spinner /> : <PlusIcon />}
-              Add
+              {tc("actions.add")}
             </Button>
           </div>
 
@@ -134,7 +137,7 @@ export function ManageCategoriesDialog({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label="Save name"
+                      aria-label={t("categories.saveName")}
                       disabled={update.isPending}
                       onClick={rename}
                     >
@@ -144,7 +147,7 @@ export function ManageCategoriesDialog({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label="Cancel rename"
+                      aria-label={t("categories.cancelRename")}
                       onClick={() => setEditing(null)}
                     >
                       <XIcon />
@@ -155,7 +158,7 @@ export function ManageCategoriesDialog({
                     <span className="min-w-0 flex-1 truncate text-sm">
                       {category.name}
                       {typeof category.faqs_count === "number" && (
-                        <span className="ml-1.5 text-sm text-muted-foreground">
+                        <span className="ms-1.5 text-sm text-muted-foreground">
                           {category.faqs_count}
                         </span>
                       )}
@@ -164,7 +167,7 @@ export function ManageCategoriesDialog({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Rename ${category.name}`}
+                      aria-label={t("categories.rename", { name: category.name })}
                       onClick={() => setEditing({ id: category.id, name: category.name })}
                     >
                       <PencilIcon />
@@ -173,7 +176,7 @@ export function ManageCategoriesDialog({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label={`Delete ${category.name}`}
+                      aria-label={t("categories.delete", { name: category.name })}
                       onClick={() => setDeleting(category)}
                     >
                       <Trash2Icon />
@@ -183,7 +186,9 @@ export function ManageCategoriesDialog({
               </li>
             ))}
             {categoriesQuery.data && categoriesQuery.data.length === 0 && (
-              <p className="px-2 py-3 text-sm text-muted-foreground">No categories yet.</p>
+              <p className="px-2 py-3 text-sm text-muted-foreground">
+                {t("categories.empty")}
+              </p>
             )}
           </ul>
         </DialogContent>
@@ -197,24 +202,26 @@ export function ManageCategoriesDialog({
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("categories.deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              FAQs in this category keep their answers but lose the category.
+              {t("categories.deleteDialog.description")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 remove.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Category deleted"),
+                  onSuccess: () => toast.success(t("toasts.categoryDeleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

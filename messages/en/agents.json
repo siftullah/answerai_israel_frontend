@@ -1,0 +1,353 @@
+{
+  "meta": {
+    "title": "Agents",
+    "agentTitle": "Agent"
+  },
+  "charCount": "{count, number} / {max, number}",
+  "actions": {
+    "archive": "Archive",
+    "restore": "Restore",
+    "rotateToolToken": "Rotate tool token",
+    "rotateToken": "Rotate token"
+  },
+  "toasts": {
+    "deleted": "Agent deleted",
+    "archived": "Agent archived",
+    "restored": "Agent restored"
+  },
+  "purpose": {
+    "label": "Purpose",
+    "inbound": {
+      "label": "Inbound",
+      "description": "Answers calls to your numbers."
+    },
+    "outbound": {
+      "label": "Outbound",
+      "description": "Makes calls — campaigns and callbacks."
+    }
+  },
+  "badges": {
+    "archived": "Archived",
+    "sync": {
+      "inSync": "In sync",
+      "error": "Sync error",
+      "errorFallback": "The last publish to the voice engine failed.",
+      "errorTooltip": "{error} Retries automatically every 15 minutes.",
+      "syncing": "Syncing",
+      "publishing": "Publishing"
+    }
+  },
+  "deleteDialog": {
+    "title": "Delete {name}?",
+    "description": "This permanently deletes the agent and unpublishes it from the voice engine.",
+    "routedNumbers": "{count, plural, one {# phone number currently routes to this agent and will be left unassigned: {numbers}.} other {# phone numbers currently route to this agent and will be left unassigned: {numbers}.}}"
+  },
+  "list": {
+    "title": "Agents",
+    "description": "The AI voice agents that answer and make your calls.",
+    "newAgent": "New agent",
+    "filterByStatus": "Filter by status",
+    "actionsFor": "Actions for {name}",
+    "unknownVoice": "Unknown voice",
+    "loadError": "Couldn't load agents",
+    "empty": {
+      "title": "Create your first agent",
+      "description": "Start from a template — receptionist, appointment setter, outbound caller — or build one from scratch."
+    },
+    "searchPlaceholder": "Search agents…",
+    "searchLabel": "Search agents",
+    "noMatch": {
+      "title": "No agents match",
+      "archived": "Nothing has been archived.",
+      "active": "Try a different search, or check the archived filter."
+    },
+    "noDescription": "No description yet.",
+    "columns": {
+      "purpose": "Purpose",
+      "voice": "Voice",
+      "updated": "Updated"
+    },
+    "toasts": {
+      "archived": "{name} archived",
+      "restored": "{name} restored"
+    }
+  },
+  "create": {
+    "title": "New agent",
+    "description": "Start from a template, or build one from scratch.",
+    "submit": "Create agent",
+    "steps": {
+      "template": "Template",
+      "details": "Details"
+    },
+    "namePlaceholder": "e.g. Front desk",
+    "purposeHint": "Purpose decides which phone-number slots this agent can fill.",
+    "toasts": {
+      "created": "Agent created — publishing to the voice engine…"
+    }
+  },
+  "testCall": {
+    "title": "Test {name}",
+    "description": "Type the caller's opening line — the voice engine simulates the whole conversation against the last published version, with tools mocked.",
+    "empty": "No test runs yet. Try “Hi, what are your opening hours?”",
+    "placeholder": "What does the caller say first?",
+    "inputLabel": "Caller's opening line",
+    "run": "Run test",
+    "quoted": "“{message}”",
+    "silence": "(silence)",
+    "seconds": "{seconds}s",
+    "simulating": "Simulating the conversation — this can take up to a minute…",
+    "unpublished": "{error} New agents publish automatically within a minute of their first save.",
+    "noTranscript": "The simulation returned no transcript."
+  },
+  "detail": {
+    "back": "Agents",
+    "sectionsNav": "Agent sections",
+    "actionsLabel": "Agent actions",
+    "testAgent": "Test agent",
+    "testTooltip": {
+      "archived": "Restore the agent to test it.",
+      "unpublished": "The agent publishes to the voice engine after its first save — testing unlocks once that completes.",
+      "publishing": "A publish is in progress — tests use the last published version."
+    },
+    "publishFailed": {
+      "title": "Publish failed",
+      "fallback": "The voice engine rejected the last publish.",
+      "description": "{error} We retry automatically every 15 minutes — your changes are safe and go live on the next successful sync."
+    },
+    "archivedBanner": {
+      "title": "This agent is archived and read-only.",
+      "description": "Restore it to make changes or take calls."
+    },
+    "rotateDialog": {
+      "title": "Rotate the tool token?",
+      "description": "The old token stops working immediately. The voice engine receives the new one automatically on the next sync — live calls in progress may lose tool access until then."
+    },
+    "leaveDialog": {
+      "title": "Discard unsaved changes?",
+      "description": "Your edits haven't been saved.",
+      "confirm": "Discard and leave"
+    },
+    "notFound": {
+      "title": "Agent not found",
+      "description": "This agent doesn't exist or was deleted."
+    },
+    "loadError": "Couldn't load this agent",
+    "toasts": {
+      "saved": "Agent saved — publishing to the voice engine…",
+      "fixFields": "Fix the highlighted fields."
+    }
+  },
+  "sections": {
+    "general": {
+      "title": "General",
+      "description": "Name, internal notes and what this agent is for.",
+      "descriptionPlaceholder": "Internal note about what this agent handles.",
+      "purposeHint": "Changing purpose affects which phone numbers can use this agent — inbound and outbound slots only accept matching agents."
+    },
+    "voice": {
+      "title": "Voice",
+      "description": "How this agent sounds on a call. Tap play to hear a sample.",
+      "loadError": "Couldn't load voices",
+      "genderFilterLabel": "Filter voices by gender",
+      "gender": {
+        "male": "Male",
+        "female": "Female",
+        "neutral": "Neutral"
+      },
+      "noVoiceSelected": "No voice selected yet — the agent can't take calls without one.",
+      "unknownVoice": "Unknown voice ({id})",
+      "unknownVoiceHint": "This voice is no longer offered — pick a replacement.",
+      "noMatch": "No voices match.",
+      "play": "Play {name}",
+      "pause": "Pause {name}"
+    },
+    "conversation": {
+      "title": "Conversation",
+      "description": "What the agent says first, and the instructions it follows.",
+      "advisories": {
+        "title": "Saved with advisories",
+        "item": "{field}: {issue}",
+        "dismiss": "Dismiss advisories"
+      },
+      "firstMessageLabel": "First message",
+      "firstMessagePlaceholder": "Thanks for calling {businessToken}, this is {agentToken} — how can I help?",
+      "firstMessageHint": "Spoken as the call connects. Leave empty to let the agent open naturally.",
+      "instructionsLabel": "Instructions",
+      "instructionsPlaceholder": "You are {agentToken}, the friendly receptionist for {businessToken}…",
+      "instructionsHint": "The agent's personality, rules and job.",
+      "insertLabel": "Insert:"
+    },
+    "tools": {
+      "title": "Tools",
+      "description": "Actions the agent can take during a live call.",
+      "enableModule": "Enable the {module} module to use these tools.",
+      "stranded": "The {module} module is disabled — this tool will be removed when you save.",
+      "lookupInboundNote": "Has no effect on inbound agents — a caller's number can belong to someone else, so inbound calls skip the lookup."
+    },
+    "variables": {
+      "title": "Variables",
+      "description": "Custom placeholders for your messages. Each one needs a value whenever a call is placed: the default only prefills the place-call form, and campaign recipients without a value are skipped. Variables still referenced in your messages can't be removed until the reference is deleted.",
+      "add": "Add variable",
+      "builtins": {
+        "title": "Built-in variables",
+        "description": "Filled from the contact record on every call. Tick one to ask for it when placing a call, so the caller can confirm or replace it, and to let campaigns supply it per recipient. Recipients with no value for a ticked variable are skipped."
+      },
+      "empty": "No custom variables. Built-ins like {businessToken} and {contactToken} are always available.",
+      "defaultLabel": "Default value",
+      "defaultPlaceholder": "Empty by default",
+      "remove": "Remove variable",
+      "limit": "Up to {max} variables per agent."
+    },
+    "calendar": {
+      "title": "Calendar",
+      "description": "Booking mechanics for this agent only — anything left on Inherit uses your business and team-member calendar settings.",
+      "inherit": "Inherit",
+      "minutes": "{count, plural, one {# minute} other {# minutes}}",
+      "range": "{min, number} – {max, number}",
+      "showOverrides": "Show overrides",
+      "hideOverrides": "Hide overrides",
+      "slotInterval": "Slot interval",
+      "minNotice": "Minimum notice (minutes)",
+      "maxHorizon": "Booking horizon (days)",
+      "buffer": "Buffer between bookings (minutes)",
+      "dailyLimit": "Daily booking limit",
+      "bookingsMode": {
+        "no_cap": "No daily cap",
+        "custom": "Custom limit"
+      },
+      "maxPerDay": "Maximum per day",
+      "appointmentLength": "Appointment length (minutes)",
+      "callbackLength": "Callback length (minutes)"
+    },
+    "transfers": {
+      "title": "Transfers",
+      "description": "Who this agent can hand live calls to.",
+      "teamMember": "Team member",
+      "overrides": "{number} (overrides {name})",
+      "addTarget": "Add target",
+      "loadError": "Couldn't load transfer targets",
+      "usingBusiness": "Using the business directory",
+      "mode": {
+        "blind": "Blind",
+        "blindDescription": "Connect the caller straight through.",
+        "screened": "Screened",
+        "screenedDescription": "The AI briefs the person first, then connects the caller."
+      },
+      "noBusinessTargets": "No business-wide targets yet — this agent currently has nowhere to transfer calls.",
+      "andMore": "{count, plural, one {…and # more} other {…and # more}}",
+      "copying": "Copying {done} of {total}…",
+      "customise": "Customise for this agent",
+      "editBusinessDirectory": "Edit business directory",
+      "ownDirectory": "This agent uses its own directory and ignores the business-wide one.",
+      "columns": {
+        "destination": "Destination",
+        "when": "When",
+        "hours": "Hours"
+      },
+      "actionsFor": "Actions for {name}",
+      "revert": "Revert to business directory",
+      "customiseDialog": {
+        "title": "Customise transfers for this agent",
+        "description": "Once this agent has its own targets, it stops using the business directory entirely.",
+        "copy": "Copy the business directory ({count, plural, one {# target} other {# targets}})",
+        "startEmpty": "Start empty"
+      },
+      "switchDialog": {
+        "title": "Switch every target to {mode, select, screened {screened} other {blind}}?",
+        "description": "This changes how all {count, plural, one {# target} other {# targets}} in this agent's directory transfer.",
+        "confirm": "Switch mode"
+      },
+      "deleteDialog": {
+        "title": "Delete {name}?",
+        "last": "This is the agent's last custom target — deleting it puts the agent back on the business directory.",
+        "other": "This agent will no longer transfer calls here."
+      },
+      "revertDialog": {
+        "title": "Revert to the business directory?",
+        "description": "Deletes all {count, plural, one {# custom target} other {# custom targets}}. Calls will use the business-wide directory again.",
+        "confirm": "Revert"
+      },
+      "toasts": {
+        "copied": "{count, plural, one {Copied # target} other {Copied # targets}} — this agent now uses its own directory.",
+        "copyFailed": "Couldn't copy every target.",
+        "reverted": "Reverted — this agent uses the business directory again.",
+        "revertFailed": "Couldn't remove every target.",
+        "deleted": "Transfer target deleted"
+      }
+    },
+    "knowledge": {
+      "title": "Knowledge",
+      "description": "What this agent knows about your business. Which entries it can use is managed per entry in your business profile.",
+      "rows": {
+        "docs": "Docs",
+        "faqs": "FAQs",
+        "services": "Services",
+        "products": "Products",
+        "policies": "Policies"
+      },
+      "useKnowledgeBase": "Use the business knowledge base",
+      "ragHint": "When off, the agent answers from its instructions alone. Entry scoping below still applies when you turn it back on.",
+      "enabledCount": "{enabled, number} of {total, number} enabled for this agent",
+      "manage": "Manage"
+    },
+    "numbers": {
+      "title": "Numbers",
+      "description": "Phone numbers that route calls to or from this agent.",
+      "manage": "Manage phone numbers",
+      "empty": "No phone numbers use this agent yet — assign it on the phone numbers page."
+    },
+    "callSummary": {
+      "title": "Call summary emails",
+      "navTitle": "Call summaries",
+      "description": "After each call, an AI assistant reads the transcript, decides who on your team needs to hear about it, and writes each of them an email tailored to what the call was about.",
+      "loadError": "Couldn't load call summary settings",
+      "copy": {
+        "enabledLabel": "Send call summary emails",
+        "enabledDescription": "When off, nothing is sent — your recipients and rules are kept for when you turn it back on.",
+        "recipientsTitle": "Who receives them",
+        "recipientsDescription": "The people the assistant may write to. It decides who actually hears about each call from your rules and their roles — not everyone gets every call.",
+        "customEmailsDescription": "Anyone else who should receive summaries, such as a shared inbox.",
+        "rulesTitle": "Rules for the assistant",
+        "rulesDescription": "Plain-English instructions for who should hear about which calls, what each email should cover, and which calls to skip.",
+        "rulesEmpty": "No rules yet — the assistant will go by each person's role to decide who needs a call. Add rules to tell it how calls should be routed and written up.",
+        "rulePlaceholders": {
+          "repairs": "Send repair and maintenance requests to the property management team at pm@example.com",
+          "skip": "Skip the summary for wrong numbers and sales calls to us",
+          "address": "Always include the property address when one is mentioned"
+        },
+        "rulesLimitNote": "Up to 20 rules per agent."
+      },
+      "sendSample": "Send me a sample",
+      "sampleTooltip": {
+        "archived": "Restore the agent to send a sample.",
+        "disabled": "Turn on call summary emails and save to send a sample.",
+        "unsaved": "Save your changes first — samples use the saved settings."
+      },
+      "toasts": {
+        "saved": "Call summary settings saved",
+        "sampleSent": "{count, plural, one {Sample email} other {# sample emails}} sent to {email}",
+        "nobody": "The assistant decided nobody needed to hear about that call."
+      }
+    },
+    "danger": {
+      "title": "Danger zone",
+      "description": "Actions that affect this agent's live behaviour.",
+      "rotate": {
+        "description": "The tool token authenticates this agent's live actions — bookings, contact lookups — against your account. Rotating invalidates the old token instantly; the voice engine receives the new one automatically."
+      },
+      "archive": {
+        "title": "Archive agent",
+        "description": "Deactivates the agent and hides it from pickers. Nothing is deleted — restore it any time."
+      },
+      "restore": {
+        "title": "Restore agent",
+        "description": "Make the agent active again so it can take calls and be edited."
+      },
+      "delete": {
+        "title": "Delete agent",
+        "description": "Permanently deletes the agent and unpublishes it from the voice engine. Phone numbers that route here are left unassigned."
+      }
+    }
+  }
+}

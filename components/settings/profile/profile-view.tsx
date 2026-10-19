@@ -2,6 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { ErrorState } from "@/components/error-state";
 import { PageHeader } from "@/components/layout/page-header";
@@ -13,6 +14,7 @@ import { ProfileDetailsForm } from "@/components/settings/profile/profile-detail
 import { useMe } from "@/hooks/use-me";
 
 export function ProfileView() {
+  const t = useTranslations("settings.profile");
   const { business, membership } = useBusiness();
   const meQuery = useMe();
   const router = useRouter();
@@ -22,14 +24,14 @@ export function ProfileView() {
   useEffect(() => {
     const status = searchParams.get("email_change");
     if (!status) return;
-    if (status === "success") toast.success("Email address confirmed");
-    else toast.error("That confirmation link was invalid or has expired");
+    if (status === "success") toast.success(t("toasts.emailConfirmed"));
+    else toast.error(t("toasts.emailLinkInvalid"));
     router.replace(`/b/${business.id}/settings/profile`);
-  }, [searchParams, router, business.id]);
+  }, [searchParams, router, business.id, t]);
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Profile" description="Your account details, photo and password." />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {meQuery.isPending ? (
         <div className="flex max-w-3xl flex-col gap-6">
@@ -39,7 +41,7 @@ export function ProfileView() {
         </div>
       ) : meQuery.isError ? (
         <ErrorState
-          title="Couldn't load your profile"
+          title={t("loadError")}
           message={meQuery.error.message}
           onRetry={() => meQuery.refetch()}
         />

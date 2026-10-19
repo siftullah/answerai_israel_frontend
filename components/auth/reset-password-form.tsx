@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -23,8 +25,12 @@ export function ResetPasswordForm() {
   const token = searchParams.get("token");
   const email = searchParams.get("email");
 
+  const t = useTranslations("auth");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => resetPasswordSchema(tv), [tv]);
   const form = useForm<ResetPasswordValues>({
-    resolver: zodResolver(resetPasswordSchema),
+    resolver: zodResolver(schema),
     defaultValues: { password: "" },
   });
   const { errors } = form.formState;
@@ -34,12 +40,12 @@ export function ResetPasswordForm() {
       <PublicOnly>
         <div className="flex flex-col gap-5">
           <Alert variant="destructive">
-            <AlertTitle>Invalid reset link</AlertTitle>
-            <AlertDescription>
-              This link is missing information. Request a new one below.
-            </AlertDescription>
+            <AlertTitle>{t("resetPassword.invalidLink.title")}</AlertTitle>
+            <AlertDescription>{t("resetPassword.invalidLink.description")}</AlertDescription>
           </Alert>
-          <Button render={<Link href="/forgot-password" />}>Request a new link</Button>
+          <Button render={<Link href="/forgot-password" />}>
+            {t("resetPassword.invalidLink.requestNew")}
+          </Button>
         </div>
       </PublicOnly>
     );
@@ -61,8 +67,8 @@ export function ResetPasswordForm() {
     <PublicOnly>
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <h1 className="font-heading text-2xl font-semibold">Reset your password</h1>
-          <p className="text-sm text-muted-foreground">Choose a new password for your account.</p>
+          <h1 className="font-heading text-2xl font-semibold">{t("resetPassword.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("resetPassword.subtitle")}</p>
         </div>
 
         {errors.root?.server && (
@@ -74,12 +80,12 @@ export function ResetPasswordForm() {
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup className="gap-4">
             <Field>
-              <FieldLabel htmlFor="reset-email">Email</FieldLabel>
+              <FieldLabel htmlFor="reset-email">{tc("labels.email")}</FieldLabel>
               <Input id="reset-email" type="email" value={email} disabled readOnly />
             </Field>
 
             <Field data-invalid={!!errors.password || undefined}>
-              <FieldLabel htmlFor="password">New password</FieldLabel>
+              <FieldLabel htmlFor="password">{t("resetPassword.newPassword")}</FieldLabel>
               <PasswordInput
                 id="password"
                 autoComplete="new-password"
@@ -89,20 +95,20 @@ export function ResetPasswordForm() {
               {errors.password ? (
                 <FieldError>{errors.password.message}</FieldError>
               ) : (
-                <FieldDescription>At least 8 characters.</FieldDescription>
+                <FieldDescription>{t("fields.passwordHint")}</FieldDescription>
               )}
             </Field>
 
             <Button type="submit" disabled={resetPassword.isPending}>
               {resetPassword.isPending && <Spinner />}
-              Reset password
+              {t("resetPassword.submit")}
             </Button>
           </FieldGroup>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
           <Link href="/login" className="text-primary underline-offset-4 hover:underline">
-            Back to log in
+            {t("resetPassword.backToLogin")}
           </Link>
         </p>
       </div>

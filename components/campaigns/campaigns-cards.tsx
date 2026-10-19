@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { CampaignProgress } from "@/components/campaigns/campaign-progress";
 import { CampaignRowActions } from "@/components/campaigns/campaign-row-actions";
 import { CampaignStatusBadge } from "@/components/campaigns/campaign-status-badge";
@@ -14,6 +15,7 @@ export function CampaignsCards({
   timeZone,
   actions,
 }: CampaignListProps) {
+  const t = useTranslations("campaigns.list");
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
       {campaigns.map((campaign) => (
@@ -43,11 +45,11 @@ export function CampaignsCards({
           </div>
 
           <div className="flex flex-col gap-1 text-sm text-muted-foreground">
-            <span className="truncate">{campaign.agent?.name ?? "No agent"}</span>
+            <span className="truncate">{campaign.agent?.name ?? t("noAgent")}</span>
             <span className="truncate tabular-nums">
               {campaign.caller_number
-                ? `From ${formatE164(campaign.caller_number.e164)}`
-                : "No caller number"}
+                ? t("fromNumber", { number: formatE164(campaign.caller_number.e164) })
+                : t("noCallerNumber")}
             </span>
           </div>
 

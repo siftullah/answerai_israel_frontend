@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -18,23 +19,31 @@ import type { Campaign, CallListFilters, CallStatus } from "@/lib/api/types";
 type StatusFilter = "all" | CallStatus;
 
 // Only the statuses an outbound campaign call can land in.
-const STATUS_ITEMS: { value: StatusFilter; label: string }[] = [
-  { value: "all", label: "All statuses" },
-  { value: "queued", label: "Queued" },
-  { value: "initiating", label: "Initiating" },
-  { value: "ringing", label: "Ringing" },
-  { value: "in_progress", label: "In progress" },
-  { value: "completed", label: "Completed" },
-  { value: "busy", label: "Busy" },
-  { value: "no_answer", label: "No answer" },
-  { value: "failed", label: "Failed" },
-  { value: "canceled", label: "Canceled" },
+const CAMPAIGN_CALL_STATUSES: CallStatus[] = [
+  "queued",
+  "initiating",
+  "ringing",
+  "in_progress",
+  "completed",
+  "busy",
+  "no_answer",
+  "failed",
+  "canceled",
 ];
 
 /** The campaign's slice of the call log — rows open the full call detail. */
 export function CampaignCallsTab({ campaign }: { campaign: Campaign }) {
+  const t = useTranslations("campaigns");
   const { business } = useBusiness();
   const router = useRouter();
+
+  const statusItems = useMemo<{ value: StatusFilter; label: string }[]>(
+    () => [
+      { value: "all", label: t("filters.allStatuses") },
+      ...CAMPAIGN_CALL_STATUSES.map((value) => ({ value, label: t(`calls.status.${value}`) })),
+    ],
+    [t]
+  );
 
   const [search, setSearch] = useState("");
   const debouncedSearch = useDebouncedValue(search.trim(), 300);
@@ -58,20 +67,20 @@ export function CampaignCallsTab({ campaign }: { campaign: Campaign }) {
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search number or caller"
+          placeholder={t("calls.searchPlaceholder")}
           className="w-full sm:w-64"
           autoComplete="off"
         />
         <Select
-          items={STATUS_ITEMS}
+          items={statusItems}
           value={status}
           onValueChange={(value) => setStatus((value as StatusFilter | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by call status">
+          <SelectTrigger aria-label={t("calls.filterByStatus")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {STATUS_ITEMS.map((item) => (
+            {statusItems.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -85,8 +94,8 @@ export function CampaignCallsTab({ campaign }: { campaign: Campaign }) {
         filters={filters}
         selectedId={null}
         onSelect={(call) => router.push(`/b/${business.id}/calls/${call.id}`)}
-        emptyTitle="No calls yet"
-        emptyDescription="Calls appear here as the campaign dials. Start the campaign to begin."
+        emptyTitle={t("calls.emptyTitle")}
+        emptyDescription={t("calls.emptyDescription")}
       />
     </div>
   );

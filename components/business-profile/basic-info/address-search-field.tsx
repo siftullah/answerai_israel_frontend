@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { useAddressSearch } from "@/hooks/use-address-search";
@@ -29,6 +30,7 @@ export function AddressSearchField({
   onPick: (result: AddressSearchResult) => void;
   invalid?: boolean;
 }) {
+  const t = useTranslations("businessProfile.address");
   const [open, setOpen] = useState(false);
   const search = useAddressSearch(businessUuid, value);
 
@@ -47,18 +49,18 @@ export function AddressSearchField({
         onFocus={() => setOpen(true)}
         // Suggestion buttons commit on mousedown, before this blur fires.
         onBlur={() => setOpen(false)}
-        placeholder="Start typing an address"
+        placeholder={t("placeholder")}
         autoComplete="off"
         aria-invalid={invalid}
       />
       {search.notConfigured && (
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Address search isn&apos;t configured — enter the address manually.
+          {t("notConfigured")}
         </p>
       )}
       {search.unavailable && (
         <p className="mt-1.5 text-sm text-muted-foreground">
-          Address search is temporarily unavailable — enter the address manually.
+          {t("unavailable")}
         </p>
       )}
       {showList && (
@@ -66,7 +68,7 @@ export function AddressSearchField({
           {search.isFetching && !search.data ? (
             <div className="flex items-center gap-2 px-3 py-2.5 text-sm text-muted-foreground">
               <Spinner className="size-4" />
-              Searching…
+              {t("searching")}
             </div>
           ) : search.data && search.data.length > 0 ? (
             <ul className="max-h-64 overflow-y-auto py-1">
@@ -74,7 +76,7 @@ export function AddressSearchField({
                 <li key={`${result.address}-${index}`}>
                   <button
                     type="button"
-                    className="w-full px-3 py-2 text-left text-sm hover:bg-accent hover:text-accent-foreground"
+                    className="w-full px-3 py-2 text-start text-sm hover:bg-accent hover:text-accent-foreground"
                     onMouseDown={(event) => {
                       event.preventDefault();
                       onPick(result);
@@ -88,7 +90,7 @@ export function AddressSearchField({
             </ul>
           ) : search.data ? (
             <p className="px-3 py-2.5 text-sm text-muted-foreground">
-              No matches — keep typing or enter it manually.
+              {t("noMatches")}
             </p>
           ) : null}
         </div>

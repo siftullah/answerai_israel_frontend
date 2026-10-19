@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 import {
   ArrowUpRightIcon,
@@ -37,6 +38,7 @@ function enabledCount(items: Scoped[] | undefined, agentId: string): number {
 }
 
 export function KnowledgeSection({ agent }: { agent: Agent }) {
+  const t = useTranslations("agents.sections.knowledge");
   const { business } = useBusiness();
   const form = useFormContext<AgentSettingsValues>();
   const { disabled } = form.formState;
@@ -49,19 +51,15 @@ export function KnowledgeSection({ agent }: { agent: Agent }) {
   const policies = useBusinessPolicies(business.id);
 
   const rows = [
-    { title: "Docs", icon: FilesIcon, segment: "docs", query: documents },
-    { title: "FAQs", icon: MessageCircleQuestionIcon, segment: "faqs", query: faqs },
-    { title: "Services", icon: BriefcaseIcon, segment: "services", query: services },
-    { title: "Products", icon: PackageIcon, segment: "products", query: products },
-    { title: "Policies", icon: ScrollTextIcon, segment: "policies", query: policies },
+    { title: t("rows.docs"), icon: FilesIcon, segment: "docs", query: documents },
+    { title: t("rows.faqs"), icon: MessageCircleQuestionIcon, segment: "faqs", query: faqs },
+    { title: t("rows.services"), icon: BriefcaseIcon, segment: "services", query: services },
+    { title: t("rows.products"), icon: PackageIcon, segment: "products", query: products },
+    { title: t("rows.policies"), icon: ScrollTextIcon, segment: "policies", query: policies },
   ] as const;
 
   return (
-    <AgentSection
-      id="knowledge"
-      title="Knowledge"
-      description="What this agent knows about your business. Which entries it can use is managed per entry in your business profile."
-    >
+    <AgentSection id="knowledge" title={t("title")} description={t("description")}>
       <Field>
         <div className="flex items-center gap-3">
           <Controller
@@ -77,13 +75,10 @@ export function KnowledgeSection({ agent }: { agent: Agent }) {
             )}
           />
           <FieldLabel htmlFor="agent-rag" className="font-normal">
-            Use the business knowledge base
+            {t("useKnowledgeBase")}
           </FieldLabel>
         </div>
-        <FieldDescription>
-          When off, the agent answers from its instructions alone. Entry scoping below still
-          applies when you turn it back on.
-        </FieldDescription>
+        <FieldDescription>{t("ragHint")}</FieldDescription>
       </Field>
 
       <div className={cn("flex flex-col divide-y", !ragEnabled && "opacity-60")}>
@@ -100,7 +95,7 @@ export function KnowledgeSection({ agent }: { agent: Agent }) {
                 <span className="text-sm text-muted-foreground">—</span>
               ) : (
                 <span className="text-sm text-muted-foreground">
-                  {enabled} of {total} enabled for this agent
+                  {t("enabledCount", { enabled, total: total ?? 0 })}
                 </span>
               )}
               <Button
@@ -109,8 +104,8 @@ export function KnowledgeSection({ agent }: { agent: Agent }) {
                 className="text-cta hover:text-cta"
                 render={<Link href={`/b/${business.id}/business-profile/${row.segment}`} />}
               >
-                Manage
-                <ArrowUpRightIcon />
+                {t("manage")}
+                <ArrowUpRightIcon className="rtl:-scale-x-100" />
               </Button>
             </div>
           );

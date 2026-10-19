@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,6 +40,7 @@ export function SipCredentialsDialog({
   context: "connect" | "rotate";
   onDone: () => void;
 }) {
+  const t = useTranslations("phoneNumbers");
   const [confirmClose, setConfirmClose] = useState(false);
 
   return (
@@ -52,33 +54,28 @@ export function SipCredentialsDialog({
         <DialogContent showCloseButton={false} className="sm:max-w-lg">
           <DialogHeader>
             <DialogTitle>
-              {context === "rotate" ? "Your new SIP password" : "Your SIP credentials"}
+              {context === "rotate" ? t("credentials.rotateTitle") : t("credentials.connectTitle")}
             </DialogTitle>
-            <DialogDescription>
-              Point a trunk on your PBX or carrier at these details.
-            </DialogDescription>
+            <DialogDescription>{t("credentials.description")}</DialogDescription>
           </DialogHeader>
 
           <Alert variant="destructive">
-            <AlertDescription>
-              Save these now — the password is shown only once and can&apos;t be retrieved
-              later.
-            </AlertDescription>
+            <AlertDescription>{t("credentials.warning")}</AlertDescription>
           </Alert>
 
           <div className="flex flex-col gap-3">
-            <CopyField label="Username" value={credentials.username} />
-            <CopyField label="Password" value={credentials.password} />
-            <CopyField label="SIP domain" value={credentials.domain} />
+            <CopyField label={t("sipFields.username")} value={credentials.username} />
+            <CopyField label={t("sipFields.password")} value={credentials.password} />
+            <CopyField label={t("sipFields.domain")} value={credentials.domain} />
             <CopyField
-              label="Destination URI"
+              label={t("sipFields.destinationUri")}
               value={credentials.destination_uri_format}
-              hint="Replace {your_number_e164} with each number you register."
+              hint={t("sipFields.destinationHint", { placeholder: "{your_number_e164}" })}
             />
           </div>
 
           <DialogFooter>
-            <Button onClick={onDone}>I&apos;ve saved these credentials</Button>
+            <Button onClick={onDone}>{t("credentials.saved")}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -86,13 +83,11 @@ export function SipCredentialsDialog({
       <AlertDialog open={confirmClose} onOpenChange={setConfirmClose}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Close without saving?</AlertDialogTitle>
-            <AlertDialogDescription>
-              You won&apos;t be able to see this password again.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("credentials.closeTitle")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("credentials.closeDescription")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep them open</AlertDialogCancel>
+            <AlertDialogCancel>{t("credentials.keepOpen")}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
@@ -100,7 +95,7 @@ export function SipCredentialsDialog({
                 onDone();
               }}
             >
-              Close anyway
+              {t("credentials.closeAnyway")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

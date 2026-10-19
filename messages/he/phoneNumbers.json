@@ -1,0 +1,155 @@
+{
+  "meta": {
+    "title": "מספרי טלפון"
+  },
+  "page": {
+    "title": "מספרי טלפון",
+    "description": "המספרים שסוכן ה-AI שלכם עונה בהם — שנרכשו כאן או חוברו דרך טראנק משלכם.",
+    "addSipNumber": "הוספת מספר SIP",
+    "buyNumber": "רכישת מספר"
+  },
+  "tabs": {
+    "numbers": "מספרים",
+    "sip": "טראנק SIP"
+  },
+  "sipGate": {
+    "title": "קודם חברו טראנק SIP",
+    "description": "מספרי SIP פועלים דרך טראנק משלכם. חברו טראנק, ואז רשמו את המספרים שמשויכים אליו.",
+    "goToSip": "מעבר לטראנק SIP"
+  },
+  "status": {
+    "error": "שגיאה",
+    "released": "שוחרר",
+    "purchasing": "ברכישה",
+    "configuring": "בהגדרה",
+    "releasing": "בשחרור"
+  },
+  "provider": {
+    "twilio": "פלטפורמה",
+    "byoSip": "SIP משלכם"
+  },
+  "numberType": {
+    "local": "מקומי",
+    "mobile": "טלפון נייד",
+    "tollFree": "שיחת חינם"
+  },
+  "agentSlot": {
+    "inbound": "סוכן AI לשיחות נכנסות",
+    "outbound": "סוכן AI לשיחות יוצאות",
+    "optional": "{label} (אופציונלי)",
+    "noneEligible": "{slot, select, inbound {אין עדיין סוכני AI מסונכרנים לשיחות נכנסות — אפשר לשייך סוכן בהמשך.} other {אין עדיין סוכני AI מסונכרנים לשיחות יוצאות — אפשר לשייך סוכן בהמשך.}}"
+  },
+  "numbers": {
+    "loadError": "לא ניתן לטעון את מספרי הטלפון",
+    "empty": {
+      "title": "קבלו את מספר הטלפון הראשון שלכם",
+      "description": "רכשו מספר שסוכן ה-AI שלכם יענה בו, או חברו מספר משלכם דרך טראנק SIP."
+    },
+    "showReleased": "הצגת מספרים ששוחררו",
+    "allReleased": "כל המספרים שלכם שוחררו.",
+    "agentsLine": "נכנסות: {inbound} · יוצאות: {outbound}",
+    "rowActions": "פעולות עבור {number}",
+    "retryPurchase": "ניסיון רכישה חוזר",
+    "release": "שחרור",
+    "columns": {
+      "number": "מספר",
+      "provider": "ספק",
+      "type": "סוג"
+    }
+  },
+  "release": {
+    "title": "לשחרר את {number}?",
+    "thisNumber": "המספר הזה",
+    "descriptionSip": "הפעולה תבטל מיד את רישום המספר בטראנק שלכם. אפשר לרשום אותו שוב בהמשך.",
+    "descriptionPlatform": "הפעולה תשחרר את המספר לצמיתות. מי שיחייגו אליו לא יגיעו אליכם, וייתכן שלא תוכלו לקבל אותו בחזרה.",
+    "confirm": "שחרור מספר"
+  },
+  "buy": {
+    "title": "רכישת מספר",
+    "pickDescription": "בחרו מספר מקומי באוסטרליה שסוכן ה-AI שלכם יענה בו.",
+    "detailsDescription": "אשרו את פרטי המספר החדש שלכם.",
+    "searchPlaceholder": "למשל 02 או 9955",
+    "searchLabel": "חיפוש מספרים לפי ספרות",
+    "searchHint": "התחילו בקידומת אזור כדי לחפש מתחילת המספר, למשל 02 לסידני או 03 למלבורן.",
+    "noMatches": "לא נמצאו התאמות — נסו ספרות אחרות.",
+    "taken": "המספר הזה נתפס כרגע — בחרו מספר אחר.",
+    "agentsHint": "אפשר לשייך או לשנות סוכני AI בכל עת לאחר הרכישה."
+  },
+  "form": {
+    "details": "פרטים",
+    "friendlyName": "שם תצוגה",
+    "friendlyNamePlaceholder": "קו ראשי",
+    "inboundOnly": "מספרי SIP מיועדים לשיחות נכנסות בלבד — שיחות יוצאות מתבצעות תמיד ממספר של הפלטפורמה."
+  },
+  "addSip": {
+    "description": "רשמו מספר שכבר משויך לטראנק שלכם, והשיחות אליו יגיעו לסוכן AI שלכם.",
+    "submit": "רישום מספר",
+    "phoneNumber": "מספר טלפון",
+    "phonePlaceholder": "(02) 5550 1234",
+    "phoneHint": "המספר שכבר משויך לטראנק שלכם — כולל קידומת אזור החיוג.",
+    "friendlyNamePlaceholder": "קו קבלה"
+  },
+  "edit": {
+    "title": "עריכת {number}"
+  },
+  "sip": {
+    "loadError": "לא ניתן לטעון את חיבור ה-SIP שלכם",
+    "setup": {
+      "title": "חיבור טראנק SIP משלכם",
+      "description": "שמרו על המספרים והספק הקיימים — ונתבו את השיחות לסוכן AI שלכם.",
+      "stepCredentials": "ניצור עבורכם פרטי אימות Digest בדומיין ה-SIP המשותף שלנו.",
+      "stepPointTrunk": "הפנו טראנק במרכזייה או אצל ספק התקשורת שלכם לכתובת ה-URI של היעד.",
+      "stepRegister": "רשמו את המספרים המשויכים לטראנק ונתבו כל אחד לסוכן AI.",
+      "connect": "חיבור טראנק SIP"
+    },
+    "activeDescription": "המרכזייה שלכם משתמשת בפרטים האלה לאימות מול דומיין ה-SIP המשותף שלנו.",
+    "connected": "מחובר",
+    "lastRotated": "החלפת סיסמה אחרונה",
+    "never": "מעולם לא",
+    "rotatePassword": "החלפת סיסמה",
+    "disconnect": "ניתוק",
+    "releaseFirst": "{count, plural, one {שחררו את מספר ה-SIP שלכם (#) לפני הניתוק.} other {שחררו את # מספרי ה-SIP שלכם לפני הניתוק.}}",
+    "disconnected": "מנותק",
+    "disconnectedDescription": "חיבור מחדש מנפיק פרטי אימות חדשים — הסיסמה הישנה לא תשוחזר.",
+    "reconnect": "חיבור מחדש",
+    "rotateDialog": {
+      "title": "להחליף את סיסמת ה-SIP?",
+      "description": "הסיסמה הנוכחית תפסיק לפעול מיד — עדכנו את המרכזייה בסיסמה החדשה ללא דיחוי."
+    },
+    "disconnectDialog": {
+      "title": "לנתק את טראנק ה-SIP?",
+      "description": "פרטי האימות של הטראנק יפסיקו לפעול מיד. אפשר להתחבר מחדש בהמשך — ולקבל פרטי אימות חדשים."
+    }
+  },
+  "sipFields": {
+    "username": "שם משתמש",
+    "password": "סיסמה",
+    "domain": "דומיין SIP",
+    "destinationUri": "כתובת URI של היעד",
+    "destinationHint": "החליפו את {placeholder} בכל מספר שאתם רושמים."
+  },
+  "credentials": {
+    "connectTitle": "פרטי האימות שלכם ל-SIP",
+    "rotateTitle": "סיסמת ה-SIP החדשה שלכם",
+    "description": "הגדירו טראנק במרכזייה או אצל ספק התקשורת שלכם לפי הפרטים האלה.",
+    "warning": "שמרו את הפרטים עכשיו — הסיסמה מוצגת פעם אחת בלבד ולא ניתן לשחזר אותה בהמשך.",
+    "saved": "שמרתי את פרטי האימות",
+    "closeTitle": "לסגור בלי לשמור?",
+    "closeDescription": "לא תוכלו לראות שוב את הסיסמה הזו.",
+    "keepOpen": "השארת הפרטים פתוחים",
+    "closeAnyway": "סגירה בכל זאת"
+  },
+  "copyField": {
+    "copyLabel": "העתקת {label}"
+  },
+  "toasts": {
+    "retrying": "ניסיון רכישה נוסף",
+    "released": "המספר שוחרר",
+    "releasing": "המספר בתהליך שחרור",
+    "purchaseStarted": "רכישת המספר החלה — הוא יהיה פעיל בקרוב",
+    "sipRegistered": "מספר SIP נרשם",
+    "updated": "המספר עודכן",
+    "sipDisconnected": "טראנק SIP נותק",
+    "copyFailed": "ההעתקה נכשלה — בחרו את הטקסט ידנית"
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { zonedMinutesOfDay } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 import type { BusinessHourRow, Weekday } from "@/lib/api/types";
@@ -89,6 +90,7 @@ export function TimeGrid({
   /** Click on empty grid space — rounded down to the half hour. */
   onSelectSlot?: (dateKey: string, time: string) => void;
 }) {
+  const t = useTranslations("calendar.grid");
   const now = useNowTick();
   const scrollRef = useRef<HTMLDivElement>(null);
 
@@ -144,7 +146,7 @@ export function TimeGrid({
               return (
                 <div
                   key={day.key}
-                  className="flex items-center justify-center gap-1.5 border-l py-2 text-sm"
+                  className="flex items-center justify-center gap-1.5 border-s py-2 text-sm"
                 >
                   <span className={cn("text-muted-foreground", isToday && "text-primary")}>
                     {weekdayShort(day.key)}
@@ -163,11 +165,11 @@ export function TimeGrid({
           </div>
           {hasAllDayRow && (
             <div className="grid border-t" style={{ gridTemplateColumns }}>
-              <div className="py-1 pr-2 text-right text-[11px] text-muted-foreground">
-                all-day
+              <div className="py-1 pe-2 text-end text-[11px] text-muted-foreground">
+                {t("allDay")}
               </div>
               {days.map((day) => (
-                <div key={day.key} className="flex flex-col gap-0.5 border-l p-1">
+                <div key={day.key} className="flex flex-col gap-0.5 border-s p-1">
                   {day.allDay.map((event) => (
                     <EventChip
                       key={event.key}
@@ -188,13 +190,13 @@ export function TimeGrid({
             {Array.from({ length: 24 }, (_, hour) => (
               <div
                 key={hour}
-                className="relative text-right text-[11px] text-muted-foreground"
+                className="relative text-end text-[11px] text-muted-foreground"
                 style={{ height: HOUR_PX }}
               >
                 {/* Labels sit above their line; midnight has no room above, so it sits below. */}
                 <span
                   className={cn(
-                    "absolute right-2 bg-background/80 px-0.5",
+                    "absolute end-2 bg-background/80 px-0.5",
                     hour === 0 ? "top-1" : "-top-2"
                   )}
                 >
@@ -209,7 +211,7 @@ export function TimeGrid({
             return (
               <div
                 key={day.key}
-                className={cn("relative border-l", onSelectSlot && "cursor-pointer")}
+                className={cn("relative border-s", onSelectSlot && "cursor-pointer")}
                 style={{ height: 24 * HOUR_PX }}
                 onClick={handleColumnClick(day.key)}
               >
@@ -241,7 +243,7 @@ export function TimeGrid({
                     className="absolute inset-x-0 z-20 flex items-center"
                     style={{ top: (nowMin / 60) * HOUR_PX - 1 }}
                   >
-                    <span className="-ml-1 size-2 rounded-full bg-destructive" />
+                    <span className="-ms-1 size-2 rounded-full bg-destructive" />
                     <span className="h-0.5 flex-1 bg-destructive" />
                   </div>
                 )}

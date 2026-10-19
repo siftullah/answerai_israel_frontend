@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { DownloadIcon, PlusIcon, UploadIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -49,20 +50,6 @@ import { cn } from "@/lib/utils";
 type SourceFilter = "all" | ContactSource;
 type NameFilter = "all" | "named" | "unnamed";
 
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the filter trigger shows e.g. "all".
-const SOURCE_ITEMS: { value: SourceFilter; label: string }[] = [
-  { value: "all", label: "All sources" },
-  { value: "manual", label: "Manual" },
-  { value: "ai", label: "Captured by AI" },
-];
-
-const NAME_OPTIONS: { value: NameFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "named", label: "Named" },
-  { value: "unnamed", label: "No name" },
-];
-
 /** Segmented pill group (agents StatusFilter recipe) — isolates the
  * nameless AI-created backlog. */
 function NameFilterGroup({
@@ -72,13 +59,21 @@ function NameFilterGroup({
   value: NameFilter;
   onChange: (value: NameFilter) => void;
 }) {
+  const t = useTranslations("contacts.list");
+  const tc = useTranslations("common");
+  const options: { value: NameFilter; label: string }[] = [
+    { value: "all", label: tc("labels.all") },
+    { value: "named", label: t("named") },
+    { value: "unnamed", label: t("unnamed") },
+  ];
+
   return (
     <div
       role="group"
-      aria-label="Filter by name"
+      aria-label={t("filterByName")}
       className="flex shrink-0 items-center gap-0.5 rounded-full bg-muted p-1"
     >
-      {NAME_OPTIONS.map((option) => (
+      {options.map((option) => (
         <button
           key={option.value}
           type="button"
@@ -99,9 +94,19 @@ function NameFilterGroup({
 }
 
 export function ContactsView() {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const searchParams = useSearchParams();
+
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the filter trigger shows e.g. "all".
+  const sourceItems: { value: SourceFilter; label: string }[] = [
+    { value: "all", label: t("allSources") },
+    { value: "manual", label: t("source.manual") },
+    { value: "ai", label: t("list.capturedByAi") },
+  ];
 
   // Legacy deep link: call detail used to link to /contacts?contact={uuid}.
   const legacyContact = searchParams.get("contact");
@@ -134,12 +139,13 @@ export function ContactsView() {
   const tagsQuery = useContactTags(business.id);
   const deleteContact = useDeleteContact(business.id);
 
+  const allTagsLabel = t("list.allTags");
   const tagItems = useMemo(
     () => [
-      { value: "all", label: "All tags" },
+      { value: "all", label: allTagsLabel },
       ...(tagsQuery.data ?? []).map((value) => ({ value, label: value })),
     ],
-    [tagsQuery.data]
+    [tagsQuery.data, allTagsLabel]
   );
 
   const [viewMode, setViewMode] = useViewMode("contacts");
@@ -177,7 +183,7 @@ export function ContactsView() {
         `contacts-${new Date().toISOString().slice(0, 10)}.csv`
       );
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Export failed");
+      toast.error(error instanceof Error ? error.message : t("exportFailed"));
     } finally {
       setExporting(false);
     }
@@ -210,21 +216,21 @@ export function ContactsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Contacts"
-        description="Everyone your AI talks to — captured from calls, added by you, or imported."
+        title={t("list.title")}
+        description={t("list.description")}
         actions={
           <>
             <Button variant="outline" onClick={exportCsv} disabled={exporting}>
               {exporting ? <Spinner /> : <DownloadIcon />}
-              Export
+              {tc("actions.export")}
             </Button>
             <Button variant="outline" onClick={() => setImportOpen(true)}>
               <UploadIcon />
-              Import
+              {tc("actions.import")}
             </Button>
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add contact
+              {t("addContact")}
             </Button>
           </>
         }
@@ -234,20 +240,20 @@ export function ContactsView() {
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search name, company, phone or email"
+          placeholder={t("list.searchPlaceholder")}
           className="w-full sm:w-72"
           autoComplete="off"
         />
         <Select
-          items={SOURCE_ITEMS}
+          items={sourceItems}
           value={source}
           onValueChange={(value) => setSource((value as SourceFilter | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by source">
+          <SelectTrigger aria-label={t("filterBySource")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {SOURCE_ITEMS.map((item) => (
+            {sourceItems.map((item) => (
               <SelectItem key={item.value} value={item.value}>
                 {item.label}
               </SelectItem>
@@ -259,7 +265,7 @@ export function ContactsView() {
           value={tag}
           onValueChange={(value) => setTag((value as string | null) ?? "all")}
         >
-          <SelectTrigger aria-label="Filter by tag">
+          <SelectTrigger aria-label={t("list.filterByTag")}>
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -271,7 +277,7 @@ export function ContactsView() {
           </SelectContent>
         </Select>
         <NameFilterGroup value={nameFilter} onChange={setNameFilter} />
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ml-auto" />
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ms-auto" />
       </div>
 
       {contactsQuery.isPending ? (
@@ -282,32 +288,27 @@ export function ContactsView() {
         </div>
       ) : contactsQuery.isError ? (
         <ErrorState
-          title="Couldn't load contacts"
+          title={t("list.loadError")}
           message={contactsQuery.error.message}
           onRetry={() => contactsQuery.refetch()}
         />
       ) : contacts.length === 0 ? (
         hasFilters ? (
-          <p className="py-8 text-center text-sm text-muted-foreground">
-            No contacts match your filters.
-          </p>
+          <p className="py-8 text-center text-sm text-muted-foreground">{t("list.noMatch")}</p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>No contacts yet</EmptyTitle>
-              <EmptyDescription>
-                Your AI creates contacts automatically from inbound calls. You can also add
-                them yourself or import a spreadsheet.
-              </EmptyDescription>
+              <EmptyTitle>{t("list.emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("list.emptyDescription")}</EmptyDescription>
             </EmptyHeader>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => setImportOpen(true)}>
                 <UploadIcon />
-                Import
+                {tc("actions.import")}
               </Button>
               <Button onClick={() => setEditor({ source: null })}>
                 <PlusIcon />
-                Add contact
+                {t("addContact")}
               </Button>
             </div>
           </Empty>
@@ -376,25 +377,23 @@ export function ContactsView() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Delete {deleting ? contactDisplayName(deleting) : ""}?
+              {t("delete.title", { name: deleting ? contactDisplayName(deleting) : "" })}
             </AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes them from your contact book. Past call logs keep their name.
-            </AlertDialogDescription>
+            <AlertDialogDescription>{t("delete.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteContact.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Contact deleted"),
+                  onSuccess: () => toast.success(t("delete.toast")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

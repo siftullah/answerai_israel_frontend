@@ -39,16 +39,16 @@ export function ChoiceCards<T extends string>({
             aria-checked={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              "relative flex flex-col gap-1 rounded-2xl border p-4 text-left transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
+              "relative flex flex-col gap-1 rounded-2xl border p-4 text-start transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
               active
                 ? "border-primary bg-primary/5 ring-1 ring-primary"
                 : "hover:bg-muted/40"
             )}
           >
             {active && (
-              <CircleCheckIcon className="absolute top-3.5 right-3.5 size-4.5 text-primary" />
+              <CircleCheckIcon className="absolute top-3.5 end-3.5 size-4.5 text-primary" />
             )}
-            <span className="pr-6 text-base font-medium">{option.label}</span>
+            <span className="pe-6 text-base font-medium">{option.label}</span>
             {option.description && (
               <span className="text-sm text-muted-foreground">
                 {option.description}

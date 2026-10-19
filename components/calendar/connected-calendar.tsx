@@ -2,6 +2,7 @@
 
 import { useMemo } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { CalendarOffIcon, TriangleAlertIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,7 @@ export function ConnectedCalendar({
   businessHours: BusinessHourRow[];
   onSelectEvent: (event: GridEvent) => void;
 }) {
+  const t = useTranslations("calendar.connected");
   const { business } = useBusiness();
   const connectionsQuery = useCalendarConnections(business.id);
 
@@ -75,14 +77,11 @@ export function ConnectedCalendar({
           <EmptyMedia variant="icon">
             <CalendarOffIcon />
           </EmptyMedia>
-          <EmptyTitle>No calendar connected</EmptyTitle>
-          <EmptyDescription>
-            Connect your Outlook calendar to see it side by side with the system calendar.
-            Each team member connects their own.
-          </EmptyDescription>
+          <EmptyTitle>{t("empty.title")}</EmptyTitle>
+          <EmptyDescription>{t("empty.description")}</EmptyDescription>
         </EmptyHeader>
         <Button render={<Link href={`/b/${business.id}/settings/calendar`} />}>
-          Connect Outlook
+          {t("empty.connect")}
         </Button>
       </Empty>
     );
@@ -95,14 +94,15 @@ export function ConnectedCalendar({
           <EmptyMedia variant="icon">
             <TriangleAlertIcon className="text-warning" />
           </EmptyMedia>
-          <EmptyTitle>Calendar needs reconnecting</EmptyTitle>
+          <EmptyTitle>{t("broken.title")}</EmptyTitle>
           <EmptyDescription>
-            The connection to {active.account_email ?? "your Outlook account"} stopped
-            working. Reconnect it to bring this view back.
+            {active.account_email
+              ? t("broken.description", { email: active.account_email })
+              : t("broken.descriptionNoEmail")}
           </EmptyDescription>
         </EmptyHeader>
         <Button render={<Link href={`/b/${business.id}/settings/calendar`} />}>
-          Go to calendar settings
+          {t("broken.goToSettings")}
         </Button>
       </Empty>
     );
@@ -122,15 +122,14 @@ export function ConnectedCalendar({
     <div className="flex min-h-0 flex-col gap-3 lg:flex-1">
       {viewQuery.data.available ? (
         <p className="text-sm text-muted-foreground">
-          Showing {viewQuery.data.account_email ?? "your Outlook calendar"} — view-only.
+          {viewQuery.data.account_email
+            ? t("showing", { email: viewQuery.data.account_email })
+            : t("showingNoEmail")}
         </p>
       ) : (
         <Alert variant="warning">
           <TriangleAlertIcon />
-          <AlertDescription>
-            Outlook didn&apos;t respond just now, so events are hidden. This usually clears
-            up on its own — try again in a minute.
-          </AlertDescription>
+          <AlertDescription>{t("unavailable")}</AlertDescription>
         </Alert>
       )}
       <TimeGrid

@@ -1,0 +1,150 @@
+{
+  "meta": {
+    "title": "Calendar"
+  },
+  "views": {
+    "month": "Month",
+    "week": "Week",
+    "day": "Day"
+  },
+  "page": {
+    "title": "Calendar",
+    "description": "Bookings across your team — with your own Outlook alongside.",
+    "bookingRules": "Booking rules",
+    "calendarSync": "Calendar sync",
+    "newCallback": "New callback",
+    "newAppointment": "New appointment",
+    "systemTab": "System calendar",
+    "everyone": "Everyone",
+    "memberFilterLabel": "Filter by team member",
+    "previous": "{view, select, day {Previous day} week {Previous week} other {Previous month}}",
+    "next": "{view, select, day {Next day} week {Next week} other {Next month}}",
+    "today": "Today"
+  },
+  "legend": {
+    "appointment": "Appointment",
+    "callback": "Callback",
+    "job": "Job",
+    "attention": "Needs attention",
+    "done": "Done"
+  },
+  "grid": {
+    "openDay": "Open {date} in day view",
+    "more": "{count, plural, other {+# more}}",
+    "allDay": "all-day"
+  },
+  "detail": {
+    "contact": "Contact",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "cancelReason": "Cancel reason",
+    "reschedule": "Reschedule",
+    "complete": "Complete",
+    "appointment": {
+      "moduleDisabled": "Enable the Appointments module to manage this booking.",
+      "open": "Open in Appointments",
+      "cancel": "Cancel booking",
+      "noShow": "No-show",
+      "toasts": {
+        "noShow": "Marked as no-show",
+        "completed": "Appointment completed",
+        "confirmed": "Appointment confirmed"
+      }
+    },
+    "callback": {
+      "number": "Number",
+      "topic": "Topic",
+      "moduleDisabled": "Enable the Callbacks module to manage this callback.",
+      "open": "Open in Callbacks",
+      "cancel": "Cancel callback"
+    },
+    "job": {
+      "moduleDisabled": "Enable the Jobs module to manage this job.",
+      "open": "Open in Jobs",
+      "start": "Start job",
+      "complete": "Complete job",
+      "toasts": {
+        "completed": "{reference} completed — ready to invoice",
+        "started": "{reference} started"
+      }
+    },
+    "external": {
+      "allDay": "All day",
+      "ourBooking": "AnswerAI booking",
+      "busy": "Busy",
+      "free": "Free",
+      "location": "Location",
+      "oursNote": "This is our own booking's synced copy — manage it from the system calendar.",
+      "externalNote": "External events are view-only here; edit them in Outlook."
+    }
+  },
+  "assign": {
+    "label": "Assign to",
+    "unassignedPool": "Unassigned (shared pool)"
+  },
+  "cancelDialog": {
+    "title": "Cancel this appointment?",
+    "description": "The slot frees up, the synced calendar copy is removed, and the contact is emailed a cancellation.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Shared with the contact (optional)",
+    "keep": "Keep appointment",
+    "canceling": "Canceling…",
+    "confirm": "Cancel appointment",
+    "toasts": {
+      "canceled": "Appointment canceled"
+    }
+  },
+  "reassignDialog": {
+    "title": "Reassign appointment",
+    "description": "The booking keeps its time — the synced calendar copy moves to the new assignee.",
+    "reassigning": "Reassigning…",
+    "reassign": "Reassign",
+    "toasts": {
+      "reassigned": "Appointment reassigned"
+    }
+  },
+  "rescheduleDialog": {
+    "title": "Reschedule appointment",
+    "description": "Pick a new time — the contact will be emailed the update.",
+    "rescheduling": "Rescheduling…",
+    "reschedule": "Reschedule",
+    "toasts": {
+      "rescheduled": "Appointment rescheduled"
+    }
+  },
+  "createDialog": {
+    "title": "New appointment",
+    "description": "Book a time for a contact. Duration follows your calendar settings.",
+    "contact": "Contact",
+    "notesPlaceholder": "Anything the team should know (optional)",
+    "booking": "Booking…",
+    "book": "Book appointment",
+    "toasts": {
+      "booked": "Appointment booked"
+    }
+  },
+  "slotPicker": {
+    "openSlots": "Open slots",
+    "custom": "Custom",
+    "pickDate": "Pick a date to see open slots.",
+    "loadError": "Couldn't load slots — switch to a custom time or try another day.",
+    "empty": "No open slots this day — try another day, or use a custom time.",
+    "customWarning": "Custom times skip the availability check — double-booking is allowed."
+  },
+  "connected": {
+    "empty": {
+      "title": "No calendar connected",
+      "description": "Connect your Outlook calendar to see it side by side with the system calendar. Each team member connects their own.",
+      "connect": "Connect Outlook"
+    },
+    "broken": {
+      "title": "Calendar needs reconnecting",
+      "description": "The connection to {email} stopped working. Reconnect it to bring this view back.",
+      "descriptionNoEmail": "The connection to your Outlook account stopped working. Reconnect it to bring this view back.",
+      "goToSettings": "Go to calendar settings"
+    },
+    "showing": "Showing {email} — view-only.",
+    "showingNoEmail": "Showing your Outlook calendar — view-only.",
+    "unavailable": "Outlook didn't respond just now, so events are hidden. This usually clears up on its own — try again in a minute."
+  }
+}

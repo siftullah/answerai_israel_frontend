@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -19,8 +21,12 @@ export function RegisterForm() {
   const router = useRouter();
   const register = useRegister();
 
+  const t = useTranslations("auth");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => registerSchema(tv), [tv]);
   const form = useForm<RegisterValues>({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       first_name: "",
       last_name: "",
@@ -43,10 +49,8 @@ export function RegisterForm() {
     <PublicOnly>
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <h1 className="font-heading text-2xl font-semibold">Create your account</h1>
-          <p className="text-sm text-muted-foreground">
-            Set up your business on AnswerAI in a minute.
-          </p>
+          <h1 className="font-heading text-2xl font-semibold">{t("register.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("register.subtitle")}</p>
         </div>
 
         {errors.root?.server && (
@@ -58,7 +62,7 @@ export function RegisterForm() {
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup className="gap-4">
             <Field data-invalid={!!errors.business_name || undefined}>
-              <FieldLabel htmlFor="business_name">Business name</FieldLabel>
+              <FieldLabel htmlFor="business_name">{t("fields.businessName")}</FieldLabel>
               <Input
                 id="business_name"
                 autoComplete="organization"
@@ -70,7 +74,7 @@ export function RegisterForm() {
 
             <div className="grid gap-4 sm:grid-cols-2">
               <Field data-invalid={!!errors.first_name || undefined}>
-                <FieldLabel htmlFor="first_name">First name</FieldLabel>
+                <FieldLabel htmlFor="first_name">{t("fields.firstName")}</FieldLabel>
                 <Input
                   id="first_name"
                   autoComplete="given-name"
@@ -81,7 +85,7 @@ export function RegisterForm() {
               </Field>
 
               <Field data-invalid={!!errors.last_name || undefined}>
-                <FieldLabel htmlFor="last_name">Last name</FieldLabel>
+                <FieldLabel htmlFor="last_name">{t("fields.lastName")}</FieldLabel>
                 <Input
                   id="last_name"
                   autoComplete="family-name"
@@ -93,7 +97,7 @@ export function RegisterForm() {
             </div>
 
             <Field data-invalid={!!errors.email || undefined}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">{tc("labels.email")}</FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -105,7 +109,7 @@ export function RegisterForm() {
             </Field>
 
             <Field data-invalid={!!errors.password || undefined}>
-              <FieldLabel htmlFor="password">Password</FieldLabel>
+              <FieldLabel htmlFor="password">{t("fields.password")}</FieldLabel>
               <PasswordInput
                 id="password"
                 autoComplete="new-password"
@@ -115,22 +119,25 @@ export function RegisterForm() {
               {errors.password ? (
                 <FieldError>{errors.password.message}</FieldError>
               ) : (
-                <FieldDescription>At least 8 characters.</FieldDescription>
+                <FieldDescription>{t("fields.passwordHint")}</FieldDescription>
               )}
             </Field>
 
             <Button type="submit" disabled={register.isPending}>
               {register.isPending && <Spinner />}
-              Create account
+              {t("register.submit")}
             </Button>
           </FieldGroup>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Already have an account?{" "}
-          <Link href="/login" className="text-primary underline-offset-4 hover:underline">
-            Log in
-          </Link>
+          {t.rich("register.haveAccount", {
+            link: (chunks) => (
+              <Link href="/login" className="text-primary underline-offset-4 hover:underline">
+                {chunks}
+              </Link>
+            ),
+          })}
         </p>
       </div>
     </PublicOnly>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { MessageSquareTextIcon, MilestoneIcon, PhoneIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ export function LeadActivityTimeline({
   leadUuid: string;
   timeZone: string;
 }) {
+  const t = useTranslations("leads.timeline");
   const activitiesQuery = useLeadActivities(businessUuid, leadUuid);
   const addNote = useAddLeadNote(businessUuid);
   const [note, setNote] = useState("");
@@ -71,15 +73,15 @@ export function LeadActivityTimeline({
   };
 
   return (
-    <DetailCard title="Activity" accent>
+    <DetailCard title={t("title")} accent>
       <div className="flex flex-col gap-2">
         <Textarea
           value={note}
           onChange={(event) => setNote(event.target.value)}
           rows={2}
           maxLength={5000}
-          placeholder="Add a note — calls made, follow-ups, pricing…"
-          aria-label="Add a note to this lead"
+          placeholder={t("placeholder")}
+          aria-label={t("label")}
         />
         <div className="flex justify-end">
           <Button
@@ -87,7 +89,7 @@ export function LeadActivityTimeline({
             onClick={submit}
             disabled={note.trim() === "" || addNote.isPending}
           >
-            {addNote.isPending ? "Adding…" : "Add note"}
+            {addNote.isPending ? t("adding") : t("addNote")}
           </Button>
         </div>
       </div>
@@ -99,14 +101,12 @@ export function LeadActivityTimeline({
         </div>
       ) : activitiesQuery.isError ? (
         <ErrorState
-          title="Couldn't load the timeline"
+          title={t("loadError")}
           message={activitiesQuery.error.message}
           onRetry={() => activitiesQuery.refetch()}
         />
       ) : activitiesQuery.data.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Nothing yet — notes and status changes will show up here.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-4">
           {activitiesQuery.data.map((activity) => (

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -42,12 +44,14 @@ export function OwnedFaqDialog({
   faq: Faq;
 }) {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.faqs");
+  const tc = useTranslations("common");
   const categoriesQuery = useFaqCategories(business.id);
 
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows the category's uuid.
   const categoryItems = [
-    { value: "none", label: "No category" },
+    { value: "none", label: t("noCategory") },
     ...(categoriesQuery.data ?? []).map((category) => ({
       value: category.id,
       label: category.name,
@@ -55,8 +59,10 @@ export function OwnedFaqDialog({
   ];
   const update = useUpdateFaq(business.id);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => ownedFaqSchema(tv), [tv]);
   const form = useForm<OwnedFaqValues>({
-    resolver: zodResolver(ownedFaqSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       question: faq.question,
       answer: faq.answer,
@@ -77,7 +83,7 @@ export function OwnedFaqDialog({
       },
       {
         onSuccess: () => {
-          toast.success("FAQ saved");
+          toast.success(t("toasts.saved"));
           onOpenChange(false);
         },
         onError: (error) => applyServerErrors(form, error),
@@ -89,8 +95,8 @@ export function OwnedFaqDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>Edit FAQ</DialogTitle>
-          <DialogDescription>This copy belongs to this item only.</DialogDescription>
+          <DialogTitle>{t("modal.editTitle")}</DialogTitle>
+          <DialogDescription>{t("owned.description")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
@@ -101,10 +107,10 @@ export function OwnedFaqDialog({
           )}
 
           <Field data-invalid={!!errors.question || undefined}>
-            <FieldLabel htmlFor="owned-faq-question">Question</FieldLabel>
+            <FieldLabel htmlFor="owned-faq-question">{t("question")}</FieldLabel>
             <Input
               id="owned-faq-question"
-              placeholder="Do you offer free quotes?"
+              placeholder={t("questionPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.question}
               {...form.register("question")}
@@ -113,11 +119,11 @@ export function OwnedFaqDialog({
           </Field>
 
           <Field data-invalid={!!errors.answer || undefined}>
-            <FieldLabel htmlFor="owned-faq-answer">Answer</FieldLabel>
+            <FieldLabel htmlFor="owned-faq-answer">{t("answer")}</FieldLabel>
             <Textarea
               id="owned-faq-answer"
               className="min-h-40"
-              placeholder="Yes — we quote most jobs within one business day…"
+              placeholder={t("answerPlaceholder")}
               aria-invalid={!!errors.answer}
               {...form.register("answer")}
             />
@@ -125,7 +131,7 @@ export function OwnedFaqDialog({
           </Field>
 
           <Field>
-            <FieldLabel htmlFor="owned-faq-category">Category</FieldLabel>
+            <FieldLabel htmlFor="owned-faq-category">{t("category")}</FieldLabel>
             <Controller
               control={form.control}
               name="faq_category_id"
@@ -154,11 +160,11 @@ export function OwnedFaqDialog({
 
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={update.isPending}>
               {update.isPending && <Spinner />}
-              Save changes
+              {tc("actions.saveChanges")}
             </Button>
           </DialogFooter>
         </form>

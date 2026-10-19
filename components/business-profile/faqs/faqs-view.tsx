@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -73,11 +74,17 @@ function FaqRowActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${faq.question}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={ts("rowActions", { name: faq.question })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -85,11 +92,11 @@ function FaqRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -98,6 +105,9 @@ function FaqRowActions({
 
 export function FaqsView() {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.faqs");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
   const [categoryId, setCategoryId] = useState<string | null>(null);
   const faqsQuery = useFaqs(business.id, categoryId ? { category_id: categoryId } : {});
@@ -120,7 +130,7 @@ export function FaqsView() {
       (item) => item.question && item.answer
     );
     if (items.length === 0) {
-      toast.info("Nothing usable was extracted from that source.");
+      toast.info(ts("nothingExtracted"));
       return;
     }
     setDraftRows(
@@ -161,19 +171,19 @@ export function FaqsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="FAQs"
-        description="Questions and answers your AI uses to help callers."
+        title={t("title")}
+        description={t("description")}
         actions={
           <>
             <ExtractionDialog
               target="faqs"
-              title="Extract FAQs"
-              description="Pull questions and answers from your website or a document. You review every row before anything is added."
+              title={t("extract.title")}
+              description={t("extract.description")}
               onReady={(extraction) => onExtractionReady(extraction.draft)}
             />
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add FAQ
+              {t("add")}
             </Button>
           </>
         }
@@ -190,7 +200,7 @@ export function FaqsView() {
               : "border-border text-muted-foreground hover:text-foreground"
           )}
         >
-          All
+          {tc("labels.all")}
         </button>
         {(categoriesQuery.data ?? []).map((category) => (
           <button
@@ -206,14 +216,14 @@ export function FaqsView() {
           >
             {category.name}
             {typeof category.faqs_count === "number" && (
-              <span className="ml-1 text-sm opacity-70">{category.faqs_count}</span>
+              <span className="ms-1 text-sm opacity-70">{category.faqs_count}</span>
             )}
           </button>
         ))}
         <Button variant="ghost" size="sm" onClick={() => setManageOpen(true)}>
-          Manage categories
+          {t("manageCategories")}
         </Button>
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ml-auto" />
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ms-auto" />
       </div>
 
       {faqsQuery.isPending ? (
@@ -224,27 +234,24 @@ export function FaqsView() {
         </div>
       ) : faqsQuery.isError ? (
         <ErrorState
-          title="Couldn't load FAQs"
+          title={t("loadError")}
           message={faqsQuery.error.message}
           onRetry={() => faqsQuery.refetch()}
         />
       ) : faqsQuery.data.length === 0 ? (
         categoryId !== null ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No FAQs in this category.
+            {t("noneInCategory")}
           </p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>Add your first FAQ</EmptyTitle>
-              <EmptyDescription>
-                These apply business-wide. FAQs created inside a service or product live
-                with that item instead.
-              </EmptyDescription>
+              <EmptyTitle>{t("empty.title")}</EmptyTitle>
+              <EmptyDescription>{t("empty.description")}</EmptyDescription>
             </EmptyHeader>
             <Button onClick={() => setEditor({ source: null })}>
               <PlusIcon />
-              Add FAQ
+              {t("add")}
             </Button>
           </Empty>
         )
@@ -262,11 +269,13 @@ export function FaqsView() {
               </div>
               <p className="line-clamp-2 text-sm text-muted-foreground">{faq.answer}</p>
               <div className="mt-auto flex flex-wrap items-center gap-2 border-t pt-3 text-sm text-muted-foreground">
-                <span>{faq.category?.name ?? "No category"}</span>
+                <span>{faq.category?.name ?? t("noCategory")}</span>
                 {faq.agent_scope === "all" ? (
-                  <span>· All agents</span>
+                  <span>· {ts("allAgents")}</span>
                 ) : (
-                  <Badge variant="secondary">{faq.agent_ids?.length ?? 0} selected</Badge>
+                  <Badge variant="secondary">
+                    {ts("selectedAgents", { count: faq.agent_ids?.length ?? 0 })}
+                  </Badge>
                 )}
               </div>
             </div>
@@ -277,9 +286,9 @@ export function FaqsView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Question</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Agents</TableHead>
+                <TableHead>{t("question")}</TableHead>
+                <TableHead>{t("category")}</TableHead>
+                <TableHead>{ts("agents")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -299,10 +308,10 @@ export function FaqsView() {
                   </TableCell>
                   <TableCell>
                     {faq.agent_scope === "all" ? (
-                      <span className="text-muted-foreground">All agents</span>
+                      <span className="text-muted-foreground">{ts("allAgents")}</span>
                     ) : (
                       <Badge variant="secondary">
-                        {faq.agent_ids?.length ?? 0} selected
+                        {ts("selectedAgents", { count: faq.agent_ids?.length ?? 0 })}
                       </Badge>
                     )}
                   </TableCell>
@@ -340,24 +349,22 @@ export function FaqsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete this FAQ?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your AI will stop using this answer. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("deleteDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteFaq.mutate(deleting.id, {
-                  onSuccess: () => toast.success("FAQ deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -369,8 +376,9 @@ export function FaqsView() {
           onOpenChange={(next) => {
             if (!next) setDraftRows(null);
           }}
-          title="Review extracted FAQs"
-          itemNoun="FAQ"
+          title={t("review.title")}
+          addLabel={(count) => t("review.addCount", { count })}
+          addedLabel={(count) => t("review.addedCount", { count })}
           rows={draftRows}
           onRowsChange={setDraftRows}
           summary={(item) => ({

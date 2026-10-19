@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   BanIcon,
@@ -49,10 +50,11 @@ import type { Invoice } from "@/lib/api/types";
 import { LINE_ITEM_KIND_LABELS } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("invoices.detail");
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All invoices
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("back")}
     </Button>
   );
 }
@@ -75,9 +77,10 @@ function MetaBand({
   invoice: Invoice;
   timeZone: string;
 }) {
+  const t = useTranslations("invoices");
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label="Customer">
+      <Meta label={t("labels.customer")}>
         {invoice.contact ? (
           <Link
             href={`/b/${businessUuid}/contacts/${invoice.contact.id}`}
@@ -90,7 +93,7 @@ function MetaBand({
         )}
       </Meta>
       {invoice.job && (
-        <Meta label="From job">
+        <Meta label={t("detail.fields.fromJob")}>
           <Link
             href={`/b/${businessUuid}/jobs?job=${invoice.job.id}`}
             className="text-primary hover:underline"
@@ -99,23 +102,23 @@ function MetaBand({
           </Link>
         </Meta>
       )}
-      <Meta label="Issued">
-        {invoice.issue_date ? formatDateKey(invoice.issue_date) : "Set on send"}
+      <Meta label={t("detail.fields.issued")}>
+        {invoice.issue_date ? formatDateKey(invoice.issue_date) : t("labels.setOnSend")}
       </Meta>
-      <Meta label="Due">
+      <Meta label={t("detail.fields.due")}>
         {invoice.due_date ? (
           <span className={invoice.status === "overdue" ? "text-destructive" : undefined}>
             {formatDateKey(invoice.due_date)}
           </span>
         ) : (
-          "Set on send"
+          t("labels.setOnSend")
         )}
       </Meta>
       {invoice.sent_at && (
-        <Meta label="Sent">{formatDateTime(invoice.sent_at, timeZone)}</Meta>
+        <Meta label={t("detail.fields.sent")}>{formatDateTime(invoice.sent_at, timeZone)}</Meta>
       )}
       {invoice.paid_at && (
-        <Meta label="Paid">
+        <Meta label={t("detail.fields.paid")}>
           {formatDateTime(invoice.paid_at, timeZone)}
           {invoice.payment_reference && (
             <span className="block text-xs font-normal text-muted-foreground">
@@ -125,9 +128,11 @@ function MetaBand({
         </Meta>
       )}
       {invoice.voided_at && (
-        <Meta label="Voided">{formatDateTime(invoice.voided_at, timeZone)}</Meta>
+        <Meta label={t("detail.fields.voided")}>
+          {formatDateTime(invoice.voided_at, timeZone)}
+        </Meta>
       )}
-      <Meta label="Created">{formatDate(invoice.created_at, timeZone)}</Meta>
+      <Meta label={t("detail.fields.created")}>{formatDate(invoice.created_at, timeZone)}</Meta>
     </dl>
   );
 }
@@ -139,20 +144,22 @@ function displayQuantity(quantity: string): string {
 }
 
 function ItemsCard({ invoice, taxLabel }: { invoice: Invoice; taxLabel: string }) {
+  const t = useTranslations("invoices.labels");
+  const tc = useTranslations("common");
   const items = invoice.items ?? [];
   const currency = invoice.currency;
 
   return (
-    <DetailCard title="Line items" accent>
+    <DetailCard title={t("lineItems")} accent>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Qty</TableHead>
-              <TableHead className="text-right">Unit</TableHead>
-              <TableHead className="text-right">{taxLabel}</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>{tc("labels.description")}</TableHead>
+              <TableHead className="text-end">{t("qty")}</TableHead>
+              <TableHead className="text-end">{t("unit")}</TableHead>
+              <TableHead className="text-end">{taxLabel}</TableHead>
+              <TableHead className="text-end">{t("amount")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -164,16 +171,16 @@ function ItemsCard({ invoice, taxLabel }: { invoice: Invoice; taxLabel: string }
                     {LINE_ITEM_KIND_LABELS[item.kind]}
                   </span>
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-end tabular-nums">
                   {displayQuantity(item.quantity)}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-end tabular-nums">
                   {formatCents(item.unit_price_cents, currency)}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-end tabular-nums">
                   {item.tax_rate_bp > 0 ? `${item.tax_rate_bp / 100}%` : "—"}
                 </TableCell>
-                <TableCell className="text-right font-medium tabular-nums">
+                <TableCell className="text-end font-medium tabular-nums">
                   {formatCents(item.amount_cents, currency)}
                 </TableCell>
               </TableRow>
@@ -185,7 +192,7 @@ function ItemsCard({ invoice, taxLabel }: { invoice: Invoice; taxLabel: string }
       <div className="flex justify-end">
         <dl className="flex w-56 flex-col gap-1.5 text-sm">
           <div className="flex justify-between">
-            <dt className="text-muted-foreground">Subtotal</dt>
+            <dt className="text-muted-foreground">{tc("labels.subtotal")}</dt>
             <dd className="tabular-nums">{formatCents(invoice.subtotal_cents, currency)}</dd>
           </div>
           <div className="flex justify-between">
@@ -193,7 +200,7 @@ function ItemsCard({ invoice, taxLabel }: { invoice: Invoice; taxLabel: string }
             <dd className="tabular-nums">{formatCents(invoice.tax_cents, currency)}</dd>
           </div>
           <div className="flex justify-between border-t border-border pt-1.5 text-base font-semibold">
-            <dt>Total</dt>
+            <dt>{tc("labels.total")}</dt>
             <dd className="tabular-nums">{formatCents(invoice.total_cents, currency)}</dd>
           </div>
         </dl>
@@ -213,6 +220,8 @@ export function InvoiceDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("invoices");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const invoiceQuery = useInvoiceDetail(businessUuid, invoiceUuid);
   const { taxLabel } = useTaxDefaults(businessUuid);
@@ -231,8 +240,8 @@ export function InvoiceDetailPane({
           <EmptyMedia variant="icon">
             <ReceiptTextIcon />
           </EmptyMedia>
-          <EmptyTitle>No invoice selected</EmptyTitle>
-          <EmptyDescription>Select an invoice to see its details.</EmptyDescription>
+          <EmptyTitle>{t("detail.noneSelected.title")}</EmptyTitle>
+          <EmptyDescription>{t("detail.noneSelected.description")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -258,11 +267,9 @@ export function InvoiceDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Invoice not found" : "Couldn't load this invoice"}
+          title={notFound ? t("detail.notFound.title") : t("detail.loadError")}
           message={
-            notFound
-              ? "This invoice doesn't exist or was removed."
-              : invoiceQuery.error.message
+            notFound ? t("detail.notFound.description") : invoiceQuery.error.message
           }
           onRetry={notFound ? onClearSelection : () => invoiceQuery.refetch()}
         />
@@ -276,7 +283,7 @@ export function InvoiceDetailPane({
 
   const duplicate = () =>
     duplicateInvoice.mutate(invoice.id, {
-      onSuccess: (copy) => toast.success(`Draft ${copy.number} created`),
+      onSuccess: (copy) => toast.success(t("toasts.draftCreated", { number: copy.number })),
       onError: (error) => toast.error(error.message),
     });
 
@@ -284,7 +291,7 @@ export function InvoiceDetailPane({
     <div key={invoice.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           <div className="flex flex-col gap-4 pb-6">
             {/* Identity + status */}
@@ -292,11 +299,13 @@ export function InvoiceDetailPane({
               <div className="flex min-w-0 flex-col gap-1">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                   <h2 className="max-w-full truncate font-heading text-2xl font-semibold">
-                    Invoice {invoice.number}
+                    {t("detail.title", { number: invoice.number })}
                   </h2>
                   <InvoiceStatusBadge status={invoice.status} />
                   {invoice.job && (
-                    <Badge variant="outline">From {invoice.job.reference}</Badge>
+                    <Badge variant="outline">
+                      {t("detail.fromJobBadge", { reference: invoice.job.reference })}
+                    </Badge>
                   )}
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -311,7 +320,7 @@ export function InvoiceDetailPane({
                   render={<Link href={`/b/${businessUuid}/contacts/${invoice.contact.id}`} />}
                 >
                   <UserRoundIcon />
-                  View contact
+                  {t("actions.viewContact")}
                 </Button>
               )}
             </div>
@@ -327,11 +336,11 @@ export function InvoiceDetailPane({
                 <>
                   <Button size="sm" onClick={() => setSending(true)}>
                     <SendIcon />
-                    Send invoice
+                    {t("actions.send")}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
                     <PencilIcon />
-                    Edit
+                    {tc("actions.edit")}
                   </Button>
                 </>
               )}
@@ -343,7 +352,7 @@ export function InvoiceDetailPane({
                   onClick={() => setMarkingPaid(true)}
                 >
                   <CheckIcon />
-                  Mark as paid
+                  {t("actions.markPaid")}
                 </Button>
               )}
               <Button
@@ -353,7 +362,7 @@ export function InvoiceDetailPane({
                 onClick={duplicate}
               >
                 <CopyIcon />
-                Duplicate
+                {t("actions.duplicate")}
               </Button>
               {awaitingPayment && (
                 <Button
@@ -363,7 +372,7 @@ export function InvoiceDetailPane({
                   onClick={() => setVoiding(true)}
                 >
                   <BanIcon />
-                  Void
+                  {t("actions.void")}
                 </Button>
               )}
               {draft && (
@@ -374,7 +383,7 @@ export function InvoiceDetailPane({
                   onClick={() => setDeleting(true)}
                 >
                   <Trash2Icon />
-                  Delete
+                  {tc("actions.delete")}
                 </Button>
               )}
             </div>
@@ -383,13 +392,13 @@ export function InvoiceDetailPane({
           <ItemsCard invoice={invoice} taxLabel={taxLabel} />
 
           {invoice.notes && (
-            <DetailCard title="Notes">
+            <DetailCard title={tc("labels.notes")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{invoice.notes}</p>
             </DetailCard>
           )}
 
           {invoice.payment_instructions && (
-            <DetailCard title="Payment instructions">
+            <DetailCard title={t("labels.paymentInstructions")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">
                 {invoice.payment_instructions}
               </p>

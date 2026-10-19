@@ -2,16 +2,23 @@
 
 import * as React from "react"
 import {
+  DateLib,
   DayPicker,
   getDefaultClassNames,
   type DayButton,
   type Locale,
 } from "react-day-picker"
+import { ar, enGB, he } from "date-fns/locale"
+import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
-import { LOCALE } from "@/lib/datetime"
+import { displayLocale } from "@/lib/i18n/runtime"
+import type { Locale as UiLocale } from "@/i18n/config"
 import { Button, buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
+
+/** date-fns locale per UI language — the DayPicker default when the caller passes none. */
+const DATE_FNS_LOCALES: Record<UiLocale, Locale> = { en: enGB, he, ar }
 
 function Calendar({
   className,
@@ -20,13 +27,19 @@ function Calendar({
   captionLayout = "label",
   buttonVariant = "ghost",
   locale,
+  // Israeli week: Sunday first in every language (date-fns' ar locale would
+  // start on Saturday and enGB on Monday).
+  weekStartsOn = 0,
   formatters,
+  labels,
   components,
   ...props
 }: React.ComponentProps<typeof DayPicker> & {
   buttonVariant?: React.ComponentProps<typeof Button>["variant"]
 }) {
   const defaultClassNames = getDefaultClassNames()
+  const uiLocale = useLocale() as UiLocale
+  const t = useTranslations("ui")
 
   return (
     <DayPicker
@@ -38,10 +51,29 @@ function Calendar({
         className
       )}
       captionLayout={captionLayout}
-      locale={locale}
+      locale={locale ?? DATE_FNS_LOCALES[uiLocale]}
+      weekStartsOn={weekStartsOn}
+      labels={{
+        labelNext: () => t("calendar.nextMonth"),
+        labelPrevious: () => t("calendar.previousMonth"),
+        labelMonthDropdown: () => t("calendar.chooseMonth"),
+        labelYearDropdown: () => t("calendar.chooseYear"),
+        labelWeekNumberHeader: () => t("calendar.weekNumberHeader"),
+        labelWeekNumber: (number) => t("calendar.weekNumber", { number }),
+        labelDayButton: (date, modifiers, options, dateLib) => {
+          const formatted = (dateLib ?? new DateLib(options)).format(date, "PPPP")
+          if (modifiers.today && modifiers.selected) {
+            return t("calendar.dayTodaySelected", { date: formatted })
+          }
+          if (modifiers.today) return t("calendar.dayToday", { date: formatted })
+          if (modifiers.selected) return t("calendar.daySelected", { date: formatted })
+          return formatted
+        },
+        ...labels,
+      }}
       formatters={{
         formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code ?? LOCALE, { month: "short" }),
+          date.toLocaleString(locale?.code ?? displayLocale(), { month: "short" }),
         ...formatters,
       }}
       classNames={{
@@ -104,19 +136,19 @@ function Calendar({
           defaultClassNames.week_number
         ),
         day: cn(
-          "group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-r-(--cell-radius)",
+          "group/day relative aspect-square h-full w-full rounded-(--cell-radius) p-0 text-center select-none [&:last-child[data-selected=true]_button]:rounded-e-(--cell-radius)",
           props.showWeekNumber
-            ? "[&:nth-child(2)[data-selected=true]_button]:rounded-l-(--cell-radius)"
-            : "[&:first-child[data-selected=true]_button]:rounded-l-(--cell-radius)",
+            ? "[&:nth-child(2)[data-selected=true]_button]:rounded-s-(--cell-radius)"
+            : "[&:first-child[data-selected=true]_button]:rounded-s-(--cell-radius)",
           defaultClassNames.day
         ),
         range_start: cn(
-          "relative isolate z-0 rounded-l-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:right-0 after:w-4 after:bg-muted",
+          "relative isolate z-0 rounded-s-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:end-0 after:w-4 after:bg-muted",
           defaultClassNames.range_start
         ),
         range_middle: cn("rounded-none", defaultClassNames.range_middle),
         range_end: cn(
-          "relative isolate z-0 rounded-r-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:left-0 after:w-4 after:bg-muted",
+          "relative isolate z-0 rounded-e-(--cell-radius) bg-muted after:absolute after:inset-y-0 after:start-0 after:w-4 after:bg-muted",
           defaultClassNames.range_end
         ),
         today: cn(
@@ -199,7 +231,7 @@ function CalendarDayButton({
     <Button
       variant="ghost"
       size="icon"
-      data-day={day.date.toLocaleDateString(locale?.code ?? LOCALE)}
+      data-day={day.date.toLocaleDateString(locale?.code ?? displayLocale())}
       data-selected-single={
         modifiers.selected &&
         !modifiers.range_start &&
@@ -210,7 +242,7 @@ function CalendarDayButton({
       data-range-end={modifiers.range_end}
       data-range-middle={modifiers.range_middle}
       className={cn(
-        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-r-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-l-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
+        "relative isolate z-10 flex aspect-square size-auto w-full min-w-(--cell-size) flex-col gap-1 border-0 leading-none font-normal group-data-[focused=true]/day:relative group-data-[focused=true]/day:z-10 group-data-[focused=true]/day:border-ring group-data-[focused=true]/day:ring-[3px] group-data-[focused=true]/day:ring-ring/50 data-[range-end=true]:rounded-(--cell-radius) data-[range-end=true]:rounded-e-(--cell-radius) data-[range-end=true]:bg-primary data-[range-end=true]:text-primary-foreground data-[range-middle=true]:rounded-none data-[range-middle=true]:bg-muted data-[range-middle=true]:text-foreground data-[range-start=true]:rounded-(--cell-radius) data-[range-start=true]:rounded-s-(--cell-radius) data-[range-start=true]:bg-primary data-[range-start=true]:text-primary-foreground data-[selected-single=true]:bg-primary data-[selected-single=true]:text-primary-foreground dark:hover:text-foreground [&>span]:text-xs [&>span]:opacity-70",
         defaultClassNames.day,
         className
       )}

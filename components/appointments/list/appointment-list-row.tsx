@@ -1,6 +1,7 @@
 "use client";
 
 import { BotIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { AppointmentStatusBadge } from "@/components/calendar/appointment-status-badge";
 import { formatTimeOfDay } from "@/lib/datetime";
@@ -10,7 +11,8 @@ import { UPCOMING_APPOINTMENT_STATUSES } from "@/lib/api/types";
 
 /** Rendered beside the status — an open booking whose end passed unrecorded. */
 export function NeedsReviewBadge() {
-  return <Badge variant="warning">Needs review</Badge>;
+  const t = useTranslations("appointments");
+  return <Badge variant="warning">{t("row.needsReview")}</Badge>;
 }
 
 /** An open booking whose end has passed without an outcome being recorded. */
@@ -34,6 +36,7 @@ export function AppointmentListRow({
   nowMs: number;
   onSelect: () => void;
 }) {
+  const t = useTranslations("appointments");
   const needsReview = appointmentNeedsReview(appointment, nowMs);
 
   return (
@@ -42,7 +45,7 @@ export function AppointmentListRow({
       onClick={onSelect}
       aria-current={selected || undefined}
       className={cn(
-        "flex w-full flex-col gap-1 rounded-xl border px-3 py-3 text-left outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "flex w-full flex-col gap-1 rounded-xl border px-3 py-3 text-start outline-none transition-colors focus-visible:border-ring focus-visible:ring-[3px] focus-visible:ring-ring/50",
         selected
           ? "border-primary/40 bg-primary/[0.07]"
           : needsReview
@@ -69,10 +72,10 @@ export function AppointmentListRow({
       {/* Assignee + status */}
       <div className="flex w-full items-center gap-2">
         {appointment.source === "agent_call" && (
-          <BotIcon aria-label="Booked by AI on a call" className="size-4 shrink-0 text-muted-foreground" />
+          <BotIcon aria-label={t("row.bookedByAi")} className="size-4 shrink-0 text-muted-foreground" />
         )}
         <span className="min-w-0 flex-1 truncate text-[13px] font-medium text-cta">
-          {appointment.member?.name ?? "Unassigned"}
+          {appointment.member?.name ?? t("unassigned")}
         </span>
         <span className="flex shrink-0 items-center gap-1.5">
           {needsReview && <NeedsReviewBadge />}

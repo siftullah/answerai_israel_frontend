@@ -12,6 +12,7 @@ import {
   WrenchIcon,
   type LucideIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useBusiness, useModuleEnabled } from "@/components/business/business-provider";
@@ -34,15 +35,16 @@ const TONE: Record<Tone, string> = {
 
 interface AttentionItem {
   key: string;
-  count: number;
-  label: string;
+  /** Pluralized message with the count wrapped in <num> for emphasis. */
+  label: React.ReactNode;
   href: string;
   icon: LucideIcon;
   tone: Tone;
 }
 
-function plural(count: number, noun: string): string {
-  return `${noun}${count === 1 ? "" : "s"}`;
+/** Renderer for the <num> tag: the bold count leading each row. */
+function emphasizeCount(chunks: React.ReactNode) {
+  return <span className="font-semibold tabular-nums">{chunks}</span>;
 }
 
 /**
@@ -50,6 +52,7 @@ function plural(count: number, noun: string): string {
  * problems first. Rows only exist for enabled modules with a non-zero count.
  */
 export function NeedsAttentionCard({ className }: { className?: string }) {
+  const t = useTranslations("dashboard.needsAttention");
   const { business } = useBusiness();
   const base = `/b/${business.id}`;
 
@@ -81,8 +84,10 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (callbacks.data && callbacks.data.overdue > 0) {
     items.push({
       key: "callbacks-overdue",
-      count: callbacks.data.overdue,
-      label: `${plural(callbacks.data.overdue, "callback")} overdue`,
+      label: t.rich("callbacksOverdue", {
+        count: callbacks.data.overdue,
+        num: emphasizeCount,
+      }),
       href: `${base}/calls/callbacks`,
       icon: AlarmClockIcon,
       tone: "destructive",
@@ -91,8 +96,11 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (invoices.data && invoices.data.overdue > 0) {
     items.push({
       key: "invoices-overdue",
-      count: invoices.data.overdue,
-      label: `${plural(invoices.data.overdue, "invoice")} overdue · ${formatCents(invoices.data.overdue_cents)}`,
+      label: t.rich("invoicesOverdue", {
+        count: invoices.data.overdue,
+        amount: formatCents(invoices.data.overdue_cents),
+        num: emphasizeCount,
+      }),
       href: `${base}/invoices`,
       icon: ReceiptTextIcon,
       tone: "destructive",
@@ -101,8 +109,10 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (jobs.data && jobs.data.high_priority_active > 0) {
     items.push({
       key: "jobs-high",
-      count: jobs.data.high_priority_active,
-      label: `high-priority ${plural(jobs.data.high_priority_active, "job")} open`,
+      label: t.rich("jobsHighPriority", {
+        count: jobs.data.high_priority_active,
+        num: emphasizeCount,
+      }),
       href: `${base}/jobs`,
       icon: WrenchIcon,
       tone: "destructive",
@@ -111,8 +121,10 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (appointments.data && appointments.data.needs_review > 0) {
     items.push({
       key: "appointments-review",
-      count: appointments.data.needs_review,
-      label: `${plural(appointments.data.needs_review, "appointment")} to review`,
+      label: t.rich("appointmentsToReview", {
+        count: appointments.data.needs_review,
+        num: emphasizeCount,
+      }),
       href: `${base}/appointments`,
       icon: CalendarClockIcon,
       tone: "warning",
@@ -121,8 +133,10 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (quotes.data && quotes.data.expiring_soon > 0) {
     items.push({
       key: "quotes-expiring",
-      count: quotes.data.expiring_soon,
-      label: `${plural(quotes.data.expiring_soon, "quote")} expiring soon`,
+      label: t.rich("quotesExpiring", {
+        count: quotes.data.expiring_soon,
+        num: emphasizeCount,
+      }),
       href: `${base}/quotes`,
       icon: FileTextIcon,
       tone: "warning",
@@ -131,8 +145,7 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (leads.data && leads.data.new > 0) {
     items.push({
       key: "leads-new",
-      count: leads.data.new,
-      label: `new ${plural(leads.data.new, "lead")} to action`,
+      label: t.rich("leadsNew", { count: leads.data.new, num: emphasizeCount }),
       href: `${base}/leads`,
       icon: TargetIcon,
       tone: "info",
@@ -141,8 +154,10 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   if (callbacks.data && callbacks.data.due_today > 0) {
     items.push({
       key: "callbacks-today",
-      count: callbacks.data.due_today,
-      label: `${plural(callbacks.data.due_today, "callback")} due today`,
+      label: t.rich("callbacksDueToday", {
+        count: callbacks.data.due_today,
+        num: emphasizeCount,
+      }),
       href: `${base}/calls/callbacks`,
       icon: AlarmClockIcon,
       tone: "info",
@@ -152,8 +167,8 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
   return (
     <Card className={cn("h-full", className)}>
       <CardHeader>
-        <CardTitle>Needs attention</CardTitle>
-        <CardDescription>Where a human makes the difference</CardDescription>
+        <CardTitle>{t("title")}</CardTitle>
+        <CardDescription>{t("description")}</CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col">
         {loading ? (
@@ -168,10 +183,8 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
               <CircleCheckBigIcon className="size-5" />
             </span>
             <div>
-              <p className="text-sm font-medium">All clear</p>
-              <p className="text-xs text-muted-foreground">
-                Nothing needs your attention right now.
-              </p>
+              <p className="text-sm font-medium">{t("allClear")}</p>
+              <p className="text-xs text-muted-foreground">{t("allClearDescription")}</p>
             </div>
           </div>
         ) : (
@@ -190,11 +203,8 @@ export function NeedsAttentionCard({ className }: { className?: string }) {
                 >
                   <item.icon className="size-4" />
                 </span>
-                <span className="min-w-0 truncate text-sm">
-                  <span className="font-semibold tabular-nums">{item.count}</span>{" "}
-                  {item.label}
-                </span>
-                <ChevronRightIcon className="ml-auto size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5" />
+                <span className="min-w-0 truncate text-sm">{item.label}</span>
+                <ChevronRightIcon className="ms-auto size-4 shrink-0 text-muted-foreground transition-transform group-hover:translate-x-0.5 rtl:-scale-x-100 rtl:group-hover:-translate-x-0.5" />
               </Link>
             ))}
           </div>

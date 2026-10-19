@@ -2,62 +2,66 @@ import { z } from "zod";
 import type { BusinessProfile, UpdateBusinessProfilePayload } from "@/lib/api/types";
 import { SOCIAL_KEYS } from "@/lib/api/types";
 import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
+import type { Translator } from "@/lib/i18n/types";
 
 const CURRENT_YEAR = new Date().getFullYear();
 
-const optionalEmail = z.union([z.literal(""), z.email("Enter a valid email address")]);
-const socialUrl = z.union([
-  z.literal(""),
-  z.url("Enter a full URL, including https://").max(500, "Keep the URL under 500 characters"),
-]);
-
 /**
  * Form-facing schema: text inputs hold "" for unset values (the payload
- * builder converts to null), numeric inputs hold strings.
+ * builder converts to null), numeric inputs hold strings. `t` is a
+ * translator scoped to the `validation` namespace.
  */
-export const businessProfileSchema = z.object({
-  public_email: optionalEmail,
-  // Loose AU shape gate; the backend's Phone rule stays the authority.
-  public_phone: optionalAuPhoneField(),
-  website: z.union([
+export function businessProfileSchema(t: Translator) {
+  const optionalEmail = z.union([z.literal(""), z.email(t("common.emailInvalid"))]);
+  const socialUrl = z.union([
     z.literal(""),
-    z.url("Enter a full URL, including https://").max(2000, "Keep the URL under 2,000 characters"),
-  ]),
-  country: z.string(),
-  currency: z.string(),
-  description: z.string().max(5000, "Keep the description under 5,000 characters"),
-  categories: z
-    .array(z.string().min(1).max(60, "Each category must be 60 characters or fewer"))
-    .max(10, "Up to 10 categories"),
-  year_founded: z
-    .string()
-    .refine(
-      (v) => v === "" || (/^\d{4}$/.test(v) && Number(v) >= 1800 && Number(v) <= CURRENT_YEAR),
-      `Enter a year between 1800 and ${CURRENT_YEAR}`
-    ),
-  socials: z.object({
-    facebook: socialUrl,
-    instagram: socialUrl,
-    linkedin: socialUrl,
-    tiktok: socialUrl,
-    youtube: socialUrl,
-    x: socialUrl,
-  }),
-  location_type: z.union([z.literal(""), z.enum(["fixed", "mobile", "online"])]),
-  address: z.string().max(500, "Keep the address under 500 characters"),
-  landmark: z.string().max(255, "Keep the landmark under 255 characters"),
-  latitude: z.number().nullable(),
-  longitude: z.number().nullable(),
-  base_location: z.string().max(500, "Keep the base location under 500 characters"),
-  travel_radius_km: z
-    .string()
-    .refine(
-      (v) => v === "" || (/^\d+$/.test(v) && Number(v) >= 1 && Number(v) <= 1000),
-      "Enter a distance between 1 and 1000 km"
-    ),
-});
+    z.url(t("common.urlInvalid")).max(500, t("length.url", { max: 500 })),
+  ]);
 
-export type BusinessProfileValues = z.infer<typeof businessProfileSchema>;
+  return z.object({
+    public_email: optionalEmail,
+    // Loose AU shape gate; the backend's Phone rule stays the authority.
+    public_phone: optionalAuPhoneField(t),
+    website: z.union([
+      z.literal(""),
+      z.url(t("common.urlInvalid")).max(2000, t("length.url", { max: 2000 })),
+    ]),
+    country: z.string(),
+    currency: z.string(),
+    description: z.string().max(5000, t("length.description", { max: 5000 })),
+    categories: z
+      .array(z.string().min(1).max(60, t("length.category", { max: 60 })))
+      .max(10, t("count.categories", { max: 10 })),
+    year_founded: z
+      .string()
+      .refine(
+        (v) => v === "" || (/^\d{4}$/.test(v) && Number(v) >= 1800 && Number(v) <= CURRENT_YEAR),
+        t("businessProfile.yearRange", { min: 1800, max: CURRENT_YEAR })
+      ),
+    socials: z.object({
+      facebook: socialUrl,
+      instagram: socialUrl,
+      linkedin: socialUrl,
+      tiktok: socialUrl,
+      youtube: socialUrl,
+      x: socialUrl,
+    }),
+    location_type: z.union([z.literal(""), z.enum(["fixed", "mobile", "online"])]),
+    address: z.string().max(500, t("length.address", { max: 500 })),
+    landmark: z.string().max(255, t("length.landmark", { max: 255 })),
+    latitude: z.number().nullable(),
+    longitude: z.number().nullable(),
+    base_location: z.string().max(500, t("length.baseLocation", { max: 500 })),
+    travel_radius_km: z
+      .string()
+      .refine(
+        (v) => v === "" || (/^\d+$/.test(v) && Number(v) >= 1 && Number(v) <= 1000),
+        t("businessProfile.travelRadiusRange", { min: 1, max: 1000 })
+      ),
+  });
+}
+
+export type BusinessProfileValues = z.infer<ReturnType<typeof businessProfileSchema>>;
 
 export function toBusinessProfileValues(profile: BusinessProfile): BusinessProfileValues {
   return {

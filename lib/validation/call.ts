@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { PhoneNumber, PlaceCallPayload } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { auPhoneField, normalizeAuPhone } from "@/lib/phone";
 
 /**
@@ -16,28 +17,30 @@ export function callablePhoneNumbers(numbers: PhoneNumber[] | undefined): PhoneN
 /**
  * Loose AU shape check only — the backend's Phone rule is the validation
  * authority; its 422 lands on `to_number` via applyServerErrors. The payload
- * mapper canonicalizes to +61 E.164.
+ * mapper canonicalizes to +61 E.164. `t` is scoped to the `validation` namespace.
  */
-export const placeCallSchema = z.object({
-  agent_id: z.string().min(1, "Choose an agent to make the call"),
-  from_phone_number_id: z.string().min(1, "Choose a number to call from"),
-  to_number: auPhoneField("Enter the number to call"),
-  /** Carried through when the call starts from a contact; never rendered. */
-  contact_id: z.string().optional(),
-  /**
-   * One pair per variable the chosen agent declares, prefilled with its default.
-   * Every value must be given: the backend rejects a blank one rather than falling
-   * back. Pairs, not a record — RHF paths with user-authored keys are fragile.
-   */
-  dynamic_variables: z.array(
-    z.object({
-      name: z.string(),
-      value: z.string().trim().min(1, "Enter a value for this variable"),
-    })
-  ),
-});
+export function placeCallSchema(t: Translator) {
+  return z.object({
+    agent_id: z.string().min(1, t("call.agentRequired")),
+    from_phone_number_id: z.string().min(1, t("common.fromNumberRequired")),
+    to_number: auPhoneField(t, t("call.toNumberRequired")),
+    /** Carried through when the call starts from a contact; never rendered. */
+    contact_id: z.string().optional(),
+    /**
+     * One pair per variable the chosen agent declares, prefilled with its default.
+     * Every value must be given: the backend rejects a blank one rather than falling
+     * back. Pairs, not a record — RHF paths with user-authored keys are fragile.
+     */
+    dynamic_variables: z.array(
+      z.object({
+        name: z.string(),
+        value: z.string().trim().min(1, t("call.variableValueRequired")),
+      })
+    ),
+  });
+}
 
-export type PlaceCallValues = z.infer<typeof placeCallSchema>;
+export type PlaceCallValues = z.infer<ReturnType<typeof placeCallSchema>>;
 
 export function defaultPlaceCallValues(
   overrides: Partial<PlaceCallValues> = {}

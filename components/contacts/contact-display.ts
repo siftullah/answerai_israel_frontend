@@ -1,4 +1,5 @@
 import type { Contact, ContactPhone } from "@/lib/api/types";
+import { rt } from "@/lib/i18n/runtime";
 import { formatE164 } from "@/lib/phone";
 
 export function primaryPhone(contact: Contact): ContactPhone | null {
@@ -13,7 +14,7 @@ export function primaryEmail(contact: Contact): string | null {
 /** Nameless AI-created contacts display as their number. */
 export function contactDisplayName(contact: Contact): string {
   const phone = primaryPhone(contact);
-  return contact.name ?? contact.company ?? (phone ? formatE164(phone.e164) : "Unnamed contact");
+  return contact.name ?? contact.company ?? (phone ? formatE164(phone.e164) : rt("contacts.unnamed"));
 }
 
 /** Initial for the gradient avatar tile; "#" for phone-only contacts. */

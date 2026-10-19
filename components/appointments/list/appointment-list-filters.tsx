@@ -1,6 +1,7 @@
 "use client";
 
 import { ListFilterIcon, XIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -49,7 +50,7 @@ function FilterSelect({
   value,
   options,
   onChange,
-  anyLabel = "Any",
+  anyLabel,
 }: {
   id: string;
   label: string;
@@ -58,7 +59,8 @@ function FilterSelect({
   onChange: (value: string) => void;
   anyLabel?: string;
 }) {
-  const items = [{ value: "", label: anyLabel }, ...options];
+  const t = useTranslations("appointments");
+  const items = [{ value: "", label: anyLabel ?? t("filters.any") }, ...options];
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
@@ -102,6 +104,8 @@ export function AppointmentListFilters({
   onFiltersChange: (filters: AppointmentFilterState) => void;
   members: BusinessMember[] | undefined;
 }) {
+  const t = useTranslations("appointments");
+  const tc = useTranslations("common");
   const set = <K extends keyof AppointmentFilterState>(
     key: K,
     value: AppointmentFilterState[K]
@@ -111,7 +115,7 @@ export function AppointmentListFilters({
   // Assignees must have a linked account — the assignee is the user uuid.
   const assignees = (members ?? []).filter((member) => member.has_account && member.user);
   const assigneeOptions = [
-    { value: "unassigned", label: "Unassigned" },
+    { value: "unassigned", label: t("unassigned") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -123,8 +127,9 @@ export function AppointmentListFilters({
       key: "memberId",
       label:
         filters.memberId === "unassigned"
-          ? "Unassigned"
-          : (assignees.find((member) => member.user?.id === filters.memberId)?.name ?? "Assignee"),
+          ? t("unassigned")
+          : (assignees.find((member) => member.user?.id === filters.memberId)?.name ??
+            t("filters.assignee")),
     });
   }
 
@@ -137,8 +142,8 @@ export function AppointmentListFilters({
         <Input
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search contact…"
-          aria-label="Search appointments by contact name"
+          placeholder={t("filters.searchPlaceholder")}
+          aria-label={t("filters.searchLabel")}
         />
         <Popover>
           <PopoverTrigger
@@ -146,21 +151,21 @@ export function AppointmentListFilters({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Filter appointments"
+                aria-label={t("filters.filterLabel")}
                 className="relative shrink-0"
               />
             }
           >
             <ListFilterIcon />
             {chips.length > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-primary" />
+              <span className="absolute -top-0.5 -end-0.5 size-2 rounded-full bg-primary" />
             )}
           </PopoverTrigger>
           <PopoverContent align="end" className="flex w-72 flex-col gap-4">
             {tab !== "needs_review" && (
               <FilterSelect
                 id="appointment-filter-status"
-                label="Status"
+                label={tc("labels.status")}
                 value={filters.status}
                 options={statuses.map((status) => ({
                   value: status,
@@ -171,7 +176,7 @@ export function AppointmentListFilters({
             )}
             <FilterSelect
               id="appointment-filter-source"
-              label="Source"
+              label={t("filters.source")}
               value={filters.source}
               options={APPOINTMENT_SOURCES.map((source) => ({
                 value: source,
@@ -181,11 +186,11 @@ export function AppointmentListFilters({
             />
             <FilterSelect
               id="appointment-filter-assignee"
-              label="Assignee"
+              label={t("filters.assignee")}
               value={filters.memberId}
               options={assigneeOptions}
               onChange={(value) => set("memberId", value)}
-              anyLabel="Everyone"
+              anyLabel={t("filters.everyone")}
             />
           </PopoverContent>
         </Popover>
@@ -194,12 +199,12 @@ export function AppointmentListFilters({
       {chips.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
           {chips.map((chip) => (
-            <Badge key={chip.key} variant="outline" className="h-6 gap-1 pr-1">
+            <Badge key={chip.key} variant="outline" className="h-6 gap-1 pe-1">
               {chip.label}
               <button
                 type="button"
                 onClick={() => clear(chip.key)}
-                aria-label={`Remove ${chip.label} filter`}
+                aria-label={t("filters.removeFilter", { label: chip.label })}
                 className="rounded-full p-0.5 hover:bg-muted"
               >
                 <XIcon className="size-3" />
@@ -212,7 +217,7 @@ export function AppointmentListFilters({
             className="h-6 px-2 text-xs"
             onClick={() => onFiltersChange(EMPTY_APPOINTMENT_FILTERS)}
           >
-            Clear all
+            {t("filters.clearAll")}
           </Button>
         </div>
       )}

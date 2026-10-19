@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "Appointments"
+  },
+  "page": {
+    "title": "Appointments",
+    "description": "Bookings taken by your AI agents and your team.",
+    "openCalendar": "Open calendar",
+    "newAppointment": "New appointment"
+  },
+  "tabs": {
+    "upcoming": "Upcoming",
+    "today": "Today",
+    "needsReview": "Review",
+    "history": "History"
+  },
+  "empty": {
+    "upcoming": {
+      "title": "No upcoming appointments",
+      "description": "Bookings taken by your AI agents — and ones you add yourself — will show up here."
+    },
+    "today": {
+      "title": "Nothing booked today",
+      "description": "Appointments starting today will appear here."
+    },
+    "needsReview": {
+      "title": "Nothing to review",
+      "description": "Open bookings whose time has passed land here until you record an outcome."
+    },
+    "history": {
+      "title": "No appointment history yet",
+      "description": "Completed, canceled and no-show bookings land here."
+    },
+    "noMatch": {
+      "title": "No appointments match",
+      "description": "Try a different search or clear some filters."
+    }
+  },
+  "unassigned": "Unassigned",
+  "list": {
+    "loadError": "Couldn't load appointments"
+  },
+  "row": {
+    "needsReview": "Needs review",
+    "bookedByAi": "Booked by AI on a call"
+  },
+  "filters": {
+    "searchPlaceholder": "Search contact…",
+    "searchLabel": "Search appointments by contact name",
+    "filterLabel": "Filter appointments",
+    "source": "Source",
+    "assignee": "Assignee",
+    "any": "Any",
+    "everyone": "Everyone",
+    "removeFilter": "Remove {label} filter",
+    "clearAll": "Clear all"
+  },
+  "detail": {
+    "back": "All appointments",
+    "noSelection": {
+      "title": "No appointment selected",
+      "description": "Select a booking to see its details."
+    },
+    "notFound": {
+      "title": "Appointment not found",
+      "description": "This appointment doesn't exist or was removed."
+    },
+    "loadError": "Couldn't load this appointment",
+    "meta": {
+      "when": "When",
+      "duration": "{count, plural, one {# minute} other {# minutes}}",
+      "assignee": "Assignee",
+      "source": "Source",
+      "booked": "Booked",
+      "cancelReason": "Cancel reason"
+    },
+    "actions": {
+      "viewContact": "View contact",
+      "viewOnCalendar": "View on calendar",
+      "complete": "Complete",
+      "noShow": "No-show",
+      "reschedule": "Reschedule",
+      "reassign": "Reassign"
+    },
+    "notes": {
+      "title": "Notes",
+      "add": "Add notes",
+      "placeholder": "Anything the team should know",
+      "label": "Appointment notes",
+      "save": "Save notes",
+      "empty": "No notes yet."
+    },
+    "call": {
+      "title": "Booked on a call",
+      "inbound": "Inbound call",
+      "outbound": "Outbound call"
+    }
+  },
+  "toasts": {
+    "notesSaved": "Notes saved",
+    "confirmed": "Appointment confirmed",
+    "completed": "Appointment completed",
+    "noShow": "Marked as no-show"
+  }
+}

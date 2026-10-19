@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useBusiness } from "@/components/business/business-provider";
@@ -9,6 +10,7 @@ import type { AgentSettingsValues } from "@/lib/validation/agent";
 import { cn } from "@/lib/utils";
 
 export function ToolsSection() {
+  const t = useTranslations("agents.sections.tools");
   const { modules } = useBusiness();
   const form = useFormContext<AgentSettingsValues>();
   const { disabled } = form.formState;
@@ -17,11 +19,7 @@ export function ToolsSection() {
   const groups = toolGroups(modules);
 
   return (
-    <AgentSection
-      id="tools"
-      title="Tools"
-      description="Actions the agent can take during a live call."
-    >
+    <AgentSection id="tools" title={t("title")} description={t("description")}>
       <Controller
         control={form.control}
         name="action_tools"
@@ -33,7 +31,7 @@ export function ToolsSection() {
                   <p className="text-sm font-medium">{group.label}</p>
                   {!group.enabled && (
                     <p className="text-sm text-muted-foreground">
-                      Enable the {group.label} module to use these tools.
+                      {t("enableModule", { module: group.label })}
                     </p>
                   )}
                 </div>
@@ -69,14 +67,12 @@ export function ToolsSection() {
                           )}
                           {strandedTool && (
                             <span className="text-sm text-warning">
-                              The {group.label} module is disabled — this tool will be removed
-                              when you save.
+                              {t("stranded", { module: group.label })}
                             </span>
                           )}
                           {tool === "lookup_contact" && purpose === "inbound" && checked && (
                             <span className="text-sm text-muted-foreground">
-                              Has no effect on inbound agents — a caller&apos;s number can
-                              belong to someone else, so inbound calls skip the lookup.
+                              {t("lookupInboundNote")}
                             </span>
                           )}
                         </span>

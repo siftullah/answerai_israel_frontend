@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, XIcon } from "lucide-react";
@@ -76,17 +77,13 @@ function mapItemErrorKey(key: string): string {
   return key.replace(/\.unit_price_cents$/, ".unit_price");
 }
 
-const KIND_ITEMS = LINE_ITEM_KINDS.map((kind) => ({
-  value: kind,
-  label: LINE_ITEM_KIND_LABELS[kind],
-}));
-
-const DEPOSIT_ITEMS = [
-  { value: "none", label: "No deposit" },
-  { value: "percent", label: "Percentage of total" },
-  { value: "fixed", label: "Fixed amount" },
-] as const;
-
+/** Built per render: the kind labels translate on access, so a module-level copy would freeze the locale. */
+function buildKindOptions() {
+  return LINE_ITEM_KINDS.map((kind) => ({
+    value: kind,
+    label: LINE_ITEM_KIND_LABELS[kind],
+  }));
+}
 /** One row of the items grid; mobile stacks description first, then the numbers. */
 const ROW_GRID =
   "md:grid md:grid-cols-[7.5rem_minmax(0,1fr)_4.5rem_7rem_3.25rem_5.5rem_1.75rem] md:items-start md:gap-2";
@@ -102,6 +99,8 @@ function QuoteFormBody({
   onOpenChange: (open: boolean) => void;
   onSaved?: (quote: Quote) => void;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const createQuote = useCreateQuote(business.id);
   const updateQuote = useUpdateQuote(business.id);
@@ -114,8 +113,10 @@ function QuoteFormBody({
     quote?.contact ? contactStub(quote.contact) : null
   );
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => quoteFormSchema(tv), [tv]);
   const form = useForm<QuoteFormValues>({
-    resolver: zodResolver(quoteFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: quote
       ? quoteToFormValues(quote)
       : {
@@ -133,6 +134,12 @@ function QuoteFormBody({
   const depositValue = form.watch("deposit_value");
   const totals = computeQuoteTotals(watchedItems, taxRateBp, depositType, depositValue);
   const taxPercent = taxRateBp / 100;
+  const kindOptions = buildKindOptions();
+  const depositOptions: { value: QuoteFormValues["deposit_type"]; label: string }[] = [
+    { value: "none", label: t("form.deposit.none") },
+    { value: "percent", label: t("form.deposit.percent") },
+    { value: "fixed", label: t("form.deposit.fixed") },
+  ];
 
   const saving = createQuote.isPending || updateQuote.isPending || replaceItems.isPending;
 
@@ -144,7 +151,7 @@ function QuoteFormBody({
           id: quote.id,
           items: toQuoteItemsPayload(values.items),
         });
-        toast.success(`Quote ${updated.number} updated`);
+        toast.success(t("toasts.updated", { number: updated.number }));
         onOpenChange(false);
       } catch (error) {
         applyServerErrors(form, error as Parameters<typeof applyServerErrors>[1], {
@@ -156,7 +163,7 @@ function QuoteFormBody({
 
     createQuote.mutate(toStoreQuotePayload(values), {
       onSuccess: (created) => {
-        toast.success(`Draft ${created.number} created`);
+        toast.success(t("toasts.draftCreated", { number: created.number }));
         onSaved?.(created);
         onOpenChange(false);
       },
@@ -172,7 +179,7 @@ function QuoteFormBody({
         id="quote-form"
         onSubmit={onSubmit}
         noValidate
-        className="scrollbar-slim -mr-2 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-2"
+        className="scrollbar-slim -me-2 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pe-2"
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <Controller
@@ -180,7 +187,7 @@ function QuoteFormBody({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined} className="sm:col-span-2">
-                <FieldLabel htmlFor="quote-contact">Customer</FieldLabel>
+                <FieldLabel htmlFor="quote-contact">{t("labels.customer")}</FieldLabel>
                 <ContactCombobox
                   id="quote-contact"
                   selected={selectedContact}
@@ -203,11 +210,11 @@ function QuoteFormBody({
             data-invalid={!!form.formState.errors.title || undefined}
             className="sm:col-span-2"
           >
-            <FieldLabel htmlFor="quote-title">Title</FieldLabel>
+            <FieldLabel htmlFor="quote-title">{t("form.title")}</FieldLabel>
             <Input
               id="quote-title"
               {...form.register("title")}
-              placeholder="What the quote is for, e.g. Kitchen rewire"
+              placeholder={t("form.titlePlaceholder")}
               aria-invalid={!!form.formState.errors.title}
             />
             {form.formState.errors.title?.message && (
@@ -220,14 +227,14 @@ function QuoteFormBody({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="quote-issue-date">Issue date</FieldLabel>
+                <FieldLabel htmlFor="quote-issue-date">{t("form.issueDate")}</FieldLabel>
                 <DatePicker
                   id="quote-issue-date"
                   ref={field.ref}
                   value={field.value}
                   onChange={field.onChange}
                   clearable
-                  placeholder="Set on send"
+                  placeholder={t("labels.setOnSend")}
                   invalid={!!fieldState.error}
                 />
                 {fieldState.error?.message && (
@@ -242,21 +249,21 @@ function QuoteFormBody({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="quote-valid-until">Valid until</FieldLabel>
+                <FieldLabel htmlFor="quote-valid-until">{t("labels.validUntil")}</FieldLabel>
                 <DatePicker
                   id="quote-valid-until"
                   ref={field.ref}
                   value={field.value}
                   onChange={field.onChange}
                   clearable
-                  placeholder="Set on send"
+                  placeholder={t("labels.setOnSend")}
                   invalid={!!fieldState.error}
                 />
                 {fieldState.error?.message ? (
                   <FieldError>{fieldState.error.message}</FieldError>
                 ) : (
                   <FieldDescription>
-                    Left blank, sending sets it {settings.valid_days} days after the issue date.
+                    {t("form.validUntilHint", { days: settings.valid_days })}
                   </FieldDescription>
                 )}
               </Field>
@@ -267,7 +274,7 @@ function QuoteFormBody({
         {/* Line items */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Line items</span>
+            <span className="text-sm font-medium">{t("labels.lineItems")}</span>
             <Button
               type="button"
               variant="outline"
@@ -275,18 +282,18 @@ function QuoteFormBody({
               onClick={() => itemsArray.append(emptyQuoteItem())}
             >
               <PlusIcon />
-              Add line
+              {t("form.addLine")}
             </Button>
           </div>
 
           {/* Column labels (desktop) */}
           <div className={`hidden text-xs text-muted-foreground ${ROW_GRID}`}>
-            <span>Type</span>
-            <span>Description</span>
-            <span className="text-right">Qty</span>
-            <span className="text-right">Unit price</span>
+            <span>{t("labels.type")}</span>
+            <span>{tc("labels.description")}</span>
+            <span className="text-end">{t("labels.qty")}</span>
+            <span className="text-end">{t("labels.unitPrice")}</span>
             <span className="text-center">{taxLabel}</span>
-            <span className="text-right">Amount</span>
+            <span className="text-end">{t("labels.amount")}</span>
             <span />
           </div>
 
@@ -308,8 +315,8 @@ function QuoteFormBody({
                   <div className="md:order-2">
                     <Input
                       {...form.register(`items.${index}.description`)}
-                      placeholder="What will be done or supplied"
-                      aria-label={`Line ${index + 1} description`}
+                      placeholder={t("form.descriptionPlaceholder")}
+                      aria-label={t("form.lineDescription", { line: index + 1 })}
                       aria-invalid={!!rowErrors?.description}
                     />
                     {rowErrors?.description?.message && (
@@ -325,7 +332,7 @@ function QuoteFormBody({
                       control={form.control}
                       render={({ field }) => (
                         <Select
-                          items={KIND_ITEMS}
+                          items={kindOptions}
                           value={field.value}
                           onValueChange={(value) =>
                             field.onChange((value as LineItemKind | null) ?? "labour")
@@ -333,12 +340,12 @@ function QuoteFormBody({
                         >
                           <SelectTrigger
                             className="w-full"
-                            aria-label={`Line ${index + 1} type`}
+                            aria-label={t("form.lineType", { line: index + 1 })}
                           >
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {KIND_ITEMS.map((item) => (
+                            {kindOptions.map((item) => (
                               <SelectItem key={item.value} value={item.value}>
                                 {item.label}
                               </SelectItem>
@@ -354,8 +361,8 @@ function QuoteFormBody({
                       <Input
                         {...form.register(`items.${index}.quantity`)}
                         inputMode="decimal"
-                        className="text-right"
-                        aria-label={`Line ${index + 1} quantity`}
+                        className="text-end"
+                        aria-label={t("form.lineQuantity", { line: index + 1 })}
                         aria-invalid={!!rowErrors?.quantity}
                       />
                       {rowErrors?.quantity?.message && (
@@ -370,8 +377,8 @@ function QuoteFormBody({
                         {...form.register(`items.${index}.unit_price`)}
                         inputMode="decimal"
                         placeholder="0.00"
-                        className="text-right"
-                        aria-label={`Line ${index + 1} unit price in dollars`}
+                        className="text-end"
+                        aria-label={t("form.lineUnitPrice", { line: index + 1 })}
                         aria-invalid={!!rowErrors?.unit_price}
                       />
                       {rowErrors?.unit_price?.message && (
@@ -389,16 +396,16 @@ function QuoteFormBody({
                           <Checkbox
                             checked={field.value}
                             onCheckedChange={(checked) => field.onChange(checked === true)}
-                            aria-label={`Line ${index + 1} attracts ${taxLabel}`}
+                            aria-label={t("form.lineTax", { line: index + 1, tax: taxLabel })}
                           />
-                          <span className="ml-1.5 text-xs text-muted-foreground md:hidden">
+                          <span className="ms-1.5 text-xs text-muted-foreground md:hidden">
                             {taxLabel}
                           </span>
                         </div>
                       )}
                     />
 
-                    <span className="ml-auto flex h-9 items-center text-sm font-medium tabular-nums md:order-6 md:ml-0 md:justify-end">
+                    <span className="ms-auto flex h-9 items-center text-sm font-medium tabular-nums md:order-6 md:ms-0 md:justify-end">
                       {amount !== null ? formatCents(amount) : "—"}
                     </span>
 
@@ -410,7 +417,7 @@ function QuoteFormBody({
                         className="size-9 text-muted-foreground hover:text-destructive"
                         disabled={itemsArray.fields.length === 1}
                         onClick={() => itemsArray.remove(index)}
-                        aria-label={`Remove line ${index + 1}`}
+                        aria-label={t("form.removeLine", { line: index + 1 })}
                       >
                         <XIcon />
                       </Button>
@@ -436,9 +443,9 @@ function QuoteFormBody({
             control={form.control}
             render={({ field }) => (
               <Field>
-                <FieldLabel htmlFor="quote-deposit-type">Deposit</FieldLabel>
+                <FieldLabel htmlFor="quote-deposit-type">{t("labels.deposit")}</FieldLabel>
                 <Select
-                  items={[...DEPOSIT_ITEMS]}
+                  items={depositOptions}
                   value={field.value}
                   onValueChange={(value) => {
                     field.onChange((value as QuoteFormValues["deposit_type"] | null) ?? "none");
@@ -450,7 +457,7 @@ function QuoteFormBody({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {DEPOSIT_ITEMS.map((item) => (
+                    {depositOptions.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>
@@ -464,7 +471,9 @@ function QuoteFormBody({
           {depositType !== "none" && (
             <Field data-invalid={!!form.formState.errors.deposit_value || undefined}>
               <FieldLabel htmlFor="quote-deposit-value">
-                {depositType === "percent" ? "Deposit percentage" : "Deposit amount"}
+                {depositType === "percent"
+                  ? t("form.deposit.percentLabel")
+                  : t("form.deposit.amountLabel")}
               </FieldLabel>
               <Input
                 id="quote-deposit-value"
@@ -478,8 +487,8 @@ function QuoteFormBody({
               ) : (
                 <FieldDescription>
                   {depositType === "percent"
-                    ? "Whole percent of the quote total."
-                    : "Dollar amount payable to commence."}
+                    ? t("form.deposit.percentHint")
+                    : t("form.deposit.amountHint")}
                 </FieldDescription>
               )}
             </Field>
@@ -487,12 +496,12 @@ function QuoteFormBody({
         </div>
 
         <Field data-invalid={!!form.formState.errors.notes || undefined}>
-          <FieldLabel htmlFor="quote-notes">Notes</FieldLabel>
+          <FieldLabel htmlFor="quote-notes">{tc("labels.notes")}</FieldLabel>
           <Textarea
             id="quote-notes"
             {...form.register("notes")}
             rows={2}
-            placeholder="Shown to the customer on the quote (optional)"
+            placeholder={t("form.notesPlaceholder")}
             aria-invalid={!!form.formState.errors.notes}
           />
           {form.formState.errors.notes?.message && (
@@ -501,12 +510,12 @@ function QuoteFormBody({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.terms || undefined}>
-          <FieldLabel htmlFor="quote-terms">Terms</FieldLabel>
+          <FieldLabel htmlFor="quote-terms">{t("labels.terms")}</FieldLabel>
           <Textarea
             id="quote-terms"
             {...form.register("terms")}
             rows={3}
-            placeholder="Scope of work, exclusions, payment terms…"
+            placeholder={t("form.termsPlaceholder")}
             aria-invalid={!!form.formState.errors.terms}
           />
           {form.formState.errors.terms?.message && (
@@ -515,12 +524,12 @@ function QuoteFormBody({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.internal_notes || undefined}>
-          <FieldLabel htmlFor="quote-internal-notes">Internal notes</FieldLabel>
+          <FieldLabel htmlFor="quote-internal-notes">{t("labels.internalNotes")}</FieldLabel>
           <Textarea
             id="quote-internal-notes"
             {...form.register("internal_notes")}
             rows={2}
-            placeholder="Pricing workings, call details — never shown to the customer"
+            placeholder={t("form.internalNotesPlaceholder")}
             aria-invalid={!!form.formState.errors.internal_notes}
           />
           {form.formState.errors.internal_notes?.message && (
@@ -533,22 +542,22 @@ function QuoteFormBody({
       <div className="flex justify-end border-t border-border pt-3">
         <dl className="flex w-64 flex-col gap-1 text-sm">
           <div className="flex justify-between">
-            <dt className="text-muted-foreground">Subtotal</dt>
+            <dt className="text-muted-foreground">{tc("labels.subtotal")}</dt>
             <dd className="tabular-nums">{formatCents(totals.subtotal_cents)}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-muted-foreground">
-              {taxLabel} ({taxPercent}%)
+              {t("labels.taxLine", { label: taxLabel, rate: taxPercent })}
             </dt>
             <dd className="tabular-nums">{formatCents(totals.tax_cents)}</dd>
           </div>
           <div className="flex justify-between text-base font-semibold">
-            <dt>Total</dt>
+            <dt>{tc("labels.total")}</dt>
             <dd className="tabular-nums">{formatCents(totals.total_cents)}</dd>
           </div>
           {totals.deposit_cents > 0 && (
             <div className="flex justify-between text-xs text-muted-foreground">
-              <dt>Deposit to commence</dt>
+              <dt>{t("form.deposit.toCommence")}</dt>
               <dd className="tabular-nums">{formatCents(totals.deposit_cents)}</dd>
             </div>
           )}
@@ -563,10 +572,14 @@ function QuoteFormBody({
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-          Cancel
+          {tc("actions.cancel")}
         </Button>
         <Button type="submit" form="quote-form" disabled={saving}>
-          {saving ? "Saving…" : editing ? "Save changes" : "Create draft"}
+          {saving
+            ? tc("actions.saving")
+            : editing
+              ? tc("actions.saveChanges")
+              : t("actions.createDraft")}
         </Button>
       </DialogFooter>
     </>
@@ -590,6 +603,7 @@ export function QuoteFormDialog({
   quote?: Quote;
   onSaved?: (quote: Quote) => void;
 }) {
+  const t = useTranslations("quotes");
   const { business } = useBusiness();
   const settingsQuery = useModuleSettings<QuoteModuleSettings>(business.id, "quotes");
 
@@ -597,11 +611,11 @@ export function QuoteFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>{quote ? `Edit quote ${quote.number}` : "New quote"}</DialogTitle>
+          <DialogTitle>
+            {quote ? t("form.editTitle", { number: quote.number }) : t("newQuote")}
+          </DialogTitle>
           <DialogDescription>
-            {quote
-              ? "Drafts stay editable until you send them."
-              : "Price up the work, then send it for the customer to accept."}
+            {quote ? t("form.editDescription") : t("form.newDescription")}
           </DialogDescription>
         </DialogHeader>
 

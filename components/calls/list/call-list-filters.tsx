@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ListFilterIcon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { useCallStatusLabels } from "@/components/calls/call-status-badge";
 import type { Agent, CallDirection, CallStatus, PhoneNumber } from "@/lib/api/types";
 import { formatE164 } from "@/lib/phone";
 
@@ -53,23 +55,7 @@ const OUTBOUND_STATUSES: readonly CallStatus[] = [
   "canceled",
 ];
 
-const STATUS_LABELS: Record<CallStatus, string> = {
-  queued: "Queued",
-  initiating: "Initiating",
-  ringing: "Ringing",
-  in_progress: "In progress",
-  completed: "Completed",
-  busy: "Busy",
-  no_answer: "No answer",
-  failed: "Failed",
-  canceled: "Canceled",
-};
-
-const DATE_LABELS: Record<Exclude<DatePreset, "">, string> = {
-  today: "Today",
-  "7d": "Last 7 days",
-  "30d": "Last 30 days",
-};
+const DATE_PRESETS = ["today", "7d", "30d"] as const;
 
 function FilterSelect({
   id,
@@ -77,17 +63,19 @@ function FilterSelect({
   value,
   options,
   onChange,
-  anyLabel = "Any",
+  anyLabel,
 }: {
   id: string;
   label: string;
   value: string;
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
-  /** null = no "Any" option (for always-set values like sort). */
+  /** Omit for the default "Any"; null = no "Any" option (for always-set values like sort). */
   anyLabel?: string | null;
 }) {
-  const items = anyLabel === null ? options : [{ value: "", label: anyLabel }, ...options];
+  const t = useTranslations("calls.filters");
+  const items =
+    anyLabel === null ? options : [{ value: "", label: anyLabel ?? t("any") }, ...options];
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
@@ -132,29 +120,38 @@ export function CallListFilters({
   agents: Agent[] | undefined;
   numbers: PhoneNumber[] | undefined;
 }) {
+  const t = useTranslations("calls");
+  const tc = useTranslations("common");
+  const statusLabels = useCallStatusLabels();
+  const dateLabel = (preset: Exclude<DatePreset, "">) =>
+    preset === "today"
+      ? t("filters.today")
+      : t("filters.lastDays", { count: preset === "7d" ? 7 : 30 });
+
   const set = <K extends keyof CallFilterState>(key: K, value: CallFilterState[K]) =>
     onFiltersChange({ ...filters, [key]: value });
 
   const statuses = direction === "inbound" ? INBOUND_STATUSES : OUTBOUND_STATUSES;
 
   const chips: { key: keyof CallFilterState; label: string }[] = [];
-  if (filters.status) chips.push({ key: "status", label: STATUS_LABELS[filters.status] });
+  if (filters.status) chips.push({ key: "status", label: statusLabels[filters.status] });
   if (filters.agentId) {
     chips.push({
       key: "agentId",
-      label: agents?.find((agent) => agent.id === filters.agentId)?.name ?? "Agent",
+      label: agents?.find((agent) => agent.id === filters.agentId)?.name ?? t("labels.agent"),
     });
   }
   if (filters.phoneNumberId) {
     chips.push({
       key: "phoneNumberId",
       label:
-        numbers?.find((number) => number.id === filters.phoneNumberId)?.friendly_name ?? "Number",
+        numbers?.find((number) => number.id === filters.phoneNumberId)?.friendly_name ??
+        t("filters.numberFallback"),
     });
   }
-  if (filters.hasRecording) chips.push({ key: "hasRecording", label: "Has recording" });
-  if (filters.datePreset) chips.push({ key: "datePreset", label: DATE_LABELS[filters.datePreset] });
-  if (filters.sort === "oldest") chips.push({ key: "sort", label: "Oldest first" });
+  if (filters.hasRecording) chips.push({ key: "hasRecording", label: t("filters.hasRecording") });
+  if (filters.datePreset) chips.push({ key: "datePreset", label: dateLabel(filters.datePreset) });
+  if (filters.sort === "oldest") chips.push({ key: "sort", label: t("filters.oldestFirst") });
 
   const clear = (key: keyof CallFilterState) =>
     onFiltersChange({ ...filters, [key]: EMPTY_CALL_FILTERS[key] } as CallFilterState);
@@ -165,8 +162,8 @@ export function CallListFilters({
         <Input
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search name, number or words said…"
-          aria-label="Search calls by name, number, summary or transcript"
+          placeholder={t("filters.searchPlaceholder")}
+          aria-label={t("filters.searchAriaLabel")}
         />
         <Popover>
           <PopoverTrigger
@@ -174,45 +171,45 @@ export function CallListFilters({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Filter and sort calls"
+                aria-label={t("filters.filterAriaLabel")}
                 className="relative shrink-0"
               />
             }
           >
             <ListFilterIcon />
             {chips.length > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-primary" />
+              <span className="absolute -top-0.5 -end-0.5 size-2 rounded-full bg-primary" />
             )}
           </PopoverTrigger>
           <PopoverContent align="end" className="flex w-72 flex-col gap-4">
             <FilterSelect
               id="call-filter-sort"
-              label="Sort by date"
+              label={t("filters.sortByDate")}
               value={filters.sort}
               anyLabel={null}
               options={[
-                { value: "newest", label: "Newest first" },
-                { value: "oldest", label: "Oldest first" },
+                { value: "newest", label: t("filters.newestFirst") },
+                { value: "oldest", label: t("filters.oldestFirst") },
               ]}
               onChange={(value) => set("sort", (value || "newest") as SortOrder)}
             />
             <FilterSelect
               id="call-filter-status"
-              label="Status"
+              label={tc("labels.status")}
               value={filters.status}
-              options={statuses.map((status) => ({ value: status, label: STATUS_LABELS[status] }))}
+              options={statuses.map((status) => ({ value: status, label: statusLabels[status] }))}
               onChange={(value) => set("status", value as CallStatus | "")}
             />
             <FilterSelect
               id="call-filter-agent"
-              label="Agent"
+              label={t("labels.agent")}
               value={filters.agentId}
               options={(agents ?? []).map((agent) => ({ value: agent.id, label: agent.name }))}
               onChange={(value) => set("agentId", value)}
             />
             <FilterSelect
               id="call-filter-number"
-              label="Phone number"
+              label={t("filters.phoneNumber")}
               value={filters.phoneNumberId}
               options={(numbers ?? []).map((number) => ({
                 value: number.id,
@@ -222,16 +219,16 @@ export function CallListFilters({
             />
             <FilterSelect
               id="call-filter-date"
-              label="Period"
+              label={t("filters.period")}
               value={filters.datePreset}
-              options={(["today", "7d", "30d"] as const).map((preset) => ({
+              options={DATE_PRESETS.map((preset) => ({
                 value: preset,
-                label: DATE_LABELS[preset],
+                label: dateLabel(preset),
               }))}
               onChange={(value) => set("datePreset", value as DatePreset)}
             />
             <div className="flex items-center justify-between gap-2">
-              <Label htmlFor="call-filter-recording">Has recording</Label>
+              <Label htmlFor="call-filter-recording">{t("filters.hasRecording")}</Label>
               <Switch
                 id="call-filter-recording"
                 checked={filters.hasRecording}
@@ -245,12 +242,12 @@ export function CallListFilters({
       {chips.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
           {chips.map((chip) => (
-            <Badge key={chip.key} variant="outline" className="h-6 gap-1 pr-1">
+            <Badge key={chip.key} variant="outline" className="h-6 gap-1 pe-1">
               {chip.label}
               <button
                 type="button"
                 onClick={() => clear(chip.key)}
-                aria-label={`Remove ${chip.label} filter`}
+                aria-label={t("filters.removeFilter", { label: chip.label })}
                 className="rounded-full p-0.5 hover:bg-muted"
               >
                 <XIcon className="size-3" />
@@ -263,7 +260,7 @@ export function CallListFilters({
             className="h-6 px-2 text-xs"
             onClick={() => onFiltersChange(EMPTY_CALL_FILTERS)}
           >
-            Clear all
+            {t("filters.clearAll")}
           </Button>
         </div>
       )}

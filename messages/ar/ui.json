@@ -1,0 +1,53 @@
+{
+  "breadcrumb": {
+    "label": "مسار التنقل"
+  },
+  "sidebar": {
+    "title": "الشريط الجانبي",
+    "description": "يعرض الشريط الجانبي على الجوّال.",
+    "toggle": "إظهار أو إخفاء الشريط الجانبي"
+  },
+  "command": {
+    "title": "لوحة الأوامر",
+    "description": "ابحث عن أمر لتنفيذه…"
+  },
+  "datePicker": {
+    "placeholder": "اختر تاريخًا",
+    "clear": "مسح التاريخ"
+  },
+  "calendar": {
+    "nextMonth": "انتقل إلى الشهر التالي",
+    "previousMonth": "انتقل إلى الشهر السابق",
+    "chooseMonth": "اختر الشهر",
+    "chooseYear": "اختر السنة",
+    "weekNumberHeader": "رقم الأسبوع",
+    "weekNumber": "الأسبوع {number}",
+    "dayToday": "اليوم، {date}",
+    "daySelected": "{date}، محدد",
+    "dayTodaySelected": "اليوم، {date}، محدد"
+  },
+  "chipInput": {
+    "limitReached": "تم بلوغ الحد الأقصى",
+    "remove": "إزالة {item}"
+  },
+  "spinner": {
+    "loading": "جارٍ التحميل"
+  },
+  "passwordInput": {
+    "show": "إظهار كلمة المرور",
+    "hide": "إخفاء كلمة المرور"
+  },
+  "audioPlayer": {
+    "failed": "تعذر تشغيل التسجيل. حاول إعادة تحميل الصفحة.",
+    "back": "رجوع 10 ثوانٍ",
+    "forward": "تقديم 10 ثوانٍ",
+    "play": "تشغيل التسجيل",
+    "pause": "إيقاف التسجيل مؤقتًا",
+    "seek": "الانتقال إلى موضع في التسجيل",
+    "speed": "سرعة التشغيل {speed}x",
+    "download": "تنزيل التسجيل"
+  },
+  "unsavedChanges": {
+    "title": "تغييرات غير محفوظة"
+  }
+}

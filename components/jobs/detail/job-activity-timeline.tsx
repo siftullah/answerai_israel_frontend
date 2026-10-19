@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   CalendarClockIcon,
   MessageSquareTextIcon,
@@ -61,6 +62,7 @@ export function JobActivityTimeline({
   jobUuid: string;
   timeZone: string;
 }) {
+  const t = useTranslations("jobs.activity");
   const activitiesQuery = useJobActivities(businessUuid, jobUuid);
   const addNote = useAddJobNote(businessUuid);
   const [note, setNote] = useState("");
@@ -79,15 +81,15 @@ export function JobActivityTimeline({
   };
 
   return (
-    <DetailCard title="Activity" accent>
+    <DetailCard title={t("title")} accent>
       <div className="flex flex-col gap-2">
         <Textarea
           value={note}
           onChange={(event) => setNote(event.target.value)}
           rows={2}
           maxLength={5000}
-          placeholder="Add a note — site access, parts ordered, what was done…"
-          aria-label="Add a note to this job"
+          placeholder={t("notePlaceholder")}
+          aria-label={t("noteLabel")}
         />
         <div className="flex justify-end">
           <Button
@@ -95,7 +97,7 @@ export function JobActivityTimeline({
             onClick={submit}
             disabled={note.trim() === "" || addNote.isPending}
           >
-            {addNote.isPending ? "Adding…" : "Add note"}
+            {addNote.isPending ? t("adding") : t("addNote")}
           </Button>
         </div>
       </div>
@@ -107,14 +109,12 @@ export function JobActivityTimeline({
         </div>
       ) : activitiesQuery.isError ? (
         <ErrorState
-          title="Couldn't load the timeline"
+          title={t("loadError")}
           message={activitiesQuery.error.message}
           onRetry={() => activitiesQuery.refetch()}
         />
       ) : activitiesQuery.data.length === 0 ? (
-        <p className="text-sm text-muted-foreground">
-          Nothing yet — notes, bookings, and status changes will show up here.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-4">
           {activitiesQuery.data.map((activity) => (

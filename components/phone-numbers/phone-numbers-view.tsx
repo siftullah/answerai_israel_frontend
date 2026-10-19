@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import {
   AlertDialog,
@@ -23,6 +24,8 @@ import { SipTrunkTab } from "@/components/phone-numbers/sip-trunk-tab";
 import { useSipConnection } from "@/hooks/use-sip-connection";
 
 export function PhoneNumbersView() {
+  const t = useTranslations("phoneNumbers");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
 
   // Shared with SipTrunkTab via the query cache — no duplicate request.
@@ -44,8 +47,8 @@ export function PhoneNumbersView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Phone numbers"
-        description="The numbers your AI answers on — bought here or brought over your own trunk."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={
           tab === "numbers" ? (
             <>
@@ -55,11 +58,11 @@ export function PhoneNumbersView() {
                 onClick={handleAddSip}
               >
                 <PlusIcon />
-                Add SIP number
+                {t("page.addSipNumber")}
               </Button>
               <Button onClick={() => setBuyOpen(true)}>
                 <PlusIcon />
-                Buy number
+                {t("page.buyNumber")}
               </Button>
             </>
           ) : undefined
@@ -68,8 +71,8 @@ export function PhoneNumbersView() {
 
       <Tabs value={tab} onValueChange={(value) => setTab(value as "numbers" | "sip")}>
         <TabsList>
-          <TabsTrigger value="numbers">Numbers</TabsTrigger>
-          <TabsTrigger value="sip">SIP trunk</TabsTrigger>
+          <TabsTrigger value="numbers">{t("tabs.numbers")}</TabsTrigger>
+          <TabsTrigger value="sip">{t("tabs.sip")}</TabsTrigger>
         </TabsList>
         <TabsContent value="numbers" className="pt-4">
           <NumbersTab onBuy={() => setBuyOpen(true)} onAddSip={handleAddSip} />
@@ -100,21 +103,18 @@ export function PhoneNumbersView() {
       <AlertDialog open={gateOpen} onOpenChange={setGateOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Connect a SIP trunk first</AlertDialogTitle>
-            <AlertDialogDescription>
-              SIP numbers ride on your own trunk. Connect one, then register the numbers
-              it carries.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("sipGate.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("sipGate.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setGateOpen(false);
                 setTab("sip");
               }}
             >
-              Go to SIP trunk
+              {t("sipGate.goToSip")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

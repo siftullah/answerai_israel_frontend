@@ -9,6 +9,7 @@ import type {
   UpdateJobPayload,
 } from "@/lib/api/types";
 import { LINE_ITEM_KINDS } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { centsToDollarsInput, dollarsToCents } from "@/lib/money";
 
 /**
@@ -16,53 +17,64 @@ import { centsToDollarsInput, dollarsToCents } from "@/lib/money";
  * group of optional inputs — but once any of it is filled in, street and
  * suburb become required (the backend's required_with rule); `details` only
  * exists on create (it seeds the first timeline note — edits add notes
- * instead).
+ * instead). Schema factories take a translator scoped to the `validation`
+ * namespace.
  */
-export const jobFormSchema = z
-  .object({
-    title: z
-      .string()
-      .trim()
-      .min(1, "Give the job a short title")
-      .max(200, "Keep the title under 200 characters"),
-    contact_id: z.string().min(1, "Choose a contact"),
-    description: z.string().max(5000, "Keep the description under 5,000 characters"),
-    priority: z.enum(["low", "normal", "high"]),
-    /** "" = unassigned. */
-    assignee_user_id: z.string(),
-    /** Minutes input; "" = use the module default. */
-    estimated_minutes: z
-      .string()
-      .refine((value) => {
-        if (value.trim() === "") return true;
-        const minutes = Number(value);
-        return Number.isInteger(minutes) && minutes >= 1 && minutes <= 1440;
-      }, "Enter whole minutes between 1 and 1440"),
-    address_line1: z.string().max(200, "Keep the street under 200 characters"),
-    address_line2: z.string().max(200, "Keep this under 200 characters"),
-    address_city: z.string().max(100, "Keep the suburb under 100 characters"),
-    address_region: z.string().max(100, "Keep the state under 100 characters"),
-    address_postal_code: z.string().max(20, "Keep the postcode under 20 characters"),
-    details: z.string().max(5000, "Keep the notes under 5,000 characters"),
-  })
-  .superRefine((values, ctx) => {
-    const anyAddress =
-      values.address_line1.trim() !== "" ||
-      values.address_line2.trim() !== "" ||
-      values.address_city.trim() !== "" ||
-      values.address_region.trim() !== "" ||
-      values.address_postal_code.trim() !== "";
-    if (!anyAddress) return;
+export function jobFormSchema(t: Translator) {
+  return z
+    .object({
+      title: z
+        .string()
+        .trim()
+        .min(1, t("job.titleRequired"))
+        .max(200, t("length.title", { max: 200 })),
+      contact_id: z.string().min(1, t("common.contactRequired")),
+      description: z.string().max(5000, t("length.description", { max: 5000 })),
+      priority: z.enum(["low", "normal", "high"]),
+      /** "" = unassigned. */
+      assignee_user_id: z.string(),
+      /** Minutes input; "" = use the module default. */
+      estimated_minutes: z
+        .string()
+        .refine((value) => {
+          if (value.trim() === "") return true;
+          const minutes = Number(value);
+          return Number.isInteger(minutes) && minutes >= 1 && minutes <= 1440;
+        }, t("job.estimatedMinutesRange", { min: 1, max: 1440 })),
+      address_line1: z.string().max(200, t("length.street", { max: 200 })),
+      address_line2: z.string().max(200, t("length.generic", { max: 200 })),
+      address_city: z.string().max(100, t("length.suburb", { max: 100 })),
+      address_region: z.string().max(100, t("length.state", { max: 100 })),
+      address_postal_code: z.string().max(20, t("length.postcode", { max: 20 })),
+      details: z.string().max(5000, t("length.notes", { max: 5000 })),
+    })
+    .superRefine((values, ctx) => {
+      const anyAddress =
+        values.address_line1.trim() !== "" ||
+        values.address_line2.trim() !== "" ||
+        values.address_city.trim() !== "" ||
+        values.address_region.trim() !== "" ||
+        values.address_postal_code.trim() !== "";
+      if (!anyAddress) return;
 
-    if (values.address_line1.trim() === "") {
-      ctx.addIssue({ code: "custom", message: "Add the street address", path: ["address_line1"] });
-    }
-    if (values.address_city.trim() === "") {
-      ctx.addIssue({ code: "custom", message: "Add the suburb or city", path: ["address_city"] });
-    }
-  });
+      if (values.address_line1.trim() === "") {
+        ctx.addIssue({
+          code: "custom",
+          message: t("job.streetRequired"),
+          path: ["address_line1"],
+        });
+      }
+      if (values.address_city.trim() === "") {
+        ctx.addIssue({
+          code: "custom",
+          message: t("job.cityRequired"),
+          path: ["address_city"],
+        });
+      }
+    });
+}
 
-export type JobFormValues = z.infer<typeof jobFormSchema>;
+export type JobFormValues = z.infer<ReturnType<typeof jobFormSchema>>;
 
 export function defaultJobValues(): JobFormValues {
   return {
@@ -151,44 +163,50 @@ export function toUpdateJobPayload(values: JobFormValues): UpdateJobPayload {
 }
 
 /** The schedule/reschedule dialog — a business-local date + time pair. */
-export const scheduleJobSchema = z.object({
-  /** Calendar key "YYYY-MM-DD". */
-  date: z.string().min(1, "Pick a date"),
-  time: z.string().regex(/^\d{2}:\d{2}$/, "Pick a time"),
-});
+export function scheduleJobSchema(t: Translator) {
+  return z.object({
+    /** Calendar key "YYYY-MM-DD". */
+    date: z.string().min(1, t("common.dateRequired")),
+    time: z.string().regex(/^\d{2}:\d{2}$/, t("common.timeRequired")),
+  });
+}
 
-export type ScheduleJobValues = z.infer<typeof scheduleJobSchema>;
+export type ScheduleJobValues = z.infer<ReturnType<typeof scheduleJobSchema>>;
 
 /**
  * The items editor (mirrors Store/UpdateBusinessJobLineItemRequest). Prices
  * are edited in dollars and converted to integer cents at the payload
  * boundary; job items carry no tax — VAT applies when the job is invoiced.
  */
-const jobLineItemSchema = z.object({
-  /** Present = an existing row (PATCH); absent = a new one (POST). */
-  itemId: z.string().optional(),
-  kind: z.enum(LINE_ITEM_KINDS),
-  description: z
-    .string()
-    .trim()
-    .min(1, "Describe the work or part")
-    .max(300, "Keep the description under 300 characters"),
-  quantity: z.string().refine((value) => {
-    const quantity = Number(value);
-    return value.trim() !== "" && Number.isFinite(quantity) && quantity > 0 && quantity <= 99999;
-  }, "Enter a quantity above zero"),
-  unit_price: z
-    .string()
-    .refine((value) => dollarsToCents(value) !== null, "Enter a price like 180 or 180.50"),
-});
+function jobLineItemSchema(t: Translator) {
+  return z.object({
+    /** Present = an existing row (PATCH); absent = a new one (POST). */
+    itemId: z.string().optional(),
+    kind: z.enum(LINE_ITEM_KINDS),
+    description: z
+      .string()
+      .trim()
+      .min(1, t("lineItem.descriptionRequired"))
+      .max(300, t("length.description", { max: 300 })),
+    quantity: z.string().refine((value) => {
+      const quantity = Number(value);
+      return value.trim() !== "" && Number.isFinite(quantity) && quantity > 0 && quantity <= 99999;
+    }, t("lineItem.quantityInvalid")),
+    unit_price: z
+      .string()
+      .refine((value) => dollarsToCents(value) !== null, t("lineItem.unitPriceInvalid")),
+  });
+}
 
-export type JobLineItemFormValues = z.infer<typeof jobLineItemSchema>;
+export type JobLineItemFormValues = z.infer<ReturnType<typeof jobLineItemSchema>>;
 
-export const jobLineItemsSchema = z.object({
-  items: z.array(jobLineItemSchema).min(1, "Add at least one line item"),
-});
+export function jobLineItemsSchema(t: Translator) {
+  return z.object({
+    items: z.array(jobLineItemSchema(t)).min(1, t("lineItem.itemsRequired")),
+  });
+}
 
-export type JobLineItemsFormValues = z.infer<typeof jobLineItemsSchema>;
+export type JobLineItemsFormValues = z.infer<ReturnType<typeof jobLineItemsSchema>>;
 
 export function emptyJobLineItem(): JobLineItemFormValues {
   return { kind: "labour", description: "", quantity: "1", unit_price: "" };

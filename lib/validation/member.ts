@@ -4,6 +4,7 @@ import type {
   StoreMemberPayload,
   UpdateMemberPayload,
 } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { formatE164, normalizeAuPhone, optionalAuPhoneField } from "@/lib/phone";
 import {
   hourRowSchema,
@@ -12,27 +13,36 @@ import {
   validateHourRows,
 } from "@/lib/validation/weekly-hours";
 
-export const memberSchema = z
-  .object({
-    first_name: z.string().min(1, "First name is required").max(100, "Keep the first name under 100 characters"),
-    last_name: z.string().min(1, "Last name is required").max(100, "Keep the last name under 100 characters"),
-    email: z.email("Enter a valid email address"),
-    // Loose AU shape gate; the backend's Phone rule stays the authority.
-    phone_e164: optionalAuPhoneField(),
-    position: z.string().max(150, "Keep the position under 150 characters"),
-    /** "" = default member role. */
-    role_id: z.string(),
-    /** UI-only: whether the member follows the trading hours or a custom week. */
-    hours_mode: z.enum(["inherit", "custom"]),
-    calling_hours: z.array(hourRowSchema),
-  })
-  .superRefine((values, ctx) => {
-    if (values.hours_mode === "custom") {
-      validateHourRows(values.calling_hours, ctx, ["calling_hours"]);
-    }
-  });
+/** Schema factories take a translator scoped to the `validation` namespace. */
+export function memberSchema(t: Translator) {
+  return z
+    .object({
+      first_name: z
+        .string()
+        .min(1, t("common.firstNameRequired"))
+        .max(100, t("length.firstName", { max: 100 })),
+      last_name: z
+        .string()
+        .min(1, t("common.lastNameRequired"))
+        .max(100, t("length.lastName", { max: 100 })),
+      email: z.email(t("common.emailInvalid")),
+      // Loose AU shape gate; the backend's Phone rule stays the authority.
+      phone_e164: optionalAuPhoneField(t),
+      position: z.string().max(150, t("length.position", { max: 150 })),
+      /** "" = default member role. */
+      role_id: z.string(),
+      /** UI-only: whether the member follows the trading hours or a custom week. */
+      hours_mode: z.enum(["inherit", "custom"]),
+      calling_hours: z.array(hourRowSchema),
+    })
+    .superRefine((values, ctx) => {
+      if (values.hours_mode === "custom") {
+        validateHourRows(t, values.calling_hours, ctx, ["calling_hours"]);
+      }
+    });
+}
 
-export type MemberValues = z.infer<typeof memberSchema>;
+export type MemberValues = z.infer<ReturnType<typeof memberSchema>>;
 
 export function toMemberValues(member: BusinessMember | null): MemberValues {
   const saved = member?.calling_hours ?? [];
@@ -102,8 +112,10 @@ export function memberServerFieldKey(key: string): string {
 }
 
 /** Email/phone come from the invited member's row — only the role is chosen. */
-export const inviteSchema = z.object({
-  role_id: z.string().min(1, "Choose a role"),
-});
+export function inviteSchema(t: Translator) {
+  return z.object({
+    role_id: z.string().min(1, t("member.roleRequired")),
+  });
+}
 
-export type InviteValues = z.infer<typeof inviteSchema>;
+export type InviteValues = z.infer<ReturnType<typeof inviteSchema>>;

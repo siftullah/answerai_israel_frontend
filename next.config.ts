@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import createNextIntlPlugin from "next-intl/plugin";
 
 const nextConfig: NextConfig = {
   // Dev is accessed through the Herd proxy (app.answerai.co.il.test -> localhost:3000);
@@ -6,4 +7,7 @@ const nextConfig: NextConfig = {
   allowedDevOrigins: ["app.answerai.co.il.test"],
 };
 
-export default nextConfig;
+// Wires i18n/request.ts (cookie-based locale, no URL prefix).
+const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+
+export default withNextIntl(nextConfig);

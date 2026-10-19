@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowLeftIcon, DiscIcon, FileTextIcon, PhoneIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -39,10 +40,11 @@ import {
 } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("calls.detail");
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All calls
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("backToList")}
     </Button>
   );
 }
@@ -56,14 +58,8 @@ function Meta({ label, children }: { label: string; children: React.ReactNode })
   );
 }
 
-const RECORDING_NOTES: Partial<Record<Call["recording_status"], string>> = {
-  pending: "The recording is still processing — check back shortly.",
-  processing: "The recording is still processing — check back shortly.",
-  failed: "The recording couldn't be captured for this call.",
-  deleted: "This recording is no longer available.",
-};
-
 function RecordingStrip({ businessUuid, call }: { businessUuid: string; call: Call }) {
+  const t = useTranslations("calls.detail");
   const available = call.recording_status === "available";
   const recording = useCallRecording(businessUuid, call.id, { enabled: available });
 
@@ -73,9 +69,7 @@ function RecordingStrip({ businessUuid, call }: { businessUuid: string; call: Ca
         {recording.isPending ? (
           <Skeleton className="h-9 w-full" />
         ) : recording.isError ? (
-          <p className="text-sm text-muted-foreground">
-            The recording couldn&apos;t be loaded right now.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("recordingLoadFailed")}</p>
         ) : (
           <AudioPlayer
             src={recording.data.url}
@@ -87,7 +81,13 @@ function RecordingStrip({ businessUuid, call }: { businessUuid: string; call: Ca
     );
   }
 
-  const note = RECORDING_NOTES[call.recording_status];
+  const notes: Partial<Record<Call["recording_status"], string>> = {
+    pending: t("recordingProcessing"),
+    processing: t("recordingProcessing"),
+    failed: t("recordingFailed"),
+    deleted: t("recordingDeleted"),
+  };
+  const note = notes[call.recording_status];
   return note ? <p className="text-sm text-muted-foreground">{note}</p> : null;
 }
 
@@ -100,16 +100,17 @@ function MetaBand({
   call: Call;
   timeZone: string;
 }) {
+  const t = useTranslations("calls");
   const live = TRANSITIONAL_CALL_STATUSES.includes(call.status);
   // The counterpart is already in the header; show the business's own line.
   const businessLine = call.direction === "inbound" ? call.to_e164 : call.from_e164;
 
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label={call.direction === "inbound" ? "Received on" : "Called from"}>
+      <Meta label={call.direction === "inbound" ? t("detail.receivedOn") : t("detail.calledFrom")}>
         {formatE164(businessLine)}
       </Meta>
-      <Meta label="Agent">
+      <Meta label={t("labels.agent")}>
         {call.agent ? (
           <Link
             href={`/b/${businessUuid}/agents/${call.agent.id}`}
@@ -121,8 +122,10 @@ function MetaBand({
           "—"
         )}
       </Meta>
-      <Meta label="Started">{formatDateTime(call.started_at ?? call.created_at, timeZone)}</Meta>
-      <Meta label="Duration">
+      <Meta label={t("detail.started")}>
+        {formatDateTime(call.started_at ?? call.created_at, timeZone)}
+      </Meta>
+      <Meta label={t("detail.duration")}>
         {live ? (
           <LiveDuration startedAt={call.started_at} className="tabular-nums" />
         ) : call.duration_seconds !== null ? (
@@ -131,7 +134,7 @@ function MetaBand({
           "—"
         )}
       </Meta>
-      <Meta label="End reason">{formatEndReason(call.end_reason) ?? "—"}</Meta>
+      <Meta label={t("detail.endReason")}>{formatEndReason(call.end_reason) ?? "—"}</Meta>
     </dl>
   );
 }
@@ -154,6 +157,7 @@ export function CallDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("calls");
   const { business } = useBusiness();
   const callQuery = useCall(businessUuid, callUuid);
   const [cancelling, setCancelling] = useState<Call | null>(null);
@@ -167,8 +171,8 @@ export function CallDetailPane({
           <EmptyMedia variant="icon">
             <PhoneIcon />
           </EmptyMedia>
-          <EmptyTitle>No call selected</EmptyTitle>
-          <EmptyDescription>Select a call to see its details.</EmptyDescription>
+          <EmptyTitle>{t("detail.emptyTitle")}</EmptyTitle>
+          <EmptyDescription>{t("detail.emptyDescription")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -195,10 +199,8 @@ export function CallDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Call not found" : "Couldn't load this call"}
-          message={
-            notFound ? "This call doesn't exist or was removed." : callQuery.error.message
-          }
+          title={notFound ? t("errors.notFoundTitle") : t("errors.loadFailedTitle")}
+          message={notFound ? t("errors.notFoundMessage") : callQuery.error.message}
           onRetry={notFound ? onClearSelection : () => callQuery.refetch()}
         />
       </div>
@@ -216,7 +218,7 @@ export function CallDetailPane({
     <div key={call.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           {/* Identity + routing + recording + actions */}
           <div className="flex flex-col gap-4 pb-6">
@@ -233,7 +235,7 @@ export function CallDetailPane({
                 {showTranscript && (
                   <Button size="sm" onClick={() => setTranscriptOpen(true)}>
                     <FileTextIcon />
-                    View transcript
+                    {t("actions.viewTranscript")}
                   </Button>
                 )}
                 {showRecordings && (
@@ -244,7 +246,7 @@ export function CallDetailPane({
                     onClick={() => setRecordingsOpen(true)}
                   >
                     <DiscIcon />
-                    Other recordings
+                    {t("actions.otherRecordings")}
                   </Button>
                 )}
               </div>
@@ -252,7 +254,7 @@ export function CallDetailPane({
           </div>
 
           {(call.summary_title || call.summary) && (
-            <DetailCard title={call.summary_title ?? "Summary"} accent>
+            <DetailCard title={call.summary_title ?? t("detail.summary")} accent>
               {call.summary && (
                 <p className="text-sm whitespace-pre-wrap text-muted-foreground">
                   {call.summary}

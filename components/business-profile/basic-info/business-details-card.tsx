@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -35,6 +37,7 @@ import {
 
 /** Fetch gate — the form mounts only once the trading hours are known. */
 export function BusinessDetailsCard() {
+  const t = useTranslations("businessProfile.businessDetails");
   const { business } = useBusiness();
   const hoursQuery = useBusinessHours(business.id);
 
@@ -45,7 +48,7 @@ export function BusinessDetailsCard() {
   if (hoursQuery.isError) {
     return (
       <ErrorState
-        title="Couldn't load your trading hours"
+        title={t("loadError")}
         message={hoursQuery.error.message}
         onRetry={() => hoursQuery.refetch()}
       />
@@ -62,11 +65,16 @@ function BusinessDetailsForm({
   business: Business;
   hours: BusinessHourRow[];
 }) {
+  const t = useTranslations("businessProfile.businessDetails");
+  const ts = useTranslations("businessProfile.shared");
+  const tc = useTranslations("common");
   const updateBusiness = useUpdateBusiness(business.id);
   const replaceHours = useReplaceBusinessHours(business.id);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => businessDetailsSchema(tv), [tv]);
   const form = useForm<BusinessDetailsValues>({
-    resolver: zodResolver(businessDetailsSchema),
+    resolver: zodResolver(schema),
     defaultValues: toBusinessDetailsValues(business, hours),
   });
   const { errors, isDirty } = form.formState;
@@ -92,7 +100,7 @@ function BusinessDetailsForm({
       }
 
       form.reset(toBusinessDetailsValues(nextBusiness, nextHours));
-      toast.success("Business details saved");
+      toast.success(t("toasts.saved"));
     } catch (error) {
       // Partial failure keeps the form dirty; re-saving the already-saved
       // part is an idempotent PATCH/PUT, so a retry is harmless.
@@ -104,8 +112,8 @@ function BusinessDetailsForm({
     <form onSubmit={onSubmit} noValidate>
       <Card>
         <CardHeader>
-          <CardTitle className="text-[#30aece]">Business details</CardTitle>
-          <CardDescription>Your business name, timezone and trading hours.</CardDescription>
+          <CardTitle className="text-[#30aece]">{t("title")}</CardTitle>
+          <CardDescription>{t("description")}</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-5">
           {errors.root?.server && (
@@ -116,10 +124,10 @@ function BusinessDetailsForm({
 
           <div className="grid gap-4 sm:grid-cols-2">
             <Field data-invalid={!!errors.name || undefined}>
-              <FieldLabel htmlFor="business-name">Business name</FieldLabel>
+              <FieldLabel htmlFor="business-name">{t("name")}</FieldLabel>
               <Input
                 id="business-name"
-                placeholder="Joe's Plumbing"
+                placeholder={t("namePlaceholder")}
                 autoComplete="off"
                 aria-invalid={!!errors.name}
                 {...form.register("name")}
@@ -127,7 +135,7 @@ function BusinessDetailsForm({
               {errors.name && <FieldError>{errors.name.message}</FieldError>}
             </Field>
             <Field data-invalid={!!errors.timezone || undefined}>
-              <FieldLabel htmlFor="business-timezone">Timezone</FieldLabel>
+              <FieldLabel htmlFor="business-timezone">{t("timezone")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="timezone"
@@ -141,7 +149,7 @@ function BusinessDetailsForm({
                 )}
               />
               <p className="text-sm text-muted-foreground">
-                Times across the portal display in this timezone.
+                {t("timezoneHint")}
               </p>
               {errors.timezone && <FieldError>{errors.timezone.message}</FieldError>}
             </Field>
@@ -149,10 +157,9 @@ function BusinessDetailsForm({
 
           <div className="flex flex-col gap-3">
             <div>
-              <p className="text-base font-medium">Trading hours</p>
+              <p className="text-base font-medium">{t("tradingHours")}</p>
               <p className="text-sm text-muted-foreground">
-                When the business is open — transfers and campaigns set to business
-                hours follow this week.
+                {t("tradingHoursHint")}
               </p>
             </div>
             <Controller
@@ -170,12 +177,12 @@ function BusinessDetailsForm({
           <div className="flex items-center justify-end gap-2">
             {isDirty && (
               <Button type="button" variant="ghost" onClick={() => form.reset()}>
-                Discard changes
+                {ts("discardChanges")}
               </Button>
             )}
             <Button type="submit" disabled={!isDirty || saving}>
               {saving && <Spinner />}
-              Save changes
+              {tc("actions.saveChanges")}
             </Button>
           </div>
         </CardContent>

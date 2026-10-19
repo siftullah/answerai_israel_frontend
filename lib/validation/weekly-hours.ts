@@ -5,6 +5,7 @@ import type {
   BusinessHourRowPayload,
 } from "@/lib/api/types";
 import { WEEKDAYS } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 
 export const hoursWindowSchema = z.object({
   start: z.string(),
@@ -20,8 +21,10 @@ export const hourRowSchema = z.object({
 export type HourRowValues = z.infer<typeof hourRowSchema>;
 
 /** Shared superRefine body for weekly-hours fields: every available day needs
- * at least one window, and windows must end after they start. */
+ * at least one window, and windows must end after they start. `t` is scoped
+ * to the `validation` namespace; the messages ICU-select the day name. */
 export function validateHourRows(
+  t: Translator,
   rows: HourRowValues[],
   ctx: z.RefinementCtx,
   path: (string | number)[]
@@ -32,7 +35,7 @@ export function validateHourRows(
       ctx.addIssue({
         code: "custom",
         path,
-        message: `Add at least one time window for ${row.day}`,
+        message: t("weeklyHours.windowRequired", { day: row.day }),
       });
       break;
     }
@@ -40,7 +43,7 @@ export function validateHourRows(
       ctx.addIssue({
         code: "custom",
         path,
-        message: `Each window must end after it starts (${row.day})`,
+        message: t("weeklyHours.windowOrder", { day: row.day }),
       });
       break;
     }

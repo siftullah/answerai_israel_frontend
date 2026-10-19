@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   EllipsisVerticalIcon,
   EyeIcon,
@@ -32,6 +33,8 @@ export function ContactRowActions({
   onAddToDnc: (e164: string) => void;
   onDelete: () => void;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const phone = primaryPhone(contact);
 
   return (
@@ -41,7 +44,7 @@ export function ContactRowActions({
           <Button
             variant="ghost"
             size="icon-sm"
-            aria-label={`Actions for ${contactDisplayName(contact)}`}
+            aria-label={t("actionsFor", { name: contactDisplayName(contact) })}
           />
         }
       >
@@ -50,22 +53,22 @@ export function ContactRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem render={<Link href={`/b/${businessUuid}/contacts/${contact.id}`} />}>
           <EyeIcon />
-          Open
+          {tc("actions.open")}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         {/* Phone-less contacts have nothing to block. */}
         {phone && !contact.on_dnc && (
           <DropdownMenuItem onClick={() => onAddToDnc(phone.e164)}>
             <PhoneOffIcon />
-            Add to DNC
+            {t("addToDnc")}
           </DropdownMenuItem>
         )}
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>

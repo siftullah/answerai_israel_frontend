@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -10,18 +11,23 @@ import {
 } from "@/components/ui/chart";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
+import { displayLocale, runtimeLocale } from "@/lib/i18n/runtime";
 import { cn } from "@/lib/utils";
 import type { DashboardHourlyPoint } from "@/lib/api/types";
 
-const chartConfig = {
-  calls: { label: "Calls", color: "var(--chart-3)" },
-} satisfies ChartConfig;
-
-/** 0 → "12am", 13 → "1pm". Compact — these are axis ticks. */
+/**
+ * 0 → "12am", 13 → "1pm" in English (12-hour, like lib/datetime); Hebrew and
+ * Arabic read "00:00" / "13:00". Compact — these are axis ticks.
+ */
 function hourLabel(hour: number): string {
-  const suffix = hour >= 12 ? "pm" : "am";
-  const hour12 = hour % 12 === 0 ? 12 : hour % 12;
-  return `${hour12}${suffix}`;
+  const en = runtimeLocale() === "en";
+  const label = new Date(Date.UTC(2000, 0, 1, hour)).toLocaleTimeString(
+    displayLocale(),
+    en
+      ? { timeZone: "UTC", hour: "numeric", hour12: true }
+      : { timeZone: "UTC", hour: "2-digit", minute: "2-digit", hour12: false }
+  );
+  return en ? label.replace(/\s/g, "") : label;
 }
 
 function hourRange(hour: number): string {
@@ -36,9 +42,15 @@ export function BusiestHoursCard({
   hourly: DashboardHourlyPoint[] | undefined;
   className?: string;
 }) {
+  const t = useTranslations("dashboard.busiestHours");
+
   if (!hourly) {
     return <Skeleton className={cn("h-full min-h-[280px] rounded-2xl", className)} />;
   }
+
+  const chartConfig = {
+    calls: { label: t("seriesCalls"), color: "var(--chart-3)" },
+  } satisfies ChartConfig;
 
   const total = hourly.reduce((sum, point) => sum + point.calls, 0);
   const peak = hourly.reduce(
@@ -49,21 +61,17 @@ export function BusiestHoursCard({
   return (
     <Card className={cn("h-full", className)}>
       <CardHeader>
-        <CardTitle>Busiest hours</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
         <CardDescription>
-          {total > 0
-            ? `Peak around ${hourRange(peak.hour)} · last 14 days`
-            : "Last 14 days"}
+          {total > 0 ? t("peak", { range: hourRange(peak.hour) }) : t("period")}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-1 flex-col justify-end">
         {total === 0 ? (
           <Empty className="flex-1 border border-dashed py-10">
             <EmptyHeader>
-              <EmptyTitle>No calls yet</EmptyTitle>
-              <EmptyDescription>
-                Once calls come in, you&apos;ll see when your phone runs hottest.
-              </EmptyDescription>
+              <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (

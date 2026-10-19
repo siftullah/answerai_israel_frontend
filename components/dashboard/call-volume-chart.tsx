@@ -1,6 +1,7 @@
 "use client";
 
 import { TrendingDownIcon, TrendingUpIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 import {
   Card,
@@ -20,33 +21,26 @@ import {
 } from "@/components/ui/chart";
 import { Empty, EmptyDescription, EmptyHeader, EmptyTitle } from "@/components/ui/empty";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LOCALE, parseDateKey } from "@/lib/datetime";
+import { parseDateKey } from "@/lib/datetime";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { cn } from "@/lib/utils";
 import type { DashboardCalls, DashboardSeriesPoint } from "@/lib/api/types";
 
-/**
- * Two-series palette validated against the house tokens: brand blue for
- * inbound, the mid cyan ramp step for outbound (CVD-safe, ≥3:1 on white).
- */
-const chartConfig = {
-  inbound: { label: "Inbound", color: "var(--brand-blue)" },
-  outbound: { label: "Outbound", color: "var(--chart-3)" },
-} satisfies ChartConfig;
-
 function tickLabel(key: string): string {
   const date = parseDateKey(key);
-  return date ? date.toLocaleDateString(LOCALE, { day: "numeric", month: "short" }) : key;
+  return date ? date.toLocaleDateString(displayLocale(), { day: "numeric", month: "short" }) : key;
 }
 
 function tooltipLabel(key: string): string {
   const date = parseDateKey(key);
   return date
-    ? date.toLocaleDateString(LOCALE, { weekday: "short", day: "numeric", month: "short" })
+    ? date.toLocaleDateString(displayLocale(), { weekday: "short", day: "numeric", month: "short" })
     : key;
 }
 
 /** Week-over-week delta chip; hidden until there's a prior week to compare. */
 function TrendChip({ calls }: { calls: DashboardCalls }) {
+  const t = useTranslations("dashboard.callVolume");
   if (calls.prev_7_days === 0) return null;
 
   const pct = Math.round(
@@ -69,7 +63,7 @@ function TrendChip({ calls }: { calls: DashboardCalls }) {
         {up ? "+" : ""}
         {pct}%
       </span>
-      <span className="text-xs text-muted-foreground">vs prior week</span>
+      <span className="text-xs text-muted-foreground">{t("vsPriorWeek")}</span>
     </div>
   );
 }
@@ -84,16 +78,24 @@ export function CallVolumeChart({
   calls: DashboardCalls | undefined;
   className?: string;
 }) {
+  const t = useTranslations("dashboard.callVolume");
   const total = series?.reduce((sum, point) => sum + point.inbound + point.outbound, 0);
+
+  /**
+   * Two-series palette validated against the house tokens: brand blue for
+   * inbound, the mid cyan ramp step for outbound (CVD-safe, ≥3:1 on white).
+   */
+  const chartConfig = {
+    inbound: { label: t("inbound"), color: "var(--brand-blue)" },
+    outbound: { label: t("outbound"), color: "var(--chart-3)" },
+  } satisfies ChartConfig;
 
   return (
     <Card className={cn("h-full", className)}>
       <CardHeader>
-        <CardTitle>Call volume</CardTitle>
+        <CardTitle>{t("title")}</CardTitle>
         <CardDescription>
-          {total !== undefined
-            ? `${total} call${total === 1 ? "" : "s"} in the last 14 days`
-            : "Last 14 days"}
+          {total !== undefined ? t("total", { count: total }) : t("period")}
         </CardDescription>
         {calls && (
           <CardAction>
@@ -107,10 +109,8 @@ export function CallVolumeChart({
         ) : total === 0 ? (
           <Empty className="h-[240px] border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>No calls yet</EmptyTitle>
-              <EmptyDescription>
-                Once your AI starts answering, daily volume shows up here.
-              </EmptyDescription>
+              <EmptyTitle>{t("emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("emptyDescription")}</EmptyDescription>
             </EmptyHeader>
           </Empty>
         ) : (

@@ -189,27 +189,29 @@
   0% { opacity: 0; transform: translateX(0); }
   3% { opacity: 1; }
   19% { opacity: 1; }
-  22%, 100% { opacity: 0; transform: translateX(140px); }
+  22%, 100% { opacity: 0; transform: translateX(calc(140px * var(--bubble-dir, 1))); }
 }
 @keyframes call-bubble-2 {
   0%, 25% { opacity: 0; transform: translateX(0); }
   28% { opacity: 1; }
   44% { opacity: 1; }
-  47%, 100% { opacity: 0; transform: translateX(-140px); }
+  47%, 100% { opacity: 0; transform: translateX(calc(-140px * var(--bubble-dir, 1))); }
 }
 @keyframes call-bubble-3 {
   0%, 50% { opacity: 0; transform: translateX(0); }
   53% { opacity: 1; }
   69% { opacity: 1; }
-  72%, 100% { opacity: 0; transform: translateX(140px); }
+  72%, 100% { opacity: 0; transform: translateX(calc(140px * var(--bubble-dir, 1))); }
 }
 @keyframes call-bubble-4 {
   0%, 75% { opacity: 0; transform: translateX(0); }
   78% { opacity: 1; }
   94% { opacity: 1; }
-  97%, 100% { opacity: 0; transform: translateX(-140px); }
+  97%, 100% { opacity: 0; transform: translateX(calc(-140px * var(--bubble-dir, 1))); }
 }
 
+/* Bubbles exit toward the panel's inner side; mirror the slide under RTL. */
+:root[dir="rtl"] { --bubble-dir: -1; }
 .call-bubble-1 { animation: call-bubble-1 18s linear infinite both; }
 .call-bubble-2 { animation: call-bubble-2 18s linear infinite both; }
 .call-bubble-3 { animation: call-bubble-3 18s linear infinite both; }
@@ -305,4 +307,21 @@
   -webkit-box-shadow: 0 0 0 1000px
     color-mix(in oklab, var(--input) 30%, var(--background)) inset;
   border-radius: calc(var(--radius) * 2.6);
+}
+/* Hebrew and Arabic have no glyphs in Geist/Roboto: switch the sans and
+   heading stacks to Rubik (Latin + Hebrew + Arabic) so body copy and headings
+   match in those locales. The variable comes from next/font in app/layout. */
+:root:lang(he),
+:root:lang(ar) {
+  --font-sans: var(--font-rubik);
+  --font-heading: var(--font-rubik);
+}
+
+
+/* Arabic letters connect, so any letter-spacing breaks the joins; neutralise
+   the tracking utilities (eyebrow labels and the like) under Arabic. */
+:root:lang(ar) .tracking-wide,
+:root:lang(ar) .tracking-wider,
+:root:lang(ar) .tracking-widest {
+  letter-spacing: 0;
 }

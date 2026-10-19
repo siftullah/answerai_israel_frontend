@@ -6,6 +6,7 @@ import {
   type ProductDraft,
   type ProductPayload,
 } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import {
   agentScopeFields,
   faqAttachmentFields,
@@ -15,24 +16,27 @@ import {
   refinePrice,
 } from "@/lib/validation/knowledge";
 
-export const productSchema = z
-  .object({
-    name: z.string().min(1, "Name is required").max(150, "Keep the name under 150 characters"),
-    description: z.string().max(2000, "Keep the description under 2,000 characters"),
-    available: z.boolean(),
-    ...priceFields,
-    // Products only support fixed / range / custom_message.
-    price_type: z.union([z.literal(""), z.enum(PRODUCT_PRICE_TYPES)]),
-    ...faqAttachmentFields,
-    ...pendingOwnFaqFields,
-    ...agentScopeFields,
-  })
-  .superRefine((values, ctx) => {
-    refinePrice(values, ctx);
-    refineAgentScope(values, ctx);
-  });
+/** `t` is a translator scoped to the `validation` namespace. */
+export function productSchema(t: Translator) {
+  return z
+    .object({
+      name: z.string().min(1, t("common.nameRequired")).max(150, t("length.name", { max: 150 })),
+      description: z.string().max(2000, t("length.description", { max: 2000 })),
+      available: z.boolean(),
+      ...priceFields(t),
+      // Products only support fixed / range / custom_message.
+      price_type: z.union([z.literal(""), z.enum(PRODUCT_PRICE_TYPES)]),
+      ...faqAttachmentFields,
+      ...pendingOwnFaqFields(t),
+      ...agentScopeFields,
+    })
+    .superRefine((values, ctx) => {
+      refinePrice(t, values, ctx);
+      refineAgentScope(t, values, ctx);
+    });
+}
 
-export type ProductValues = z.infer<typeof productSchema>;
+export type ProductValues = z.infer<ReturnType<typeof productSchema>>;
 
 /** Accepts a saved Product, an extraction-draft payload, or null (create). */
 export function toProductValues(source: Product | ProductPayload | null): ProductValues {

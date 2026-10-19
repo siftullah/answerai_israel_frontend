@@ -1,0 +1,155 @@
+{
+  "meta": {
+    "title": "Phone numbers"
+  },
+  "page": {
+    "title": "Phone numbers",
+    "description": "The numbers your AI answers on — bought here or brought over your own trunk.",
+    "addSipNumber": "Add SIP number",
+    "buyNumber": "Buy number"
+  },
+  "tabs": {
+    "numbers": "Numbers",
+    "sip": "SIP trunk"
+  },
+  "sipGate": {
+    "title": "Connect a SIP trunk first",
+    "description": "SIP numbers ride on your own trunk. Connect one, then register the numbers it carries.",
+    "goToSip": "Go to SIP trunk"
+  },
+  "status": {
+    "error": "Error",
+    "released": "Released",
+    "purchasing": "Purchasing",
+    "configuring": "Configuring",
+    "releasing": "Releasing"
+  },
+  "provider": {
+    "twilio": "Platform",
+    "byoSip": "BYO SIP"
+  },
+  "numberType": {
+    "local": "Local",
+    "mobile": "Mobile",
+    "tollFree": "Toll-free"
+  },
+  "agentSlot": {
+    "inbound": "Inbound agent",
+    "outbound": "Outbound agent",
+    "optional": "{label} (optional)",
+    "noneEligible": "{slot, select, inbound {No synced inbound agents yet — you can assign one later.} other {No synced outbound agents yet — you can assign one later.}}"
+  },
+  "numbers": {
+    "loadError": "Couldn't load phone numbers",
+    "empty": {
+      "title": "Get your first phone number",
+      "description": "Buy a number for your AI to answer, or bring your own over a SIP trunk."
+    },
+    "showReleased": "Show released",
+    "allReleased": "All your numbers have been released.",
+    "agentsLine": "In: {inbound} · Out: {outbound}",
+    "rowActions": "Actions for {number}",
+    "retryPurchase": "Retry purchase",
+    "release": "Release",
+    "columns": {
+      "number": "Number",
+      "provider": "Provider",
+      "type": "Type"
+    }
+  },
+  "release": {
+    "title": "Release {number}?",
+    "thisNumber": "this number",
+    "descriptionSip": "This unregisters the number from your trunk immediately. You can register it again later.",
+    "descriptionPlatform": "This permanently gives the number up. Callers who dial it won't reach you, and you may not be able to get it back.",
+    "confirm": "Release number"
+  },
+  "buy": {
+    "title": "Buy a number",
+    "pickDescription": "Pick an Australian local number for your AI to answer.",
+    "detailsDescription": "Confirm the details for your new number.",
+    "searchPlaceholder": "e.g. 02 or 9955",
+    "searchLabel": "Search numbers by digits",
+    "searchHint": "Start with an area code to match from the beginning, e.g. 02 for Sydney or 03 for Melbourne.",
+    "noMatches": "No matches — try different digits.",
+    "taken": "That number was just taken — pick another.",
+    "agentsHint": "You can assign or change agents any time after purchase."
+  },
+  "form": {
+    "details": "Details",
+    "friendlyName": "Friendly name",
+    "friendlyNamePlaceholder": "Main line",
+    "inboundOnly": "SIP numbers are inbound-only — outbound calls always go out from a platform number."
+  },
+  "addSip": {
+    "description": "Register a number your trunk already carries, and calls to it will reach your AI.",
+    "submit": "Register number",
+    "phoneNumber": "Phone number",
+    "phonePlaceholder": "(02) 5550 1234",
+    "phoneHint": "The number your trunk already carries — include the area code.",
+    "friendlyNamePlaceholder": "Reception line"
+  },
+  "edit": {
+    "title": "Edit {number}"
+  },
+  "sip": {
+    "loadError": "Couldn't load your SIP connection",
+    "setup": {
+      "title": "Bring your own SIP trunk",
+      "description": "Keep your existing numbers and carrier — route their calls to your AI.",
+      "stepCredentials": "We create digest credentials for you on our shared SIP domain.",
+      "stepPointTrunk": "Point a trunk on your PBX or carrier at your destination URI.",
+      "stepRegister": "Register the numbers that trunk carries and route each to an agent.",
+      "connect": "Connect SIP trunk"
+    },
+    "activeDescription": "Your PBX authenticates against our shared SIP domain with these details.",
+    "connected": "Connected",
+    "lastRotated": "Last rotated",
+    "never": "Never",
+    "rotatePassword": "Rotate password",
+    "disconnect": "Disconnect",
+    "releaseFirst": "{count, plural, one {Release your # SIP number before disconnecting.} other {Release your # SIP numbers before disconnecting.}}",
+    "disconnected": "Disconnected",
+    "disconnectedDescription": "Reconnecting issues fresh credentials — your old password will not come back.",
+    "reconnect": "Reconnect",
+    "rotateDialog": {
+      "title": "Rotate the SIP password?",
+      "description": "The current password stops working immediately — update your PBX with the new one straight away."
+    },
+    "disconnectDialog": {
+      "title": "Disconnect SIP trunk?",
+      "description": "Your trunk credentials stop working immediately. You can reconnect later — you'll get fresh credentials."
+    }
+  },
+  "sipFields": {
+    "username": "Username",
+    "password": "Password",
+    "domain": "SIP domain",
+    "destinationUri": "Destination URI",
+    "destinationHint": "Replace {placeholder} with each number you register."
+  },
+  "credentials": {
+    "connectTitle": "Your SIP credentials",
+    "rotateTitle": "Your new SIP password",
+    "description": "Point a trunk on your PBX or carrier at these details.",
+    "warning": "Save these now — the password is shown only once and can't be retrieved later.",
+    "saved": "I've saved these credentials",
+    "closeTitle": "Close without saving?",
+    "closeDescription": "You won't be able to see this password again.",
+    "keepOpen": "Keep them open",
+    "closeAnyway": "Close anyway"
+  },
+  "copyField": {
+    "copyLabel": "Copy {label}"
+  },
+  "toasts": {
+    "retrying": "Retrying purchase",
+    "released": "Number released",
+    "releasing": "Releasing number",
+    "purchaseStarted": "Number purchase started — it'll be live shortly",
+    "sipRegistered": "SIP number registered",
+    "updated": "Number updated",
+    "sipDisconnected": "SIP trunk disconnected",
+    "copyFailed": "Copy failed — select the text manually"
+  }
+}

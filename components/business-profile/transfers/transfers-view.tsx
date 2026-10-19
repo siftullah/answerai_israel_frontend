@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { EllipsisVerticalIcon, PencilIcon, PlusIcon, Trash2Icon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -70,11 +71,17 @@ function TransferRowActions({
   onEdit: () => void;
   onDelete: () => void;
 }) {
+  const t = useTranslations("businessProfile.transfers");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${target.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("actionsFor", { name: target.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -82,11 +89,11 @@ function TransferRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onEdit}>
           <PencilIcon />
-          Edit
+          {tc("actions.edit")}
         </DropdownMenuItem>
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -94,6 +101,8 @@ function TransferRowActions({
 }
 
 export function TransfersView() {
+  const t = useTranslations("businessProfile.transfers");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
 
   const targetsQuery = useTransferTargets(business.id);
@@ -113,12 +122,14 @@ export function TransfersView() {
   const memberName = (target: TransferTarget) =>
     target.business_member
       ? (membersQuery.data?.find((m) => m.id === target.business_member?.id)?.name ??
-        "Team member")
+        t("memberFallback"))
       : null;
 
   const destination = (target: TransferTarget) => {
     const name = memberName(target);
-    if (target.to_e164 && name) return `${formatE164(target.to_e164)} (overrides ${name})`;
+    if (target.to_e164 && name) {
+      return t("overrides", { number: formatE164(target.to_e164), name });
+    }
     return target.to_e164 ? formatE164(target.to_e164) : (name ?? "—");
   };
 
@@ -134,22 +145,20 @@ export function TransfersView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Transfers"
-        description="Where and how your AI transfers live calls."
+        title={t("title")}
+        description={t("description")}
         actions={
           <Button onClick={() => setEditor({ target: null })}>
             <PlusIcon />
-            Add target
+            {t("addTarget")}
           </Button>
         }
       />
 
       <Card>
         <CardHeader>
-          <CardTitle>Transfer mode</CardTitle>
-          <CardDescription>
-            Applies to every target in this directory — the two styles can&apos;t be mixed.
-          </CardDescription>
+          <CardTitle>{t("mode.title")}</CardTitle>
+          <CardDescription>{t("mode.description")}</CardDescription>
         </CardHeader>
         <CardContent>
           <ChoiceCards
@@ -159,13 +168,13 @@ export function TransfersView() {
             options={[
               {
                 value: "blind",
-                label: "Blind",
-                description: "Connect the caller straight through.",
+                label: t("mode.blind"),
+                description: t("mode.blindHint"),
               },
               {
                 value: "screened",
-                label: "Screened",
-                description: "The AI briefs the person first, then connects the caller.",
+                label: t("mode.screened"),
+                description: t("mode.screenedHint"),
               },
             ]}
           />
@@ -179,21 +188,19 @@ export function TransfersView() {
         </div>
       ) : targetsQuery.isError ? (
         <ErrorState
-          title="Couldn't load transfer targets"
+          title={t("loadError")}
           message={targetsQuery.error.message}
           onRetry={() => targetsQuery.refetch()}
         />
       ) : targets.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>
-            <EmptyTitle>Add your first transfer target</EmptyTitle>
-            <EmptyDescription>
-              Targets tell your AI who real callers can be handed to, and when.
-            </EmptyDescription>
+            <EmptyTitle>{t("empty.title")}</EmptyTitle>
+            <EmptyDescription>{t("empty.description")}</EmptyDescription>
           </EmptyHeader>
           <Button onClick={() => setEditor({ target: null })}>
             <PlusIcon />
-            Add target
+            {t("addTarget")}
           </Button>
         </Empty>
       ) : (
@@ -235,10 +242,10 @@ export function TransfersView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Destination</TableHead>
-                <TableHead>When</TableHead>
-                <TableHead>Hours</TableHead>
+                <TableHead>{tc("labels.name")}</TableHead>
+                <TableHead>{t("columns.destination")}</TableHead>
+                <TableHead>{t("columns.when")}</TableHead>
+                <TableHead>{t("columns.hours")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -293,15 +300,14 @@ export function TransfersView() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Switch every target to {pendingMode === "screened" ? "screened" : "blind"}?
+              {t("switchDialog.title", { mode: pendingMode ?? "blind" })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This changes how all {targets.length}{" "}
-              {targets.length === 1 ? "target" : "targets"} in this directory transfer.
+              {t("switchDialog.description", { count: targets.length })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!pendingMode) return;
@@ -312,7 +318,7 @@ export function TransfersView() {
                 setPendingMode(null);
               }}
             >
-              Switch mode
+              {t("switchDialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -326,24 +332,24 @@ export function TransfersView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your AI will no longer transfer calls here.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteTarget.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Transfer target deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

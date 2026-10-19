@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -31,10 +32,9 @@ import { toolLabel } from "@/lib/agents/tool-catalog";
 import { MODULE_CATALOG } from "@/lib/modules/catalog";
 import type { BusinessModule, ModuleKey } from "@/lib/api/types";
 
-const description =
-  "Turn features on or off for this business. Each module adds its own screens and gives your AI new abilities on calls.";
-
 export function ModulesView() {
+  const t = useTranslations("businessProfile.modules");
+  const tc = useTranslations("common");
   const { business, membership, modules } = useBusiness();
 
   const privileged =
@@ -53,12 +53,12 @@ export function ModulesView() {
   if (!privileged) {
     return (
       <div className="flex flex-col gap-6">
-        <PageHeader title="Modules" description={description} />
+        <PageHeader title={t("title")} description={t("description")} />
         <Card className="max-w-2xl">
           <CardHeader>
-            <CardTitle>Not available</CardTitle>
+            <CardTitle>{t("notAvailable.title")}</CardTitle>
             <CardDescription>
-              Modules are managed by the business owner and admins.
+              {t("notAvailable.description")}
             </CardDescription>
           </CardHeader>
         </Card>
@@ -74,10 +74,10 @@ export function ModulesView() {
 
     setPendingKey(key);
     update.mutate(desired, {
-      onSuccess: () =>
-        toast.success(
-          `${MODULE_CATALOG[key].label} turned ${next ? "on" : "off"}`
-        ),
+      onSuccess: () => {
+        const label = MODULE_CATALOG[key].label;
+        toast.success(next ? t("toasts.turnedOn", { label }) : t("toasts.turnedOff", { label }));
+      },
       onError: (error) => toast.error(error.message),
       onSettled: () => setPendingKey(null),
     });
@@ -85,7 +85,7 @@ export function ModulesView() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title="Modules" description={description} />
+      <PageHeader title={t("title")} description={t("description")} />
 
       <div className="grid gap-4 sm:grid-cols-2">
         {modules.map((module) => {
@@ -104,10 +104,10 @@ export function ModulesView() {
                   </span>
                   {info.label}
                   {module.enabled ? (
-                    <Badge variant="success">On</Badge>
+                    <Badge variant="success">{t("on")}</Badge>
                   ) : (
                     <Badge variant="outline" className="text-muted-foreground">
-                      Off
+                      {t("off")}
                     </Badge>
                   )}
                 </CardTitle>
@@ -125,7 +125,7 @@ export function ModulesView() {
                         if (next) apply(module.key, true);
                         else setConfirming(module);
                       }}
-                      aria-label={`${info.label} module`}
+                      aria-label={t("switchAria", { label: info.label })}
                     />
                   )}
                 </CardAction>
@@ -133,7 +133,7 @@ export function ModulesView() {
 
               {module.tools.length > 0 && (
                 <CardContent className="flex flex-col gap-2">
-                  <p className="text-sm font-medium">Adds these agent tools</p>
+                  <p className="text-sm font-medium">{t("addsTools")}</p>
                   <ul className="flex flex-wrap gap-1.5">
                     {module.tools.map((tool) => (
                       <li key={tool}>
@@ -161,7 +161,7 @@ export function ModulesView() {
         <AlertDialogContent>
           {confirming && <DisableConfirmation module={confirming} />}
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               variant="destructive"
               onClick={() => {
@@ -170,7 +170,7 @@ export function ModulesView() {
                 setConfirming(null);
               }}
             >
-              Turn off
+              {t("turnOff")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -185,24 +185,17 @@ export function ModulesView() {
  * Invoices contributes no tools, so that sentence drops out.
  */
 function DisableConfirmation({ module }: { module: BusinessModule }) {
+  const t = useTranslations("businessProfile.modules");
   const label = MODULE_CATALOG[module.key].label;
   const count = module.tools.length;
 
   return (
     <AlertDialogHeader>
-      <AlertDialogTitle>Turn off {label}?</AlertDialogTitle>
+      <AlertDialogTitle>{t("disableDialog.title", { label })}</AlertDialogTitle>
       <AlertDialogDescription>
-        Nothing is deleted — anything already recorded stays, and you can turn{" "}
-        {label} back on any time.
-        {count > 0 && (
-          <>
-            {" "}
-            Your AI agents will lose the {count}{" "}
-            {count === 1 ? "tool" : "tools"} it adds and be republished
-            automatically.
-          </>
-        )}{" "}
-        {label} also disappears from the sidebar for everyone in this business.
+        {t("disableDialog.keeps", { label })}
+        {count > 0 && <> {t("disableDialog.toolsLost", { count })}</>}{" "}
+        {t("disableDialog.sidebar", { label })}
       </AlertDialogDescription>
     </AlertDialogHeader>
   );

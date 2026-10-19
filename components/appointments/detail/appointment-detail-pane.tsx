@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   ArrowLeftIcon,
@@ -52,10 +53,11 @@ import {
 } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("appointments");
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All appointments
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("detail.back")}
     </Button>
   );
 }
@@ -70,22 +72,25 @@ function Meta({ label, children }: { label: string; children: React.ReactNode })
 }
 
 function MetaBand({ appointment, timeZone }: { appointment: Appointment; timeZone: string }) {
+  const t = useTranslations("appointments");
   const minutes = Math.round(
     (Date.parse(appointment.ends_at) - Date.parse(appointment.starts_at)) / 60_000
   );
 
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label="When">
+      <Meta label={t("detail.meta.when")}>
         {formatDateTime(appointment.starts_at, timeZone)} –{" "}
         {formatTimeOfDay(appointment.ends_at, timeZone)}
-        <span className="block text-xs font-normal text-muted-foreground">{minutes} minutes</span>
+        <span className="block text-xs font-normal text-muted-foreground">
+          {t("detail.meta.duration", { count: minutes })}
+        </span>
       </Meta>
-      <Meta label="Assignee">{appointment.member?.name ?? "Unassigned"}</Meta>
-      <Meta label="Source">{APPOINTMENT_SOURCE_LABELS[appointment.source]}</Meta>
-      <Meta label="Booked">{formatDateTime(appointment.created_at, timeZone)}</Meta>
+      <Meta label={t("detail.meta.assignee")}>{appointment.member?.name ?? t("unassigned")}</Meta>
+      <Meta label={t("detail.meta.source")}>{APPOINTMENT_SOURCE_LABELS[appointment.source]}</Meta>
+      <Meta label={t("detail.meta.booked")}>{formatDateTime(appointment.created_at, timeZone)}</Meta>
       {appointment.status === "canceled" && appointment.canceled_reason && (
-        <Meta label="Cancel reason">{appointment.canceled_reason}</Meta>
+        <Meta label={t("detail.meta.cancelReason")}>{appointment.canceled_reason}</Meta>
       )}
     </dl>
   );
@@ -93,6 +98,8 @@ function MetaBand({ appointment, timeZone }: { appointment: Appointment; timeZon
 
 /** Inline notes editor backed by PATCH /appointments/{id} (notes only). */
 function NotesCard({ businessUuid, appointment }: { businessUuid: string; appointment: Appointment }) {
+  const t = useTranslations("appointments");
+  const tc = useTranslations("common");
   const update = useUpdateAppointment(businessUuid);
   const [editing, setEditing] = useState(false);
   const [draft, setDraft] = useState("");
@@ -107,7 +114,7 @@ function NotesCard({ businessUuid, appointment }: { businessUuid: string; appoin
       { id: appointment.id, payload: { notes: draft.trim() || null } },
       {
         onSuccess: () => {
-          toast.success("Notes saved");
+          toast.success(t("toasts.notesSaved"));
           setEditing(false);
         },
         onError: (error) => toast.error(error.message),
@@ -117,12 +124,12 @@ function NotesCard({ businessUuid, appointment }: { businessUuid: string; appoin
 
   return (
     <DetailCard
-      title="Notes"
+      title={t("detail.notes.title")}
       actions={
         !editing ? (
           <Button variant="ghost" size="sm" onClick={startEditing}>
             <PencilIcon />
-            {appointment.notes ? "Edit" : "Add notes"}
+            {appointment.notes ? tc("actions.edit") : t("detail.notes.add")}
           </Button>
         ) : undefined
       }
@@ -134,23 +141,23 @@ function NotesCard({ businessUuid, appointment }: { businessUuid: string; appoin
             onChange={(event) => setDraft(event.target.value)}
             rows={3}
             maxLength={2000}
-            placeholder="Anything the team should know"
-            aria-label="Appointment notes"
+            placeholder={t("detail.notes.placeholder")}
+            aria-label={t("detail.notes.label")}
             autoFocus
           />
           <div className="flex justify-end gap-2">
             <Button variant="outline" size="sm" onClick={() => setEditing(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button size="sm" onClick={save} disabled={update.isPending}>
-              {update.isPending ? "Saving…" : "Save notes"}
+              {update.isPending ? tc("actions.saving") : t("detail.notes.save")}
             </Button>
           </div>
         </div>
       ) : appointment.notes ? (
         <p className="text-sm whitespace-pre-wrap text-muted-foreground">{appointment.notes}</p>
       ) : (
-        <p className="text-sm text-muted-foreground">No notes yet.</p>
+        <p className="text-sm text-muted-foreground">{t("detail.notes.empty")}</p>
       )}
     </DetailCard>
   );
@@ -174,6 +181,8 @@ export function AppointmentDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("appointments");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const appointmentQuery = useAppointment(businessUuid, appointmentUuid);
 
@@ -191,8 +200,8 @@ export function AppointmentDetailPane({
           <EmptyMedia variant="icon">
             <CalendarDaysIcon />
           </EmptyMedia>
-          <EmptyTitle>No appointment selected</EmptyTitle>
-          <EmptyDescription>Select a booking to see its details.</EmptyDescription>
+          <EmptyTitle>{t("detail.noSelection.title")}</EmptyTitle>
+          <EmptyDescription>{t("detail.noSelection.description")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -218,11 +227,9 @@ export function AppointmentDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Appointment not found" : "Couldn't load this appointment"}
+          title={notFound ? t("detail.notFound.title") : t("detail.loadError")}
           message={
-            notFound
-              ? "This appointment doesn't exist or was removed."
-              : appointmentQuery.error.message
+            notFound ? t("detail.notFound.description") : appointmentQuery.error.message
           }
           onRetry={notFound ? onClearSelection : () => appointmentQuery.refetch()}
         />
@@ -251,7 +258,7 @@ export function AppointmentDetailPane({
     <div key={appointment.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           <div className="flex flex-col gap-4 pb-6">
             {/* Identity + status */}
@@ -273,7 +280,7 @@ export function AppointmentDetailPane({
                   render={<Link href={`/b/${businessUuid}/contacts/${appointment.contact.id}`} />}
                 >
                   <UserRoundIcon />
-                  View contact
+                  {t("detail.actions.viewContact")}
                 </Button>
               )}
             </div>
@@ -281,16 +288,16 @@ export function AppointmentDetailPane({
             <MetaBand appointment={appointment} timeZone={business.timezone} />
 
             <div className="flex flex-wrap gap-2">
-              <Button variant="ghost" size="sm" className="mr-auto px-2" render={<Link href={calendarHref} />}>
+              <Button variant="ghost" size="sm" className="me-auto px-2" render={<Link href={calendarHref} />}>
                 <CalendarDaysIcon />
-                View on calendar
+                {t("detail.actions.viewOnCalendar")}
               </Button>
               {actionable && (
                 <>
                   {appointment.status === "scheduled" && (
-                    <Button size="sm" disabled={acting} onClick={() => run(confirm, "Appointment confirmed")}>
+                    <Button size="sm" disabled={acting} onClick={() => run(confirm, t("toasts.confirmed"))}>
                       <CheckIcon />
-                      Confirm
+                      {tc("actions.confirm")}
                     </Button>
                   )}
                   <Button
@@ -298,28 +305,28 @@ export function AppointmentDetailPane({
                     variant="ghost"
                     className="border border-success/25 bg-success/10 text-success hover:bg-success/15 hover:text-success"
                     disabled={acting}
-                    onClick={() => run(complete, "Appointment completed")}
+                    onClick={() => run(complete, t("toasts.completed"))}
                   >
                     <CheckIcon />
-                    Complete
+                    {t("detail.actions.complete")}
                   </Button>
                   {ended && (
                     <Button
                       size="sm"
                       variant="outline"
                       disabled={acting}
-                      onClick={() => run(noShow, "Marked as no-show")}
+                      onClick={() => run(noShow, t("toasts.noShow"))}
                     >
-                      No-show
+                      {t("detail.actions.noShow")}
                     </Button>
                   )}
                   <Button size="sm" variant="outline" disabled={acting} onClick={() => setRescheduling(true)}>
                     <CalendarClockIcon />
-                    Reschedule
+                    {t("detail.actions.reschedule")}
                   </Button>
                   <Button size="sm" variant="outline" disabled={acting} onClick={() => setReassigning(true)}>
                     <UserRoundPenIcon />
-                    Reassign
+                    {t("detail.actions.reassign")}
                   </Button>
                   <Button
                     size="sm"
@@ -329,7 +336,7 @@ export function AppointmentDetailPane({
                     onClick={() => setCanceling(true)}
                   >
                     <XIcon />
-                    Cancel
+                    {tc("actions.cancel")}
                   </Button>
                 </>
               )}
@@ -339,7 +346,7 @@ export function AppointmentDetailPane({
           <NotesCard businessUuid={businessUuid} appointment={appointment} />
 
           {appointment.call && (
-            <DetailCard title="Booked on a call">
+            <DetailCard title={t("detail.call.title")}>
               <Link
                 href={`/b/${businessUuid}/calls/${appointment.call.id}`}
                 className="flex items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm transition-colors hover:bg-muted/50"
@@ -347,12 +354,14 @@ export function AppointmentDetailPane({
                 <span className="flex min-w-0 items-center gap-2">
                   <PhoneForwardedIcon className="size-4 shrink-0 text-muted-foreground" />
                   <span className="truncate font-medium">
-                    {appointment.call.direction === "inbound" ? "Inbound call" : "Outbound call"}
+                    {appointment.call.direction === "inbound"
+                      ? t("detail.call.inbound")
+                      : t("detail.call.outbound")}
                     {appointment.call.started_at &&
                       ` · ${formatDateTime(appointment.call.started_at, business.timezone)}`}
                   </span>
                 </span>
-                <ArrowUpRightIcon className="size-4 shrink-0 text-muted-foreground" />
+                <ArrowUpRightIcon className="size-4 shrink-0 text-muted-foreground rtl:-scale-x-100" />
               </Link>
             </DetailCard>
           )}

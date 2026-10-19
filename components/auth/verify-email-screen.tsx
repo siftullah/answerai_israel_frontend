@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { MailCheckIcon, TriangleAlertIcon } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ function VerifyEmailContent() {
   const router = useRouter();
   const resend = useResendVerification();
   const logout = useLogout();
+  const t = useTranslations("auth.verifyEmail");
 
   const [cooldown, setCooldown] = useState(0);
   const [notice, setNotice] = useState<string | null>(null);
@@ -61,10 +63,12 @@ function VerifyEmailContent() {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-col gap-1">
-        <h1 className="font-heading text-2xl font-semibold">Verify your email</h1>
+        <h1 className="font-heading text-2xl font-semibold">{t("title")}</h1>
         <p className="text-sm text-muted-foreground">
-          We sent a verification link to <span className="font-medium text-foreground">{data.user.email}</span>.
-          Click it to activate your account.
+          {t.rich("description", {
+            email: data.user.email,
+            strong: (chunks) => <span className="font-medium text-foreground">{chunks}</span>,
+          })}
         </p>
       </div>
 
@@ -84,35 +88,36 @@ function VerifyEmailContent() {
       {stillUnverified && (
         <Alert variant="destructive">
           <TriangleAlertIcon />
-          <AlertTitle>Still not verified</AlertTitle>
-          <AlertDescription>
-            Click the link in your email first, then check again or resend it.
-          </AlertDescription>
+          <AlertTitle>{t("stillUnverified.title")}</AlertTitle>
+          <AlertDescription>{t("stillUnverified.description")}</AlertDescription>
         </Alert>
       )}
 
       <div className="flex flex-col gap-3">
         <Button onClick={onResend} disabled={resend.isPending || cooldown > 0}>
           {resend.isPending && <Spinner />}
-          {cooldown > 0 ? `Resend in ${cooldown}s` : "Resend verification email"}
+          {cooldown > 0 ? t("resendIn", { seconds: cooldown }) : t("resend")}
         </Button>
 
         <Button variant="outline" onClick={onCheckVerified} disabled={isRefetching}>
           {isRefetching && <Spinner />}
-          I&apos;ve verified my email
+          {t("checkVerified")}
         </Button>
       </div>
 
       <p className="text-center text-sm text-muted-foreground">
-        Wrong account?{" "}
-        <button
-          type="button"
-          onClick={() => logout.mutate()}
-          disabled={logout.isPending}
-          className="text-primary underline-offset-4 hover:underline"
-        >
-          Log out
-        </button>
+        {t.rich("wrongAccount", {
+          logout: (chunks) => (
+            <button
+              type="button"
+              onClick={() => logout.mutate()}
+              disabled={logout.isPending}
+              className="text-primary underline-offset-4 hover:underline"
+            >
+              {chunks}
+            </button>
+          ),
+        })}
       </p>
     </div>
   );

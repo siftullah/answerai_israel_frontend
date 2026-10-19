@@ -1,0 +1,287 @@
+{
+  "datetime": {
+    "today": "اليوم",
+    "yesterday": "أمس"
+  },
+  "money": {
+    "noPrice": "بلا سعر",
+    "customMessage": "رسالة مخصصة",
+    "priceNotSet": "السعر غير محدد",
+    "perHour": "{price}/ساعة",
+    "perDay": "{price}/يوم",
+    "perWeek": "{price}/أسبوع",
+    "perMonth": "{price}/شهر",
+    "perYear": "{price}/سنة",
+    "duration": {
+      "hours": "{count, plural, zero {{count} ساعة} one {{count} ساعة} two {{count} ساعة} few {{count} ساعات} many {{count} ساعة} other {{count} ساعة}}",
+      "days": "{count, plural, zero {{count} يوم} one {{count} يوم} two {{count} يوم} few {{count} أيام} many {{count} يومًا} other {{count} يوم}}",
+      "weeks": "{count, plural, zero {{count} أسبوع} one {{count} أسبوع} two {{count} أسبوع} few {{count} أسابيع} many {{count} أسبوعًا} other {{count} أسبوع}}",
+      "months": "{count, plural, zero {{count} شهر} one {{count} شهر} two {{count} شهر} few {{count} أشهر} many {{count} شهرًا} other {{count} شهر}}",
+      "years": "{count, plural, zero {{count} سنة} one {{count} سنة} two {{count} سنة} few {{count} سنوات} many {{count} سنة} other {{count} سنة}}"
+    }
+  },
+  "tax": {
+    "defaultLabel": "ضريبة القيمة المضافة",
+    "line": "ضريبة القيمة المضافة ({rate}%)"
+  },
+  "endReason": {
+    "customer_ended_call": "أنهى المتصل المكالمة",
+    "agent_ended_call": "أنهى وكيل الذكاء الاصطناعي المكالمة",
+    "transferred": "تم التحويل",
+    "no_conversation": "لم تحدث محادثة",
+    "no_answer": "لا رد",
+    "busy": "مشغول",
+    "canceled": "ملغى",
+    "failed": "فشل",
+    "unknown": "غير معروف"
+  },
+  "modules": {
+    "appointments": {
+      "label": "المواعيد",
+      "description": "أتِح لوكيل الذكاء الاصطناعي مراجعة التقويم وحجز مواعيد للمتصلين في الفترات المتاحة، ثم إدارة تلك الحجوزات."
+    },
+    "leads": {
+      "label": "العملاء المحتملون",
+      "description": "سجّل استفسارات المبيعات من المكالمات كعملاء محتملين يمكن لفريقك متابعتهم لاحقًا."
+    },
+    "quotes": {
+      "label": "عروض الأسعار",
+      "description": "حدّد أسعار الأعمال، وأرسل عروض أسعار يقبلها العملاء عبر الإنترنت، وسجّل طلبات عروض الأسعار من المكالمات."
+    },
+    "jobs": {
+      "label": "أوامر العمل",
+      "description": "سجّل أوامر العمل الميدانية التي يتلقاها وكيل الذكاء الاصطناعي عبر الهاتف وجدول الزيارة."
+    },
+    "invoices": {
+      "label": "الفواتير",
+      "description": "أصدر فواتير للأعمال المكتملة وتابع ما تم سداده."
+    },
+    "callbacks": {
+      "label": "مكالمات معاودة الاتصال",
+      "description": "جدول مكالمة معاودة الاتصال عندما يتعذر على وكيل الذكاء الاصطناعي مساعدة المتصل فورًا."
+    }
+  },
+  "tools": {
+    "lookup_contact": {
+      "label": "البحث عن المتصل",
+      "description": "تحقق مما إذا كان المتصل جهة اتصال معروفة ورحّب به باسمه."
+    },
+    "save_contact_info": {
+      "label": "حفظ معلومات جهة الاتصال",
+      "description": "احفظ اسم المتصل أو بريده الإلكتروني أو شركته في سجل جهة الاتصال الخاص به."
+    },
+    "add_to_dnc": {
+      "label": "طلبات عدم الاتصال",
+      "description": "أضف المتصل إلى قائمة عدم الاتصال عندما يطلب ذلك."
+    },
+    "get_current_time": {
+      "label": "الوقت الحالي",
+      "description": "اذكر الوقت وما إذا كان النشاط التجاري مفتوحًا الآن."
+    },
+    "get_call_history": {
+      "label": "سجل المكالمات",
+      "description": "استرجع مكالمات المتصل السابقة مع أي من وكلاء الذكاء الاصطناعي لديك، مع الملاحظات ونصوص المكالمات."
+    },
+    "schedule_callback": {
+      "label": "جدولة مكالمة معاودة الاتصال",
+      "description": "احجز مكالمة معاودة الاتصال بالمتصل في وقت لاحق يطلبه."
+    },
+    "check_availability": {
+      "label": "التحقق من التوافر",
+      "description": "البحث عن فترات متاحة للمواعيد في التقويم."
+    },
+    "book_appointment": {
+      "label": "حجز موعد",
+      "description": "حجز موعد للمتصل في فترة متاحة."
+    },
+    "cancel_appointment": {
+      "label": "إلغاء موعد",
+      "description": "إلغاء موعد قائم للمتصل."
+    },
+    "create_lead": {
+      "label": "إنشاء عميل محتمل",
+      "description": "تسجيل عميل مبيعات محتمل جديد من المحادثة."
+    },
+    "request_quote": {
+      "label": "طلب عرض سعر",
+      "description": "تسجيل طلب عرض سعر لعمل يريد المتصل تسعيره؛ يقدّم الفريق عرض السعر لاحقًا."
+    },
+    "create_job": {
+      "label": "إنشاء أمر عمل",
+      "description": "تسجيل طلب أمر عمل جديد من المتصل."
+    },
+    "check_job_availability": {
+      "label": "التحقق من توافر مواعيد أوامر العمل",
+      "description": "البحث عن فترات متاحة لجدولة زيارة لتنفيذ أمر عمل."
+    },
+    "book_job": {
+      "label": "حجز أمر عمل",
+      "description": "حجز زيارة لتنفيذ أمر عمل في فترة متاحة."
+    }
+  },
+  "toolGroups": {
+    "core": "الأساسية"
+  },
+  "apiErrors": {
+    "sessionExpired": "انتهت صلاحية جلستك. يرجى تسجيل الدخول مجددًا.",
+    "subscriptionRequired": "يلزم اشتراك نشط.",
+    "forbidden": "لا يُسمح لك بتنفيذ هذا الإجراء.",
+    "notFound": "لم يتم العثور على المطلوب.",
+    "linkInvalid": "لم يعد هذا الرابط صالحًا.",
+    "tokenExpired": "انتهت صلاحية رمز جلستك. حاول مجددًا.",
+    "invalidData": "البيانات المقدّمة غير صالحة.",
+    "tooManyAttempts": "محاولات كثيرة جدًا. انتظر دقيقة وحاول مجددًا.",
+    "server": "حدث خطأ من جانبنا. حاول مجددًا.",
+    "generic": "حدث خطأ. حاول مجددًا.",
+    "network": "خطأ في الشبكة — تحقّق من اتصالك.",
+    "unknown": "حدث خطأ."
+  },
+  "voices": {
+    "previewFailed": "تعذّر تشغيل معاينة الصوت."
+  },
+  "agentTemplates": {
+    "blank": {
+      "label": "البدء من الصفر",
+      "description": "وكيل ذكاء اصطناعي فارغ تضبط إعداداته من الصفر."
+    },
+    "receptionist": {
+      "label": "وكيل استقبال",
+      "description": "يرد على المكالمات، ويجيب عن الأسئلة، ويتلقى الرسائل."
+    },
+    "appointment_setter": {
+      "label": "منظّم المواعيد",
+      "description": "يحجز المواعيد للمتصلين ويتحقق منها ويلغيها."
+    },
+    "after_hours": {
+      "label": "خارج ساعات العمل",
+      "description": "يرد على المكالمات خارج ساعات العمل ويسجّل التفاصيل."
+    },
+    "outbound_caller": {
+      "label": "وكيل المكالمات الصادرة",
+      "description": "يتصل بجهات الاتصال للحملات ومكالمات معاودة الاتصال والمتابعة."
+    },
+    "lead_qualifier": {
+      "label": "مؤهّل العملاء المحتملين",
+      "description": "يتصل بالعملاء المحتملين الجدد، ويقيّم اهتمامهم، ويسجّل التفاصيل."
+    }
+  },
+  "overridableBuiltin": {
+    "contact_name": "اسم جهة الاتصال",
+    "contact_email": "البريد الإلكتروني الأساسي لجهة الاتصال",
+    "contact_company": "شركة جهة الاتصال",
+    "contact_address": "عنوان جهة الاتصال"
+  },
+  "appointmentStatus": {
+    "scheduled": "مجدول",
+    "confirmed": "مؤكد",
+    "completed": "مكتمل",
+    "canceled": "ملغى",
+    "no_show": "لم يحضر"
+  },
+  "appointmentSource": {
+    "manual": "يدوي",
+    "agent_call": "حجزه وكيل الذكاء الاصطناعي خلال مكالمة",
+    "api": "API"
+  },
+  "subscriptionStatus": {
+    "pending": "قيد الانتظار",
+    "active": "نشط",
+    "past_due": "متأخر السداد",
+    "suspended": "معلّق",
+    "cancelled": "ملغى"
+  },
+  "billingInterval": {
+    "monthly": "شهري",
+    "annual": "سنوي"
+  },
+  "billingChargeStatus": {
+    "pending": "قيد المعالجة",
+    "paid": "مدفوع",
+    "failed": "فشل"
+  },
+  "billingChargeType": {
+    "initial": "الدفعة الأولى",
+    "renewal": "تجديد",
+    "plan_change": "تغيير الباقة"
+  },
+  "callbackStatus": {
+    "scheduled": "مجدول",
+    "queued": "جارٍ الاتصال",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "no_answer": "لا رد",
+    "failed": "فشل",
+    "canceled": "ملغى"
+  },
+  "callbackType": {
+    "agent": "وكيل الذكاء الاصطناعي",
+    "team_member": "عضو الفريق"
+  },
+  "callbackSource": {
+    "manual": "يدوي",
+    "agent_call": "مكالمة وكيل الذكاء الاصطناعي",
+    "api": "API"
+  },
+  "callbackOutcome": {
+    "reached": "تم التواصل",
+    "voicemail": "تُركت رسالة صوتية",
+    "no_answer": "لا رد",
+    "handled": "تمت المعالجة"
+  },
+  "invoiceStatus": {
+    "draft": "مسودة",
+    "sent": "مرسل",
+    "paid": "مدفوع",
+    "overdue": "متأخر السداد",
+    "void": "لاغٍ"
+  },
+  "lineItemKind": {
+    "labour": "أجور العمل",
+    "material": "مواد"
+  },
+  "jobStatus": {
+    "open": "مفتوح",
+    "scheduled": "مجدول",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "canceled": "ملغى"
+  },
+  "jobPriority": {
+    "low": "منخفضة",
+    "normal": "عادية",
+    "high": "عالية"
+  },
+  "jobSource": {
+    "manual": "أُضيف يدويًا",
+    "agent_call": "من مكالمة",
+    "api": "عبر API",
+    "lead": "محوّل من عميل محتمل",
+    "quote": "محوّل من عرض سعر"
+  },
+  "leadStatus": {
+    "new": "جديد",
+    "contacted": "تم التواصل معه",
+    "qualified": "مؤهل",
+    "won": "تم كسبه",
+    "lost": "تمت خسارته"
+  },
+  "leadSource": {
+    "manual": "أُضيف يدويًا",
+    "agent_call": "من مكالمة",
+    "api": "عبر API"
+  },
+  "quoteStatus": {
+    "draft": "مسودة",
+    "sent": "مرسل",
+    "accepted": "مقبول",
+    "declined": "مرفوض",
+    "expired": "منتهي الصلاحية",
+    "void": "لاغٍ"
+  },
+  "hoursMode": {
+    "inherit": "ساعات العمل",
+    "member": "التوفر",
+    "custom": "مخصص",
+    "bypass": "دائمًا"
+  }
+}

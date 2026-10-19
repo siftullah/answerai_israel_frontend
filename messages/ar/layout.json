@@ -1,0 +1,58 @@
+{
+  "metaDescription": "وكلاء ذكاء اصطناعي صوتيون يجيبون على كل مكالمة لنشاطك التجاري.",
+  "nav": {
+    "dashboard": "لوحة التحكم",
+    "contacts": "جهات الاتصال",
+    "allContacts": "جميع جهات الاتصال",
+    "dnc": "عدم الاتصال (DNC)",
+    "calls": "المكالمات",
+    "inboundLogs": "سجلات المكالمات الواردة",
+    "outboundLogs": "سجلات المكالمات الصادرة",
+    "callbacks": "مكالمات معاودة الاتصال",
+    "campaigns": "الحملات",
+    "calendar": "التقويم",
+    "appointments": "المواعيد",
+    "leads": "العملاء المحتملون",
+    "quotes": "عروض الأسعار",
+    "jobs": "أوامر العمل",
+    "invoices": "الفواتير",
+    "businessProfile": "ملف النشاط التجاري",
+    "phoneNumbers": "أرقام الهاتف",
+    "agents": "وكلاء الذكاء الاصطناعي",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "notifications": "الإشعارات",
+    "billing": "الفوترة",
+    "plans": "الباقات",
+    "overview": "نظرة عامة",
+    "knowledgeBase": "قاعدة المعرفة",
+    "basicInfo": "المعلومات الأساسية",
+    "services": "الخدمات",
+    "products": "المنتجات",
+    "faqs": "الأسئلة الشائعة",
+    "policies": "السياسات",
+    "docs": "المستندات",
+    "integrations": "التكاملات",
+    "operations": "العمليات",
+    "team": "الفريق",
+    "transfers": "تحويل المكالمات",
+    "modules": "الوحدات الإضافية"
+  },
+  "sidebar": {
+    "setupGroup": "إعداد الذكاء الاصطناعي"
+  },
+  "navUser": {
+    "switchBusiness": "تبديل النشاط التجاري"
+  },
+  "sectionNav": {
+    "label": "أقسام ملف النشاط التجاري"
+  },
+  "settingsNav": {
+    "label": "أقسام الإعدادات"
+  },
+  "notFound": {
+    "title": "الصفحة غير موجودة",
+    "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
+    "backHome": "العودة إلى AnswerAI"
+  }
+}

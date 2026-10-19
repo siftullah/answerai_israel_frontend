@@ -1,4 +1,5 @@
 import { AxiosError } from "axios";
+import { rt } from "@/lib/i18n/runtime";
 
 /**
  * Every non-2xx response (and network failure) is normalized into this shape
@@ -30,21 +31,23 @@ export function isApiError(error: unknown): error is ApiError {
   return error instanceof ApiError;
 }
 
-const FALLBACK_MESSAGES: Record<number, string> = {
-  401: "Your session has expired. Please log in again.",
-  402: "An active subscription is required.",
-  403: "You are not allowed to do that.",
-  404: "Not found.",
-  410: "This link is no longer valid.",
-  419: "Your session token expired. Please try again.",
-  422: "The given data was invalid.",
-  429: "Too many attempts. Please wait a minute and try again.",
+/** Resolved when the error is created, so the text follows the active UI language. */
+const FALLBACK_MESSAGES: Record<number, () => string> = {
+  401: () => rt("lib.apiErrors.sessionExpired"),
+  402: () => rt("lib.apiErrors.subscriptionRequired"),
+  403: () => rt("lib.apiErrors.forbidden"),
+  404: () => rt("lib.apiErrors.notFound"),
+  410: () => rt("lib.apiErrors.linkInvalid"),
+  419: () => rt("lib.apiErrors.tokenExpired"),
+  422: () => rt("lib.apiErrors.invalidData"),
+  429: () => rt("lib.apiErrors.tooManyAttempts"),
 };
 
 function fallbackMessage(status: number): string {
-  if (FALLBACK_MESSAGES[status]) return FALLBACK_MESSAGES[status];
-  if (status >= 500) return "Something went wrong on our end. Please try again.";
-  return "Something went wrong. Please try again.";
+  const fallback = FALLBACK_MESSAGES[status];
+  if (fallback) return fallback();
+  if (status >= 500) return rt("lib.apiErrors.server");
+  return rt("lib.apiErrors.generic");
 }
 
 export function normalizeApiError(error: unknown): ApiError {
@@ -52,7 +55,7 @@ export function normalizeApiError(error: unknown): ApiError {
 
   if (error instanceof AxiosError) {
     if (!error.response) {
-      return new ApiError(0, "Network error — please check your connection.");
+      return new ApiError(0, rt("lib.apiErrors.network"));
     }
 
     const { status, data } = error.response;
@@ -71,5 +74,5 @@ export function normalizeApiError(error: unknown): ApiError {
     return new ApiError(status, message, errors, reason);
   }
 
-  return new ApiError(0, error instanceof Error ? error.message : "Something went wrong.");
+  return new ApiError(0, error instanceof Error ? error.message : rt("lib.apiErrors.unknown"));
 }

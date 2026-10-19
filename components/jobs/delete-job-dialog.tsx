@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,6 +26,8 @@ export function DeleteJobDialog({
   onOpenChange: (open: boolean) => void;
   onDeleted?: () => void;
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const deleteJob = useDeleteJob(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
@@ -32,7 +35,7 @@ export function DeleteJobDialog({
   const confirm = () => {
     deleteJob.mutate(job.id, {
       onSuccess: () => {
-        toast.success(`${job.reference} deleted`);
+        toast.success(t("toasts.deleted", { reference: job.reference }));
         onDeleted?.();
       },
       onError: (error) => toast.error(error.message),
@@ -44,20 +47,19 @@ export function DeleteJobDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Delete {job.reference}?</AlertDialogTitle>
+          <AlertDialogTitle>{t("delete.title", { reference: job.reference })}</AlertDialogTitle>
           <AlertDialogDescription>
-            &ldquo;{job.title}&rdquo; and its timeline disappear from the portal. A booked visit
-            stops blocking the schedule. Invoices already raised from it are kept.
+            {t("delete.description", { title: job.title })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep job</AlertDialogCancel>
+          <AlertDialogCancel>{t("keepJob")}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={deleteJob.isPending}
             onClick={confirm}
           >
-            {deleteJob.isPending ? "Deleting…" : "Delete job"}
+            {deleteJob.isPending ? tc("actions.deleting") : t("delete.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

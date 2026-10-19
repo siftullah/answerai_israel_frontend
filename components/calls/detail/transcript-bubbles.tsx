@@ -1,14 +1,17 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { WrenchIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useCallTranscript } from "@/hooks/use-calls";
+import { TOOL_LABELS } from "@/lib/agents/tool-catalog";
 import { formatOffset } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 
-/** Snake_case tool names → "Book appointment". */
+/** Catalog tools use their translated label; anything else: snake_case → "Book appointment". */
 function humanizeTool(name: string): string {
+  if (Object.prototype.hasOwnProperty.call(TOOL_LABELS, name)) return TOOL_LABELS[name].label;
   const spaced = name.replace(/[_-]+/g, " ").trim();
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
@@ -34,13 +37,14 @@ export function TranscriptBubbles({
   onSeek?: (seconds: number) => void;
   activeTime?: number | null;
 }) {
+  const t = useTranslations("calls");
   const transcript = useCallTranscript(businessUuid, callUuid, enabled);
 
   if (transcript.isPending) {
     return (
       <div className="flex flex-col gap-3">
         <Skeleton className="h-12 w-3/4" />
-        <Skeleton className="ml-auto h-12 w-3/4" />
+        <Skeleton className="ms-auto h-12 w-3/4" />
         <Skeleton className="h-12 w-2/3" />
       </div>
     );
@@ -50,8 +54,8 @@ export function TranscriptBubbles({
     return (
       <p className="py-6 text-center text-sm text-muted-foreground">
         {transcript.isError && transcript.error.status !== 404
-          ? "The transcript couldn't be loaded right now."
-          : "No transcript was produced for this call."}
+          ? t("transcript.loadFailed")
+          : t("transcript.empty")}
       </p>
     );
   }
@@ -81,14 +85,16 @@ export function TranscriptBubbles({
                 caller && "flex-row-reverse"
               )}
             >
-              <span className="font-medium">{caller ? "Caller" : "Agent"}</span>
+              <span className="font-medium">
+                {caller ? t("transcript.caller") : t("labels.agent")}
+              </span>
               {t0 !== null &&
                 (onSeek ? (
                   <button
                     type="button"
                     onClick={() => onSeek(t0)}
                     className="tabular-nums hover:text-foreground hover:underline"
-                    aria-label={`Play recording from ${formatOffset(t0)}`}
+                    aria-label={t("transcript.playFrom", { time: formatOffset(t0) })}
                   >
                     {formatOffset(t0)}
                   </button>
@@ -101,8 +107,8 @@ export function TranscriptBubbles({
                 className={cn(
                   "rounded-2xl px-3.5 py-2 text-sm whitespace-pre-wrap",
                   caller
-                    ? "rounded-tr-sm bg-primary text-primary-foreground"
-                    : "rounded-tl-sm bg-muted",
+                    ? "rounded-se-sm bg-primary text-primary-foreground"
+                    : "rounded-ss-sm bg-muted",
                   index === activeIndex && "ring-2 ring-cta/60"
                 )}
               >

@@ -1,34 +1,49 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { InvoiceStatusBadge } from "@/components/invoices/invoice-status-badge";
 import { formatDate, formatDateKey } from "@/lib/datetime";
+import type { Translator } from "@/lib/i18n/types";
 import { formatCents } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { Invoice } from "@/lib/api/types";
+import { INVOICE_STATUS_LABELS } from "@/lib/api/types";
 
 /** The row's third line: where this invoice is in its life, date-first. */
-function dateLine(invoice: Invoice, timeZone: string): { text: string; overdue: boolean } {
+function dateLine(
+  invoice: Invoice,
+  timeZone: string,
+  t: Translator
+): { text: string; overdue: boolean } {
   switch (invoice.status) {
     case "draft":
-      return { text: "Draft — not sent yet", overdue: false };
+      return { text: t("draft"), overdue: false };
     case "sent":
       return {
-        text: invoice.due_date ? `Due ${formatDateKey(invoice.due_date)}` : "Sent",
+        text: invoice.due_date
+          ? t("due", { date: formatDateKey(invoice.due_date) })
+          : INVOICE_STATUS_LABELS.sent,
         overdue: false,
       };
     case "overdue":
       return {
-        text: invoice.due_date ? `Was due ${formatDateKey(invoice.due_date)}` : "Overdue",
+        text: invoice.due_date
+          ? t("wasDue", { date: formatDateKey(invoice.due_date) })
+          : INVOICE_STATUS_LABELS.overdue,
         overdue: true,
       };
     case "paid":
       return {
-        text: invoice.paid_at ? `Paid ${formatDate(invoice.paid_at, timeZone)}` : "Paid",
+        text: invoice.paid_at
+          ? t("paid", { date: formatDate(invoice.paid_at, timeZone) })
+          : INVOICE_STATUS_LABELS.paid,
         overdue: false,
       };
     case "void":
       return {
-        text: invoice.voided_at ? `Voided ${formatDate(invoice.voided_at, timeZone)}` : "Void",
+        text: invoice.voided_at
+          ? t("voided", { date: formatDate(invoice.voided_at, timeZone) })
+          : INVOICE_STATUS_LABELS.void,
         overdue: false,
       };
   }
@@ -45,7 +60,8 @@ export function InvoiceListRow({
   timeZone: string;
   onSelect: () => void;
 }) {
-  const line = dateLine(invoice, timeZone);
+  const t = useTranslations("invoices.row");
+  const line = dateLine(invoice, timeZone, t);
 
   return (
     <button
@@ -53,7 +69,7 @@ export function InvoiceListRow({
       onClick={onSelect}
       aria-current={selected || undefined}
       className={cn(
-        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-left outline-none transition-colors focus-visible:bg-muted",
+        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-start outline-none transition-colors focus-visible:bg-muted",
         selected
           ? "bg-primary/[0.07]"
           : invoice.status === "overdue"

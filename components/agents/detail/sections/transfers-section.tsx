@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArrowUpRightIcon,
   EllipsisVerticalIcon,
@@ -66,8 +67,9 @@ import {
   toTransferTargetValues,
 } from "@/lib/validation/transfer-target";
 
-
 export function TransfersSection({ agent }: { agent: Agent }) {
+  const t = useTranslations("agents.sections.transfers");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const archived = agent.status === "archived";
 
@@ -96,12 +98,14 @@ export function TransfersSection({ agent }: { agent: Agent }) {
   const memberName = (target: TransferTarget) =>
     target.business_member
       ? (membersQuery.data?.find((m) => m.id === target.business_member?.id)?.name ??
-        "Team member")
+        t("teamMember"))
       : null;
 
   const destination = (target: TransferTarget) => {
     const name = memberName(target);
-    if (target.to_e164 && name) return `${formatE164(target.to_e164)} (overrides ${name})`;
+    if (target.to_e164 && name) {
+      return t("overrides", { number: formatE164(target.to_e164), name });
+    }
     return target.to_e164 ? formatE164(target.to_e164) : (name ?? "—");
   };
 
@@ -116,13 +120,11 @@ export function TransfersSection({ agent }: { agent: Agent }) {
         });
         setCopying({ done: index + 1, total: businessTargets.length });
       }
-      toast.success(
-        `Copied ${businessTargets.length} ${businessTargets.length === 1 ? "target" : "targets"} — this agent now uses its own directory.`
-      );
+      toast.success(t("toasts.copied", { count: businessTargets.length }));
     } catch (error) {
       // Already-copied entries remain: the section lands in the customised
       // state where the rest can be added manually.
-      toast.error(error instanceof Error ? error.message : "Couldn't copy every target.");
+      toast.error(error instanceof Error ? error.message : t("toasts.copyFailed"));
       void ownQuery.refetch();
     } finally {
       setCopying(null);
@@ -136,9 +138,9 @@ export function TransfersSection({ agent }: { agent: Agent }) {
       for (const target of own) {
         await deleteTarget.mutateAsync(target.id);
       }
-      toast.success("Reverted — this agent uses the business directory again.");
+      toast.success(t("toasts.reverted"));
     } catch (error) {
-      toast.error(error instanceof Error ? error.message : "Couldn't remove every target.");
+      toast.error(error instanceof Error ? error.message : t("toasts.revertFailed"));
       void ownQuery.refetch();
     } finally {
       setRevertBusy(false);
@@ -157,13 +159,13 @@ export function TransfersSection({ agent }: { agent: Agent }) {
   return (
     <AgentSection
       id="transfers"
-      title="Transfers"
-      description="Who this agent can hand live calls to."
+      title={t("title")}
+      description={t("description")}
       actions={
         customised && !archived ? (
           <Button type="button" variant="cta" size="sm" onClick={() => setEditor({ target: null })}>
             <PlusIcon />
-            Add target
+            {t("addTarget")}
           </Button>
         ) : undefined
       }
@@ -175,7 +177,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
         </div>
       ) : ownQuery.isError ? (
         <ErrorState
-          title="Couldn't load transfer targets"
+          title={t("loadError")}
           message={ownQuery.error.message}
           onRetry={() => ownQuery.refetch()}
         />
@@ -183,16 +185,13 @@ export function TransfersSection({ agent }: { agent: Agent }) {
         <div className="flex flex-col gap-4">
           <div className="rounded-2xl border bg-muted/40 p-4">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-medium">Using the business directory</p>
+              <p className="text-sm font-medium">{t("usingBusiness")}</p>
               <Badge variant="secondary">
-                {businessMode === "screened" ? "Screened" : "Blind"}
+                {businessMode === "screened" ? t("mode.screened") : t("mode.blind")}
               </Badge>
             </div>
             {businessTargets.length === 0 ? (
-              <p className="mt-2 text-sm text-muted-foreground">
-                No business-wide targets yet — this agent currently has nowhere to transfer
-                calls.
-              </p>
+              <p className="mt-2 text-sm text-muted-foreground">{t("noBusinessTargets")}</p>
             ) : (
               <ul className="mt-3 flex flex-col gap-1.5">
                 {businessTargets.slice(0, 5).map((target) => (
@@ -205,7 +204,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
                 ))}
                 {businessTargets.length > 5 && (
                   <li className="text-sm text-muted-foreground">
-                    …and {businessTargets.length - 5} more
+                    {t("andMore", { count: businessTargets.length - 5 })}
                   </li>
                 )}
               </ul>
@@ -223,8 +222,8 @@ export function TransfersSection({ agent }: { agent: Agent }) {
               >
                 {copying && <Spinner />}
                 {copying
-                  ? `Copying ${copying.done} of ${copying.total}…`
-                  : "Customise for this agent"}
+                  ? t("copying", { done: copying.done, total: copying.total })
+                  : t("customise")}
               </Button>
             )}
             <Button
@@ -232,16 +231,14 @@ export function TransfersSection({ agent }: { agent: Agent }) {
               size="sm"
               render={<Link href={`/b/${business.id}/business-profile/transfers`} />}
             >
-              Edit business directory
-              <ArrowUpRightIcon />
+              {t("editBusinessDirectory")}
+              <ArrowUpRightIcon className="rtl:-scale-x-100" />
             </Button>
           </div>
         </div>
       ) : (
         <div className="flex flex-col gap-5">
-          <p className="text-sm text-muted-foreground">
-            This agent uses its own directory and ignores the business-wide one.
-          </p>
+          <p className="text-sm text-muted-foreground">{t("ownDirectory")}</p>
 
           <ChoiceCards
             value={scopeMode}
@@ -252,13 +249,13 @@ export function TransfersSection({ agent }: { agent: Agent }) {
             options={[
               {
                 value: "blind",
-                label: "Blind",
-                description: "Connect the caller straight through.",
+                label: t("mode.blind"),
+                description: t("mode.blindDescription"),
               },
               {
                 value: "screened",
-                label: "Screened",
-                description: "The AI briefs the person first, then connects the caller.",
+                label: t("mode.screened"),
+                description: t("mode.screenedDescription"),
               },
             ]}
           />
@@ -267,10 +264,10 @@ export function TransfersSection({ agent }: { agent: Agent }) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Name</TableHead>
-                  <TableHead>Destination</TableHead>
-                  <TableHead>When</TableHead>
-                  <TableHead>Hours</TableHead>
+                  <TableHead>{tc("labels.name")}</TableHead>
+                  <TableHead>{t("columns.destination")}</TableHead>
+                  <TableHead>{t("columns.when")}</TableHead>
+                  <TableHead>{t("columns.hours")}</TableHead>
                   {!archived && <TableHead className="w-10" />}
                 </TableRow>
               </TableHeader>
@@ -297,7 +294,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
                               <Button
                                 variant="ghost"
                                 size="icon-sm"
-                                aria-label={`Actions for ${target.name}`}
+                                aria-label={t("actionsFor", { name: target.name })}
                               />
                             }
                           >
@@ -306,14 +303,14 @@ export function TransfersSection({ agent }: { agent: Agent }) {
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem onClick={() => setEditor({ target })}>
                               <PencilIcon />
-                              Edit
+                              {tc("actions.edit")}
                             </DropdownMenuItem>
                             <DropdownMenuItem
                               variant="destructive"
                               onClick={() => setDeleting(target)}
                             >
                               <Trash2Icon />
-                              Delete
+                              {tc("actions.delete")}
                             </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
@@ -336,7 +333,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
                 onClick={() => setReverting(true)}
               >
                 {revertBusy && <Spinner />}
-                Revert to business directory
+                {t("revert")}
               </Button>
             </div>
           )}
@@ -346,11 +343,8 @@ export function TransfersSection({ agent }: { agent: Agent }) {
       <Dialog open={customising} onOpenChange={setCustomising}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Customise transfers for this agent</DialogTitle>
-            <DialogDescription>
-              Once this agent has its own targets, it stops using the business directory
-              entirely.
-            </DialogDescription>
+            <DialogTitle>{t("customiseDialog.title")}</DialogTitle>
+            <DialogDescription>{t("customiseDialog.description")}</DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-2">
             <Button
@@ -358,8 +352,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
               variant="outline"
               onClick={() => void copyBusinessDirectory()}
             >
-              Copy the business directory ({businessTargets.length}{" "}
-              {businessTargets.length === 1 ? "target" : "targets"})
+              {t("customiseDialog.copy", { count: businessTargets.length })}
             </Button>
             <Button
               type="button"
@@ -369,7 +362,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
                 setEditor({ target: null });
               }}
             >
-              Start empty
+              {t("customiseDialog.startEmpty")}
             </Button>
           </div>
         </DialogContent>
@@ -396,15 +389,14 @@ export function TransfersSection({ agent }: { agent: Agent }) {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Switch every target to {pendingMode === "screened" ? "screened" : "blind"}?
+              {t("switchDialog.title", { mode: pendingMode ?? "blind" })}
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This changes how all {own.length} {own.length === 1 ? "target" : "targets"} in
-              this agent&apos;s directory transfer.
+              {t("switchDialog.description", { count: own.length })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!pendingMode) return;
@@ -415,7 +407,7 @@ export function TransfersSection({ agent }: { agent: Agent }) {
                 setPendingMode(null);
               }}
             >
-              Switch mode
+              {t("switchDialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -429,26 +421,26 @@ export function TransfersSection({ agent }: { agent: Agent }) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
             <AlertDialogDescription>
-              {own.length === 1
-                ? "This is the agent's last custom target — deleting it puts the agent back on the business directory."
-                : "This agent will no longer transfer calls here."}
+              {own.length === 1 ? t("deleteDialog.last") : t("deleteDialog.other")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteTarget.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Transfer target deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -457,16 +449,15 @@ export function TransfersSection({ agent }: { agent: Agent }) {
       <AlertDialog open={reverting} onOpenChange={setReverting}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Revert to the business directory?</AlertDialogTitle>
+            <AlertDialogTitle>{t("revertDialog.title")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Deletes all {own.length} custom {own.length === 1 ? "target" : "targets"}. Calls
-              will use the business-wide directory again.
+              {t("revertDialog.description", { count: own.length })}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction onClick={() => void revertToBusiness()}>
-              Revert
+              {t("revertDialog.confirm")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

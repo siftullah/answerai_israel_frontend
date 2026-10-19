@@ -7,6 +7,7 @@ import type {
   UpdateQuotePayload,
 } from "@/lib/api/types";
 import { LINE_ITEM_KINDS } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { dollarsToCents, centsToDollarsInput } from "@/lib/money";
 
 /**
@@ -14,81 +15,86 @@ import { dollarsToCents, centsToDollarsInput } from "@/lib/money";
  * Prices are edited in dollars and converted to integer cents at the payload
  * boundary; the VAT switch stands in for tax_rate_bp (checked = omit, so the
  * backend applies the business default rate; unchecked = 0). The deposit is
- * "none" | percent (whole %) | fixed (dollars → cents).
+ * "none" | percent (whole %) | fixed (dollars → cents). Schema factories take
+ * a translator scoped to the `validation` namespace.
  */
-const quoteItemSchema = z.object({
-  kind: z.enum(LINE_ITEM_KINDS),
-  description: z
-    .string()
-    .trim()
-    .min(1, "Describe the work or part")
-    .max(300, "Keep the description under 300 characters"),
-  quantity: z.string().refine((value) => {
-    const quantity = Number(value);
-    return value.trim() !== "" && Number.isFinite(quantity) && quantity > 0 && quantity <= 99999;
-  }, "Enter a quantity above zero"),
-  unit_price: z
-    .string()
-    .refine((value) => dollarsToCents(value) !== null, "Enter a price like 180 or 180.50"),
-  gst: z.boolean(),
-});
+function quoteItemSchema(t: Translator) {
+  return z.object({
+    kind: z.enum(LINE_ITEM_KINDS),
+    description: z
+      .string()
+      .trim()
+      .min(1, t("lineItem.descriptionRequired"))
+      .max(300, t("length.description", { max: 300 })),
+    quantity: z.string().refine((value) => {
+      const quantity = Number(value);
+      return value.trim() !== "" && Number.isFinite(quantity) && quantity > 0 && quantity <= 99999;
+    }, t("lineItem.quantityInvalid")),
+    unit_price: z
+      .string()
+      .refine((value) => dollarsToCents(value) !== null, t("lineItem.unitPriceInvalid")),
+    gst: z.boolean(),
+  });
+}
 
-export type QuoteItemFormValues = z.infer<typeof quoteItemSchema>;
+export type QuoteItemFormValues = z.infer<ReturnType<typeof quoteItemSchema>>;
 
-export const quoteFormSchema = z
-  .object({
-    contact_id: z.string().min(1, "Choose a contact"),
-    title: z.string().max(200, "Keep the title under 200 characters"),
-    /** Calendar keys "YYYY-MM-DD", "" = set on send. */
-    issue_date: z.string(),
-    valid_until: z.string(),
-    notes: z.string().max(5000, "Keep the notes under 5,000 characters"),
-    terms: z.string().max(5000, "Keep the terms under 5,000 characters"),
-    internal_notes: z.string().max(5000, "Keep the internal notes under 5,000 characters"),
-    deposit_type: z.enum(["none", "percent", "fixed"]),
-    deposit_value: z.string(),
-    items: z.array(quoteItemSchema).min(1, "Add at least one line item"),
-  })
-  .superRefine((values, ctx) => {
-    if (values.valid_until && !values.issue_date) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["valid_until"],
-        message: "Set an issue date first, or leave both to fill on send",
-      });
-    }
-    if (values.issue_date && values.valid_until && values.valid_until < values.issue_date) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["valid_until"],
-        message: "The validity date can't be before the issue date",
-      });
-    }
-    if (values.deposit_type === "percent") {
-      const percent = Number(values.deposit_value);
-      if (
-        values.deposit_value.trim() === "" ||
-        !Number.isInteger(percent) ||
-        percent < 1 ||
-        percent > 100
-      ) {
+export function quoteFormSchema(t: Translator) {
+  return z
+    .object({
+      contact_id: z.string().min(1, t("common.contactRequired")),
+      title: z.string().max(200, t("length.title", { max: 200 })),
+      /** Calendar keys "YYYY-MM-DD", "" = set on send. */
+      issue_date: z.string(),
+      valid_until: z.string(),
+      notes: z.string().max(5000, t("length.notes", { max: 5000 })),
+      terms: z.string().max(5000, t("length.terms", { max: 5000 })),
+      internal_notes: z.string().max(5000, t("length.internalNotes", { max: 5000 })),
+      deposit_type: z.enum(["none", "percent", "fixed"]),
+      deposit_value: z.string(),
+      items: z.array(quoteItemSchema(t)).min(1, t("lineItem.itemsRequired")),
+    })
+    .superRefine((values, ctx) => {
+      if (values.valid_until && !values.issue_date) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["valid_until"],
+          message: t("common.issueDateFirst"),
+        });
+      }
+      if (values.issue_date && values.valid_until && values.valid_until < values.issue_date) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["valid_until"],
+          message: t("quote.validUntilBeforeIssue"),
+        });
+      }
+      if (values.deposit_type === "percent") {
+        const percent = Number(values.deposit_value);
+        if (
+          values.deposit_value.trim() === "" ||
+          !Number.isInteger(percent) ||
+          percent < 1 ||
+          percent > 100
+        ) {
+          ctx.addIssue({
+            code: "custom",
+            path: ["deposit_value"],
+            message: t("quote.depositPercentRange", { min: 1, max: 100 }),
+          });
+        }
+      }
+      if (values.deposit_type === "fixed" && dollarsToCents(values.deposit_value) === null) {
         ctx.addIssue({
           code: "custom",
           path: ["deposit_value"],
-          message: "Enter a whole percentage between 1 and 100",
+          message: t("quote.depositAmountInvalid"),
         });
       }
-    }
-    if (values.deposit_type === "fixed" && dollarsToCents(values.deposit_value) === null) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["deposit_value"],
-        message: "Enter an amount like 250 or 250.50",
-      });
-    }
-  });
+    });
+}
 
-export type QuoteFormValues = z.infer<typeof quoteFormSchema>;
+export type QuoteFormValues = z.infer<ReturnType<typeof quoteFormSchema>>;
 
 export function emptyQuoteItem(): QuoteItemFormValues {
   return { kind: "labour", description: "", quantity: "1", unit_price: "", gst: true };

@@ -1,8 +1,10 @@
 "use client";
 
 import { BotIcon, PhoneIcon, PhoneMissedIcon, TimerIcon, type LucideIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Skeleton } from "@/components/ui/skeleton";
-import { LOCALE, formatDuration } from "@/lib/datetime";
+import { formatDuration } from "@/lib/datetime";
+import { displayLocale } from "@/lib/i18n/runtime";
 import { cn } from "@/lib/utils";
 import type { DashboardCalls } from "@/lib/api/types";
 
@@ -35,7 +37,7 @@ function HeroTile({
       <div
         aria-hidden
         className={cn(
-          "pointer-events-none absolute -top-10 -right-8 size-28 rounded-full blur-2xl",
+          "pointer-events-none absolute -top-10 -end-8 size-28 rounded-full blur-2xl",
           t.glow
         )}
       />
@@ -62,6 +64,8 @@ function HeroTile({
 
 /** The hero strip: what the AI handled today, and the month's talk time. */
 export function CallActivityTiles({ calls }: { calls: DashboardCalls | undefined }) {
+  const t = useTranslations("dashboard.activity");
+
   if (!calls) {
     return (
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
@@ -77,41 +81,41 @@ export function CallActivityTiles({ calls }: { calls: DashboardCalls | undefined
   return (
     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
       <HeroTile
-        label="Calls today"
+        label={t("callsToday")}
         value={String(today.total)}
         detail={
           today.total > 0
-            ? `${today.inbound} inbound · ${today.outbound} outbound`
-            : "No calls yet today"
+            ? t("directionSplit", { inbound: today.inbound, outbound: today.outbound })
+            : t("noCallsToday")
         }
         icon={PhoneIcon}
         tone="info"
       />
       <HeroTile
-        label="Answered by AI"
+        label={t("answeredByAi")}
         value={String(today.answered)}
         detail={
           today.transferred > 0
-            ? `${today.transferred} passed to your team`
-            : "Handled end to end"
+            ? t("transferred", { count: today.transferred })
+            : t("handledEndToEnd")
         }
         icon={BotIcon}
         tone="success"
       />
       <HeroTile
-        label="Missed"
+        label={t("missed")}
         value={String(today.missed)}
-        detail={today.missed > 0 ? "Busy, failed or rang out" : "Nothing slipped through"}
+        detail={today.missed > 0 ? t("missedDetail") : t("nothingMissed")}
         icon={PhoneMissedIcon}
         tone="warning"
       />
       <HeroTile
-        label="Minutes this month"
-        value={calls.minutes_this_month.toLocaleString(LOCALE)}
+        label={t("minutesThisMonth")}
+        value={calls.minutes_this_month.toLocaleString(displayLocale())}
         detail={
           calls.avg_duration_seconds > 0
-            ? `Avg ${formatDuration(calls.avg_duration_seconds)} per call`
-            : "No talk time yet"
+            ? t("avgPerCall", { duration: formatDuration(calls.avg_duration_seconds) })
+            : t("noTalkTime")
         }
         icon={TimerIcon}
         tone="cta"

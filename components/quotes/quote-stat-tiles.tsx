@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { CircleCheckBigIcon, HourglassIcon, TrophyIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCents } from "@/lib/money";
@@ -41,10 +42,6 @@ function StatTile({
   );
 }
 
-function plural(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`;
-}
-
 /** The pipeline-at-a-glance strip: what's out there, what landed, how often you win. */
 export function QuoteStatTiles({
   counts,
@@ -53,6 +50,8 @@ export function QuoteStatTiles({
   counts: QuoteCounts | undefined;
   className?: string;
 }) {
+  const t = useTranslations("quotes.stats");
+
   if (!counts) {
     return (
       <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", className)}>
@@ -70,32 +69,35 @@ export function QuoteStatTiles({
     <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", className)}>
       <StatTile
         icon={HourglassIcon}
-        label="Awaiting response"
+        label={t("awaitingResponse")}
         value={formatCents(counts.open_value_cents)}
         detail={
           counts.awaiting > 0
-            ? `${plural(counts.awaiting, "quote")} with customers${
-                counts.expiring_soon > 0 ? ` · ${counts.expiring_soon} expiring soon` : ""
-              }`
-            : "Nothing awaiting a response"
+            ? counts.expiring_soon > 0
+              ? t("withCustomersExpiring", {
+                  count: counts.awaiting,
+                  expiring: counts.expiring_soon,
+                })
+              : t("withCustomers", { count: counts.awaiting })
+            : t("nothingAwaiting")
         }
         tone="info"
       />
       <StatTile
         icon={CircleCheckBigIcon}
-        label="Accepted this month"
+        label={t("acceptedThisMonth")}
         value={formatCents(counts.accepted_this_month_cents)}
-        detail={`${plural(counts.accepted, "quote")} accepted all time`}
+        detail={t("acceptedAllTime", { count: counts.accepted })}
         tone="success"
       />
       <StatTile
         icon={TrophyIcon}
-        label="Win rate"
+        label={t("winRate")}
         value={winRate !== null ? `${winRate}%` : "—"}
         detail={
           winRate !== null
-            ? `${counts.accepted_90d} of ${plural(decided, "decided quote")}, last 90 days`
-            : "No decided quotes in the last 90 days"
+            ? t("winRateDetail", { accepted: counts.accepted_90d, decided })
+            : t("noDecided")
         }
         tone="cta"
       />

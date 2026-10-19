@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { BuildingIcon, ChevronsUpDownIcon, LogOutIcon, SettingsIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
@@ -41,6 +42,8 @@ export function NavUser() {
   const { isMobile } = useSidebar();
   const logout = useLogout();
   const router = useRouter();
+  const t = useTranslations("layout");
+  const tc = useTranslations("common");
 
   if (!data) return null;
   const { user } = data;
@@ -60,22 +63,22 @@ export function NavUser() {
                 {initials(user.name)}
               </AvatarFallback>
             </Avatar>
-            <div className="grid flex-1 text-left text-sm leading-tight">
+            <div className="grid flex-1 text-start text-sm leading-tight">
               <span className="truncate font-medium">{user.name}</span>
               <span className="truncate text-xs text-sidebar-foreground/70">{business.name}</span>
             </div>
-            <ChevronsUpDownIcon className="ml-auto size-4" />
+            <ChevronsUpDownIcon className="ms-auto size-4" />
           </DropdownMenuTrigger>
           <DropdownMenuContent
             className="min-w-56 space-y-1.5 pb-2.5"
-            side={isMobile ? "bottom" : "right"}
+            side={isMobile ? "bottom" : "inline-end"}
             align="end"
             sideOffset={4}
           >
             {/* Base UI: GroupLabel must live inside a Group. */}
             <DropdownMenuGroup>
               <DropdownMenuLabel className="p-0 font-normal">
-                <div className="flex items-center gap-2 px-1 py-1.5 text-left text-sm">
+                <div className="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
                   <Avatar className="size-9 rounded-lg">
                     {user.avatar && (
                       <AvatarImage src={user.avatar.url} alt={user.name} className="rounded-lg" />
@@ -84,7 +87,7 @@ export function NavUser() {
                       {initials(user.name)}
                     </AvatarFallback>
                   </Avatar>
-                  <div className="grid flex-1 text-left text-sm leading-tight">
+                  <div className="grid flex-1 text-start text-sm leading-tight">
                     <span className="truncate font-medium">{user.name}</span>
                     <span className="truncate text-xs">{user.email}</span>
                   </div>
@@ -93,12 +96,12 @@ export function NavUser() {
             </DropdownMenuGroup>
             <DropdownMenuItem onClick={() => router.push(`/b/${business.id}/settings/profile`)}>
               <SettingsIcon />
-              Settings
+              {tc("labels.settings")}
             </DropdownMenuItem>
             {data.memberships.length > 1 && (
               <DropdownMenuItem onClick={() => router.push("/select-business")}>
                 <BuildingIcon />
-                Switch business
+                {t("navUser.switchBusiness")}
               </DropdownMenuItem>
             )}
             <DropdownMenuItem
@@ -107,7 +110,7 @@ export function NavUser() {
               disabled={logout.isPending}
             >
               <LogOutIcon />
-              Log out
+              {tc("actions.logOut")}
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

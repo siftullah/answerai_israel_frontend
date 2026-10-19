@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "לוח בקרה"
+  },
+  "header": {
+    "welcome": "טוב שחזרתם",
+    "welcomeName": "טוב שחזרתם, {name}"
+  },
+  "hours": {
+    "openUntil": "פתוח · נסגר ב-{time}",
+    "openNow": "פתוח עכשיו",
+    "closedUntil": "סגור · נפתח ב-{time}",
+    "closedToday": "סגור היום"
+  },
+  "health": {
+    "agentsTitle": "{count, plural, one {סוכן AI לא מצליח להסתנכרן} other {# סוכני AI לא מצליחים להסתנכרן}}",
+    "agentsDescription": "מתקשרים עלולים להגיע לגרסה לא מעודכנת. <link>בדיקת סוכני AI</link>",
+    "numbersTitle": "{count, plural, one {מספר טלפון דורש טיפול} other {# מספרי טלפון דורשים טיפול}}",
+    "numbersDescription": "הפעלת המספר נכשלה — מתקשרים לא יכולים להשיג אתכם דרכו. <link>תיקון מספרי טלפון</link>",
+    "calendarTitle": "החיבור ליומן שלכם לא תקין",
+    "calendarDescription": "פגישות חדשות לא מסתנכרנות ליומן החיצוני שלכם. <link>חיבור מחדש</link>"
+  },
+  "loadError": "לא ניתן לטעון את הסקירה הכללית",
+  "activity": {
+    "callsToday": "שיחות היום",
+    "directionSplit": "{inbound} נכנסות · {outbound} יוצאות",
+    "noCallsToday": "עדיין אין שיחות היום",
+    "answeredByAi": "נענו על ידי AI",
+    "transferred": "{count} הועברו לצוות שלכם",
+    "handledEndToEnd": "טופלו מתחילתן ועד סופן",
+    "missed": "שלא נענו",
+    "missedDetail": "תפוס, כשל או ללא מענה",
+    "nothingMissed": "אף שיחה לא התפספסה",
+    "minutesThisMonth": "דקות החודש",
+    "avgPerCall": "ממוצע של {duration} לשיחה",
+    "noTalkTime": "עדיין אין זמן שיחה"
+  },
+  "callVolume": {
+    "title": "נפח שיחות",
+    "total": "{count, plural, one {שיחה #} two {# שיחות} other {# שיחות}} ב-14 הימים האחרונים",
+    "period": "14 הימים האחרונים",
+    "vsPriorWeek": "לעומת השבוע הקודם",
+    "emptyTitle": "עדיין אין שיחות",
+    "emptyDescription": "כשסוכן ה-AI שלכם יתחיל לענות, נפח השיחות היומי יופיע כאן.",
+    "inbound": "נכנסות",
+    "outbound": "יוצאות"
+  },
+  "needsAttention": {
+    "title": "דורש טיפול",
+    "description": "כאן המגע האנושי עושה את ההבדל",
+    "allClear": "הכל תקין",
+    "allClearDescription": "אין כרגע שום דבר שדורש את תשומת לבכם.",
+    "callbacksOverdue": "{count, plural, one {שיחה חוזרת <num>#</num> באיחור} two {<num>#</num> שיחות חוזרות באיחור} other {<num>#</num> שיחות חוזרות באיחור}}",
+    "invoicesOverdue": "{count, plural, one {חשבונית <num>#</num> באיחור · {amount}} two {<num>#</num> חשבוניות באיחור · {amount}} other {<num>#</num> חשבוניות באיחור · {amount}}}",
+    "jobsHighPriority": "{count, plural, one {עבודה פתוחה <num>#</num> בעדיפות גבוהה} two {<num>#</num> עבודות פתוחות בעדיפות גבוהה} other {<num>#</num> עבודות פתוחות בעדיפות גבוהה}}",
+    "appointmentsToReview": "{count, plural, one {פגישה <num>#</num> לבדיקה} two {<num>#</num> פגישות לבדיקה} other {<num>#</num> פגישות לבדיקה}}",
+    "quotesExpiring": "{count, plural, one {הצעת מחיר <num>#</num> שתוקפה יפוג בקרוב} two {<num>#</num> הצעות מחיר שתוקפן יפוג בקרוב} other {<num>#</num> הצעות מחיר שתוקפן יפוג בקרוב}}",
+    "leadsNew": "{count, plural, one {ליד חדש <num>#</num> לטיפול} two {<num>#</num> לידים חדשים לטיפול} other {<num>#</num> לידים חדשים לטיפול}}",
+    "callbacksDueToday": "{count, plural, one {שיחה חוזרת <num>#</num> לביצוע היום} two {<num>#</num> שיחות חוזרות לביצוע היום} other {<num>#</num> שיחות חוזרות לביצוע היום}}"
+  },
+  "answerRate": {
+    "title": "שיעור מענה",
+    "period": "7 הימים האחרונים",
+    "emptyTitle": "אין שיחות השבוע",
+    "emptyDescription": "המד יתמלא כשיתחילו להגיע שיחות.",
+    "seriesAnswered": "נענו",
+    "gaugeCaption": "נענו",
+    "summary": "{answered} מתוך {total, plural, one {# שיחה} other {# שיחות}} נענו",
+    "delta": "{sign}{points, plural, one {# נקודה} other {# נקודות}} לעומת השבוע הקודם"
+  },
+  "busiestHours": {
+    "title": "השעות העמוסות ביותר",
+    "peak": "שיא בסביבות {range} · 14 הימים האחרונים",
+    "period": "14 הימים האחרונים",
+    "emptyTitle": "אין שיחות עדיין",
+    "emptyDescription": "כשיתחילו להיכנס שיחות, תוכלו לראות באילו שעות הטלפון הכי עמוס.",
+    "seriesCalls": "שיחות"
+  },
+  "today": {
+    "title": "היום",
+    "description": "פגישות, עבודות ושיחות חוזרות",
+    "openCalendar": "פתיחת היומן",
+    "emptyTitle": "אין אירועים מתוזמנים",
+    "emptyDescription": "אירועים שסוכן ה-AI קובע בשיחות מופיעים כאן אוטומטית.",
+    "kinds": {
+      "appointment": "פגישה",
+      "callback": "שיחה חוזרת",
+      "job": "עבודה"
+    }
+  },
+  "recentCalls": {
+    "title": "שיחות אחרונות",
+    "description": "במה סוכן ה-AI שלכם טיפל לאחרונה",
+    "emptyTitle": "אין שיחות עדיין",
+    "emptyDescription": "שיחות שסוכן ה-AI שלכם עונה להן או מבצע יופיעו כאן.",
+    "noSummary": "אין סיכום"
+  },
+  "captured": {
+    "title": "נאספו על ידי סוכן ה-AI שלכם",
+    "period": "החודש, מתוך שיחות",
+    "footer": "נוצרו אוטומטית — ללא הזנה ידנית.",
+    "items": {
+      "leads": "לידים",
+      "appointments": "פגישות",
+      "quotes": "בקשות להצעת מחיר",
+      "jobs": "עבודות",
+      "callbacks": "שיחות חוזרות"
+    }
+  },
+  "snapshots": {
+    "leads": {
+      "title": "לידים",
+      "moneyLabel": "צבר מכירות פתוח",
+      "open": "{count} פתוחים",
+      "new": "{count} חדשים"
+    },
+    "quotes": {
+      "title": "הצעות מחיר",
+      "moneyLabel": "ממתינות לתשובה",
+      "awaiting": "{count} ממתינות",
+      "expiringSoon": "{count} יפוגו בקרוב"
+    },
+    "jobs": {
+      "title": "עבודות",
+      "moneyLabel": "שווי עבודות פעילות",
+      "active": "{count} פעילות",
+      "today": "{count} היום"
+    },
+    "invoices": {
+      "title": "חשבוניות",
+      "moneyLabel": "יתרה לתשלום",
+      "awaitingPayment": "{count} ממתינות לתשלום",
+      "overdue": "{count} באיחור"
+    }
+  }
+}

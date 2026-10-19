@@ -1,0 +1,315 @@
+{
+  "meta": {
+    "title": "קמפיינים",
+    "detailTitle": "קמפיין"
+  },
+  "status": {
+    "draft": "טיוטה",
+    "scheduled": "מתוזמן",
+    "running": "פעיל",
+    "paused": "מושהה",
+    "completed": "הושלם",
+    "canceled": "בוטל"
+  },
+  "recipientStatus": {
+    "pending": "ממתין",
+    "queued": "בתור",
+    "calling": "בחיוג",
+    "completed": "הושלם",
+    "retry_scheduled": "תוזמן ניסיון נוסף",
+    "failed": "נכשל",
+    "max_attempts": "מוצו הניסיונות",
+    "dnc_blocked": "ברשימת אין להתקשר (DNC)",
+    "invalid": "לא תקין",
+    "skipped": "דולג",
+    "canceled": "בוטל"
+  },
+  "startErrors": {
+    "campaign_not_startable": "אפשר להתחיל רק קמפיינים בטיוטה או קמפיינים מתוזמנים.",
+    "campaign_agent_not_ready": "כדי שהקמפיין יוכל לחייג, סוכן ה-AI חייב להיות פעיל, מפורסם ומוגדר לשיחות יוצאות.",
+    "campaign_number_not_ready": "מספר המתקשר עדיין לא פעיל.",
+    "campaign_number_not_dialable": "אי אפשר לחייג בקמפיינים ממספרי SIP — בחרו אחד ממספרי Twilio שלכם.",
+    "campaign_no_recipients": "הוסיפו לפחות נמען אחד לפני ההתחלה.",
+    "campaign_locked": "הקמפיין הזה הסתיים ולא ניתן לשנות אותו יותר."
+  },
+  "filters": {
+    "byStatus": "סינון לפי סטטוס",
+    "allStatuses": "כל הסטטוסים"
+  },
+  "a11y": {
+    "actionsFor": "פעולות עבור {name}",
+    "selectItem": "בחירת {name}"
+  },
+  "list": {
+    "title": "קמפיינים",
+    "description": "שיחות יוצאות בהיקף רחב — סוכן ה-AI שלכם עובר על הרשימה, מנסה שוב כשאין מענה ומדלג על מי שברשימת אין להתקשר.",
+    "newCampaign": "קמפיין חדש",
+    "searchPlaceholder": "חיפוש קמפיינים",
+    "loadError": "לא ניתן לטעון את הקמפיינים",
+    "noMatches": "אין קמפיינים שתואמים למסננים שלכם.",
+    "emptyTitle": "אין עדיין קמפיינים",
+    "emptyDescription": "צרו קמפיין, טענו רשימת מספרים או אנשי קשר, וסוכן ה-AI לשיחות יוצאות יבצע את השיחות.",
+    "noAgent": "אין סוכן AI",
+    "fromNumber": "מהמספר {number}",
+    "noCallerNumber": "אין מספר מתקשר"
+  },
+  "table": {
+    "agent": "סוכן AI",
+    "callerNumber": "מספר מתקשר",
+    "progress": "התקדמות",
+    "created": "נוצר"
+  },
+  "progress": {
+    "noRecipients": "אין נמענים",
+    "doneOfTotal": "{done} מתוך {total}"
+  },
+  "actions": {
+    "start": "התחלה",
+    "startNow": "התחלה עכשיו",
+    "pause": "השהיה",
+    "resume": "המשך",
+    "duplicate": "שכפול",
+    "cancelCampaign": "ביטול קמפיין"
+  },
+  "toasts": {
+    "created": "הקמפיין נוצר כטיוטה — השלב הבא הוא הוספת נמענים",
+    "updated": "הקמפיין עודכן",
+    "scheduled": "הקמפיין תוזמן — החיוג יתחיל בשעת ההתחלה",
+    "started": "הקמפיין התחיל",
+    "paused": "הקמפיין הושהה",
+    "resumed": "הקמפיין חודש",
+    "duplicated": "הקמפיין שוכפל כטיוטה",
+    "canceled": "הקמפיין בוטל",
+    "deleted": "הקמפיין נמחק",
+    "noRecipientsHint": "הוסיפו מספרים, בחרו אנשי קשר או ייבאו גיליון אלקטרוני למטה."
+  },
+  "cancelDialog": {
+    "title": "לבטל את {name}?",
+    "description": "הביטול מפסיק את החיוג ומבטל את כל השיחות שבתור ואת ההתקשרות לנמענים שנותרו. לא ניתן לבטל פעולה זו.",
+    "keepRunning": "המשך הפעלה"
+  },
+  "deleteDialog": {
+    "title": "למחוק את {name}?",
+    "description": "פעולה זו מסירה את הקמפיין ואת רשימת הנמענים שלו. שיחות שכבר בוצעו יישארו ביומן השיחות."
+  },
+  "create": {
+    "title": "קמפיין חדש",
+    "description": "בחרו מי מתקשר ומאיזה מספר — את כל השאר אפשר לשנות בהמשך.",
+    "submit": "יצירת קמפיין",
+    "steps": {
+      "basics": "פרטים בסיסיים",
+      "pacingSchedule": "קצב ותזמון"
+    }
+  },
+  "form": {
+    "namePlaceholder": "למשל, שיחות מעקב ליולי",
+    "agent": "סוכן AI",
+    "agentPlaceholder": "בחרו סוכן AI לשיחות יוצאות",
+    "noAgents": "אין סוכני AI מוכנים לשיחות יוצאות — צרו סוכן במסך סוכני AI ופרסמו אותו תחילה.",
+    "agentHint": "רק סוכני AI פעילים שפורסמו ומיועדים לשיחות יוצאות יכולים לחייג בקמפיינים.",
+    "callerNumber": "מספר לחיוג יוצא",
+    "numberPlaceholder": "בחרו את המספר שממנו יבוצעו השיחות",
+    "noNumbers": "אין מספרים מתאימים — קמפיינים מחייגים ממספרי Twilio הפעילים שלכם (מספרי SIP לא יכולים לבצע שיחות קמפיין).",
+    "numberHint": "הנמענים יראו את המספר הזה בזיהוי המתקשר.",
+    "startDate": "תאריך התחלה",
+    "startTime": "שעת התחלה",
+    "endDate": "תאריך סיום",
+    "endTime": "שעת סיום",
+    "scheduleHint": "השעות הן לפי אזור הזמן של העסק. השאירו ריק כדי להתחיל ידנית ולהמשיך עד לסיום הטיפול בכל הנמענים.",
+    "maxConcurrent": "שיחות במקביל",
+    "maxAttempts": "ניסיונות לאדם",
+    "retryDelay": "ניסיון חוזר לאחר (דקות)",
+    "retryOn": "ניסיון חוזר כשהשיחה מסתיימת ב־",
+    "retryOnHint": "כל תוצאה אחרת — שיחות שנענו, מספרים לא תקינים — היא סופית לאחר ניסיון אחד.",
+    "retryReasons": {
+      "no_answer": "אין מענה",
+      "busy": "תפוס",
+      "failed": "השיחה נכשלה"
+    }
+  },
+  "detail": {
+    "notFoundTitle": "הקמפיין לא נמצא",
+    "notFoundMessage": "הקמפיין הזה לא קיים או נמחק.",
+    "loadError": "לא ניתן לטעון את הקמפיין הזה",
+    "moreActions": "פעולות נוספות לקמפיין",
+    "subline": {
+      "from": "ממספר {number}",
+      "starts": "מתחיל ב־{date}",
+      "finished": "הסתיים ב-{date}"
+    }
+  },
+  "tabs": {
+    "recipients": "נמענים",
+    "recipientsSubtitle": "כל מי שהקמפיין מתקשר אליו",
+    "calls": "שיחות",
+    "callsSubtitle": "כל החיוגים שבוצעו בקמפיין",
+    "settingsSubtitle": "תזמון, קצב חיוג, שעות ומשתנים"
+  },
+  "stats": {
+    "waiting": "בהמתנה",
+    "calling": "בחיוג",
+    "completed": "הושלם",
+    "failed": "נכשל",
+    "blocked": "חסום",
+    "minutesUsed": "דקות שנוצלו",
+    "queued": "{count, plural, one {# בתור} other {# בתור}}",
+    "awaitingRetry": "{count, plural, one {# ממתין לניסיון חוזר} other {# ממתינים לניסיון חוזר}}",
+    "onDnc": "{count, plural, one {# ברשימת אין להתקשר (DNC)} other {# ברשימת אין להתקשר (DNC)}}",
+    "invalid": "{count, plural, one {# לא תקין} other {# לא תקינים}}",
+    "skipped": "{count, plural, one {# דולג} other {# דולגו}}",
+    "hitMaxAttempts": "{count, plural, one {# הגיע למגבלת הניסיונות} other {# הגיעו למגבלת הניסיונות}}"
+  },
+  "calls": {
+    "searchPlaceholder": "חיפוש לפי מספר או מתקשר",
+    "filterByStatus": "סינון לפי סטטוס שיחה",
+    "emptyTitle": "עדיין אין שיחות",
+    "emptyDescription": "השיחות יופיעו כאן כשהקמפיין יחייג. הפעילו את הקמפיין כדי להתחיל.",
+    "status": {
+      "queued": "בתור",
+      "initiating": "בחיוג",
+      "ringing": "מצלצל",
+      "in_progress": "בתהליך",
+      "completed": "הושלם",
+      "busy": "תפוס",
+      "no_answer": "אין מענה",
+      "failed": "נכשל",
+      "canceled": "בוטל"
+    }
+  },
+  "settings": {
+    "locked": "הקמפיין הסתיים — ההגדרות לקריאה בלבד. שכפלו אותו כדי להפעיל שוב עם אותן הגדרות.",
+    "basicsTitle": "פרטים בסיסיים",
+    "basicsDescription": "סוכן ה-AI שמנהל את השיחה והמספר שיוצג לנמען.",
+    "scheduleTitle": "תזמון",
+    "scheduleDescription": "חלון זמן אופציונלי — החיוג מתחיל ונעצר אוטומטית.",
+    "clearSchedule": "ניקוי התזמון",
+    "hoursTitle": "שעות חיוג",
+    "hoursDescription": "מתי מותר לקמפיין לחייג. מחוץ לשעות האלה הוא פשוט ממתין.",
+    "hoursInherit": "שעות פעילות",
+    "hoursInheritDescription": "בהתאם לשעות הפעילות של העסק.",
+    "hoursCustom": "שעות מותאמות אישית",
+    "hoursCustomDescription": "הגדירו ימים ושעות ספציפיים לקמפיין הזה.",
+    "pacingTitle": "קצב חיוג וניסיונות חוזרים",
+    "pacingDescription": "באיזה קצב הקמפיין מחייג, ובאילו מקרים כדאי לנסות שוב.",
+    "variablesTitle": "משתני ברירת מחדל",
+    "variablesDescription": "ערכי המשתנים של סוכן ה-AI לכל הקמפיין. ערכים ברמת הנמען מחליפים אותם.",
+    "variablesPickAgent": "בחרו תחילה סוכן AI — המשתנים שהוגדרו בו יופיעו כאן.",
+    "variablesNone": "לסוכן ה-AI הזה אין משתנים להגדרה ברמת הקמפיין. משתנים מובנים כמו {contactName} ו-{businessName} מתמלאים אוטומטית בכל שיחה.",
+    "variablesPlaceholder": "ערך חלופי לנמענים ללא ערך משלהם",
+    "variablesHint": "אם אין ערך למשתנה עבור נמען, כאן או בשורה שלו, המערכת תדלג עליו ולא תתקשר אליו. בשיחות קמפיין לא נעשה שימוש בברירת המחדל של סוכן ה-AI."
+  },
+  "recipients": {
+    "searchPlaceholder": "חיפוש לפי טלפון או שם",
+    "retryAllFailed": "ניסיון חוזר לכל הנמענים שנכשלו או שדולגו",
+    "importCsv": "ייבוא CSV",
+    "fromContacts": "מאנשי קשר",
+    "add": "הוספת נמענים",
+    "loadError": "לא ניתן לטעון את הנמענים",
+    "noMatches": "אין נמענים שתואמים למסננים שבחרתם.",
+    "emptyTitle": "אין עדיין נמענים",
+    "emptyDescription": "הוסיפו מספרים ידנית, בחרו אנשים מאנשי הקשר או ייבאו גיליון אלקטרוני — ואז הפעילו את הקמפיין.",
+    "toasts": {
+      "retried": "הנמען נוסף לתור לניסיון נוסף",
+      "requeued": "{count, plural, one {נמען # הוחזר לתור} other {# נמענים הוחזרו לתור}}",
+      "nothingToRetry": "אין נמענים לניסיון חוזר",
+      "removed": "הנמען הוסר",
+      "bulkRemoved": "{count, plural, one {נמען # הוסר} other {# נמענים הוסרו}}",
+      "bulkRemovedWithSkipped": "{count, plural, one {נמען # הוסר} other {# נמענים הוסרו}} — {skipped, plural, one {נמען # דולג} other {# נמענים דולגו}} (כרגע בשיחה)"
+    },
+    "errors": {
+      "notRetryable": "אפשר לנסות שוב רק נמענים שנכשלו או שדולגו.",
+      "canceledNoRetry": "אי אפשר לנסות שוב נמענים בקמפיינים שבוטלו.",
+      "onCall": "אי אפשר להסיר נמען שנמצא כרגע בשיחה.",
+      "locked": "הקמפיין הזה הסתיים — אי אפשר להוסיף עוד נמענים."
+    },
+    "removeDialog": {
+      "title": "להסיר את {phone}?",
+      "description": "לא יתבצעו שיחות למספר הזה במסגרת הקמפיין. אפשר להוסיף אותו שוב בהמשך."
+    },
+    "bulkRemoveDialog": {
+      "title": "להסיר {count, plural, one {נמען #} other {# נמענים}}?",
+      "description": "לא יתבצעו שיחות לנמענים האלה במסגרת הקמפיין. נמענים שנמצאים כרגע בשיחה לא יוסרו."
+    },
+    "bulk": {
+      "retryCount": "ניסיון חוזר ל-{count}",
+      "clearSelection": "ניקוי הבחירה"
+    },
+    "table": {
+      "selectAll": "בחירת כל הנמענים שנטענו",
+      "variables": "משתנים",
+      "attempts": "ניסיונות",
+      "nextAttempt": "הניסיון הבא",
+      "lastResult": "התוצאה האחרונה",
+      "unnamedContact": "איש קשר ללא שם",
+      "attemptsOf": "{attempts} מתוך {max}",
+      "company": "חברה",
+      "address": "כתובת"
+    },
+    "retryDialog": {
+      "titleSingle": "לנסות שוב את {phone}?",
+      "titleIds": "לנסות שוב {count, plural, one {נמען #} other {# נמענים}}?",
+      "titleAllFailed": "לנסות שוב את כל הנמענים שנכשלו או שדולגו?",
+      "description": "מספר הניסיונות יתאפס והחיוג יתחיל מחדש.",
+      "descriptionIds": "מספר הניסיונות יתאפס והחיוג יתחיל מחדש. שורות שלא נכשלו או דולגו יישארו ללא שינוי.",
+      "reopens": "הקמפיין הזה הושלם — ניסיון חוזר יפתח אותו מחדש והחיוג יתחדש במחזור העיבוד הבא.",
+      "endPassed": "תאריך הסיום כבר עבר, ולכן הקמפיין יסתיים שוב בלי לחייג לאף נמען. תחילה דחו את תאריך הסיום או הסירו אותו.",
+      "openSettings": "פתיחת הגדרות"
+    },
+    "addDialog": {
+      "description": "מספרים אוסטרליים בלבד — כל מספר אחר יסומן כלא תקין. המערכת תדלג אוטומטית על מספרים ברשימת ״אין להתקשר״ שלכם.",
+      "phonePlaceholder": "טלפון, למשל 0412 345 678",
+      "namePlaceholder": "שם (לא חובה)",
+      "rowPhone": "טלפון של נמען {index}",
+      "rowName": "שם של נמען {index}",
+      "rowVariable": "{variable} של נמען {index}",
+      "removeRow": "הסרת נמען {index}",
+      "addAnother": "הוספת נמען נוסף",
+      "bigListHint": "לרשימות גדולות יותר, השתמשו בייבוא CSV.",
+      "submit": "{count, plural, =0 {הוספת נמענים} one {הוספת # נמען} other {הוספת # נמענים}}"
+    },
+    "fromContactsDialog": {
+      "title": "הוספה מאנשי הקשר",
+      "description": "המספר הראשי של כל איש קשר יתווסף לקמפיין. אנשי קשר ללא טלפון ידולגו; מספרים ברשימת אין להתקשר ייחסמו אוטומטית.",
+      "searchPlaceholder": "חיפוש לפי שם, חברה או טלפון",
+      "allTags": "כל התגיות",
+      "filterByTag": "סינון לפי תגית",
+      "noMatches": "לא נמצאו אנשי קשר תואמים.",
+      "selectAllLoaded": "בחירת כל אנשי הקשר שנטענו",
+      "allMatchingSelected": "כל אנשי הקשר שתואמים לסינון נבחרו",
+      "selectAllMatching": "בחירת כל התואמים",
+      "onDnc": "ברשימת אין להתקשר (DNC)",
+      "noPhone": "ללא טלפון",
+      "loadMore": "טעינת נוספים",
+      "overCap": "עד {max} אנשי קשר בבחירה ידנית בכל אצווה — השתמשו במקום זאת ב״בחירת כל התואמים״ עם סינון.",
+      "addAllMatching": "הוספת כל התואמים",
+      "addCount": "{count, plural, one {הוספת # לקמפיין} other {הוספת # לקמפיין}}"
+    },
+    "importDialog": {
+      "title": "ייבוא נמענים",
+      "uploadDescription": "העלו גיליון אלקטרוני — CSV, TXT, XLS או XLSX, עד 10 MB.",
+      "mappingDescription": "התאימו את עמודות הגיליון לשדות הקמפיין.",
+      "invalidType": "השתמשו בקובץ CSV, TXT, XLS או XLSX.",
+      "tooLarge": "גודל הקובץ חייב להיות 10 MB או פחות.",
+      "notImported": "לא יובא",
+      "columnNumber": "עמודה {number}",
+      "started": "הייבוא התחיל — השורות יופיעו עם עיבודן.",
+      "expired": "תוקף ההעלאה פג — בחרו שוב את הקובץ.",
+      "chooseFile": "בחירת קובץ",
+      "matchHint": "השורות מותאמות לאנשי הקשר שלכם לפי מספר הטלפון.",
+      "hasHeaderRow": "השורה הראשונה מכילה כותרות עמודות",
+      "phoneColumn": "עמודת טלפון",
+      "nameColumn": "עמודת שם",
+      "variables": "משתנים",
+      "variablesHint": "מלאו את המשתנים של סוכן ה-AI לכל נמען מתוך עמודה.",
+      "footnote": "מספרים לא תקינים ומספרים ברשימת אין להתקשר עדיין יופיעו ברשימה עם הסיבה, כך ששום דבר לא ייעלם ללא הסבר. כפילויות ידולגו."
+    }
+  },
+  "summary": {
+    "added": "{count, plural, one {נוסף #} other {נוספו #}}",
+    "duplicates": "{count, plural, one {# כבר בקמפיין} other {# כבר בקמפיין}}",
+    "dncBlocked": "{count, plural, one {# ברשימת אין להתקשר} other {# ברשימת אין להתקשר}}",
+    "invalid": "{count, plural, one {# לא תקין} other {# לא תקינים}}",
+    "noPhone": "{count, plural, one {# ללא מספר טלפון} other {# ללא מספר טלפון}}",
+    "nothingToAdd": "אין מה להוסיף"
+  }
+}

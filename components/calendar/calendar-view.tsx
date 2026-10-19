@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import {
   CalendarClockIcon,
@@ -71,6 +72,7 @@ function LegendDot({ className, label }: { className: string; label: string }) {
  * source, and member filter live in the URL so ranges are shareable.
  */
 export function CalendarView() {
+  const t = useTranslations("calendar");
   const { business, membership } = useBusiness();
   const timeZone = business.timezone;
   const router = useRouter();
@@ -123,12 +125,11 @@ export function CalendarView() {
   };
 
   // --- Visible range -------------------------------------------------------
-  const { dayKeys, monthKey, title, range } = useMemo(() => {
+  const { dayKeys, monthKey, range } = useMemo(() => {
     if (view === "day") {
       return {
         dayKeys: [anchorKey],
         monthKey: startOfMonthDateKey(anchorKey),
-        title: formatDayTitle(anchorKey),
         range: zonedDayRangeToUtc(anchorKey, addDaysToDateKey(anchorKey, 1), timeZone),
       };
     }
@@ -138,7 +139,6 @@ export function CalendarView() {
       return {
         dayKeys: keys,
         monthKey: startOfMonthDateKey(anchorKey),
-        title: formatWeekTitle(keys[0], keys[6]),
         range: zonedDayRangeToUtc(start, addDaysToDateKey(start, 7), timeZone),
       };
     }
@@ -148,10 +148,18 @@ export function CalendarView() {
     return {
       dayKeys: keys,
       monthKey: month,
-      title: formatMonthTitle(month),
       range: zonedDayRangeToUtc(gridStart, addDaysToDateKey(gridStart, 42), timeZone),
     };
   }, [view, anchorKey, timeZone]);
+
+  // Outside the memo: the label follows the UI language, which can change
+  // without the range changing.
+  const title =
+    view === "day"
+      ? formatDayTitle(anchorKey)
+      : view === "week"
+        ? formatWeekTitle(dayKeys[0], dayKeys[6])
+        : formatMonthTitle(monthKey);
 
   const navigate = (direction: -1 | 1) => {
     const next =
@@ -178,7 +186,7 @@ export function CalendarView() {
     (member) => member.has_account && member.user
   );
   const memberItems = [
-    { value: "", label: "Everyone" },
+    { value: "", label: t("page.everyone") },
     ...assignees.map((member) => ({ value: member.user?.id ?? "", label: member.name })),
   ];
 
@@ -202,8 +210,8 @@ export function CalendarView() {
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Calendar"
-        description="Bookings across your team — with your own Outlook alongside."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={
           <>
             <Button
@@ -211,25 +219,25 @@ export function CalendarView() {
               render={<Link href={`/b/${business.id}/business-profile/calendar`} />}
             >
               <SlidersHorizontalIcon />
-              Booking rules
+              {t("page.bookingRules")}
             </Button>
             <Button
               variant="outline"
               render={<Link href={`/b/${business.id}/settings/calendar`} />}
             >
               <CalendarClockIcon />
-              Calendar sync
+              {t("page.calendarSync")}
             </Button>
             {callbacksEnabled && (
               <Button variant="outline" onClick={() => setCreatingCallback(true)}>
                 <PhoneIcon />
-                New callback
+                {t("page.newCallback")}
               </Button>
             )}
             {appointmentsEnabled && (
               <Button onClick={() => setCreatingAppointment({})}>
                 <PlusIcon />
-                New appointment
+                {t("page.newAppointment")}
               </Button>
             )}
           </>
@@ -239,7 +247,7 @@ export function CalendarView() {
       <div className="flex flex-wrap items-center justify-between gap-3">
         <Tabs value={source} onValueChange={(value) => setParams({ source: value as string })}>
           <TabsList>
-            <TabsTrigger value="system">System calendar</TabsTrigger>
+            <TabsTrigger value="system">{t("page.systemTab")}</TabsTrigger>
             <TabsTrigger value="connected">
               Outlook
               {activeConnection && (
@@ -262,7 +270,7 @@ export function CalendarView() {
               value={memberId}
               onValueChange={(value) => setParams({ member: (value as string | null) ?? "" })}
             >
-              <SelectTrigger className="w-44" aria-label="Filter by team member">
+              <SelectTrigger className="w-44" aria-label={t("page.memberFilterLabel")}>
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -296,31 +304,31 @@ export function CalendarView() {
             variant="outline"
             size="icon"
             onClick={() => navigate(-1)}
-            aria-label={`Previous ${view}`}
+            aria-label={t("page.previous", { view })}
           >
-            <ChevronLeftIcon />
+            <ChevronLeftIcon className="rtl:-scale-x-100" />
           </Button>
           <Button variant="outline" onClick={() => setParams({ date: todayKey })}>
-            Today
+            {t("page.today")}
           </Button>
           <Button
             variant="outline"
             size="icon"
             onClick={() => navigate(1)}
-            aria-label={`Next ${view}`}
+            aria-label={t("page.next", { view })}
           >
-            <ChevronRightIcon />
+            <ChevronRightIcon className="rtl:-scale-x-100" />
           </Button>
-          <h2 className="ml-1 font-heading text-lg font-medium">{title}</h2>
+          <h2 className="ms-1 font-heading text-lg font-medium">{title}</h2>
         </div>
 
         {source === "system" && (
           <div className="flex flex-wrap items-center gap-4 text-xs text-muted-foreground">
-            <LegendDot className="bg-event-appointment" label="Appointment" />
-            <LegendDot className="bg-event-callback" label="Callback" />
-            <LegendDot className="bg-event-job" label="Job" />
-            <LegendDot className="bg-warning" label="Needs attention" />
-            <LegendDot className="bg-muted-foreground/50" label="Done" />
+            <LegendDot className="bg-event-appointment" label={t("legend.appointment")} />
+            <LegendDot className="bg-event-callback" label={t("legend.callback")} />
+            <LegendDot className="bg-event-job" label={t("legend.job")} />
+            <LegendDot className="bg-warning" label={t("legend.attention")} />
+            <LegendDot className="bg-muted-foreground/50" label={t("legend.done")} />
           </div>
         )}
       </div>

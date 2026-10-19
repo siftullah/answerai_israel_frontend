@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   CheckIcon,
@@ -42,13 +43,15 @@ import { dayKey, formatDate, formatDateKey, formatDateTime } from "@/lib/datetim
 import { formatCents } from "@/lib/money";
 import { cn } from "@/lib/utils";
 import type { Lead, LeadStatus } from "@/lib/api/types";
-import { LEAD_SOURCE_LABELS, LEAD_STATUS_LABELS, OPEN_LEAD_STATUSES } from "@/lib/api/types";
+import { LEAD_SOURCE_LABELS, OPEN_LEAD_STATUSES } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("leads.detail");
+
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All leads
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("allLeads")}
     </Button>
   );
 }
@@ -71,6 +74,7 @@ function MetaBand({
   lead: Lead;
   timeZone: string;
 }) {
+  const t = useTranslations("leads");
   const open = OPEN_LEAD_STATUSES.includes(lead.status);
   const overdue =
     open &&
@@ -79,50 +83,51 @@ function MetaBand({
 
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label="Contact">
+      <Meta label={t("fields.contact")}>
         {lead.contact ? (
           <Link
             href={`/b/${businessUuid}/contacts/${lead.contact.id}`}
             className="text-primary hover:underline"
           >
-            {lead.contact.name ?? "Unnamed contact"}
+            {lead.contact.name ?? t("fields.unnamedContact")}
           </Link>
         ) : (
           "—"
         )}
       </Meta>
-      <Meta label="Estimated value">
+      <Meta label={t("fields.estimatedValue")}>
         {lead.value_cents !== null
           ? formatCents(lead.value_cents, lead.currency ?? "ILS")
-          : "Not valued yet"}
+          : t("fields.notValued")}
       </Meta>
-      <Meta label="Expected close">
+      <Meta label={t("fields.expectedClose")}>
         {lead.expected_close_date ? (
           <span className={overdue ? "text-warning" : undefined}>
             {formatDateKey(lead.expected_close_date)}
           </span>
         ) : (
-          "No target date"
+          t("fields.noTargetDate")
         )}
       </Meta>
-      <Meta label="Assignee">{lead.assignee?.name ?? "Unassigned"}</Meta>
-      <Meta label="Source">{LEAD_SOURCE_LABELS[lead.source]}</Meta>
+      <Meta label={t("fields.assignee")}>{lead.assignee?.name ?? t("fields.unassigned")}</Meta>
+      <Meta label={t("detail.source")}>{LEAD_SOURCE_LABELS[lead.source]}</Meta>
       {lead.call && (
-        <Meta label="Captured on">
+        <Meta label={t("detail.capturedOn")}>
           <Link
             href={`/b/${businessUuid}/calls/${lead.call.id}`}
             className="text-primary hover:underline"
           >
-            {lead.call.summary_title ?? `Call ${formatDate(lead.call.created_at, timeZone)}`}
+            {lead.call.summary_title ??
+              t("detail.callOn", { date: formatDate(lead.call.created_at, timeZone) })}
           </Link>
         </Meta>
       )}
       {lead.closed_at && (
-        <Meta label={lead.status === "won" ? "Won" : "Closed"}>
+        <Meta label={lead.status === "won" ? t("detail.won") : t("detail.closed")}>
           {formatDateTime(lead.closed_at, timeZone)}
         </Meta>
       )}
-      <Meta label="Created">{formatDate(lead.created_at, timeZone)}</Meta>
+      <Meta label={t("detail.created")}>{formatDate(lead.created_at, timeZone)}</Meta>
     </dl>
   );
 }
@@ -138,6 +143,8 @@ export function LeadDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("leads");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const leadQuery = useLeadDetail(businessUuid, leadUuid);
@@ -160,8 +167,8 @@ export function LeadDetailPane({
           <EmptyMedia variant="icon">
             <TargetIcon />
           </EmptyMedia>
-          <EmptyTitle>No lead selected</EmptyTitle>
-          <EmptyDescription>Select a lead to see its details and history.</EmptyDescription>
+          <EmptyTitle>{t("detail.noneSelectedTitle")}</EmptyTitle>
+          <EmptyDescription>{t("detail.noneSelectedDescription")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -187,10 +194,8 @@ export function LeadDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Lead not found" : "Couldn't load this lead"}
-          message={
-            notFound ? "This lead doesn't exist or was removed." : leadQuery.error.message
-          }
+          title={notFound ? t("detail.notFoundTitle") : t("detail.loadErrorTitle")}
+          message={notFound ? t("detail.notFoundMessage") : leadQuery.error.message}
           onRetry={notFound ? onClearSelection : () => leadQuery.refetch()}
         />
       </div>
@@ -206,7 +211,7 @@ export function LeadDetailPane({
     updateLead.mutate(
       { id: lead.id, payload: { status } },
       {
-        onSuccess: () => toast.success(`Lead marked as ${LEAD_STATUS_LABELS[status].toLowerCase()}`),
+        onSuccess: () => toast.success(t("detail.markedAs", { status })),
         onError: (error) => toast.error(error.message),
       }
     );
@@ -216,7 +221,7 @@ export function LeadDetailPane({
       { lead },
       {
         onSuccess: (quote) => {
-          toast.success(`Draft ${quote.number} created — price it up`);
+          toast.success(t("detail.quoteDrafted", { number: quote.number }));
           router.push(`/b/${businessUuid}/quotes?quote=${quote.id}`);
         },
         onError: (error) => toast.error(error.message),
@@ -227,7 +232,7 @@ export function LeadDetailPane({
     <div key={lead.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           <div className="flex flex-col gap-4 pb-6">
             {/* Identity + status */}
@@ -238,12 +243,14 @@ export function LeadDetailPane({
                     {lead.title}
                   </h2>
                   <LeadStatusBadge status={lead.status} />
-                  {lead.source === "agent_call" && <Badge variant="outline">From a call</Badge>}
+                  {lead.source === "agent_call" && (
+                    <Badge variant="outline">{LEAD_SOURCE_LABELS.agent_call}</Badge>
+                  )}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {lead.value_cents !== null
                     ? formatCents(lead.value_cents, lead.currency ?? "ILS")
-                    : "Not valued yet"}
+                    : t("fields.notValued")}
                   {lead.assignee ? ` · ${lead.assignee.name}` : ""}
                 </p>
               </div>
@@ -254,7 +261,7 @@ export function LeadDetailPane({
                   render={<Link href={`/b/${businessUuid}/contacts/${lead.contact.id}`} />}
                 >
                   <UserRoundIcon />
-                  View contact
+                  {t("detail.viewContact")}
                 </Button>
               )}
             </div>
@@ -265,13 +272,13 @@ export function LeadDetailPane({
               {lead.status === "new" && (
                 <Button size="sm" disabled={updateLead.isPending} onClick={() => advanceTo("contacted")}>
                   <PhoneIcon />
-                  Mark contacted
+                  {t("detail.markContacted")}
                 </Button>
               )}
               {lead.status === "contacted" && (
                 <Button size="sm" disabled={updateLead.isPending} onClick={() => advanceTo("qualified")}>
                   <TargetIcon />
-                  Mark qualified
+                  {t("detail.markQualified")}
                 </Button>
               )}
               {lead.status === "new" && (
@@ -281,7 +288,7 @@ export function LeadDetailPane({
                   disabled={updateLead.isPending}
                   onClick={() => advanceTo("qualified")}
                 >
-                  Mark qualified
+                  {t("detail.markQualified")}
                 </Button>
               )}
               {open && (
@@ -295,7 +302,7 @@ export function LeadDetailPane({
                   onClick={() => setMarkingWon(true)}
                 >
                   <CheckIcon />
-                  Mark won
+                  {t("detail.markWon")}
                 </Button>
               )}
               {open && (
@@ -306,13 +313,13 @@ export function LeadDetailPane({
                   onClick={() => setMarkingLost(true)}
                 >
                   <XIcon />
-                  Mark lost
+                  {t("detail.markLost")}
                 </Button>
               )}
               {closed && (
                 <Button size="sm" variant="outline" onClick={() => setReopening(true)}>
                   <RotateCcwIcon />
-                  Reopen
+                  {t("detail.reopen")}
                 </Button>
               )}
               {quotesEnabled && lead.contact && (
@@ -323,19 +330,19 @@ export function LeadDetailPane({
                   onClick={draftQuote}
                 >
                   <FileTextIcon />
-                  {createQuote.isPending ? "Creating…" : "Create quote"}
+                  {createQuote.isPending ? t("detail.creatingQuote") : t("detail.createQuote")}
                 </Button>
               )}
               {jobsEnabled && (
                 <Button size="sm" variant="outline" onClick={() => setConverting(true)}>
                   <WrenchIcon />
-                  Convert to job
+                  {t("detail.convertToJob")}
                 </Button>
               )}
               {open && (
                 <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
                   <PencilIcon />
-                  Edit
+                  {tc("actions.edit")}
                 </Button>
               )}
               <Button
@@ -345,7 +352,7 @@ export function LeadDetailPane({
                 onClick={() => setDeleting(true)}
               >
                 <Trash2Icon />
-                Delete
+                {tc("actions.delete")}
               </Button>
             </div>
           </div>

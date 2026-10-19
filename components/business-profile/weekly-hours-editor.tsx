@@ -1,20 +1,36 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { PlusIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { TimeInput } from "@/components/ui/time-input";
 import type { BusinessHourRowPayload, Weekday } from "@/lib/api/types";
+import { displayLocale } from "@/lib/i18n/runtime";
 
-const DAY_LABELS: Record<Weekday, string> = {
-  monday: "Monday",
-  tuesday: "Tuesday",
-  wednesday: "Wednesday",
-  thursday: "Thursday",
-  friday: "Friday",
-  saturday: "Saturday",
-  sunday: "Sunday",
+/** Offsets from Sunday — a fixed Sunday-first week keyed by the API's day names. */
+const WEEKDAY_OFFSET: Record<Weekday, number> = {
+  sunday: 0,
+  monday: 1,
+  tuesday: 2,
+  wednesday: 3,
+  thursday: 4,
+  friday: 5,
+  saturday: 6,
 };
+
+/** 2024-01-07 is a Sunday; formatting it +offset in UTC yields each weekday's name. */
+const SUNDAY_UTC = Date.UTC(2024, 0, 7);
+
+function weekdayNames(locale: string): Record<Weekday, string> {
+  const format = new Intl.DateTimeFormat(locale, { weekday: "long", timeZone: "UTC" });
+  const names = {} as Record<Weekday, string>;
+  for (const [day, offset] of Object.entries(WEEKDAY_OFFSET) as [Weekday, number][]) {
+    names[day] = format.format(new Date(SUNDAY_UTC + offset * 86_400_000));
+  }
+  return names;
+}
 
 /**
  * Controlled weekly-hours grid (value/onChange, not form-context) so it
@@ -27,6 +43,10 @@ export function WeeklyHoursEditor({
   value: BusinessHourRowPayload[];
   onChange: (value: BusinessHourRowPayload[]) => void;
 }) {
+  const t = useTranslations("businessProfile.weeklyHours");
+  const locale = displayLocale();
+  const dayLabels = useMemo(() => weekdayNames(locale), [locale]);
+
   const patchRow = (day: Weekday, patch: Partial<BusinessHourRowPayload>) => {
     onChange(value.map((row) => (row.day === day ? { ...row, ...patch } : row)));
   };
@@ -38,7 +58,7 @@ export function WeeklyHoursEditor({
           <div className="flex w-32 shrink-0 items-center gap-2.5 pt-1">
             <Switch
               checked={row.is_available}
-              aria-label={`Available on ${DAY_LABELS[row.day]}`}
+              aria-label={t("availableOn", { day: dayLabels[row.day] })}
               onCheckedChange={(checked) =>
                 patchRow(row.day, {
                   is_available: checked,
@@ -49,7 +69,7 @@ export function WeeklyHoursEditor({
                 })
               }
             />
-            <span className="text-sm">{DAY_LABELS[row.day]}</span>
+            <span className="text-sm">{dayLabels[row.day]}</span>
           </div>
 
           {row.is_available ? (
@@ -58,7 +78,7 @@ export function WeeklyHoursEditor({
                 <div key={index} className="flex items-center gap-1.5">
                   <TimeInput
                     value={window.start}
-                    aria-label={`${DAY_LABELS[row.day]} window ${index + 1} start`}
+                    aria-label={t("windowStart", { day: dayLabels[row.day], number: index + 1 })}
                     className="h-8 w-fit"
                     onChange={(event) =>
                       patchRow(row.day, {
@@ -68,10 +88,10 @@ export function WeeklyHoursEditor({
                       })
                     }
                   />
-                  <span className="text-sm text-muted-foreground">to</span>
+                  <span className="text-sm text-muted-foreground">{t("to")}</span>
                   <TimeInput
                     value={window.end}
-                    aria-label={`${DAY_LABELS[row.day]} window ${index + 1} end`}
+                    aria-label={t("windowEnd", { day: dayLabels[row.day], number: index + 1 })}
                     className="h-8 w-fit"
                     onChange={(event) =>
                       patchRow(row.day, {
@@ -86,7 +106,7 @@ export function WeeklyHoursEditor({
                       type="button"
                       variant="ghost"
                       size="icon-sm"
-                      aria-label="Remove window"
+                      aria-label={t("removeWindow")}
                       onClick={() =>
                         patchRow(row.day, {
                           windows: row.windows.filter((_, i) => i !== index),
@@ -110,11 +130,11 @@ export function WeeklyHoursEditor({
                 }
               >
                 <PlusIcon />
-                Add window
+                {t("addWindow")}
               </Button>
             </div>
           ) : (
-            <p className="pt-1.5 text-sm text-muted-foreground">Unavailable</p>
+            <p className="pt-1.5 text-sm text-muted-foreground">{t("unavailable")}</p>
           )}
         </div>
       ))}

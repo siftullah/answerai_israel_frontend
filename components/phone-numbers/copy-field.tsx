@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon, CopyIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -39,6 +40,8 @@ export function CopyField({
   value: string;
   hint?: string;
 }) {
+  const t = useTranslations("phoneNumbers");
+  const tc = useTranslations("common");
   const [copied, setCopied] = useState(false);
   const resetTimer = useRef<number | null>(null);
 
@@ -51,7 +54,7 @@ export function CopyField({
 
   const handleCopy = async () => {
     if (!(await copyText(value))) {
-      toast.error("Copy failed — select the text manually");
+      toast.error(t("toasts.copyFailed"));
       return;
     }
     setCopied(true);
@@ -70,7 +73,11 @@ export function CopyField({
           type="button"
           variant="ghost"
           size="icon-sm"
-          aria-label={`Copy ${label.toLowerCase()}`}
+          aria-label={
+            copied
+              ? tc("actions.copied")
+              : t("copyField.copyLabel", { label: label.toLowerCase() })
+          }
           onClick={() => void handleCopy()}
         >
           {copied ? <CheckIcon /> : <CopyIcon />}

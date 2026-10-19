@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,30 +42,6 @@ const TAB_REFINE: Record<QuoteTab, readonly QuoteStatus[]> = {
   all: QUOTE_STATUSES,
 };
 
-const COPY: Record<QuoteTab, { emptyTitle: string; emptyDescription: string }> = {
-  open: {
-    emptyTitle: "No open quotes",
-    emptyDescription: "Drafts and quotes awaiting a customer response will show up here.",
-  },
-  expired: {
-    emptyTitle: "Nothing expired",
-    emptyDescription: "Quotes that lapse without an answer land here — revive or re-quote them.",
-  },
-  accepted: {
-    emptyTitle: "No accepted quotes yet",
-    emptyDescription: "Quotes your customers say yes to will appear here.",
-  },
-  all: {
-    emptyTitle: "No quotes yet",
-    emptyDescription: "Price up your first job and send it for the customer to accept.",
-  },
-};
-
-const NO_MATCH_COPY = {
-  emptyTitle: "No quotes match",
-  emptyDescription: "Try a different search or clear some filters.",
-};
-
 /**
  * Master-detail shell mirroring the invoices page: list rail + detail pane on
  * one divider, with the pipeline stat strip above. Only the selected quote
@@ -72,6 +49,8 @@ const NO_MATCH_COPY = {
  * link lands on the default tab but the pane still renders any uuid.
  */
 export function QuotesView() {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -112,17 +91,24 @@ export function QuotesView() {
   const newQuoteButton = (
     <Button onClick={() => setCreating(true)}>
       <PlusIcon />
-      New quote
+      {t("newQuote")}
     </Button>
   );
 
-  const copy = hasActiveFilters ? NO_MATCH_COPY : COPY[tab];
+  const emptyCopy: Record<QuoteTab | "noMatch", { title: string; description: string }> = {
+    open: { title: t("empty.open.title"), description: t("empty.open.description") },
+    expired: { title: t("empty.expired.title"), description: t("empty.expired.description") },
+    accepted: { title: t("empty.accepted.title"), description: t("empty.accepted.description") },
+    all: { title: t("empty.all.title"), description: t("empty.all.description") },
+    noMatch: { title: t("empty.noMatch.title"), description: t("empty.noMatch.description") },
+  };
+  const copy = emptyCopy[hasActiveFilters ? "noMatch" : tab];
 
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Quotes"
-        description="Price up work, send it for approval, and track what gets accepted."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={newQuoteButton}
       />
 
@@ -131,14 +117,14 @@ export function QuotesView() {
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
           <Tabs value={tab} onValueChange={(value) => changeTab(value as QuoteTab)}>
             <TabsList className="w-full">
               <TabsTrigger value="open">
-                Open
+                {t("tabs.open")}
                 {counts !== undefined && counts.open > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.open}
@@ -146,15 +132,15 @@ export function QuotesView() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="expired">
-                Expired
+                {t("tabs.expired")}
                 {counts !== undefined && counts.expired > 0 && (
                   <Badge variant="warning" className="h-5">
                     {counts.expired}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="accepted">Accepted</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="accepted">{t("tabs.accepted")}</TabsTrigger>
+              <TabsTrigger value="all">{tc("labels.all")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -166,14 +152,14 @@ export function QuotesView() {
             statuses={TAB_REFINE[tab]}
           />
 
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <QuoteList
               businessUuid={business.id}
               filters={apiFilters}
               selectedId={selectedId}
               onSelect={select}
-              emptyTitle={copy.emptyTitle}
-              emptyDescription={copy.emptyDescription}
+              emptyTitle={copy.title}
+              emptyDescription={copy.description}
               emptyAction={hasActiveFilters ? undefined : newQuoteButton}
             />
           </div>
@@ -183,7 +169,7 @@ export function QuotesView() {
           // Keyed so switching quotes starts the pane back at the top.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

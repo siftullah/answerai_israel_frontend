@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
@@ -17,12 +18,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useChangePlan, useChangePlanPreview } from "@/hooks/use-billing";
 import { formatCents } from "@/lib/money";
 import { formatDate } from "@/lib/datetime";
-import {
-  BILLING_INTERVAL_LABELS,
-  TAX_LINE_LABEL,
-  type BillingInterval,
-  type Plan,
-} from "@/lib/api/types";
+import { taxLineLabel, type BillingInterval, type Plan } from "@/lib/api/types";
 
 /**
  * Change-plan confirmation, backed by POST /billing/change-plan/preview:
@@ -43,6 +39,8 @@ export function ChangePlanDialog({
   timezone: string;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("billing.change");
+  const tc = useTranslations("common");
   const preview = useChangePlanPreview();
   const changePlan = useChangePlan(businessUuid);
   const { mutate: runPreview, reset: resetPreview } = preview;
@@ -65,8 +63,8 @@ export function ChangePlanDialog({
         onSuccess: () => {
           toast.success(
             immediate
-              ? `You're now on ${plan.name}.`
-              : `Plan change to ${plan.name} scheduled.`
+              ? t("toasts.changed", { plan: plan.name })
+              : t("toasts.scheduled", { plan: plan.name })
           );
           onOpenChange(false);
         },
@@ -81,24 +79,20 @@ export function ChangePlanDialog({
     <Dialog open={plan !== null} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>
-            Change to {plan?.name} ({BILLING_INTERVAL_LABELS[interval].toLowerCase()})
-          </DialogTitle>
-          <DialogDescription>
-            Review what happens before anything changes.
-          </DialogDescription>
+          <DialogTitle>{t("title", { plan: plan?.name ?? "", interval })}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
         {preview.isPending && (
           <div className="flex items-center justify-center gap-2 py-6 text-sm text-muted-foreground">
             <Spinner className="size-4" />
-            Calculating…
+            {t("calculating")}
           </div>
         )}
 
         {preview.isError && (
           <Alert variant="destructive">
-            <AlertTitle>Couldn&apos;t preview this change</AlertTitle>
+            <AlertTitle>{t("previewError")}</AlertTitle>
             <AlertDescription>{preview.error.message}</AlertDescription>
           </Alert>
         )}
@@ -106,7 +100,7 @@ export function ChangePlanDialog({
         {data?.immediate === true && (
           <div className="flex flex-col gap-2 text-sm">
             <p className="font-medium">
-              You&apos;ll be charged {formatCents(data.total_cents, data.currency)} today.
+              {t("chargedToday", { amount: formatCents(data.total_cents, data.currency) })}
             </p>
             {data.line_items.map((line, index) => (
               <div
@@ -116,7 +110,10 @@ export function ChangePlanDialog({
                 <span className={line.amount_cents < 0 ? "text-success" : undefined}>
                   {line.description}
                   {line.quantity > 1 &&
-                    ` (${line.quantity} × ${formatCents(line.unit_cents, data.currency)})`}
+                    ` ${t("lineQuantity", {
+                      quantity: line.quantity,
+                      unit: formatCents(line.unit_cents, data.currency),
+                    })}`}
                 </span>
                 <span className="tabular-nums">
                   {formatCents(line.amount_cents, data.currency)}
@@ -125,50 +122,50 @@ export function ChangePlanDialog({
             ))}
             <Separator />
             <div className="flex items-center justify-between gap-4 text-muted-foreground">
-              <span>Subtotal</span>
+              <span>{tc("labels.subtotal")}</span>
               <span className="tabular-nums">
                 {formatCents(data.subtotal_cents, data.currency)}
               </span>
             </div>
             <div className="flex items-center justify-between gap-4 text-muted-foreground">
-              <span>{TAX_LINE_LABEL}</span>
+              <span>{taxLineLabel()}</span>
               <span className="tabular-nums">{formatCents(data.tax_cents, data.currency)}</span>
             </div>
             <div className="flex items-center justify-between gap-4 font-medium">
-              <span>Total today</span>
+              <span>{t("totalToday")}</span>
               <span className="tabular-nums">
                 {formatCents(data.total_cents, data.currency)}
               </span>
             </div>
             {data.credit_banked_cents > 0 && (
               <p className="pt-1 text-xs text-muted-foreground">
-                {formatCents(data.credit_banked_cents, data.currency)} of unused prepaid time
-                becomes account credit and is applied to future charges automatically.
+                {t("creditBanked", {
+                  amount: formatCents(data.credit_banked_cents, data.currency),
+                })}
               </p>
             )}
-            <p className="text-xs text-muted-foreground">
-              Your new plan and a fresh billing period start immediately.
-            </p>
+            <p className="text-xs text-muted-foreground">{t("startsImmediately")}</p>
           </div>
         )}
 
         {data?.immediate === false && (
           <div className="flex flex-col gap-2 text-sm">
-            <p className="font-medium">No charge today.</p>
+            <p className="font-medium">{t("noChargeToday")}</p>
             <p>
-              Your plan changes to {plan?.name} (
-              {BILLING_INTERVAL_LABELS[interval].toLowerCase()}) on{" "}
               {data.effective_at
-                ? formatDate(data.effective_at, timezone)
-                : "the next renewal"}
-              . Until then everything stays on your current plan.
+                ? t("scheduledOn", {
+                    plan: plan?.name ?? "",
+                    interval,
+                    date: formatDate(data.effective_at, timezone),
+                  })
+                : t("scheduledAtRenewal", { plan: plan?.name ?? "", interval })}
             </p>
           </div>
         )}
 
         <DialogFooter>
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             onClick={confirm}
@@ -176,8 +173,8 @@ export function ChangePlanDialog({
           >
             {changePlan.isPending && <Spinner data-icon="inline-start" />}
             {data?.immediate === true
-              ? `Confirm & pay ${formatCents(data.total_cents, data.currency)}`
-              : "Confirm change"}
+              ? t("confirmAndPay", { amount: formatCents(data.total_cents, data.currency) })
+              : t("confirmChange")}
           </Button>
         </DialogFooter>
       </DialogContent>

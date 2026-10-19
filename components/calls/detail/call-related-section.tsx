@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -9,6 +10,13 @@ import { useBusiness } from "@/components/business/business-provider";
 import { useCallRelated } from "@/hooks/use-calls";
 import { formatDateTime } from "@/lib/datetime";
 import { formatCents } from "@/lib/money";
+import {
+  APPOINTMENT_STATUS_LABELS,
+  CALLBACK_STATUS_LABELS,
+  INVOICE_STATUS_LABELS,
+  JOB_STATUS_LABELS,
+  LEAD_STATUS_LABELS,
+} from "@/lib/api/types";
 
 function Group({
   title,
@@ -19,6 +27,7 @@ function Group({
   href: string;
   children: React.ReactNode;
 }) {
+  const tc = useTranslations("common");
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-2">
@@ -27,8 +36,8 @@ function Group({
           href={href}
           className="inline-flex items-center gap-0.5 text-xs text-primary hover:underline"
         >
-          Open
-          <ArrowUpRightIcon className="size-3" />
+          {tc("actions.open")}
+          <ArrowUpRightIcon className="size-3 rtl:-scale-x-100" />
         </Link>
       </div>
       <ul className="flex flex-col gap-1">{children}</ul>
@@ -76,7 +85,9 @@ function Item({
   );
 }
 
-function humanizeStatus(status: string): string {
+/** The module's translated status label; unknown values fall back to a prettified slug. */
+function statusLabel(labels: Record<string, string>, status: string): string {
+  if (Object.prototype.hasOwnProperty.call(labels, status)) return labels[status];
   const spaced = status.replace(/[_-]+/g, " ");
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
@@ -95,6 +106,7 @@ export function CallRelatedSection({
   callUuid: string;
   enabled: boolean;
 }) {
+  const t = useTranslations("calls.related");
   const { business } = useBusiness();
   const related = useCallRelated(businessUuid, callUuid, enabled);
 
@@ -102,7 +114,7 @@ export function CallRelatedSection({
 
   if (related.isPending) {
     return (
-      <DetailCard title="Created from this call">
+      <DetailCard title={t("title")}>
         <div className="flex flex-col gap-2">
           <Skeleton className="h-8 w-full" />
           <Skeleton className="h-8 w-2/3" />
@@ -129,25 +141,22 @@ export function CallRelatedSection({
   const base = `/b/${businessUuid}`;
 
   return (
-    <DetailCard
-      title="Created from this call"
-      description="Records the agent created or fulfilled during this conversation."
-    >
+    <DetailCard title={t("title")} description={t("description")}>
       <div className="flex flex-col gap-4">
         {!!data.appointments?.length && (
-          <Group title="Appointments" href={`${base}/appointments`}>
+          <Group title={t("appointments")} href={`${base}/appointments`}>
             {data.appointments.map((appointment) => (
               <Item
                 key={appointment.id}
                 primary={formatDateTime(appointment.starts_at, business.timezone)}
-                secondary={humanizeStatus(appointment.status)}
+                secondary={statusLabel(APPOINTMENT_STATUS_LABELS, appointment.status)}
                 href={`${base}/appointments?appointment=${appointment.id}`}
               />
             ))}
           </Group>
         )}
         {!!data.leads?.length && (
-          <Group title="Leads" href={`${base}/leads`}>
+          <Group title={t("leads")} href={`${base}/leads`}>
             {data.leads.map((lead) => (
               <Item
                 key={lead.id}
@@ -156,47 +165,51 @@ export function CallRelatedSection({
                     ? `${lead.title} — ${formatCents(lead.value_cents)}`
                     : lead.title
                 }
-                secondary={humanizeStatus(lead.status)}
+                secondary={statusLabel(LEAD_STATUS_LABELS, lead.status)}
                 href={`${base}/leads?lead=${lead.id}`}
               />
             ))}
           </Group>
         )}
         {!!data.jobs?.length && (
-          <Group title="Jobs" href={`${base}/jobs`}>
+          <Group title={t("jobs")} href={`${base}/jobs`}>
             {data.jobs.map((job) => (
               <Item
                 key={job.id}
                 primary={`${job.reference} — ${job.title}`}
-                secondary={humanizeStatus(job.status)}
+                secondary={statusLabel(JOB_STATUS_LABELS, job.status)}
                 href={`${base}/jobs?job=${job.id}`}
               />
             ))}
           </Group>
         )}
         {!!data.invoices?.length && (
-          <Group title="Invoices" href={`${base}/invoices`}>
+          <Group title={t("invoices")} href={`${base}/invoices`}>
             {data.invoices.map((invoice) => (
               <Item
                 key={invoice.id}
                 primary={`${invoice.number} — ${formatCents(invoice.total_cents)}`}
-                secondary={humanizeStatus(invoice.status)}
+                secondary={statusLabel(INVOICE_STATUS_LABELS, invoice.status)}
               />
             ))}
           </Group>
         )}
         {callbacks.length > 0 && (
-          <Group title="Callbacks" href={`${base}/calls/callbacks`}>
+          <Group title={t("callbacks")} href={`${base}/calls/callbacks`}>
             {callbacks.map((callback) => (
               <Item
                 key={callback.id}
                 href={`${base}/calls/callbacks?callback=${callback.id}`}
                 primary={
                   "fulfilled" in callback && callback.fulfilled
-                    ? `Fulfilled a callback scheduled for ${formatDateTime(callback.scheduled_at, business.timezone)}`
-                    : `Scheduled for ${formatDateTime(callback.scheduled_at, business.timezone)}`
+                    ? t("fulfilledCallback", {
+                        date: formatDateTime(callback.scheduled_at, business.timezone),
+                      })
+                    : t("scheduledFor", {
+                        date: formatDateTime(callback.scheduled_at, business.timezone),
+                      })
                 }
-                secondary={humanizeStatus(callback.status)}
+                secondary={statusLabel(CALLBACK_STATUS_LABELS, callback.status)}
               />
             ))}
           </Group>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   EllipsisVerticalIcon,
@@ -50,6 +51,7 @@ import { avatarGradientClass } from "@/lib/avatar-gradient";
 import { formatE164 } from "@/lib/phone";
 
 export function ContactDetailView() {
+  const t = useTranslations("contacts.detail");
   const { contactUuid } = useParams<{ businessUuid: string; contactUuid: string }>();
   const { business } = useBusiness();
   const contactQuery = useContact(business.id, contactUuid);
@@ -71,16 +73,12 @@ export function ContactDetailView() {
     return (
       <div className="flex flex-col items-start gap-4">
         <Button variant="ghost" size="sm" render={<Link href={listHref} />}>
-          <ArrowLeftIcon />
-          Contacts
+          <ArrowLeftIcon className="rtl:-scale-x-100" />
+          {t("backToList")}
         </Button>
         <ErrorState
-          title={notFound ? "Contact not found" : "Couldn't load this contact"}
-          message={
-            notFound
-              ? "This contact doesn't exist or was deleted."
-              : contactQuery.error.message
-          }
+          title={notFound ? t("notFoundTitle") : t("loadErrorTitle")}
+          message={notFound ? t("notFoundMessage") : contactQuery.error.message}
           onRetry={notFound ? undefined : () => contactQuery.refetch()}
         />
       </div>
@@ -91,6 +89,8 @@ export function ContactDetailView() {
 }
 
 function ContactDetailBody({ contact }: { contact: Contact }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const deleteContact = useDeleteContact(business.id);
@@ -119,7 +119,7 @@ function ContactDetailBody({ contact }: { contact: Contact }) {
               <h1 className="max-w-full truncate font-heading text-2xl font-semibold">
                 {name}
               </h1>
-              {contact.on_dnc && <Badge variant="destructive">On DNC</Badge>}
+              {contact.on_dnc && <Badge variant="destructive">{t("onDnc")}</Badge>}
               <SourceBadge source={contact.source} />
             </div>
             {contact.name && contact.company && (
@@ -129,21 +129,25 @@ function ContactDetailBody({ contact }: { contact: Contact }) {
         </div>
         <div className="flex shrink-0 items-center gap-2">
           <Button variant="outline" render={<Link href={listHref} />}>
-            <ArrowLeftIcon />
-            Back
+            <ArrowLeftIcon className="rtl:-scale-x-100" />
+            {tc("actions.back")}
           </Button>
           <Button onClick={() => setEditing(true)}>
             <PencilIcon />
-            Edit
+            {tc("actions.edit")}
           </Button>
           <Button variant="cta" disabled={!phone} onClick={() => setPlacing(true)}>
             <PhoneIcon />
-            Call
+            {t("detail.call")}
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger
               render={
-                <Button variant="ghost" size="icon" aria-label={`More actions for ${name}`} />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  aria-label={t("detail.moreActions", { name })}
+                />
               }
             >
               <EllipsisVerticalIcon />
@@ -152,12 +156,12 @@ function ContactDetailBody({ contact }: { contact: Contact }) {
               {phone && !contact.on_dnc && (
                 <DropdownMenuItem onClick={() => setAddingToDnc(true)}>
                   <PhoneOffIcon />
-                  Add to DNC
+                  {t("addToDnc")}
                 </DropdownMenuItem>
               )}
               <DropdownMenuItem variant="destructive" onClick={() => setConfirmingDelete(true)}>
                 <Trash2Icon />
-                Delete
+                {tc("actions.delete")}
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -208,18 +212,16 @@ function ContactDetailBody({ contact }: { contact: Contact }) {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes them from your contact book. Past call logs keep their name.
-            </AlertDialogDescription>
+            <AlertDialogTitle>{t("delete.title", { name })}</AlertDialogTitle>
+            <AlertDialogDescription>{t("delete.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 deleteContact.mutate(contact.id, {
                   onSuccess: () => {
-                    toast.success("Contact deleted");
+                    toast.success(t("delete.toast"));
                     router.push(listHref);
                   },
                   onError: (error) => toast.error(error.message),
@@ -227,7 +229,7 @@ function ContactDetailBody({ contact }: { contact: Contact }) {
                 setConfirmingDelete(false);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

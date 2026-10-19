@@ -1,0 +1,58 @@
+{
+  "metaDescription": "סוכני AI קוליים שעונים לכל שיחה בעסק שלכם.",
+  "nav": {
+    "dashboard": "לוח בקרה",
+    "contacts": "אנשי קשר",
+    "allContacts": "כל אנשי הקשר",
+    "dnc": "אין להתקשר (DNC)",
+    "calls": "שיחות",
+    "inboundLogs": "יומן שיחות נכנסות",
+    "outboundLogs": "יומן שיחות יוצאות",
+    "callbacks": "שיחות חוזרות",
+    "campaigns": "קמפיינים",
+    "calendar": "יומן",
+    "appointments": "פגישות",
+    "leads": "לידים",
+    "quotes": "הצעות מחיר",
+    "jobs": "עבודות",
+    "invoices": "חשבוניות",
+    "businessProfile": "פרופיל העסק",
+    "phoneNumbers": "מספרי טלפון",
+    "agents": "סוכני AI",
+    "settings": "הגדרות",
+    "profile": "פרופיל",
+    "notifications": "התראות",
+    "billing": "חיוב",
+    "plans": "מסלולים",
+    "overview": "סקירה כללית",
+    "knowledgeBase": "מאגר ידע",
+    "basicInfo": "פרטים בסיסיים",
+    "services": "שירותים",
+    "products": "מוצרים",
+    "faqs": "שאלות נפוצות",
+    "policies": "מדיניות",
+    "docs": "מסמכים",
+    "integrations": "אינטגרציות",
+    "operations": "תפעול",
+    "team": "צוות",
+    "transfers": "העברת שיחות",
+    "modules": "מודולים"
+  },
+  "sidebar": {
+    "setupGroup": "הגדרת AI"
+  },
+  "navUser": {
+    "switchBusiness": "החלפת עסק"
+  },
+  "sectionNav": {
+    "label": "מקטעי פרופיל העסק"
+  },
+  "settingsNav": {
+    "label": "מקטעי ההגדרות"
+  },
+  "notFound": {
+    "title": "העמוד לא נמצא",
+    "description": "העמוד שחיפשתם לא קיים או הועבר למיקום אחר.",
+    "backHome": "חזרה ל-AnswerAI"
+  }
+}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { PhoneForwardedIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { CallStatusBadge } from "@/components/calls/call-status-badge";
@@ -20,6 +21,7 @@ export function CallListRow({
   timeZone: string;
   onSelect: () => void;
 }) {
+  const t = useTranslations("calls");
   const name = counterpartName(call);
   const number = formatE164(counterpartNumber(call));
   const showNumber = name !== number;
@@ -30,7 +32,7 @@ export function CallListRow({
       onClick={onSelect}
       aria-current={selected || undefined}
       className={cn(
-        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-left outline-none transition-colors focus-visible:bg-muted",
+        "flex w-full flex-col gap-1 border-b border-border px-3 py-3 text-start outline-none transition-colors focus-visible:bg-muted",
         selected ? "bg-primary/[0.07]" : "hover:bg-muted/60"
       )}
     >
@@ -63,7 +65,7 @@ export function CallListRow({
         {call.callback && (
           <Badge variant="outline" className="h-5">
             <PhoneForwardedIcon />
-            Callback
+            {t("labels.callback")}
           </Badge>
         )}
         {call.status !== "completed" && <CallStatusBadge status={call.status} />}

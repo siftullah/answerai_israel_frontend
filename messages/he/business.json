@@ -1,0 +1,23 @@
+{
+  "chooser": {
+    "signedInAs": "מחוברים בתור {email}",
+    "createTitle": "יצירת עסק",
+    "createDescription": "הקמת העסק שלכם ב-AnswerAI"
+  },
+  "createDialog": {
+    "title": "יצירת עסק",
+    "description": "הקימו עסק חדש ב-AnswerAI. אתם תהיו הבעלים שלו.",
+    "nameLabel": "שם העסק",
+    "submit": "יצירת עסק"
+  },
+  "moduleGate": {
+    "title": "המודול לא מופעל",
+    "description": "התכונה הזו לא מופעלת עבור העסק הזה. בעלים או מנהל מערכת יכולים להפעיל אותה תחת פרופיל העסק → מודולים.",
+    "goToModules": "מעבר למודולים"
+  },
+  "gate": {
+    "noAccessTitle": "אין גישה לעסק הזה",
+    "noAccessDescription": "ייתכן שהוא הוסר, או שאתם כבר לא חברי צוות בו.",
+    "loadErrorTitle": "לא ניתן לטעון את העסק הזה"
+  }
+}

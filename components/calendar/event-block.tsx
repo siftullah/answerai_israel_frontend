@@ -98,7 +98,7 @@ export function EventBlock({
         width: `calc(${widthPct}% - 4px)`,
       }}
       className={cn(
-        "absolute z-10 flex flex-col overflow-hidden rounded-md px-1.5 py-0.5 text-left text-xs leading-tight transition-colors",
+        "absolute z-10 flex flex-col overflow-hidden rounded-md px-1.5 py-0.5 text-start text-xs leading-tight transition-colors",
         eventClasses(event)
       )}
     >
@@ -139,7 +139,7 @@ export function EventChip({
       }}
       title={`${formatTimeOfDay(event.starts_at, timeZone)} · ${event.title}`}
       className={cn(
-        "flex w-full min-w-0 items-center gap-1 rounded-sm px-1 py-px text-left text-xs transition-colors",
+        "flex w-full min-w-0 items-center gap-1 rounded-sm px-1 py-px text-start text-xs transition-colors",
         eventClasses(event)
       )}
     >

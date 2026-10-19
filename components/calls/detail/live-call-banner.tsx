@@ -1,18 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { LiveDuration } from "@/components/calls/live-duration";
 import type { Call, CallStatus } from "@/lib/api/types";
 
-const LIVE_LABELS: Partial<Record<CallStatus, string>> = {
-  queued: "Queued — waiting to dial",
-  initiating: "Placing call…",
-  ringing: "Ringing…",
-  in_progress: "Call in progress",
-};
-
 /** The in-flight strip (outbound only — inbound calls arrive post-call). */
 export function LiveCallBanner({ call }: { call: Call }) {
-  const label = LIVE_LABELS[call.status];
+  const t = useTranslations("calls.live");
+  const liveLabels: Partial<Record<CallStatus, string>> = {
+    queued: t("queued"),
+    initiating: t("initiating"),
+    ringing: t("ringing"),
+    in_progress: t("inProgress"),
+  };
+  const label = liveLabels[call.status];
   if (!label) return null;
 
   return (
@@ -22,7 +23,7 @@ export function LiveCallBanner({ call }: { call: Call }) {
       {call.status === "in_progress" && call.started_at && (
         <LiveDuration
           startedAt={call.started_at}
-          className="ml-auto text-sm tabular-nums text-muted-foreground"
+          className="ms-auto text-sm tabular-nums text-muted-foreground"
         />
       )}
     </div>

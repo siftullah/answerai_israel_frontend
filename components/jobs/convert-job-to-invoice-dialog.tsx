@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -29,8 +30,11 @@ export function ConvertJobToInvoiceDialog({
   job: Job;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const router = useRouter();
   const createInvoice = useCreateInvoiceFromJob(businessUuid);
+  const customer = job.contact?.name ?? t("invoice.theCustomer");
 
   // The dialog stays mounted until the request settles — closing immediately
   // would unmount the mutation observer and skip these callbacks.
@@ -39,7 +43,9 @@ export function ConvertJobToInvoiceDialog({
       { job },
       {
         onSuccess: (invoice) => {
-          toast.success(`Invoice ${invoice.number} drafted from ${job.reference}`);
+          toast.success(
+            t("toasts.invoiceDrafted", { number: invoice.number, reference: job.reference })
+          );
           router.push(`/b/${businessUuid}/invoices?invoice=${invoice.id}`);
         },
         onError: (error) => toast.error(error.message),
@@ -52,20 +58,20 @@ export function ConvertJobToInvoiceDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Invoice {job.reference}?</AlertDialogTitle>
+          <AlertDialogTitle>{t("invoice.title", { reference: job.reference })}</AlertDialogTitle>
           <AlertDialogDescription>
-            Drafts an invoice
             {job.quote_cents !== null
-              ? ` for ${formatCents(job.quote_cents, job.currency ?? "ILS")} (plus tax)`
-              : ""}{" "}
-            copying the job&apos;s line items, ready to review and send to{" "}
-            {job.contact?.name ?? "the customer"}. A job is invoiced once.
+              ? t("invoice.descriptionWithAmount", {
+                  amount: formatCents(job.quote_cents, job.currency ?? "ILS"),
+                  customer,
+                })
+              : t("invoice.description", { customer })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={createInvoice.isPending} onClick={confirm}>
-            {createInvoice.isPending ? "Converting…" : "Create invoice"}
+            {createInvoice.isPending ? t("invoice.converting") : t("invoice.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

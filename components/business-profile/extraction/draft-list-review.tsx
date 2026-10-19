@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -37,8 +38,8 @@ export function DraftListReview<T>({
   open,
   onOpenChange,
   title,
-  itemNoun,
-  itemNounPlural = `${itemNoun}s`,
+  addLabel,
+  addedLabel,
   rows,
   onRowsChange,
   summary,
@@ -48,14 +49,18 @@ export function DraftListReview<T>({
   open: boolean;
   onOpenChange: (open: boolean) => void;
   title: string;
-  itemNoun: string;
-  itemNounPlural?: string;
+  /** Confirm-button copy for N pending rows — an ICU plural from the caller's namespace ("Add 3 services"). */
+  addLabel: (count: number) => string;
+  /** Success toast for N created rows — an ICU plural from the caller's namespace ("3 services added"). */
+  addedLabel: (count: number) => string;
   rows: DraftRow<T>[];
   onRowsChange: (rows: DraftRow<T>[]) => void;
   summary: (item: T) => { name: string; detail: string | null };
   onEdit: (index: number) => void;
   createItem: (item: T) => Promise<unknown>;
 }) {
+  const t = useTranslations("businessProfile.draftReview");
+  const tc = useTranslations("common");
   const [running, setRunning] = useState(false);
 
   const pendingCount = rows.filter((row) => row.checked && row.status !== "created").length;
@@ -84,7 +89,7 @@ export function DraftListReview<T>({
     const failed = next.filter((row) => row.checked && row.status === "failed").length;
     const created = next.filter((row) => row.status === "created").length;
     if (failed === 0) {
-      toast.success(`${created} ${created === 1 ? itemNoun : itemNounPlural} added`);
+      toast.success(addedLabel(created));
       onOpenChange(false);
     }
   };
@@ -101,10 +106,7 @@ export function DraftListReview<T>({
         <div className="flex max-h-[85vh] flex-col">
           <DialogHeader className="border-b px-6 py-4">
             <DialogTitle>{title}</DialogTitle>
-            <DialogDescription>
-              Untick anything you don&apos;t want, or edit a row first. Everything stays
-              editable after adding.
-            </DialogDescription>
+            <DialogDescription>{t("description")}</DialogDescription>
           </DialogHeader>
 
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
@@ -120,14 +122,14 @@ export function DraftListReview<T>({
                       checked={row.checked}
                       disabled={running || row.status === "created"}
                       onCheckedChange={(checked) => toggle(index, checked === true)}
-                      aria-label={`Include ${name}`}
+                      aria-label={t("include", { name })}
                     />
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{name}</p>
                       {row.status === "failed" ? (
                         <p className="truncate text-sm text-destructive">{row.error}</p>
                       ) : row.status === "created" ? (
-                        <p className="text-sm text-muted-foreground">Added</p>
+                        <p className="text-sm text-muted-foreground">{t("added")}</p>
                       ) : (
                         detail && (
                           <p className="truncate text-sm text-muted-foreground">{detail}</p>
@@ -144,7 +146,7 @@ export function DraftListReview<T>({
                         disabled={running}
                         onClick={() => onEdit(index)}
                       >
-                        Edit
+                        {tc("actions.edit")}
                       </Button>
                     )}
                   </li>
@@ -160,11 +162,11 @@ export function DraftListReview<T>({
               disabled={running}
               onClick={() => onOpenChange(false)}
             >
-              {createdCount > 0 ? "Close" : "Cancel"}
+              {createdCount > 0 ? tc("actions.close") : tc("actions.cancel")}
             </Button>
             <Button type="button" onClick={confirm} disabled={running || pendingCount === 0}>
               {running && <Spinner />}
-              Add {pendingCount} {pendingCount === 1 ? itemNoun : itemNounPlural}
+              {addLabel(pendingCount)}
             </Button>
           </DialogFooter>
         </div>

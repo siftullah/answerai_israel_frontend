@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -44,6 +46,8 @@ export function InviteDialog({
   onOpenChange: (open: boolean) => void;
   member: BusinessMember;
 }) {
+  const t = useTranslations("businessProfile.invite");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const rolesQuery = useRoles(business.id);
   const create = useCreateInvitation(business.id);
@@ -61,8 +65,10 @@ export function InviteDialog({
       ? member.role.id
       : (assignableRoles.find((role) => role.slug === "member")?.id ?? "");
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => inviteSchema(tv), [tv]);
   const form = useForm<InviteValues>({
-    resolver: zodResolver(inviteSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       role_id: defaultRoleId,
     },
@@ -74,7 +80,7 @@ export function InviteDialog({
       { member_id: member.id, role_id: values.role_id },
       {
         onSuccess: () => {
-          toast.success("Invitation sent");
+          toast.success(t("toasts.sent"));
           onOpenChange(false);
         },
         onError: (error) => applyServerErrors(form, error),
@@ -86,11 +92,8 @@ export function InviteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>{`Invite ${member.name}`}</DialogTitle>
-          <DialogDescription>
-            They&apos;ll get an email link to create their account, connected to this
-            member.
-          </DialogDescription>
+          <DialogTitle>{t("title", { name: member.name })}</DialogTitle>
+          <DialogDescription>{t("description")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
@@ -101,12 +104,12 @@ export function InviteDialog({
           )}
 
           <Field>
-            <FieldLabel htmlFor="invite-email">Email</FieldLabel>
+            <FieldLabel htmlFor="invite-email">{tc("labels.email")}</FieldLabel>
             <Input id="invite-email" type="email" value={member.email ?? ""} disabled />
           </Field>
 
           <Field data-invalid={!!errors.role_id || undefined}>
-            <FieldLabel htmlFor="invite-role">Role</FieldLabel>
+            <FieldLabel htmlFor="invite-role">{t("role")}</FieldLabel>
             <Controller
               control={form.control}
               name="role_id"
@@ -117,7 +120,7 @@ export function InviteDialog({
                   onValueChange={(value) => field.onChange((value as string | null) ?? "")}
                 >
                   <SelectTrigger id="invite-role" className="w-full">
-                    <SelectValue placeholder="Choose a role" />
+                    <SelectValue placeholder={t("chooseRole")} />
                   </SelectTrigger>
                   <SelectContent>
                     {roleItems.map((item) => (
@@ -134,11 +137,11 @@ export function InviteDialog({
 
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={create.isPending}>
               {create.isPending && <Spinner />}
-              Send invitation
+              {t("send")}
             </Button>
           </DialogFooter>
         </form>

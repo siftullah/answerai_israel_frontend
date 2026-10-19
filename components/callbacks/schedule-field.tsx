@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext, type FieldValues, type Path } from "react-hook-form";
 import { DatePicker } from "@/components/ui/date-picker";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
@@ -20,6 +21,7 @@ export function ScheduleField<T extends FieldValues>({
   timeName: Path<T>;
   idPrefix: string;
 }) {
+  const tc = useTranslations("common");
   const form = useFormContext<T>();
 
   return (
@@ -29,7 +31,7 @@ export function ScheduleField<T extends FieldValues>({
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={!!fieldState.error || undefined}>
-            <FieldLabel htmlFor={`${idPrefix}-date`}>Date</FieldLabel>
+            <FieldLabel htmlFor={`${idPrefix}-date`}>{tc("labels.date")}</FieldLabel>
             <DatePicker
               id={`${idPrefix}-date`}
               ref={field.ref}
@@ -47,7 +49,7 @@ export function ScheduleField<T extends FieldValues>({
         control={form.control}
         render={({ field, fieldState }) => (
           <Field data-invalid={!!fieldState.error || undefined}>
-            <FieldLabel htmlFor={`${idPrefix}-time`}>Time</FieldLabel>
+            <FieldLabel htmlFor={`${idPrefix}-time`}>{tc("labels.time")}</FieldLabel>
             <TimeInput
               id={`${idPrefix}-time`}
               value={field.value}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -25,12 +27,15 @@ export function AddSipNumberDialog({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("phoneNumbers");
   const { business } = useBusiness();
   const agentsQuery = useAgents(business.id);
   const register = useRegisterSipNumber(business.id);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => sipNumberSchema(tv), [tv]);
   const form = useForm<SipNumberValues>({
-    resolver: zodResolver(sipNumberSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultSipNumberValues(),
   });
   const { errors } = form.formState;
@@ -38,7 +43,7 @@ export function AddSipNumberDialog({
   const onSubmit = form.handleSubmit((values) => {
     register.mutate(toRegisterSipNumberPayload(values), {
       onSuccess: () => {
-        toast.success("SIP number registered");
+        toast.success(t("toasts.sipRegistered"));
         onOpenChange(false);
       },
       onError: (error) => applyServerErrors(form, error),
@@ -50,40 +55,40 @@ export function AddSipNumberDialog({
       <EntityModal
         open={open}
         onOpenChange={onOpenChange}
-        title="Add SIP number"
-        description="Register a number your trunk already carries, and calls to it will reach your AI."
+        title={t("page.addSipNumber")}
+        description={t("addSip.description")}
         onSubmit={onSubmit}
-        submitLabel="Register number"
+        submitLabel={t("addSip.submit")}
         submitClassName="bg-cta text-cta-foreground hover:bg-cta/90"
         pending={register.isPending}
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Details",
+            title: t("form.details"),
             fields: ["e164", "friendly_name", "inbound_agent_id"],
             content: (
               <>
                 <Field data-invalid={!!errors.e164 || undefined}>
-                  <FieldLabel htmlFor="sip-number-e164">Phone number</FieldLabel>
+                  <FieldLabel htmlFor="sip-number-e164">{t("addSip.phoneNumber")}</FieldLabel>
                   <Input
                     id="sip-number-e164"
                     type="tel"
-                    placeholder="(02) 5550 1234"
+                    placeholder={t("addSip.phonePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.e164}
                     {...form.register("e164")}
                   />
-                  <p className="text-sm text-muted-foreground">
-                    The number your trunk already carries — include the area code.
-                  </p>
+                  <p className="text-sm text-muted-foreground">{t("addSip.phoneHint")}</p>
                   {errors.e164 && <FieldError>{errors.e164.message}</FieldError>}
                 </Field>
 
                 <Field data-invalid={!!errors.friendly_name || undefined}>
-                  <FieldLabel htmlFor="sip-number-friendly-name">Friendly name</FieldLabel>
+                  <FieldLabel htmlFor="sip-number-friendly-name">
+                    {t("form.friendlyName")}
+                  </FieldLabel>
                   <Input
                     id="sip-number-friendly-name"
-                    placeholder="Reception line"
+                    placeholder={t("addSip.friendlyNamePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.friendly_name}
                     {...form.register("friendly_name")}
@@ -101,10 +106,7 @@ export function AddSipNumberDialog({
                   optional
                 />
 
-                <p className="text-sm text-muted-foreground">
-                  SIP numbers are inbound-only — outbound calls always go out from a
-                  platform number.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("form.inboundOnly")}</p>
               </>
             ),
           },

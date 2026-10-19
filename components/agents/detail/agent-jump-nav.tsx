@@ -13,22 +13,26 @@ import {
   TriangleAlertIcon,
   WrenchIcon,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useScrollspy } from "@/hooks/use-scrollspy";
 import { cn } from "@/lib/utils";
 
-/** Single source of truth for the detail page's sections and their anchors. */
+/**
+ * Single source of truth for the detail page's sections and their anchors.
+ * `titleKey` is the nav label's key under `agents.sections`.
+ */
 export const AGENT_SECTIONS = [
-  { id: "general", title: "General", icon: SlidersHorizontalIcon },
-  { id: "voice", title: "Voice", icon: AudioLinesIcon },
-  { id: "conversation", title: "Conversation", icon: MessageSquareTextIcon },
-  { id: "tools", title: "Tools", icon: WrenchIcon },
-  { id: "variables", title: "Variables", icon: BracesIcon },
-  { id: "calendar", title: "Calendar", icon: CalendarClockIcon },
-  { id: "transfers", title: "Transfers", icon: PhoneForwardedIcon },
-  { id: "knowledge", title: "Knowledge", icon: BookOpenIcon },
-  { id: "numbers", title: "Numbers", icon: HashIcon },
-  { id: "call-summary", title: "Call summaries", icon: MailIcon },
-  { id: "danger", title: "Danger zone", icon: TriangleAlertIcon },
+  { id: "general", titleKey: "general.title", icon: SlidersHorizontalIcon },
+  { id: "voice", titleKey: "voice.title", icon: AudioLinesIcon },
+  { id: "conversation", titleKey: "conversation.title", icon: MessageSquareTextIcon },
+  { id: "tools", titleKey: "tools.title", icon: WrenchIcon },
+  { id: "variables", titleKey: "variables.title", icon: BracesIcon },
+  { id: "calendar", titleKey: "calendar.title", icon: CalendarClockIcon },
+  { id: "transfers", titleKey: "transfers.title", icon: PhoneForwardedIcon },
+  { id: "knowledge", titleKey: "knowledge.title", icon: BookOpenIcon },
+  { id: "numbers", titleKey: "numbers.title", icon: HashIcon },
+  { id: "call-summary", titleKey: "callSummary.navTitle", icon: MailIcon },
+  { id: "danger", titleKey: "danger.title", icon: TriangleAlertIcon },
 ] as const;
 
 const SECTION_IDS = AGENT_SECTIONS.map((section) => section.id);
@@ -39,11 +43,13 @@ const SECTION_IDS = AGENT_SECTIONS.map((section) => section.id);
  */
 export function AgentJumpNav() {
   const activeId = useScrollspy(SECTION_IDS);
+  const t = useTranslations("agents.sections");
+  const td = useTranslations("agents.detail");
 
   return (
     <>
       <nav
-        aria-label="Agent sections"
+        aria-label={td("sectionsNav")}
         className="sticky top-0 z-10 -mx-4 bg-background px-4 py-2 sm:-mx-6 sm:px-6 lg:hidden"
       >
         <ul className="flex gap-1.5 overflow-x-auto pb-1">
@@ -60,7 +66,7 @@ export function AgentJumpNav() {
                 )}
               >
                 <section.icon className="size-4 shrink-0" />
-                {section.title}
+                {t(section.titleKey)}
               </a>
             </li>
           ))}
@@ -68,7 +74,7 @@ export function AgentJumpNav() {
       </nav>
 
       <nav
-        aria-label="Agent sections"
+        aria-label={td("sectionsNav")}
         className="hidden w-52 shrink-0 lg:sticky lg:top-6 lg:block lg:self-start"
       >
         <ul className="flex flex-col gap-0.5">
@@ -85,7 +91,7 @@ export function AgentJumpNav() {
                 )}
               >
                 <section.icon className="size-4 shrink-0" />
-                {section.title}
+                {t(section.titleKey)}
               </a>
             </li>
           ))}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -34,6 +36,8 @@ import {
   type TransferTargetValues,
 } from "@/lib/validation/transfer-target";
 
+const CONDITION_MAX = 500;
+
 export function TransferTargetModal({
   open,
   onOpenChange,
@@ -49,14 +53,19 @@ export function TransferTargetModal({
   /** New targets go into this agent's own directory instead of the business-wide one. */
   agentId?: string;
 }) {
+  const t = useTranslations("businessProfile.transferTarget");
+  const ts = useTranslations("businessProfile.shared");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const membersQuery = useMembers(business.id);
   const targetsQuery = useTransferTargets(business.id, agentId);
   const create = useCreateTransferTarget(business.id);
   const update = useUpdateTransferTarget(business.id);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => transferTargetSchema(tv), [tv]);
   const form = useForm<TransferTargetValues>({
-    resolver: zodResolver(transferTargetSchema),
+    resolver: zodResolver(schema),
     defaultValues: toTransferTargetValues(target),
   });
   const { errors } = form.formState;
@@ -77,7 +86,7 @@ export function TransferTargetModal({
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows the member's uuid.
   const memberItems = [
-    { value: "none", label: "None" },
+    { value: "none", label: tc("labels.none") },
     ...(membersQuery.data ?? []).map((member) => ({
       value: member.id,
       label: member.name,
@@ -115,7 +124,7 @@ export function TransferTargetModal({
         { id: target.id, payload: toTransferTargetPayload(values) },
         {
           onSuccess: () => {
-            toast.success("Transfer target saved");
+            toast.success(t("toasts.saved"));
             onOpenChange(false);
           },
           onError: handleError,
@@ -129,7 +138,7 @@ export function TransferTargetModal({
         },
         {
           onSuccess: () => {
-            toast.success("Transfer target added");
+            toast.success(t("toasts.added"));
             onOpenChange(false);
           },
           onError: handleError,
@@ -143,14 +152,14 @@ export function TransferTargetModal({
       <EntityModal
         open={open}
         onOpenChange={onOpenChange}
-        title={target ? "Edit transfer target" : "Add transfer target"}
+        title={target ? t("editTitle") : t("addTitle")}
         onSubmit={onSubmit}
-        submitLabel={target ? "Save changes" : "Add target"}
+        submitLabel={target ? tc("actions.saveChanges") : t("submitAdd")}
         pending={create.isPending || update.isPending}
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Details",
+            title: t("steps.details"),
             fields: [
               "destination_kind",
               "name",
@@ -187,13 +196,13 @@ export function TransferTargetModal({
                       options={[
                         {
                           value: "member",
-                          label: "Team member",
-                          description: "Someone on your team list.",
+                          label: t("kinds.member"),
+                          description: t("kinds.memberHint"),
                         },
                         {
                           value: "other",
-                          label: "Someone else",
-                          description: "Any other phone number.",
+                          label: t("kinds.other"),
+                          description: t("kinds.otherHint"),
                         },
                       ]}
                     />
@@ -202,10 +211,10 @@ export function TransferTargetModal({
 
                 {destinationKind === "other" && (
                   <Field data-invalid={!!errors.name || undefined}>
-                    <FieldLabel htmlFor="target-name">Name</FieldLabel>
+                    <FieldLabel htmlFor="target-name">{tc("labels.name")}</FieldLabel>
                     <Input
                       id="target-name"
-                      placeholder="Site manager"
+                      placeholder={t("namePlaceholder")}
                       autoComplete="off"
                       aria-invalid={!!errors.name}
                       {...form.register("name")}
@@ -216,7 +225,7 @@ export function TransferTargetModal({
 
                 {destinationKind === "member" && (
                   <Field data-invalid={!!errors.business_member_id || undefined}>
-                    <FieldLabel htmlFor="target-member">Team member</FieldLabel>
+                    <FieldLabel htmlFor="target-member">{t("member")}</FieldLabel>
                     <Controller
                       control={form.control}
                       name="business_member_id"
@@ -249,8 +258,8 @@ export function TransferTargetModal({
                                 >
                                   {item.label}
                                   {disabled && (
-                                    <span className="ml-auto text-xs text-muted-foreground">
-                                      Already a target
+                                    <span className="ms-auto text-xs text-muted-foreground">
+                                      {t("alreadyTarget")}
                                     </span>
                                   )}
                                 </SelectItem>
@@ -267,36 +276,34 @@ export function TransferTargetModal({
                 )}
 
                 <Field data-invalid={!!errors.to_e164 || undefined}>
-                  <FieldLabel htmlFor="target-number">Phone number</FieldLabel>
+                  <FieldLabel htmlFor="target-number">{t("phone")}</FieldLabel>
                   <Input
                     id="target-number"
                     type="tel"
-                    placeholder="0412 345 678"
+                    placeholder={t("phonePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.to_e164}
                     {...form.register("to_e164")}
                   />
                   <p className="text-sm text-muted-foreground">
-                    {destinationKind === "member"
-                      ? "Prefilled from the team member — edit to override, or clear to use their saved number."
-                      : "Australian numbers only, e.g. 0412 345 678."}
+                    {destinationKind === "member" ? t("memberPhoneHint") : t("otherPhoneHint")}
                   </p>
                   {errors.to_e164 && <FieldError>{errors.to_e164.message}</FieldError>}
                 </Field>
 
                 <Field data-invalid={!!errors.post_dial_digits || undefined}>
                   <FieldLabel htmlFor="target-digits">
-                    Post-dial digits (optional)
+                    {t("postDial")}
                   </FieldLabel>
                   <Input
                     id="target-digits"
-                    placeholder="w123#"
+                    placeholder={t("postDialPlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.post_dial_digits}
                     {...form.register("post_dial_digits")}
                   />
                   <p className="text-sm text-muted-foreground">
-                    Sent after answer — digits, * and #; w waits half a second.
+                    {t("postDialHint")}
                   </p>
                   {errors.post_dial_digits && (
                     <FieldError>{errors.post_dial_digits.message}</FieldError>
@@ -304,16 +311,16 @@ export function TransferTargetModal({
                 </Field>
 
                 <Field data-invalid={!!errors.condition || undefined}>
-                  <FieldLabel htmlFor="target-condition">When to transfer</FieldLabel>
+                  <FieldLabel htmlFor="target-condition">{t("condition")}</FieldLabel>
                   <Textarea
                     id="target-condition"
                     className="min-h-24"
-                    placeholder="The caller asks for a quote on commercial work."
+                    placeholder={t("conditionPlaceholder")}
                     aria-invalid={!!errors.condition}
                     {...form.register("condition")}
                   />
-                  <p className="text-right text-sm text-muted-foreground">
-                    {conditionLength} / 500
+                  <p className="text-end text-sm text-muted-foreground">
+                    {ts("charCount", { count: conditionLength, max: CONDITION_MAX })}
                   </p>
                   {errors.condition && <FieldError>{errors.condition.message}</FieldError>}
                 </Field>
@@ -321,14 +328,14 @@ export function TransferTargetModal({
             ),
           },
           {
-            title: "Availability",
+            title: t("steps.availability"),
             fields: ["hours_mode", "custom_hours"],
             content: (
               <>
                 <div>
-                  <p className="text-base font-medium">Availability</p>
+                  <p className="text-base font-medium">{t("availability.title")}</p>
                   <p className="text-sm text-muted-foreground">
-                    When can calls be transferred here?
+                    {t("availability.description")}
                   </p>
                 </div>
 
@@ -347,25 +354,25 @@ export function TransferTargetModal({
                           ? [
                               {
                                 value: "member" as const,
-                                label: "Availability Hours",
-                                description: "Only transfer during member availability hours",
+                                label: t("hoursModes.member"),
+                                description: t("hoursModes.memberHint"),
                               },
                             ]
                           : []),
                         {
                           value: "inherit",
-                          label: "Business Hours",
-                          description: "Only transfer during business/trading hours",
+                          label: t("hoursModes.inherit"),
+                          description: t("hoursModes.inheritHint"),
                         },
                         {
                           value: "custom",
-                          label: "Custom hours",
-                          description: "Set specific days and times.",
+                          label: t("hoursModes.custom"),
+                          description: t("hoursModes.customHint"),
                         },
                         {
                           value: "bypass",
-                          label: "All time",
-                          description: "Any time, day or night.",
+                          label: t("hoursModes.bypass"),
+                          description: t("hoursModes.bypassHint"),
                         },
                       ]}
                     />

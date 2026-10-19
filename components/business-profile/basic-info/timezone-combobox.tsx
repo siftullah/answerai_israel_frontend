@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon, ChevronsUpDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -26,6 +27,7 @@ export function TimezoneCombobox({
   invalid?: boolean;
   id?: string;
 }) {
+  const t = useTranslations("businessProfile.timezone");
   const [open, setOpen] = useState(false);
   const timezones = useMemo(() => Intl.supportedValuesOf("timeZone"), []);
 
@@ -46,15 +48,15 @@ export function TimezoneCombobox({
         }
       >
         <span className="min-w-0 truncate">
-          {value ? value.replace(/_/g, " ") : "Pick a timezone"}
+          {value ? value.replace(/_/g, " ") : t("pick")}
         </span>
         <ChevronsUpDownIcon className="shrink-0 text-muted-foreground" />
       </PopoverTrigger>
       <PopoverContent align="start" className="w-80 p-0">
         <Command>
-          <CommandInput placeholder="Search timezones…" />
+          <CommandInput placeholder={t("searchPlaceholder")} />
           <CommandList>
-            <CommandEmpty>No timezone matches.</CommandEmpty>
+            <CommandEmpty>{t("empty")}</CommandEmpty>
             <CommandGroup>
               {timezones.map((tz) => (
                 <CommandItem

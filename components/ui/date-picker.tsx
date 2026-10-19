@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CalendarIcon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -19,7 +20,7 @@ export function DatePicker({
   ref,
   value,
   onChange,
-  placeholder = "Pick a date",
+  placeholder,
   invalid,
   disabled,
   clearable = false,
@@ -42,6 +43,7 @@ export function DatePicker({
   disablePast?: boolean;
   className?: string;
 }) {
+  const t = useTranslations("ui");
   const [open, setOpen] = useState(false);
   const selected = parseDateKey(value);
   const today = new Date();
@@ -67,7 +69,7 @@ export function DatePicker({
         }
       >
         <CalendarIcon className="text-muted-foreground" />
-        {value ? formatDateKey(value) : placeholder}
+        {value ? formatDateKey(value) : (placeholder ?? t("datePicker.placeholder"))}
       </PopoverTrigger>
       <PopoverContent align="start" className="w-auto gap-0 p-0">
         <Calendar
@@ -100,7 +102,7 @@ export function DatePicker({
               }}
             >
               <XIcon />
-              Clear date
+              {t("datePicker.clear")}
             </Button>
           </div>
         )}

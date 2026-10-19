@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useFormContext, useWatch } from "react-hook-form";
 import { BUILTIN_VARIABLES } from "@/lib/validation/agent";
 import type { AgentSettingsValues } from "@/lib/validation/agent";
@@ -16,6 +17,7 @@ export function VariableInserter({
   onInsert: (name: string) => void;
   disabled?: boolean;
 }) {
+  const t = useTranslations("agents.sections.conversation");
   const { control } = useFormContext<AgentSettingsValues>();
   const declared = useWatch({ control, name: "dynamic_variables" });
 
@@ -42,7 +44,7 @@ export function VariableInserter({
 
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="text-xs text-muted-foreground">Insert:</span>
+      <span className="text-xs text-muted-foreground">{t("insertLabel")}</span>
       {BUILTIN_VARIABLES.map((name) => chip(name, false))}
       {declaredNames.map((name) => chip(name, true))}
     </div>

@@ -5,6 +5,7 @@ import type {
   PurchasePhoneNumberPayload,
   UpdatePhoneNumberPayload,
 } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { auPhoneField, normalizeAuPhone } from "@/lib/phone";
 
 /**
@@ -23,20 +24,24 @@ export function eligibleAgents(
   );
 }
 
-const friendlyName = z
-  .string()
-  .trim()
-  .min(1, "Give this number a name")
-  .max(100, "Keep the name under 100 characters");
+/** Schema factories take a translator scoped to the `validation` namespace. */
+const friendlyName = (t: Translator) =>
+  z
+    .string()
+    .trim()
+    .min(1, t("phoneNumber.nameRequired"))
+    .max(100, t("length.name", { max: 100 }));
 
 /** "" = none for both agent slots throughout. */
-export const editPhoneNumberSchema = z.object({
-  friendly_name: friendlyName,
-  inbound_agent_id: z.string(),
-  outbound_agent_id: z.string(),
-});
+export function editPhoneNumberSchema(t: Translator) {
+  return z.object({
+    friendly_name: friendlyName(t),
+    inbound_agent_id: z.string(),
+    outbound_agent_id: z.string(),
+  });
+}
 
-export type EditPhoneNumberValues = z.infer<typeof editPhoneNumberSchema>;
+export type EditPhoneNumberValues = z.infer<ReturnType<typeof editPhoneNumberSchema>>;
 
 export function toEditPhoneNumberValues(number: PhoneNumber): EditPhoneNumberValues {
   return {
@@ -68,13 +73,15 @@ export function toUpdatePhoneNumberPayload(
  * Loose AU-shape check only — the backend canonicalizes to E.164 and is the
  * validation authority; its 422 lands on this `e164` field via applyServerErrors.
  */
-export const sipNumberSchema = z.object({
-  e164: auPhoneField("Enter the number your trunk carries"),
-  friendly_name: friendlyName,
-  inbound_agent_id: z.string(),
-});
+export function sipNumberSchema(t: Translator) {
+  return z.object({
+    e164: auPhoneField(t, t("phoneNumber.sipNumberRequired")),
+    friendly_name: friendlyName(t),
+    inbound_agent_id: z.string(),
+  });
+}
 
-export type SipNumberValues = z.infer<typeof sipNumberSchema>;
+export type SipNumberValues = z.infer<ReturnType<typeof sipNumberSchema>>;
 
 export function defaultSipNumberValues(): SipNumberValues {
   return { e164: "", friendly_name: "", inbound_agent_id: "" };
@@ -89,13 +96,15 @@ export function toRegisterSipNumberPayload(values: SipNumberValues): PurchasePho
 }
 
 /** Step 2 of the buy dialog — the number itself comes from the picker. */
-export const buyDetailsSchema = z.object({
-  friendly_name: friendlyName,
-  inbound_agent_id: z.string(),
-  outbound_agent_id: z.string(),
-});
+export function buyDetailsSchema(t: Translator) {
+  return z.object({
+    friendly_name: friendlyName(t),
+    inbound_agent_id: z.string(),
+    outbound_agent_id: z.string(),
+  });
+}
 
-export type BuyDetailsValues = z.infer<typeof buyDetailsSchema>;
+export type BuyDetailsValues = z.infer<ReturnType<typeof buyDetailsSchema>>;
 
 export function defaultBuyDetailsValues(): BuyDetailsValues {
   return { friendly_name: "", inbound_agent_id: "", outbound_agent_id: "" };

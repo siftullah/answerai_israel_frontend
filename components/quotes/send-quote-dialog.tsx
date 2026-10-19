@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { SendIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -42,6 +43,8 @@ export function SendQuoteDialog({
   businessUuid: string;
   quote: Quote;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const sendQuote = useSendQuote(businessUuid);
   const settingsQuery = useModuleSettings<QuoteModuleSettings>(businessUuid, "quotes");
   const contactQuery = useContact(businessUuid, quote.contact?.id ?? null);
@@ -58,15 +61,21 @@ export function SendQuoteDialog({
   const missingRecipient = contactLoaded && primaryEmail === null && toEmail.trim() === "";
 
   const datesLine = quote.issue_date
-    ? `Issued ${formatDateKey(quote.issue_date)}, valid until ${
-        quote.valid_until ? formatDateKey(quote.valid_until) : `${validDays} days later`
-      }.`
-    : `The issue date will be set to today and the quote stays valid ${validDays} days.`;
+    ? quote.valid_until
+      ? t("sendDialog.datesIssuedValid", {
+          issued: formatDateKey(quote.issue_date),
+          validUntil: formatDateKey(quote.valid_until),
+        })
+      : t("sendDialog.datesIssuedNoValid", {
+          issued: formatDateKey(quote.issue_date),
+          days: validDays,
+        })
+    : t("sendDialog.datesUnset", { days: validDays });
 
   const submit = () => {
     const override = toEmail.trim();
     if (override !== "" && !EMAIL_PATTERN.test(override)) {
-      setFieldError("Enter a valid email address");
+      setFieldError(t("sendDialog.invalidEmail"));
       return;
     }
 
@@ -75,11 +84,9 @@ export function SendQuoteDialog({
       {
         onSuccess: ({ emailed }) => {
           if (emailed) {
-            toast.success(`Quote ${quote.number} sent`);
+            toast.success(t("toasts.sent", { number: quote.number }));
           } else {
-            toast.warning(
-              `Quote ${quote.number} is live, but no email went out — copy the link to share it.`
-            );
+            toast.warning(t("toasts.sentNoEmail", { number: quote.number }));
           }
           onOpenChange(false);
         },
@@ -92,17 +99,19 @@ export function SendQuoteDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Send quote {quote.number}</DialogTitle>
+          <DialogTitle>{t("sendDialog.title", { number: quote.number })}</DialogTitle>
           <DialogDescription>
-            Emails {quote.contact?.name ?? "the customer"} a quote for{" "}
-            {formatCents(quote.total_cents, quote.currency)} with a link to accept online.{" "}
-            {datesLine}
+            {t("sendDialog.description", {
+              customer: quote.contact?.name ?? t("theCustomer"),
+              amount: formatCents(quote.total_cents, quote.currency),
+              dates: datesLine,
+            })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <Field data-invalid={!!fieldError || undefined}>
-            <FieldLabel htmlFor="send-quote-email">Email to</FieldLabel>
+            <FieldLabel htmlFor="send-quote-email">{t("sendDialog.emailLabel")}</FieldLabel>
             <Input
               id="send-quote-email"
               type="email"
@@ -117,15 +126,18 @@ export function SendQuoteDialog({
             {fieldError ? (
               <FieldError>{fieldError}</FieldError>
             ) : primaryEmail ? (
-              <FieldDescription>Leave blank to send to {primaryEmail}.</FieldDescription>
+              <FieldDescription>
+                {t("sendDialog.emailHint", { email: primaryEmail })}
+              </FieldDescription>
             ) : null}
           </Field>
 
           {missingRecipient && (
             <Alert variant="warning">
               <AlertDescription>
-                {quote.contact?.name ?? "This contact"} has no email address on file. You can still
-                send — the quote goes live and you share its link by text or in person.
+                {t("sendDialog.noEmailAlert", {
+                  name: quote.contact?.name ?? t("thisContact"),
+                })}
               </AlertDescription>
             </Alert>
           )}
@@ -139,11 +151,11 @@ export function SendQuoteDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="button" onClick={submit} disabled={sendQuote.isPending}>
             <SendIcon />
-            {sendQuote.isPending ? "Sending…" : "Send quote"}
+            {sendQuote.isPending ? t("actions.sending") : t("actions.send")}
           </Button>
         </DialogFooter>
       </DialogContent>

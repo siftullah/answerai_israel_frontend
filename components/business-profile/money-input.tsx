@@ -42,7 +42,7 @@ export function MoneyInput({
 
   return (
     <div className="relative">
-      <span className="pointer-events-none absolute inset-y-0 left-3 flex items-center text-sm text-muted-foreground">
+      <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-sm text-muted-foreground">
         ₪
       </span>
       <Input
@@ -54,7 +54,7 @@ export function MoneyInput({
         placeholder={placeholder}
         autoComplete="off"
         aria-invalid={invalid}
-        className="pl-7"
+        className="ps-7"
       />
     </div>
   );

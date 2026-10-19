@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext } from "react-hook-form";
 import { ChevronDownIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -23,22 +24,6 @@ import { SLOT_INTERVALS } from "@/lib/api/types";
 import type { AgentSettingsValues } from "@/lib/validation/agent";
 import { cn } from "@/lib/utils";
 
-// "inherit" is a Select sentinel for the form's "" (Base UI items need
-// non-empty values); the mapper only ever sees "".
-const SLOT_ITEMS = [
-  { value: "inherit", label: "Inherit" },
-  ...SLOT_INTERVALS.map((interval) => ({
-    value: String(interval),
-    label: `${interval} minutes`,
-  })),
-];
-
-const BOOKINGS_MODE_ITEMS = [
-  { value: "inherit", label: "Inherit" },
-  { value: "no_cap", label: "No daily cap" },
-  { value: "custom", label: "Custom limit" },
-];
-
 function hasOverrides(calendar: AgentSettingsValues["calendar"]): boolean {
   return (
     calendar.slot_interval_minutes !== "" ||
@@ -52,12 +37,29 @@ function hasOverrides(calendar: AgentSettingsValues["calendar"]): boolean {
 }
 
 export function CalendarSection() {
+  const t = useTranslations("agents.sections.calendar");
   const form = useFormContext<AgentSettingsValues>();
   const { errors, disabled } = form.formState;
   const calendarErrors = errors.calendar;
 
   const [open, setOpen] = useState(() => hasOverrides(form.getValues("calendar")));
   const bookingsMode = form.watch("calendar.max_bookings_mode");
+
+  // "inherit" is a Select sentinel for the form's "" (Base UI items need
+  // non-empty values); the mapper only ever sees "".
+  const slotItems = [
+    { value: "inherit", label: t("inherit") },
+    ...SLOT_INTERVALS.map((interval) => ({
+      value: String(interval),
+      label: t("minutes", { count: interval }),
+    })),
+  ];
+
+  const bookingsModeItems = [
+    { value: "inherit", label: t("inherit") },
+    { value: "no_cap", label: t("bookingsMode.no_cap") },
+    { value: "custom", label: t("bookingsMode.custom") },
+  ];
 
   const numberField = (
     name:
@@ -67,7 +69,7 @@ export function CalendarSection() {
       | "appointment_duration_minutes"
       | "callback_duration_minutes",
     label: string,
-    hint: string
+    range: { min: number; max: number }
   ) => {
     const error = calendarErrors?.[name];
     return (
@@ -76,40 +78,36 @@ export function CalendarSection() {
         <Input
           id={`calendar-${name}`}
           type="number"
-          placeholder="Inherit"
+          placeholder={t("inherit")}
           aria-invalid={!!error}
           {...form.register(`calendar.${name}`)}
         />
         {error ? (
           <FieldError>{error.message}</FieldError>
         ) : (
-          <p className="text-xs text-muted-foreground">{hint}</p>
+          <p className="text-xs text-muted-foreground">{t("range", range)}</p>
         )}
       </Field>
     );
   };
 
   return (
-    <AgentSection
-      id="calendar"
-      title="Calendar"
-      description="Booking mechanics for this agent only — anything left on Inherit uses your business and team-member calendar settings."
-    >
+    <AgentSection id="calendar" title={t("title")} description={t("description")}>
       <Collapsible open={open} onOpenChange={setOpen}>
         <CollapsibleTrigger render={<Button type="button" variant="outline" size="sm" />}>
-          {open ? "Hide overrides" : "Show overrides"}
+          {open ? t("hideOverrides") : t("showOverrides")}
           <ChevronDownIcon className={cn("transition-transform", open && "rotate-180")} />
         </CollapsibleTrigger>
         <CollapsibleContent>
           <div className="grid gap-4 pt-5 sm:grid-cols-2">
             <Field>
-              <FieldLabel htmlFor="calendar-slot-interval">Slot interval</FieldLabel>
+              <FieldLabel htmlFor="calendar-slot-interval">{t("slotInterval")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="calendar.slot_interval_minutes"
                 render={({ field }) => (
                   <Select
-                    items={SLOT_ITEMS}
+                    items={slotItems}
                     value={field.value === "" ? "inherit" : field.value}
                     onValueChange={(value) =>
                       field.onChange(value === "inherit" || value === null ? "" : value)
@@ -119,7 +117,7 @@ export function CalendarSection() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {SLOT_ITEMS.map((item) => (
+                      {slotItems.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
@@ -130,18 +128,18 @@ export function CalendarSection() {
               />
             </Field>
 
-            {numberField("min_notice_minutes", "Minimum notice (minutes)", "0 – 10,080")}
-            {numberField("max_horizon_days", "Booking horizon (days)", "1 – 365")}
-            {numberField("buffer_minutes", "Buffer between bookings (minutes)", "0 – 240")}
+            {numberField("min_notice_minutes", t("minNotice"), { min: 0, max: 10080 })}
+            {numberField("max_horizon_days", t("maxHorizon"), { min: 1, max: 365 })}
+            {numberField("buffer_minutes", t("buffer"), { min: 0, max: 240 })}
 
             <Field>
-              <FieldLabel htmlFor="calendar-bookings-mode">Daily booking limit</FieldLabel>
+              <FieldLabel htmlFor="calendar-bookings-mode">{t("dailyLimit")}</FieldLabel>
               <Controller
                 control={form.control}
                 name="calendar.max_bookings_mode"
                 render={({ field }) => (
                   <Select
-                    items={BOOKINGS_MODE_ITEMS}
+                    items={bookingsModeItems}
                     value={field.value}
                     onValueChange={(value) => {
                       if (value !== null) field.onChange(value);
@@ -151,7 +149,7 @@ export function CalendarSection() {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      {BOOKINGS_MODE_ITEMS.map((item) => (
+                      {bookingsModeItems.map((item) => (
                         <SelectItem key={item.value} value={item.value}>
                           {item.label}
                         </SelectItem>
@@ -164,7 +162,7 @@ export function CalendarSection() {
 
             {bookingsMode === "custom" && (
               <Field data-invalid={!!calendarErrors?.max_bookings_per_day || undefined}>
-                <FieldLabel htmlFor="calendar-max-bookings">Maximum per day</FieldLabel>
+                <FieldLabel htmlFor="calendar-max-bookings">{t("maxPerDay")}</FieldLabel>
                 <Input
                   id="calendar-max-bookings"
                   type="number"
@@ -174,17 +172,18 @@ export function CalendarSection() {
                 {calendarErrors?.max_bookings_per_day ? (
                   <FieldError>{calendarErrors.max_bookings_per_day.message}</FieldError>
                 ) : (
-                  <p className="text-xs text-muted-foreground">1 – 100</p>
+                  <p className="text-xs text-muted-foreground">
+                    {t("range", { min: 1, max: 100 })}
+                  </p>
                 )}
               </Field>
             )}
 
-            {numberField(
-              "appointment_duration_minutes",
-              "Appointment length (minutes)",
-              "5 – 1,440"
-            )}
-            {numberField("callback_duration_minutes", "Callback length (minutes)", "5 – 240")}
+            {numberField("appointment_duration_minutes", t("appointmentLength"), {
+              min: 5,
+              max: 1440,
+            })}
+            {numberField("callback_duration_minutes", t("callbackLength"), { min: 5, max: 240 })}
           </div>
         </CollapsibleContent>
       </Collapsible>

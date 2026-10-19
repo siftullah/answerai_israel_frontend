@@ -1,0 +1,315 @@
+{
+  "meta": {
+    "title": "Campaigns",
+    "detailTitle": "Campaign"
+  },
+  "status": {
+    "draft": "Draft",
+    "scheduled": "Scheduled",
+    "running": "Running",
+    "paused": "Paused",
+    "completed": "Completed",
+    "canceled": "Canceled"
+  },
+  "recipientStatus": {
+    "pending": "Pending",
+    "queued": "Queued",
+    "calling": "Calling",
+    "completed": "Completed",
+    "retry_scheduled": "Retry scheduled",
+    "failed": "Failed",
+    "max_attempts": "Max attempts",
+    "dnc_blocked": "On DNC",
+    "invalid": "Invalid",
+    "skipped": "Skipped",
+    "canceled": "Canceled"
+  },
+  "startErrors": {
+    "campaign_not_startable": "Only draft or scheduled campaigns can be started.",
+    "campaign_agent_not_ready": "The agent must be an active, published outbound agent before the campaign can dial.",
+    "campaign_number_not_ready": "The caller number isn't active yet.",
+    "campaign_number_not_dialable": "SIP numbers can't dial campaigns — pick one of your Twilio numbers.",
+    "campaign_no_recipients": "Add at least one recipient before starting.",
+    "campaign_locked": "This campaign has finished and can no longer change."
+  },
+  "filters": {
+    "byStatus": "Filter by status",
+    "allStatuses": "All statuses"
+  },
+  "a11y": {
+    "actionsFor": "Actions for {name}",
+    "selectItem": "Select {name}"
+  },
+  "list": {
+    "title": "Campaigns",
+    "description": "Bulk outbound calling — your AI works through a list, retries the misses, and skips the do-not-call register.",
+    "newCampaign": "New campaign",
+    "searchPlaceholder": "Search campaigns",
+    "loadError": "Couldn't load campaigns",
+    "noMatches": "No campaigns match your filters.",
+    "emptyTitle": "No campaigns yet",
+    "emptyDescription": "Create one, load your list of numbers or contacts, and your outbound agent does the calling.",
+    "noAgent": "No agent",
+    "fromNumber": "From {number}",
+    "noCallerNumber": "No caller number"
+  },
+  "table": {
+    "agent": "Agent",
+    "callerNumber": "Caller number",
+    "progress": "Progress",
+    "created": "Created"
+  },
+  "progress": {
+    "noRecipients": "No recipients",
+    "doneOfTotal": "{done} of {total}"
+  },
+  "actions": {
+    "start": "Start",
+    "startNow": "Start now",
+    "pause": "Pause",
+    "resume": "Resume",
+    "duplicate": "Duplicate",
+    "cancelCampaign": "Cancel campaign"
+  },
+  "toasts": {
+    "created": "Campaign created as a draft — add recipients next",
+    "updated": "Campaign updated",
+    "scheduled": "Campaign scheduled — dialing begins at the start time",
+    "started": "Campaign started",
+    "paused": "Campaign paused",
+    "resumed": "Campaign resumed",
+    "duplicated": "Campaign duplicated as a draft",
+    "canceled": "Campaign canceled",
+    "deleted": "Campaign deleted",
+    "noRecipientsHint": "Add numbers, pick contacts, or import a spreadsheet below."
+  },
+  "cancelDialog": {
+    "title": "Cancel {name}?",
+    "description": "Canceling stops dialing and cancels every queued call and remaining recipient. This can't be undone.",
+    "keepRunning": "Keep running"
+  },
+  "deleteDialog": {
+    "title": "Delete {name}?",
+    "description": "This removes the campaign and its recipient list. Calls it already made stay in your call logs."
+  },
+  "create": {
+    "title": "New campaign",
+    "description": "Pick who calls and from which number — everything else can change later.",
+    "submit": "Create campaign",
+    "steps": {
+      "basics": "Basics",
+      "pacingSchedule": "Pacing & schedule"
+    }
+  },
+  "form": {
+    "namePlaceholder": "e.g. July follow-ups",
+    "agent": "Agent",
+    "agentPlaceholder": "Pick an outbound agent",
+    "noAgents": "No outbound agents are ready — create one under Agents and publish it first.",
+    "agentHint": "Only active, published outbound agents can dial campaigns.",
+    "callerNumber": "Caller number",
+    "numberPlaceholder": "Pick the number to call from",
+    "noNumbers": "No eligible numbers — campaigns dial from your active Twilio numbers (SIP numbers can't place campaign calls).",
+    "numberHint": "Recipients see this number on their caller ID.",
+    "startDate": "Start date",
+    "startTime": "Start time",
+    "endDate": "End date",
+    "endTime": "End time",
+    "scheduleHint": "Times are in your business timezone. Leave blank to start manually and run until every recipient is done.",
+    "maxConcurrent": "Calls at once",
+    "maxAttempts": "Attempts per person",
+    "retryDelay": "Retry after (minutes)",
+    "retryOn": "Retry when the call ends in",
+    "retryOnHint": "Anything else — answered calls, invalid numbers — is final after one attempt.",
+    "retryReasons": {
+      "no_answer": "No answer",
+      "busy": "Busy",
+      "failed": "Call failed"
+    }
+  },
+  "detail": {
+    "notFoundTitle": "Campaign not found",
+    "notFoundMessage": "This campaign doesn't exist or was deleted.",
+    "loadError": "Couldn't load this campaign",
+    "moreActions": "More campaign actions",
+    "subline": {
+      "from": "from {number}",
+      "starts": "starts {date}",
+      "finished": "finished {date}"
+    }
+  },
+  "tabs": {
+    "recipients": "Recipients",
+    "recipientsSubtitle": "Everyone this campaign calls",
+    "calls": "Calls",
+    "callsSubtitle": "Every dial this campaign has made",
+    "settingsSubtitle": "Schedule, pacing, hours and variables"
+  },
+  "stats": {
+    "waiting": "Waiting",
+    "calling": "Calling",
+    "completed": "Completed",
+    "failed": "Failed",
+    "blocked": "Blocked",
+    "minutesUsed": "Minutes used",
+    "queued": "{count, plural, one {# queued} other {# queued}}",
+    "awaitingRetry": "{count, plural, one {# awaiting retry} other {# awaiting retry}}",
+    "onDnc": "{count, plural, one {# on DNC} other {# on DNC}}",
+    "invalid": "{count, plural, one {# invalid} other {# invalid}}",
+    "skipped": "{count, plural, one {# skipped} other {# skipped}}",
+    "hitMaxAttempts": "{count, plural, one {# hit max attempts} other {# hit max attempts}}"
+  },
+  "calls": {
+    "searchPlaceholder": "Search number or caller",
+    "filterByStatus": "Filter by call status",
+    "emptyTitle": "No calls yet",
+    "emptyDescription": "Calls appear here as the campaign dials. Start the campaign to begin.",
+    "status": {
+      "queued": "Queued",
+      "initiating": "Initiating",
+      "ringing": "Ringing",
+      "in_progress": "In progress",
+      "completed": "Completed",
+      "busy": "Busy",
+      "no_answer": "No answer",
+      "failed": "Failed",
+      "canceled": "Canceled"
+    }
+  },
+  "settings": {
+    "locked": "This campaign has finished — settings are read-only. Duplicate it to run the same setup again.",
+    "basicsTitle": "Basics",
+    "basicsDescription": "The agent doing the talking and the number on the caller ID.",
+    "scheduleTitle": "Schedule",
+    "scheduleDescription": "An optional window — dialing starts and stops on its own.",
+    "clearSchedule": "Clear schedule",
+    "hoursTitle": "Calling hours",
+    "hoursDescription": "When the campaign is allowed to dial. Outside these windows it simply waits.",
+    "hoursInherit": "Business hours",
+    "hoursInheritDescription": "Follows your trading hours.",
+    "hoursCustom": "Custom hours",
+    "hoursCustomDescription": "Set specific days and times for this campaign.",
+    "pacingTitle": "Pacing & retries",
+    "pacingDescription": "How hard the campaign pushes, and what counts as worth another try.",
+    "variablesTitle": "Default variables",
+    "variablesDescription": "Campaign-wide values for the agent's placeholders. Per-recipient values override these.",
+    "variablesPickAgent": "Pick an agent first — its declared variables appear here.",
+    "variablesNone": "This agent has no variables to set per campaign. Built-ins like {contactName} and {businessName} are filled automatically on every call.",
+    "variablesPlaceholder": "Fallback for recipients without their own value",
+    "variablesHint": "A recipient with no value for a variable, here or on its own row, is skipped rather than called. The agent's own default is never used for campaign calls."
+  },
+  "recipients": {
+    "searchPlaceholder": "Search phone or name",
+    "retryAllFailed": "Retry all failed or skipped",
+    "importCsv": "Import CSV",
+    "fromContacts": "From contacts",
+    "add": "Add recipients",
+    "loadError": "Couldn't load recipients",
+    "noMatches": "No recipients match your filters.",
+    "emptyTitle": "No recipients yet",
+    "emptyDescription": "Add numbers by hand, pick people from your contacts, or import a spreadsheet — then start the campaign.",
+    "toasts": {
+      "retried": "Recipient queued for another attempt",
+      "requeued": "Requeued {count, plural, one {# recipient} other {# recipients}}",
+      "nothingToRetry": "Nothing to retry",
+      "removed": "Recipient removed",
+      "bulkRemoved": "Removed {count, plural, one {# recipient} other {# recipients}}",
+      "bulkRemovedWithSkipped": "Removed {count, plural, one {# recipient} other {# recipients}} — {skipped, plural, one {# skipped} other {# skipped}} (currently on a call)"
+    },
+    "errors": {
+      "notRetryable": "Only failed or skipped recipients can be retried.",
+      "canceledNoRetry": "Canceled campaigns can't retry recipients.",
+      "onCall": "Can't remove a recipient who's on a call right now.",
+      "locked": "This campaign has finished — recipients can no longer be added."
+    },
+    "removeDialog": {
+      "title": "Remove {phone}?",
+      "description": "They won't be called by this campaign. The number can be added again later."
+    },
+    "bulkRemoveDialog": {
+      "title": "Remove {count, plural, one {# recipient} other {# recipients}}?",
+      "description": "They won't be called by this campaign. Anyone currently on a call is skipped."
+    },
+    "bulk": {
+      "retryCount": "Retry {count}",
+      "clearSelection": "Clear selection"
+    },
+    "table": {
+      "selectAll": "Select all loaded recipients",
+      "variables": "Variables",
+      "attempts": "Attempts",
+      "nextAttempt": "Next attempt",
+      "lastResult": "Last result",
+      "unnamedContact": "Unnamed contact",
+      "attemptsOf": "{attempts} of {max}",
+      "company": "Company",
+      "address": "Address"
+    },
+    "retryDialog": {
+      "titleSingle": "Retry {phone}?",
+      "titleIds": "Retry {count, plural, one {# recipient} other {# recipients}}?",
+      "titleAllFailed": "Retry every failed or skipped recipient?",
+      "description": "The attempt count resets to zero and dialing starts again.",
+      "descriptionIds": "Attempt counts reset to zero and dialing starts again. Rows that aren't failed or skipped are left alone.",
+      "reopens": "This campaign is completed — retrying reopens it and dialing resumes on the next tick.",
+      "endPassed": "The end date has already passed, so the campaign will complete again without dialing anyone. Extend or clear the end date first.",
+      "openSettings": "Open settings"
+    },
+    "addDialog": {
+      "description": "Australian numbers only — anything else comes back as invalid. Numbers on your do-not-call list are skipped automatically.",
+      "phonePlaceholder": "Phone, e.g. 0412 345 678",
+      "namePlaceholder": "Name (optional)",
+      "rowPhone": "Recipient {index} phone",
+      "rowName": "Recipient {index} name",
+      "rowVariable": "Recipient {index} {variable}",
+      "removeRow": "Remove recipient {index}",
+      "addAnother": "Add another",
+      "bigListHint": "For bigger lists, use the CSV import.",
+      "submit": "{count, plural, =0 {Add recipients} one {Add # recipient} other {Add # recipients}}"
+    },
+    "fromContactsDialog": {
+      "title": "Add from contacts",
+      "description": "Each contact's primary number joins the campaign. Contacts without a phone are skipped; do-not-call numbers are blocked automatically.",
+      "searchPlaceholder": "Search name, company or phone",
+      "allTags": "All tags",
+      "filterByTag": "Filter by tag",
+      "noMatches": "No contacts match.",
+      "selectAllLoaded": "Select all loaded contacts",
+      "allMatchingSelected": "Everything matching your filters selected",
+      "selectAllMatching": "Select everything matching",
+      "onDnc": "On DNC",
+      "noPhone": "No phone",
+      "loadMore": "Load more",
+      "overCap": "Up to {max} individually-picked contacts per batch — use “Select everything matching” with filters instead.",
+      "addAllMatching": "Add all matching",
+      "addCount": "{count, plural, one {Add # to campaign} other {Add # to campaign}}"
+    },
+    "importDialog": {
+      "title": "Import recipients",
+      "uploadDescription": "Upload a spreadsheet — CSV, TXT, XLS or XLSX, up to 10 MB.",
+      "mappingDescription": "Match your spreadsheet columns to the campaign fields.",
+      "invalidType": "Use a CSV, TXT, XLS or XLSX file.",
+      "tooLarge": "The file must be 10 MB or smaller.",
+      "notImported": "Not imported",
+      "columnNumber": "Column {number}",
+      "started": "Import started — rows appear as they're processed.",
+      "expired": "The upload expired — choose the file again.",
+      "chooseFile": "Choose file",
+      "matchHint": "Rows are matched to your contacts by phone number.",
+      "hasHeaderRow": "The first row contains column headings",
+      "phoneColumn": "Phone column",
+      "nameColumn": "Name column",
+      "variables": "Variables",
+      "variablesHint": "Fill the agent's placeholders per recipient from a column.",
+      "footnote": "Invalid and do-not-call numbers still appear in the list with their reason, so nothing disappears silently. Duplicates are skipped."
+    }
+  },
+  "summary": {
+    "added": "{count, plural, one {Added #} other {Added #}}",
+    "duplicates": "{count, plural, one {# already in the campaign} other {# already in the campaign}}",
+    "dncBlocked": "{count, plural, one {# on the do-not-call list} other {# on the do-not-call list}}",
+    "invalid": "{count, plural, one {# invalid} other {# invalid}}",
+    "noPhone": "{count, plural, one {# without a phone number} other {# without a phone number}}",
+    "nothingToAdd": "Nothing to add"
+  }
+}

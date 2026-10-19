@@ -1,0 +1,303 @@
+{
+  "profile": {
+    "meta": {
+      "title": "Profile"
+    },
+    "title": "Profile",
+    "description": "Your account details, photo and password.",
+    "loadError": "Couldn't load your profile",
+    "toasts": {
+      "emailConfirmed": "Email address confirmed",
+      "emailLinkInvalid": "That confirmation link was invalid or has expired"
+    },
+    "avatar": {
+      "title": "Profile picture",
+      "description": "JPEG, PNG, WebP or SVG, up to 2 MB.",
+      "replace": "Replace",
+      "upload": "Upload photo",
+      "removeTitle": "Remove your photo?",
+      "removeDescription": "You can upload a new one at any time.",
+      "toasts": {
+        "invalidType": "Use a JPEG, PNG, WebP or SVG image.",
+        "tooLarge": "The photo must be 2 MB or smaller.",
+        "updated": "Photo updated",
+        "removed": "Photo removed"
+      }
+    },
+    "details": {
+      "title": "Your details",
+      "description": "Your name, email and contact details.",
+      "firstName": "First name",
+      "lastName": "Last name",
+      "pendingEmail": "Pending confirmation: <strong>{email}</strong> — check that inbox to finish the change.",
+      "emailHint": "Changing this sends a confirmation link to the new address; your current email stays active until you confirm.",
+      "phonePlaceholder": "0412 345 678",
+      "position": "Position",
+      "positionPlaceholder": "e.g. Practice Manager",
+      "discardChanges": "Discard changes",
+      "toasts": {
+        "emailPending": "Confirm your new email — we sent a link to {email}.",
+        "saved": "Profile saved"
+      }
+    },
+    "password": {
+      "title": "Password",
+      "description": "Change the password you use to sign in.",
+      "current": "Current password",
+      "new": "New password",
+      "confirm": "Confirm new password",
+      "update": "Update password",
+      "toasts": {
+        "updated": "Password updated"
+      }
+    }
+  },
+  "calendar": {
+    "meta": {
+      "title": "Calendar"
+    },
+    "title": "Calendar",
+    "description": "Connect your Microsoft calendar so your AI can check your real availability and write appointments and callbacks straight to it.",
+    "loadError": "Couldn't load your calendar connection",
+    "errors": {
+      "stateExpired": "The connection request expired. Please try connecting again.",
+      "accessDenied": "Microsoft sign-in was cancelled.",
+      "providerError": "Microsoft couldn't complete the connection. Please try again.",
+      "generic": "Couldn't connect your calendar"
+    },
+    "toasts": {
+      "connected": "Calendar connected"
+    },
+    "card": {
+      "providerName": "Microsoft Calendar",
+      "notConnected": "No calendar is connected yet. Connecting lets your AI offer your real availability and add appointments and callbacks straight to your calendar.",
+      "connect": "Connect Microsoft Calendar",
+      "connected": "Connected",
+      "needsReconnecting": "Needs reconnecting",
+      "connectedAs": "Connected as <strong>{email}</strong>. Your appointments and callbacks sync to this calendar.",
+      "connectedNoEmail": "Your Microsoft calendar is connected — appointments and callbacks sync to it.",
+      "reconnectTitle": "Reconnection required",
+      "reconnectFallback": "The connection stopped working. Reconnect to resume availability checks and syncing appointments and callbacks.",
+      "reconnect": "Reconnect",
+      "disconnect": "Disconnect",
+      "disconnectTitle": "Disconnect this calendar?",
+      "disconnectDescription": "Your AI will stop checking this calendar for availability, and new appointments and callbacks won't be added to it. You can reconnect at any time.",
+      "toasts": {
+        "disconnected": "Calendar disconnected"
+      }
+    }
+  },
+  "notifications": {
+    "meta": {
+      "title": "Notifications"
+    },
+    "title": "Notifications",
+    "description": "Who on your team hears about what your AI assistant captures. Turn routing on for a notification and an assistant picks the recipients from your rules and their roles; off, each goes to its usual default.",
+    "loadError": "Couldn't load notification settings",
+    "noModules": "None of the modules that send team notifications (leads, jobs, quotes, callbacks) are enabled for this business.",
+    "sections": {
+      "newLead": {
+        "title": "New lead",
+        "description": "Sent when your AI assistant logs a lead on a call. Leads you add in the portal never trigger it.",
+        "enabledDescription": "When off, it goes to the lead's assignee, or the business owner when nobody is assigned. Your recipients and rules are kept for when you turn it back on.",
+        "recipientsDescription": "The people the assistant can choose from. It picks who actually gets each lead from your rules and their roles — usually one person, not everyone.",
+        "rulesDescription": "Plain-English instructions for which leads go to whom, and which should go to nobody.",
+        "rulesEmpty": "No rules yet — the assistant will go by each person's role to decide who should get each lead. Add rules to tell it how to route them.",
+        "testLabel": "Test with the latest lead",
+        "testNobody": "The assistant would have sent that lead to nobody.",
+        "rulePlaceholders": {
+          "first": "Any appraisal or sales enquiry goes to bill@example.com",
+          "second": "Rental enquiries go to the property manager",
+          "third": "Don't email anyone about tenants asking for a rent receipt"
+        }
+      },
+      "newJob": {
+        "title": "New job",
+        "description": "Sent when your AI assistant logs or books a job on a call. Jobs you add in the portal never trigger it.",
+        "enabledDescription": "When off, it goes to the job's assignee, or the business owner when nobody is assigned. Your recipients and rules are kept for when you turn it back on.",
+        "recipientsDescription": "The people the assistant can choose from. It picks who actually gets each job from your rules and their roles — usually one person, not everyone.",
+        "rulesDescription": "Plain-English instructions for which jobs go to whom, and which should go to nobody.",
+        "rulesEmpty": "No rules yet — the assistant will go by each person's role to decide who should get each job. Add rules to tell it how to route them.",
+        "testLabel": "Test with the latest job",
+        "testNobody": "The assistant would have sent that job to nobody.",
+        "rulePlaceholders": {
+          "first": "Plumbing jobs go to mick@example.com, electrical to dave@example.com",
+          "second": "Anything marked urgent also goes to the office",
+          "third": "Jobs in the northern suburbs go to the north team"
+        }
+      },
+      "newQuoteRequest": {
+        "title": "New quote request",
+        "description": "Sent when your AI assistant logs a quote request on a call, so it gets priced up. Quotes you create in the portal never trigger it.",
+        "enabledDescription": "When off, it goes to the business owner. Your recipients and rules are kept for when you turn it back on.",
+        "recipientsDescription": "The people the assistant can choose from. It picks who actually gets each quote request from your rules and their roles — usually one person, not everyone.",
+        "rulesDescription": "Plain-English instructions for which quote requests go to whom, and which should go to nobody.",
+        "rulesEmpty": "No rules yet — the assistant will go by each person's role to decide who should get each quote request. Add rules to tell it how to route them.",
+        "testLabel": "Test with the latest quote request",
+        "testNobody": "The assistant would have sent that quote request to nobody.",
+        "rulePlaceholders": {
+          "first": "Commercial quotes go to sales@example.com",
+          "second": "Anything under $500 goes to the office, larger jobs to the owner",
+          "third": "Quotes for existing customers go to their account manager"
+        }
+      },
+      "teamCallbackReminder": {
+        "title": "Team callback reminder",
+        "description": "Sent shortly before a callback that someone on your team promised to make, so it isn't missed.",
+        "enabledDescription": "When off, it goes to the team member the callback is assigned to. Your recipients and rules are kept for when you turn it back on.",
+        "recipientsDescription": "The people the assistant can choose from. It picks who actually gets each callback from your rules and their roles — usually one person, not everyone.",
+        "rulesDescription": "Plain-English instructions for which callbacks go to whom, and which should go to nobody.",
+        "rulesEmpty": "No rules yet — the assistant will go by each person's role to decide who should get each callback. Add rules to tell it how to route them.",
+        "testLabel": "Test with the latest callback",
+        "testNobody": "The assistant would have sent that callback to nobody.",
+        "rulePlaceholders": {
+          "first": "Callbacks about rentals go to the property manager, not the owner",
+          "second": "If the caller asked for a specific person, remind that person",
+          "third": "Send every reminder to the office inbox as well"
+        }
+      }
+    },
+    "card": {
+      "enabledLabel": "Let an assistant choose who receives it",
+      "recipientsTitle": "Who it may go to",
+      "customEmailsDescription": "Anyone else who may receive it, such as a shared inbox.",
+      "rulesTitle": "Rules for the assistant",
+      "rulesLimitNote": "{count, plural, one {Up to # rule per notification.} other {Up to # rules per notification.}}",
+      "testTooltip": {
+        "disabled": "Turn routing on and save to test it.",
+        "unsaved": "Save your changes first — tests use the saved settings."
+      },
+      "testResult": {
+        "routed": "Would go to {recipients}",
+        "nobody": "Would go to nobody"
+      },
+      "toasts": {
+        "saved": "{title} settings saved"
+      }
+    }
+  },
+  "recipientRules": {
+    "membersLoadError": "Couldn't load team members — add addresses below instead.",
+    "noMembers": "No team members yet — add addresses below instead.",
+    "noEmail": "No email",
+    "customEmails": "Other email addresses",
+    "customEmailsPlaceholder": "Type an address and press Enter",
+    "recipientLimit": "Recipient limit reached",
+    "ruleLabel": "Rule {number}",
+    "removeRule": "Remove rule",
+    "addRule": "Add rule"
+  },
+  "billing": {
+    "meta": {
+      "title": "Billing"
+    },
+    "title": "Billing",
+    "description": "Your plan, usage and payment details.",
+    "descriptionMember": "Manage your subscription and payment details.",
+    "loadError": "Couldn't load billing",
+    "notAvailable": {
+      "title": "Not available",
+      "description": "Billing is managed by the business owner and admins."
+    },
+    "noSubscription": {
+      "title": "No subscription yet",
+      "description": "Pick a plan to get your AI receptionist answering."
+    },
+    "choosePlan": "Choose a plan",
+    "updateCard": "Update card",
+    "addCard": "Add card",
+    "cancelSubscription": "Cancel subscription",
+    "alerts": {
+      "suspended": {
+        "title": "Service suspended — payment required",
+        "failedCharge": "A charge of {amount} couldn't be collected.",
+        "failedGeneric": "A payment couldn't be collected.",
+        "body": "Inbound calls play a service-paused message and outbound calling is blocked. Updating your card retries the charge immediately and restores service as soon as it succeeds. Phone numbers are released after 30 days of suspension."
+      },
+      "pastDue": {
+        "title": "Payment failed",
+        "failedCharge": "We couldn't charge {amount} to your card.",
+        "failedGeneric": "We couldn't charge your card.",
+        "nextRetry": "The next automatic retry is {date}.",
+        "body": "Service continues for now, but repeated failures lead to suspension. Updating your card retries the charge right away."
+      },
+      "pending": {
+        "title": "Add a card to activate your subscription",
+        "reserved": "{plan} is reserved.",
+        "body": "Your first charge runs — and your AI starts answering — the moment a card is saved."
+      },
+      "cancellation": {
+        "title": "Cancellation scheduled",
+        "body": "Your subscription ends on {date}. Service continues until then.",
+        "bodyNoDate": "Your subscription ends on the current period's end. Service continues until then.",
+        "resume": "Resume subscription"
+      },
+      "planChange": {
+        "title": "Plan change scheduled",
+        "body": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on {date}. To keep your current plan instead, pick it again on the <link>plans page</link>.",
+        "bodyNoDate": "Your plan changes to {plan} ({interval, select, monthly {monthly} other {annual}}) on the next renewal. To keep your current plan instead, pick it again on the <link>plans page</link>."
+      }
+    },
+    "cancelDialog": {
+      "title": "Cancel your subscription?",
+      "pending": "This ends your subscription setup. Nothing has been charged, and you can start again any time.",
+      "suspended": "Service is already paused; cancelling ends the subscription immediately. Any outstanding balance remains payable.",
+      "active": "Your subscription stays active until {date}. After that the AI stops answering calls and the portal locks until you resubscribe. You can resume any time before then.",
+      "activeNoDate": "Your subscription stays active until the end of the current period. After that the AI stops answering calls and the portal locks until you resubscribe. You can resume any time before then.",
+      "keep": "Keep subscription"
+    },
+    "toasts": {
+      "cancelled": "Subscription cancelled.",
+      "cancelScheduled": "Cancellation scheduled for the end of the period.",
+      "resumed": "Cancellation removed — your subscription continues."
+    },
+    "currentPlan": {
+      "fallbackTitle": "Subscription",
+      "priceLine": "{price}/{interval, select, monthly {month} other {year}} + VAT · {interval, select, monthly {Monthly billing} other {Annual billing}}",
+      "billingLine": "{interval, select, monthly {Monthly billing} other {Annual billing}}",
+      "ended": "Ended",
+      "usagePeriod": "Current usage period",
+      "paidUntil": "Plan paid until",
+      "credit": "Account credit",
+      "changePlan": "Change plan"
+    },
+    "paymentMethod": {
+      "title": "Payment method",
+      "description": "Charged for renewals, usage and plan changes. Card details are held by Stripe — never on our servers.",
+      "expired": "Expired",
+      "expires": "Expires {date}",
+      "noCard": "No card on file yet.",
+      "retryNote": "Saving a new card immediately retries the failed charge."
+    },
+    "usage": {
+      "title": "Usage this period",
+      "description": "{start} – {end}. Usage charges are billed in arrears with each monthly renewal.",
+      "inbound": "Inbound AI minutes",
+      "transfer": "Transfer talk-time",
+      "minutesOf": "{used} / {included} min",
+      "over": "{minutes} min over — billed at {rate}/min with the next renewal. Service is never cut for usage.",
+      "overageRate": "Overage past this allowance bills at {rate}/min.",
+      "outbound": "Outbound calling",
+      "minutes": "{minutes} min",
+      "approxCost": "≈ {amount}",
+      "outboundNote": "Pay as you go at {rate}/min — no included allowance.",
+      "extraNumbers": "Extra phone numbers",
+      "perMonth": "{amount}/month",
+      "includedNumbers": "{count, plural, one {# number is} other {# numbers are}} included with your plan; each extra bills at {rate}/month."
+    },
+    "charges": {
+      "title": "Charge history",
+      "description": "Every subscription charge, with its full tax-invoice breakdown. Amounts in ILS (₪).",
+      "loadError": "Couldn't load charges",
+      "empty": "No charges yet.",
+      "receiptColumn": "Receipt",
+      "lineQuantity": "({quantity} × {unit})",
+      "cardSurcharge": "Card surcharge (added by the payment provider)",
+      "receipt": "Receipt {number}",
+      "receiptPaid": "Receipt {number} · paid {date}",
+      "failed": "The charge failed.",
+      "nextRetry": "Next automatic retry {date}.",
+      "loadMore": "Load more"
+    }
+  }
+}

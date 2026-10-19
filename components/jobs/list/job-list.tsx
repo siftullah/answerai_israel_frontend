@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Empty,
   EmptyDescription,
@@ -36,6 +37,7 @@ export function JobList({
   emptyDescription: string;
   emptyAction?: React.ReactNode;
 }) {
+  const t = useTranslations("jobs.list");
   const { business } = useBusiness();
   const query = useJobsInfinite(businessUuid, filters);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -79,7 +81,7 @@ export function JobList({
   if (query.isError) {
     return (
       <ErrorState
-        title="Couldn't load jobs"
+        title={t("loadError")}
         message={query.error.message}
         onRetry={() => query.refetch()}
       />

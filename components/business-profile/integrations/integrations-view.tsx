@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { CheckIcon, CircleAlertIcon, MinusIcon, PlugIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -40,10 +41,6 @@ const PROVIDER_LOGOS: Record<string, string> = {
   realestate_com_au: "/integrations/realestate-com-au.png",
 };
 
-const PROVIDER_DESCRIPTIONS: Record<string, string> = {
-  realestate_com_au: "Get property listings to feed your AI agents.",
-};
-
 function ProviderLogo({ provider }: { provider: IntegrationProviderInfo }) {
   const logo = PROVIDER_LOGOS[provider.key];
   if (logo) {
@@ -73,12 +70,13 @@ function ConnectionState({
   provider: IntegrationProviderInfo;
   timeZone: string;
 }) {
+  const t = useTranslations("knowledge.integrations.status");
   const connection = provider.connection;
   if (!connection || connection.status === "disconnected") {
     return (
       <Badge variant="outline" className={cn(connectionBadgeClassName, "text-muted-foreground")}>
         <span className="size-2 rounded-full bg-muted-foreground/50" />
-        Not connected
+        {t("notConnected")}
       </Badge>
     );
   }
@@ -90,11 +88,9 @@ function ConnectionState({
           className={cn(connectionBadgeClassName, "border-warning/30 bg-warning/15")}
         >
           <Spinner className="size-3" />
-          Connecting
+          {t("connecting")}
         </Badge>
-        <p className="text-sm text-muted-foreground">
-          Finishing the first sync — this usually takes a few seconds.
-        </p>
+        <p className="text-sm text-muted-foreground">{t("connectingHint")}</p>
       </div>
     );
   }
@@ -106,11 +102,11 @@ function ConnectionState({
           className={cn(connectionBadgeClassName, "border-destructive/30 bg-destructive/15")}
         >
           <CircleAlertIcon />
-          Error
+          {t("error")}
         </Badge>
         <p className="text-sm text-muted-foreground">
           {connection.error ? `${connection.error} ` : ""}
-          Check the settings under Manage to retry.
+          {t("errorHint")}
         </p>
       </div>
     );
@@ -122,11 +118,11 @@ function ConnectionState({
         className={cn(connectionBadgeClassName, "border-success/30 bg-success/15")}
       >
         <span className="size-2 rounded-full bg-success" />
-        Connected
+        {t("connected")}
       </Badge>
       {connection.last_synced_at && (
         <p className="text-sm text-muted-foreground">
-          Last synced {formatDateTime(connection.last_synced_at, timeZone)}
+          {t("lastSynced", { date: formatDateTime(connection.last_synced_at, timeZone) })}
         </p>
       )}
     </div>
@@ -135,6 +131,12 @@ function ConnectionState({
 
 export function IntegrationsView() {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.integrations");
+  const tc = useTranslations("common");
+
+  const providerDescriptions: Record<string, string> = {
+    realestate_com_au: t("providerDescriptions.realestateComAu"),
+  };
 
   const providersQuery = useIntegrationProviders(business.id);
   const disconnect = useDisconnectIntegration(business.id);
@@ -144,10 +146,7 @@ export function IntegrationsView() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader
-        title="Integrations"
-        description="Connect external platforms that feed your AI's knowledge."
-      />
+      <PageHeader title={t("title")} description={t("description")} />
 
       {providersQuery.isPending ? (
         <div className="grid gap-4 sm:grid-cols-2">
@@ -156,7 +155,7 @@ export function IntegrationsView() {
         </div>
       ) : providersQuery.isError ? (
         <ErrorState
-          title="Couldn't load integrations"
+          title={t("loadError")}
           message={providersQuery.error.message}
           onRetry={() => providersQuery.refetch()}
         />
@@ -176,8 +175,8 @@ export function IntegrationsView() {
                   <ProviderLogo provider={provider} />
                   <CardTitle className="sr-only">{provider.name}</CardTitle>
                   <CardDescription>
-                    {PROVIDER_DESCRIPTIONS[provider.key] ??
-                      `Feeds your AI listings and data straight from ${provider.name}.`}
+                    {providerDescriptions[provider.key] ??
+                      t("providerDescriptions.fallback", { name: provider.name })}
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="flex flex-1 flex-col gap-5">
@@ -220,18 +219,20 @@ export function IntegrationsView() {
                           className="bg-[#30aece] text-white hover:bg-[#30aece]/90"
                           onClick={() => setDialogProvider(provider)}
                         >
-                          Manage
+                          {t("actions.manage")}
                         </Button>
                         <Button
                           variant="destructive"
                           onClick={() => setDisconnecting(provider)}
                           disabled={disconnect.isPending}
                         >
-                          Disconnect
+                          {t("actions.disconnect")}
                         </Button>
                       </div>
                     ) : (
-                      <Button onClick={() => setDialogProvider(provider)}>Connect</Button>
+                      <Button onClick={() => setDialogProvider(provider)}>
+                        {t("actions.connect")}
+                      </Button>
                     )}
                   </div>
                 </CardContent>
@@ -259,14 +260,13 @@ export function IntegrationsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Disconnect {disconnecting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Its property listings are removed from your AI&apos;s knowledge and its
-              feeds stop updating.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("disconnectDialog.title", { name: disconnecting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("disconnectDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 const connection = disconnecting?.connection;
@@ -278,7 +278,7 @@ export function IntegrationsView() {
                 setDisconnecting(null);
               }}
             >
-              Disconnect
+              {t("actions.disconnect")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   BanIcon,
@@ -52,15 +53,17 @@ import { VoidQuoteDialog } from "@/components/quotes/void-quote-dialog";
 import { useDuplicateQuote, useQuoteDetail } from "@/hooks/use-quotes";
 import { useTaxDefaults } from "@/hooks/use-tax-defaults";
 import { formatDate, formatDateKey, formatDateTime } from "@/lib/datetime";
+import type { Translator } from "@/lib/i18n/types";
 import { formatCents } from "@/lib/money";
 import type { Quote } from "@/lib/api/types";
 import { LINE_ITEM_KIND_LABELS } from "@/lib/api/types";
 
 function BackButton({ onBack }: { onBack: () => void }) {
+  const t = useTranslations("quotes.detail");
   return (
     <Button variant="ghost" size="sm" className="mb-3 self-start lg:hidden" onClick={onBack}>
-      <ArrowLeftIcon />
-      All quotes
+      <ArrowLeftIcon className="rtl:-scale-x-100" />
+      {t("back")}
     </Button>
   );
 }
@@ -83,9 +86,10 @@ function MetaBand({
   quote: Quote;
   timeZone: string;
 }) {
+  const t = useTranslations("quotes");
   return (
     <dl className="grid grid-cols-2 gap-x-4 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3">
-      <Meta label="Customer">
+      <Meta label={t("labels.customer")}>
         {quote.contact ? (
           <Link
             href={`/b/${businessUuid}/contacts/${quote.contact.id}`}
@@ -98,7 +102,7 @@ function MetaBand({
         )}
       </Meta>
       {quote.lead && (
-        <Meta label="From lead">
+        <Meta label={t("detail.fields.fromLead")}>
           <Link
             href={`/b/${businessUuid}/leads?lead=${quote.lead.id}`}
             className="text-primary hover:underline"
@@ -107,32 +111,38 @@ function MetaBand({
           </Link>
         </Meta>
       )}
-      <Meta label="Issued">
-        {quote.issue_date ? formatDateKey(quote.issue_date) : "Set on send"}
+      <Meta label={t("detail.fields.issued")}>
+        {quote.issue_date ? formatDateKey(quote.issue_date) : t("labels.setOnSend")}
       </Meta>
-      <Meta label="Valid until">
+      <Meta label={t("labels.validUntil")}>
         {quote.valid_until ? (
           <span className={quote.status === "expired" ? "text-warning" : undefined}>
             {formatDateKey(quote.valid_until)}
           </span>
         ) : (
-          "Set on send"
+          t("labels.setOnSend")
         )}
       </Meta>
-      {quote.sent_at && <Meta label="Sent">{formatDateTime(quote.sent_at, timeZone)}</Meta>}
+      {quote.sent_at && (
+        <Meta label={t("detail.fields.sent")}>{formatDateTime(quote.sent_at, timeZone)}</Meta>
+      )}
       {quote.viewed_at && (
-        <Meta label="Viewed by customer">{formatDateTime(quote.viewed_at, timeZone)}</Meta>
+        <Meta label={t("detail.fields.viewed")}>
+          {formatDateTime(quote.viewed_at, timeZone)}
+        </Meta>
       )}
       {quote.accepted_at && (
-        <Meta label="Accepted">
+        <Meta label={t("detail.fields.accepted")}>
           {formatDateTime(quote.accepted_at, timeZone)}
           <span className="block text-xs font-normal text-muted-foreground">
-            {quote.accepted_via === "public_link" ? "Online via the quote link" : "Recorded in the portal"}
+            {quote.accepted_via === "public_link"
+              ? t("detail.fields.acceptedOnline")
+              : t("detail.fields.acceptedInPortal")}
           </span>
         </Meta>
       )}
       {quote.declined_at && (
-        <Meta label="Declined">
+        <Meta label={t("detail.fields.declined")}>
           {formatDateTime(quote.declined_at, timeZone)}
           {quote.decline_reason && (
             <span className="block text-xs font-normal text-muted-foreground">
@@ -141,8 +151,10 @@ function MetaBand({
           )}
         </Meta>
       )}
-      {quote.voided_at && <Meta label="Voided">{formatDateTime(quote.voided_at, timeZone)}</Meta>}
-      <Meta label="Created">{formatDate(quote.created_at, timeZone)}</Meta>
+      {quote.voided_at && (
+        <Meta label={t("detail.fields.voided")}>{formatDateTime(quote.voided_at, timeZone)}</Meta>
+      )}
+      <Meta label={t("detail.fields.created")}>{formatDate(quote.created_at, timeZone)}</Meta>
     </dl>
   );
 }
@@ -153,38 +165,40 @@ function displayQuantity(quantity: string): string {
   return Number.isFinite(parsed) ? String(parsed) : quantity;
 }
 
-function depositLabel(quote: Quote): string {
-  if (quote.deposit_type === "percent") return `Deposit (${quote.deposit_value}%)`;
-  return "Deposit";
+function depositLabel(quote: Quote, t: Translator): string {
+  if (quote.deposit_type === "percent") {
+    return t("detail.depositPercent", { percent: quote.deposit_value ?? 0 });
+  }
+  return t("labels.deposit");
 }
 
 function ItemsCard({ quote, taxLabel }: { quote: Quote; taxLabel: string }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const items = quote.items ?? [];
   const currency = quote.currency;
 
   if (items.length === 0) {
     return (
-      <DetailCard title="Line items" accent>
+      <DetailCard title={t("labels.lineItems")} accent>
         <p className="text-sm text-muted-foreground">
-          {quote.source === "agent_call"
-            ? "No line items yet — this request came in from a call. Edit the draft to price it up."
-            : "No line items yet — edit the draft to add them."}
+          {quote.source === "agent_call" ? t("detail.noItemsFromCall") : t("detail.noItems")}
         </p>
       </DetailCard>
     );
   }
 
   return (
-    <DetailCard title="Line items" accent>
+    <DetailCard title={t("labels.lineItems")} accent>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Qty</TableHead>
-              <TableHead className="text-right">Unit</TableHead>
-              <TableHead className="text-right">{taxLabel}</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>{tc("labels.description")}</TableHead>
+              <TableHead className="text-end">{t("labels.qty")}</TableHead>
+              <TableHead className="text-end">{t("labels.unit")}</TableHead>
+              <TableHead className="text-end">{taxLabel}</TableHead>
+              <TableHead className="text-end">{t("labels.amount")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -196,16 +210,16 @@ function ItemsCard({ quote, taxLabel }: { quote: Quote; taxLabel: string }) {
                     {LINE_ITEM_KIND_LABELS[item.kind]}
                   </span>
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-end tabular-nums">
                   {displayQuantity(item.quantity)}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-end tabular-nums">
                   {formatCents(item.unit_price_cents, currency)}
                 </TableCell>
-                <TableCell className="text-right tabular-nums">
+                <TableCell className="text-end tabular-nums">
                   {item.tax_rate_bp > 0 ? `${item.tax_rate_bp / 100}%` : "—"}
                 </TableCell>
-                <TableCell className="text-right font-medium tabular-nums">
+                <TableCell className="text-end font-medium tabular-nums">
                   {formatCents(item.amount_cents, currency)}
                 </TableCell>
               </TableRow>
@@ -217,7 +231,7 @@ function ItemsCard({ quote, taxLabel }: { quote: Quote; taxLabel: string }) {
       <div className="flex justify-end">
         <dl className="flex w-56 flex-col gap-1.5 text-sm">
           <div className="flex justify-between">
-            <dt className="text-muted-foreground">Subtotal</dt>
+            <dt className="text-muted-foreground">{tc("labels.subtotal")}</dt>
             <dd className="tabular-nums">{formatCents(quote.subtotal_cents, currency)}</dd>
           </div>
           <div className="flex justify-between">
@@ -225,12 +239,12 @@ function ItemsCard({ quote, taxLabel }: { quote: Quote; taxLabel: string }) {
             <dd className="tabular-nums">{formatCents(quote.tax_cents, currency)}</dd>
           </div>
           <div className="flex justify-between border-t border-border pt-1.5 text-base font-semibold">
-            <dt>Total</dt>
+            <dt>{tc("labels.total")}</dt>
             <dd className="tabular-nums">{formatCents(quote.total_cents, currency)}</dd>
           </div>
           {quote.deposit_cents > 0 && (
             <div className="flex justify-between text-xs text-muted-foreground">
-              <dt>{depositLabel(quote)}</dt>
+              <dt>{depositLabel(quote, t)}</dt>
               <dd className="tabular-nums">{formatCents(quote.deposit_cents, currency)}</dd>
             </div>
           )}
@@ -251,6 +265,8 @@ export function QuoteDetailPane({
   onBack: () => void;
   onClearSelection: () => void;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const quoteQuery = useQuoteDetail(businessUuid, quoteUuid);
   const { taxLabel } = useTaxDefaults(businessUuid);
@@ -274,8 +290,8 @@ export function QuoteDetailPane({
           <EmptyMedia variant="icon">
             <FileTextIcon />
           </EmptyMedia>
-          <EmptyTitle>No quote selected</EmptyTitle>
-          <EmptyDescription>Select a quote to see its details.</EmptyDescription>
+          <EmptyTitle>{t("detail.noneSelected.title")}</EmptyTitle>
+          <EmptyDescription>{t("detail.noneSelected.description")}</EmptyDescription>
         </EmptyHeader>
       </Empty>
     );
@@ -301,10 +317,8 @@ export function QuoteDetailPane({
       <div className="flex flex-1 flex-col items-start gap-4">
         <BackButton onBack={onBack} />
         <ErrorState
-          title={notFound ? "Quote not found" : "Couldn't load this quote"}
-          message={
-            notFound ? "This quote doesn't exist or was removed." : quoteQuery.error.message
-          }
+          title={notFound ? t("detail.notFound.title") : t("detail.loadError")}
+          message={notFound ? t("detail.notFound.description") : quoteQuery.error.message}
           onRetry={notFound ? onClearSelection : () => quoteQuery.refetch()}
         />
       </div>
@@ -322,16 +336,16 @@ export function QuoteDetailPane({
 
   const duplicate = () =>
     duplicateQuote.mutate(quote.id, {
-      onSuccess: (copy) => toast.success(`Draft ${copy.number} created`),
+      onSuccess: (copy) => toast.success(t("toasts.draftCreated", { number: copy.number })),
       onError: (error) => toast.error(error.message),
     });
 
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(quote.public_url);
-      toast.success("Quote link copied");
+      toast.success(t("toasts.linkCopied"));
     } catch {
-      toast.error("Couldn't copy — the link is shown in your browser at " + quote.public_url);
+      toast.error(t("toasts.copyFailed", { url: quote.public_url }));
     }
   };
 
@@ -339,7 +353,7 @@ export function QuoteDetailPane({
     <div key={quote.id} className="flex flex-1 flex-col lg:min-h-0">
       <BackButton onBack={onBack} />
 
-      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pr-4">
+      <div className="scrollbar-slim flex flex-col lg:min-h-0 lg:flex-1 lg:overflow-y-auto lg:pe-4">
         <div className="flex flex-col divide-y divide-border">
           <div className="flex flex-col gap-4 pb-6">
             {/* Identity + status */}
@@ -347,14 +361,22 @@ export function QuoteDetailPane({
               <div className="flex min-w-0 flex-col gap-1">
                 <div className="flex min-w-0 flex-wrap items-center gap-2">
                   <h2 className="max-w-full truncate font-heading text-2xl font-semibold">
-                    Quote {quote.number}
+                    {t("detail.title", { number: quote.number })}
                   </h2>
                   <QuoteStatusBadge status={quote.status} />
-                  {quote.source === "agent_call" && <Badge variant="outline">From a call</Badge>}
-                  {liveInvoice && (
-                    <Badge variant="outline">Invoiced as {liveInvoice.number}</Badge>
+                  {quote.source === "agent_call" && (
+                    <Badge variant="outline">{t("detail.fromCallBadge")}</Badge>
                   )}
-                  {job && <Badge variant="outline">Job {job.reference}</Badge>}
+                  {liveInvoice && (
+                    <Badge variant="outline">
+                      {t("detail.invoicedAsBadge", { number: liveInvoice.number })}
+                    </Badge>
+                  )}
+                  {job && (
+                    <Badge variant="outline">
+                      {t("detail.jobBadge", { reference: job.reference })}
+                    </Badge>
+                  )}
                 </div>
                 <p className="text-sm text-muted-foreground">
                   {quote.title ? `${quote.title} · ` : ""}
@@ -369,7 +391,7 @@ export function QuoteDetailPane({
                   render={<Link href={`/b/${businessUuid}/contacts/${quote.contact.id}`} />}
                 >
                   <UserRoundIcon />
-                  View contact
+                  {t("actions.viewContact")}
                 </Button>
               )}
             </div>
@@ -381,24 +403,24 @@ export function QuoteDetailPane({
                 <>
                   <Button size="sm" onClick={() => setSending(true)}>
                     <SendIcon />
-                    Send quote
+                    {t("actions.send")}
                   </Button>
                   <Button size="sm" variant="outline" onClick={() => setEditing(true)}>
                     <PencilIcon />
-                    Edit
+                    {tc("actions.edit")}
                   </Button>
                 </>
               )}
               {expired && (
                 <Button size="sm" onClick={() => setResending(true)}>
                   <SendIcon />
-                  Revive & re-send
+                  {t("actions.revive")}
                 </Button>
               )}
               {accepted && !liveInvoice && (
                 <Button size="sm" onClick={() => setConverting(true)}>
                   <ReceiptTextIcon />
-                  Convert to invoice
+                  {t("actions.convertToInvoice")}
                 </Button>
               )}
               {accepted && liveInvoice && (
@@ -410,13 +432,13 @@ export function QuoteDetailPane({
                   }
                 >
                   <ReceiptTextIcon />
-                  View invoice
+                  {t("actions.viewInvoice")}
                 </Button>
               )}
               {accepted && jobsEnabled && !job && (
                 <Button size="sm" variant="outline" onClick={() => setConvertingToJob(true)}>
                   <WrenchIcon />
-                  Convert to job
+                  {t("actions.convertToJob")}
                 </Button>
               )}
               {accepted && job && (
@@ -426,13 +448,13 @@ export function QuoteDetailPane({
                   render={<Link href={`/b/${businessUuid}/jobs?job=${job.id}`} />}
                 >
                   <WrenchIcon />
-                  View job
+                  {t("actions.viewJob")}
                 </Button>
               )}
               {sent && (
                 <Button size="sm" variant="outline" onClick={copyLink}>
                   <LinkIcon />
-                  Copy link
+                  {t("actions.copyLink")}
                 </Button>
               )}
               {awaiting && (
@@ -443,7 +465,7 @@ export function QuoteDetailPane({
                   onClick={() => setAccepting(true)}
                 >
                   <CheckIcon />
-                  Mark accepted
+                  {t("actions.markAccepted")}
                 </Button>
               )}
               {awaiting && (
@@ -454,13 +476,13 @@ export function QuoteDetailPane({
                   onClick={() => setDeclining(true)}
                 >
                   <XIcon />
-                  Mark declined
+                  {t("actions.markDeclined")}
                 </Button>
               )}
               {sent && (
                 <Button size="sm" variant="outline" onClick={() => setResending(true)}>
                   <SendIcon />
-                  Re-send
+                  {t("actions.resend")}
                 </Button>
               )}
               <Button
@@ -470,7 +492,7 @@ export function QuoteDetailPane({
                 onClick={duplicate}
               >
                 <CopyIcon />
-                Duplicate
+                {t("actions.duplicate")}
               </Button>
               {awaiting && (
                 <Button
@@ -480,7 +502,7 @@ export function QuoteDetailPane({
                   onClick={() => setVoiding(true)}
                 >
                   <BanIcon />
-                  Void
+                  {t("actions.void")}
                 </Button>
               )}
               {draft && (
@@ -491,7 +513,7 @@ export function QuoteDetailPane({
                   onClick={() => setDeleting(true)}
                 >
                   <Trash2Icon />
-                  Delete
+                  {tc("actions.delete")}
                 </Button>
               )}
             </div>
@@ -500,23 +522,23 @@ export function QuoteDetailPane({
           <ItemsCard quote={quote} taxLabel={taxLabel} />
 
           {quote.notes && (
-            <DetailCard title="Notes">
+            <DetailCard title={tc("labels.notes")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{quote.notes}</p>
             </DetailCard>
           )}
 
           {quote.terms && (
-            <DetailCard title="Terms">
+            <DetailCard title={t("labels.terms")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">{quote.terms}</p>
             </DetailCard>
           )}
 
           {quote.internal_notes && (
-            <DetailCard title="Internal notes">
+            <DetailCard title={t("labels.internalNotes")}>
               <p className="text-sm whitespace-pre-wrap text-muted-foreground">
                 {quote.internal_notes}
               </p>
-              <p className="text-xs text-muted-foreground/70">Never shown to the customer.</p>
+              <p className="text-xs text-muted-foreground/70">{t("detail.internalNotesHint")}</p>
             </DetailCard>
           )}
         </div>

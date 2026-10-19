@@ -1,5 +1,7 @@
 /** Mirrors app/Http/Resources/InvoiceResource.php */
 
+import { labelMap } from "@/lib/i18n/label-map";
+
 export const INVOICE_STATUSES = ["draft", "sent", "paid", "overdue", "void"] as const;
 export type InvoiceStatus = (typeof INVOICE_STATUSES)[number];
 
@@ -9,21 +11,18 @@ export const OPEN_INVOICE_STATUSES: readonly InvoiceStatus[] = ["draft", "sent",
 /** Sent and not yet paid — the "outstanding" money. */
 export const AWAITING_PAYMENT_INVOICE_STATUSES: readonly InvoiceStatus[] = ["sent", "overdue"];
 
-export const INVOICE_STATUS_LABELS: Record<InvoiceStatus, string> = {
-  draft: "Draft",
-  sent: "Sent",
-  paid: "Paid",
-  overdue: "Overdue",
-  void: "Void",
-};
+export const INVOICE_STATUS_LABELS: Record<InvoiceStatus, string> = labelMap(
+  "lib.invoiceStatus",
+  ["draft", "sent", "paid", "overdue", "void"]
+);
 
 export const LINE_ITEM_KINDS = ["labour", "material"] as const;
 export type LineItemKind = (typeof LINE_ITEM_KINDS)[number];
 
-export const LINE_ITEM_KIND_LABELS: Record<LineItemKind, string> = {
-  labour: "Labour",
-  material: "Material",
-};
+export const LINE_ITEM_KIND_LABELS: Record<LineItemKind, string> = labelMap(
+  "lib.lineItemKind",
+  ["labour", "material"]
+);
 
 export interface InvoiceContactRef {
   id: string;

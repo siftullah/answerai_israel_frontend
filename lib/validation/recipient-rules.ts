@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { CallSummaryRecipient } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 
 export const RECIPIENT_RULES_MAX_RECIPIENTS = 15;
 export const RECIPIENT_RULES_MAX_RULES = 20;
@@ -15,49 +16,55 @@ export interface RecipientRulesSettings {
 /**
  * Recipients are split by kind for the UI (checkbox list + chips) and
  * recombined into the API's discriminated list on the way out. Rules are
- * objects so useFieldArray can key the rows.
+ * objects so useFieldArray can key the rows. `t` is a translator scoped to
+ * the `validation` namespace.
  */
-export const recipientRulesSchema = z
-  .object({
-    enabled: z.boolean(),
-    member_ids: z.array(z.string()),
-    custom_emails: z.array(
-      z.email({
-        error: (issue) =>
-          typeof issue.input === "string"
-            ? `"${issue.input}" isn't a valid email address`
-            : "Enter a valid email address",
-      })
-    ),
-    rules: z
-      .array(
-        z.object({
-          text: z
-            .string()
-            .max(RECIPIENT_RULES_RULE_MAX_LENGTH, "Keep each rule under 1,000 characters"),
+export function recipientRulesSchema(t: Translator) {
+  return z
+    .object({
+      enabled: z.boolean(),
+      member_ids: z.array(z.string()),
+      custom_emails: z.array(
+        z.email({
+          error: (issue) =>
+            typeof issue.input === "string"
+              ? t("recipientRules.emailInvalid", { input: issue.input })
+              : t("common.emailInvalid"),
         })
-      )
-      .max(RECIPIENT_RULES_MAX_RULES, "Up to 20 rules"),
-  })
-  .superRefine((values, ctx) => {
-    const total = values.member_ids.length + values.custom_emails.length;
-    if (total > RECIPIENT_RULES_MAX_RECIPIENTS) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["member_ids"],
-        message: `Up to ${RECIPIENT_RULES_MAX_RECIPIENTS} recipients in total`,
-      });
-    }
-    if (values.enabled && total === 0) {
-      ctx.addIssue({
-        code: "custom",
-        path: ["member_ids"],
-        message: "Pick at least one recipient.",
-      });
-    }
-  });
+      ),
+      rules: z
+        .array(
+          z.object({
+            text: z
+              .string()
+              .max(
+                RECIPIENT_RULES_RULE_MAX_LENGTH,
+                t("length.rule", { max: RECIPIENT_RULES_RULE_MAX_LENGTH })
+              ),
+          })
+        )
+        .max(RECIPIENT_RULES_MAX_RULES, t("count.rules", { max: RECIPIENT_RULES_MAX_RULES })),
+    })
+    .superRefine((values, ctx) => {
+      const total = values.member_ids.length + values.custom_emails.length;
+      if (total > RECIPIENT_RULES_MAX_RECIPIENTS) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["member_ids"],
+          message: t("count.recipients", { max: RECIPIENT_RULES_MAX_RECIPIENTS }),
+        });
+      }
+      if (values.enabled && total === 0) {
+        ctx.addIssue({
+          code: "custom",
+          path: ["member_ids"],
+          message: t("recipientRules.recipientRequired"),
+        });
+      }
+    });
+}
 
-export type RecipientRulesValues = z.infer<typeof recipientRulesSchema>;
+export type RecipientRulesValues = z.infer<ReturnType<typeof recipientRulesSchema>>;
 
 export function toRecipientRulesValues(settings: RecipientRulesSettings): RecipientRulesValues {
   return {

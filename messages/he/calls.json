@@ -1,0 +1,177 @@
+{
+  "meta": {
+    "inboundLogs": "יומן שיחות נכנסות",
+    "outboundLogs": "יומן שיחות יוצאות",
+    "call": "שיחה"
+  },
+  "labels": {
+    "agent": "סוכן AI",
+    "callback": "שיחה חוזרת"
+  },
+  "actions": {
+    "placeCall": "ביצוע שיחה",
+    "placing": "מתבצע חיוג…",
+    "cancelCall": "ביטול שיחה",
+    "viewContact": "הצגת איש קשר",
+    "viewTranscript": "הצגת תמלול",
+    "otherRecordings": "הקלטות נוספות",
+    "saveNotes": "שמירת הערות"
+  },
+  "toasts": {
+    "callCancelled": "השיחה בוטלה",
+    "callQueued": "השיחה נוספה לתור — החיוג יתחיל בקרוב",
+    "notesSaved": "ההערות נשמרו"
+  },
+  "status": {
+    "queued": "בתור",
+    "initiating": "בהתחלה",
+    "ringing": "מצלצל",
+    "inProgress": "בתהליך",
+    "completed": "הושלם",
+    "busy": "תפוס",
+    "noAnswer": "אין מענה",
+    "failed": "נכשל",
+    "canceled": "בוטל"
+  },
+  "direction": {
+    "inbound": "שיחה נכנסת",
+    "outbound": "שיחה יוצאת"
+  },
+  "logs": {
+    "inbound": {
+      "title": "יומן שיחות נכנסות",
+      "description": "כל השיחות שסוכני ה-AI שלכם ענו להן — תמלולים, הקלטות ותוצאות.",
+      "emptyTitle": "עדיין אין שיחות נכנסות",
+      "emptyDescription": "כשמישהו יתקשר לאחד המספרים שלכם, השיחה תופיע כאן."
+    },
+    "outbound": {
+      "title": "יומן שיחות יוצאות",
+      "description": "שיחות שסוכני ה-AI שלכם ביצעו — שיחות חד-פעמיות, שיחות קמפיין ושיחות חוזרות.",
+      "emptyTitle": "עדיין אין שיחות יוצאות",
+      "emptyDescription": "בצעו שיחה וסוכן ה-AI שלכם יחייג וינהל את השיחה."
+    },
+    "loadFailed": "לא ניתן לטעון את השיחות"
+  },
+  "errors": {
+    "notFoundTitle": "השיחה לא נמצאה",
+    "notFoundMessage": "השיחה הזו לא קיימת או שהוסרה.",
+    "loadFailedTitle": "לא ניתן לטעון את השיחה הזו"
+  },
+  "resolver": {
+    "backToLogs": "יומן שיחות"
+  },
+  "cancelDialog": {
+    "title": "לבטל את השיחה הזו?",
+    "description": "השיחה אל {name} עדיין לא התחברה והיא תיעצר.",
+    "keepCalling": "המשך חיוג"
+  },
+  "placeDialog": {
+    "title": "ביצוע שיחה",
+    "description": "סוכן ה-AI שלכם יחייג למספר וינהל את השיחה.",
+    "agentPlaceholder": "בחרו סוכן AI",
+    "noAgents": "עדיין אין סוכני AI מסונכרנים לשיחות יוצאות — צרו אחד תחילה תחת סוכני AI.",
+    "callFrom": "חיוג ממספר",
+    "numberPlaceholder": "בחרו מספר",
+    "noNumbers": "אין מספרים לחיוג — מספרי SIP מיועדים לשיחות נכנסות בלבד, לכן רכשו תחילה מספר בפלטפורמה.",
+    "numberToCall": "מספר לחיוג",
+    "numberToCallPlaceholder": "0412 345 678",
+    "variablesHint": "לסוכן AI הזה נדרש ערך לכל משתנה למטה. ערכים שמולאו מראש נלקחו מרשומת איש הקשר או מברירת המחדל של המשתנה, לכן בדקו כל ערך עבור השיחה הזו."
+  },
+  "detail": {
+    "backToList": "כל השיחות",
+    "emptyTitle": "לא נבחרה שיחה",
+    "emptyDescription": "בחרו שיחה כדי לראות את הפרטים שלה.",
+    "receivedOn": "התקבלה במספר",
+    "calledFrom": "חיוג מהמספר",
+    "started": "התחלה",
+    "duration": "משך",
+    "endReason": "סיבת סיום",
+    "summary": "סיכום",
+    "campaignBadge": "קמפיין: {name}",
+    "recordingLoadFailed": "לא ניתן לטעון את ההקלטה כרגע.",
+    "recordingProcessing": "ההקלטה עדיין בעיבוד — בדקו שוב בקרוב.",
+    "recordingFailed": "לא ניתן היה להקליט את השיחה הזו.",
+    "recordingDeleted": "ההקלטה הזו כבר לא זמינה."
+  },
+  "live": {
+    "queued": "בתור — בהמתנה לחיוג",
+    "initiating": "בחיוג…",
+    "ringing": "מצלצל…",
+    "inProgress": "שיחה מתנהלת"
+  },
+  "notes": {
+    "description": "ההערות שלכם — לעולם לא יוצגו למתקשרים.",
+    "placeholder": "הוסיפו הערות משלכם על השיחה הזו…",
+    "ariaLabel": "הערות לשיחה"
+  },
+  "extraction": {
+    "title": "פרטים שחולצו",
+    "description": "הנתונים שסוכן ה-AI אסף והערכת העמידה שלו ביעדים.",
+    "evaluation": "הערכה"
+  },
+  "related": {
+    "title": "נוצרו מהשיחה הזו",
+    "description": "רשומות שסוכן ה-AI יצר או השלים במהלך השיחה הזו.",
+    "appointments": "פגישות",
+    "leads": "לידים",
+    "jobs": "עבודות",
+    "invoices": "חשבוניות",
+    "callbacks": "שיחות חוזרות",
+    "fulfilledCallback": "בוצעה שיחה חוזרת שתוזמנה ל־{date}",
+    "scheduledFor": "מתוזמן ל־{date}"
+  },
+  "transfer": {
+    "title": "הקלטות העברת שיחה",
+    "description": "שיחת ההתייעצות והשיחה המגושרת במסגרת ההעברה הזו.",
+    "recordingNotReady": "ההקלטה הזו עדיין לא מוכנה.",
+    "consultLoadFailed": "לא ניתן לטעון את פרטי ההתייעצות כרגע.",
+    "type": "סוג",
+    "warm": "העברה חמה",
+    "blind": "העברה עיוורת",
+    "transferredTo": "הועברה אל",
+    "answeredBy": "נענתה על ידי",
+    "at": "בשעה",
+    "outcome": "תוצאה",
+    "relayMessage": "הודעה שנמסרה למתקשר",
+    "consultLeg": "שיחת התייעצות",
+    "bridgedRecording": "הקלטת השיחה המגושרת",
+    "state": {
+      "consultPending": "בהתייעצות",
+      "accepted": "אושר",
+      "bridged": "חובר",
+      "declined": "נדחה",
+      "unavailable": "לא זמין",
+      "cancelled": "בוטל"
+    },
+    "nextAction": {
+      "takeCallbackMessage": "נלקחה הודעה לשיחה חוזרת",
+      "askToCallBackLater": "המתקשר התבקש להתקשר שוב מאוחר יותר",
+      "redirect": "המתקשר הופנה ליעד אחר",
+      "none": "ללא פעולת המשך"
+    }
+  },
+  "transcript": {
+    "title": "תמלול",
+    "caller": "מתקשר",
+    "loadFailed": "לא ניתן לטעון את התמלול כרגע.",
+    "empty": "לא נוצר תמלול לשיחה זו.",
+    "playFrom": "השמעת ההקלטה מ-{time}"
+  },
+  "filters": {
+    "searchPlaceholder": "חיפוש שם, מספר או מילים שנאמרו…",
+    "searchAriaLabel": "חיפוש שיחות לפי שם, מספר, סיכום או תמלול",
+    "filterAriaLabel": "סינון ומיון שיחות",
+    "any": "הכל",
+    "sortByDate": "מיון לפי תאריך",
+    "newestFirst": "החדשות ביותר קודם",
+    "oldestFirst": "הישנות ביותר קודם",
+    "phoneNumber": "מספר טלפון",
+    "numberFallback": "מספר",
+    "period": "תקופה",
+    "today": "היום",
+    "lastDays": "{count, plural, one {# יום אחרון} other {# ימים אחרונים}}",
+    "hasRecording": "עם הקלטה",
+    "removeFilter": "הסרת המסנן {label}",
+    "clearAll": "ניקוי הכל"
+  }
+}

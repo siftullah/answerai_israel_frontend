@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, XIcon } from "lucide-react";
@@ -35,11 +37,6 @@ import {
 import type { Job, LineItemKind } from "@/lib/api/types";
 import { LINE_ITEM_KINDS, LINE_ITEM_KIND_LABELS } from "@/lib/api/types";
 
-const KIND_ITEMS = LINE_ITEM_KINDS.map((kind) => ({
-  value: kind,
-  label: LINE_ITEM_KIND_LABELS[kind],
-}));
-
 /** One row of the items grid; mobile stacks description first, then the numbers. */
 const ROW_GRID =
   "md:grid md:grid-cols-[7.5rem_minmax(0,1fr)_4.5rem_7rem_5.5rem_1.75rem] md:items-start md:gap-2";
@@ -58,13 +55,24 @@ export function JobLineItemsDialog({
   onOpenChange: (open: boolean) => void;
   job: Job;
 }) {
+  const t = useTranslations("jobs.lineItems");
+  const tj = useTranslations("jobs");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const saveItems = useSaveJobLineItems(business.id);
 
+  // Built per render so the labels follow the active locale.
+  const kindItems = LINE_ITEM_KINDS.map((kind) => ({
+    value: kind,
+    label: LINE_ITEM_KIND_LABELS[kind],
+  }));
+
   const original = job.line_items ?? [];
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => jobLineItemsSchema(tv), [tv]);
   const form = useForm<JobLineItemsFormValues>({
-    resolver: zodResolver(jobLineItemsSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       items: original.length > 0 ? original.map(jobLineItemToFormValues) : [emptyJobLineItem()],
     },
@@ -100,7 +108,7 @@ export function JobLineItemsDialog({
       },
       {
         onSuccess: () => {
-          toast.success("Line items saved");
+          toast.success(tj("toasts.lineItemsSaved"));
           onOpenChange(false);
         },
         onError: (error) => toast.error(error.message),
@@ -114,25 +122,23 @@ export function JobLineItemsDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Line items — {job.reference}</DialogTitle>
-          <DialogDescription>
-            Labour and materials for this job. VAT is applied when it&apos;s invoiced.
-          </DialogDescription>
+          <DialogTitle>{t("dialogTitle", { reference: job.reference })}</DialogTitle>
+          <DialogDescription>{t("dialogDescription")}</DialogDescription>
         </DialogHeader>
 
         <form
           id="job-line-items-form"
           onSubmit={onSubmit}
           noValidate
-          className="scrollbar-slim -mr-2 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pr-2"
+          className="scrollbar-slim -me-2 flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto pe-2"
         >
           {/* Column labels (desktop) */}
           <div className={`hidden text-xs text-muted-foreground ${ROW_GRID}`}>
-            <span>Type</span>
-            <span>Description</span>
-            <span className="text-right">Qty</span>
-            <span className="text-right">Unit price</span>
-            <span className="text-right">Amount</span>
+            <span>{t("columns.type")}</span>
+            <span>{tc("labels.description")}</span>
+            <span className="text-end">{t("columns.qty")}</span>
+            <span className="text-end">{t("columns.unitPrice")}</span>
+            <span className="text-end">{t("columns.amount")}</span>
             <span />
           </div>
 
@@ -154,8 +160,8 @@ export function JobLineItemsDialog({
                   <div className="md:order-2">
                     <Input
                       {...form.register(`items.${index}.description`)}
-                      placeholder="What will be done or supplied"
-                      aria-label={`Line ${index + 1} description`}
+                      placeholder={t("descriptionPlaceholder")}
+                      aria-label={t("aria.description", { line: index + 1 })}
                       aria-invalid={!!rowErrors?.description}
                     />
                     {rowErrors?.description?.message && (
@@ -171,7 +177,7 @@ export function JobLineItemsDialog({
                       control={form.control}
                       render={({ field }) => (
                         <Select
-                          items={KIND_ITEMS}
+                          items={kindItems}
                           value={field.value}
                           onValueChange={(value) =>
                             field.onChange((value as LineItemKind | null) ?? "labour")
@@ -179,12 +185,12 @@ export function JobLineItemsDialog({
                         >
                           <SelectTrigger
                             className="w-full"
-                            aria-label={`Line ${index + 1} type`}
+                            aria-label={t("aria.type", { line: index + 1 })}
                           >
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {KIND_ITEMS.map((item) => (
+                            {kindItems.map((item) => (
                               <SelectItem key={item.value} value={item.value}>
                                 {item.label}
                               </SelectItem>
@@ -200,8 +206,8 @@ export function JobLineItemsDialog({
                       <Input
                         {...form.register(`items.${index}.quantity`)}
                         inputMode="decimal"
-                        className="text-right"
-                        aria-label={`Line ${index + 1} quantity`}
+                        className="text-end"
+                        aria-label={t("aria.quantity", { line: index + 1 })}
                         aria-invalid={!!rowErrors?.quantity}
                       />
                       {rowErrors?.quantity?.message && (
@@ -216,8 +222,8 @@ export function JobLineItemsDialog({
                         {...form.register(`items.${index}.unit_price`)}
                         inputMode="decimal"
                         placeholder="0.00"
-                        className="text-right"
-                        aria-label={`Line ${index + 1} unit price in dollars`}
+                        className="text-end"
+                        aria-label={t("aria.unitPrice", { line: index + 1 })}
                         aria-invalid={!!rowErrors?.unit_price}
                       />
                       {rowErrors?.unit_price?.message && (
@@ -227,7 +233,7 @@ export function JobLineItemsDialog({
                       )}
                     </div>
 
-                    <span className="ml-auto flex h-9 items-center text-sm font-medium tabular-nums md:order-5 md:ml-0 md:justify-end">
+                    <span className="ms-auto flex h-9 items-center text-sm font-medium tabular-nums md:order-5 md:ms-0 md:justify-end">
                       {amount !== null ? formatCents(amount) : "—"}
                     </span>
 
@@ -239,7 +245,7 @@ export function JobLineItemsDialog({
                         className="size-9 text-muted-foreground hover:text-destructive"
                         disabled={itemsArray.fields.length === 1}
                         onClick={() => itemsArray.remove(index)}
-                        aria-label={`Remove line ${index + 1}`}
+                        aria-label={t("aria.remove", { line: index + 1 })}
                       >
                         <XIcon />
                       </Button>
@@ -265,7 +271,7 @@ export function JobLineItemsDialog({
               onClick={() => itemsArray.append(emptyJobLineItem())}
             >
               <PlusIcon />
-              Add line
+              {t("addLine")}
             </Button>
           </div>
         </form>
@@ -273,7 +279,7 @@ export function JobLineItemsDialog({
         <div className="flex justify-end border-t border-border pt-3">
           <dl className="flex w-56 flex-col gap-1.5 text-sm">
             <div className="flex justify-between text-base font-semibold">
-              <dt>Total (ex. tax)</dt>
+              <dt>{t("totalExTax")}</dt>
               <dd className="tabular-nums">{formatCents(total, job.currency ?? "ILS")}</dd>
             </div>
           </dl>
@@ -287,10 +293,10 @@ export function JobLineItemsDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="submit" form="job-line-items-form" disabled={saveItems.isPending}>
-            {saveItems.isPending ? "Saving…" : "Save items"}
+            {saveItems.isPending ? tc("actions.saving") : t("save")}
           </Button>
         </DialogFooter>
       </DialogContent>

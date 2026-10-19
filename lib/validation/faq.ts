@@ -1,17 +1,34 @@
 import { z } from "zod";
 import type { Faq, FaqPayload } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { agentScopeFields, refineAgentScope } from "@/lib/validation/knowledge";
 
-export const faqSchema = z
-  .object({
-    question: z.string().min(1, "Question is required").max(500, "Keep the question under 500 characters"),
-    answer: z.string().min(1, "Answer is required").max(5000, "Keep the answer under 5,000 characters"),
-    faq_category_id: z.string(),
-    ...agentScopeFields,
-  })
-  .superRefine((values, ctx) => refineAgentScope(values, ctx));
+/** Question/answer fields shared by both FAQ forms. */
+function faqTextFields(t: Translator) {
+  return {
+    question: z
+      .string()
+      .min(1, t("faq.questionRequired"))
+      .max(500, t("length.question", { max: 500 })),
+    answer: z
+      .string()
+      .min(1, t("faq.answerRequired"))
+      .max(5000, t("length.answer", { max: 5000 })),
+  };
+}
 
-export type FaqValues = z.infer<typeof faqSchema>;
+/** `t` is a translator scoped to the `validation` namespace. */
+export function faqSchema(t: Translator) {
+  return z
+    .object({
+      ...faqTextFields(t),
+      faq_category_id: z.string(),
+      ...agentScopeFields,
+    })
+    .superRefine((values, ctx) => refineAgentScope(t, values, ctx));
+}
+
+export type FaqValues = z.infer<ReturnType<typeof faqSchema>>;
 
 /** Accepts a saved Faq, an extraction-derived payload, or null (create). */
 export function toFaqValues(source: Faq | FaqPayload | null): FaqValues {
@@ -33,13 +50,14 @@ export function toFaqValues(source: Faq | FaqPayload | null): FaqValues {
 }
 
 /** Owned FAQs (service/product copies) have no enablement of their own. */
-export const ownedFaqSchema = z.object({
-  question: z.string().min(1, "Question is required").max(500, "Keep the question under 500 characters"),
-  answer: z.string().min(1, "Answer is required").max(5000, "Keep the answer under 5,000 characters"),
-  faq_category_id: z.string(),
-});
+export function ownedFaqSchema(t: Translator) {
+  return z.object({
+    ...faqTextFields(t),
+    faq_category_id: z.string(),
+  });
+}
 
-export type OwnedFaqValues = z.infer<typeof ownedFaqSchema>;
+export type OwnedFaqValues = z.infer<ReturnType<typeof ownedFaqSchema>>;
 
 export function toFaqPayload(values: FaqValues): FaqPayload {
   return {

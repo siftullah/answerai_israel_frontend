@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -16,6 +17,8 @@ export function CallNotesSection({
   businessUuid: string;
   call: Call;
 }) {
+  const t = useTranslations("calls");
+  const tc = useTranslations("common");
   const [draft, setDraft] = useState(call.notes ?? "");
   const updateNotes = useUpdateCallNotes(businessUuid);
 
@@ -25,24 +28,24 @@ export function CallNotesSection({
     updateNotes.mutate(
       { id: call.id, notes: draft.trim() === "" ? null : draft },
       {
-        onSuccess: () => toast.success("Notes saved"),
+        onSuccess: () => toast.success(t("toasts.notesSaved")),
         onError: (error) => toast.error(error.message),
       }
     );
 
   return (
-    <DetailCard title="Notes" description="Your own notes — never shown to callers." accent>
+    <DetailCard title={tc("labels.notes")} description={t("notes.description")} accent>
       <div className="flex flex-col gap-2">
         <Textarea
           value={draft}
           onChange={(event) => setDraft(event.target.value)}
-          placeholder="Add your own notes about this call…"
+          placeholder={t("notes.placeholder")}
           maxLength={5000}
-          aria-label="Call notes"
+          aria-label={t("notes.ariaLabel")}
         />
         {dirty && (
           <Button size="sm" className="self-end" onClick={save} disabled={updateNotes.isPending}>
-            {updateNotes.isPending ? "Saving…" : "Save notes"}
+            {updateNotes.isPending ? tc("actions.saving") : t("actions.saveNotes")}
           </Button>
         )}
       </div>

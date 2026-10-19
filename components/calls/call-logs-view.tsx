@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "@/components/layout/page-header";
@@ -20,25 +21,6 @@ import { useDebouncedValue } from "@/hooks/use-debounced-value";
 import { usePhoneNumbers } from "@/hooks/use-phone-numbers";
 import { cn } from "@/lib/utils";
 import type { Call, CallDirection, CallListFilters as ApiFilters } from "@/lib/api/types";
-
-const COPY: Record<
-  CallDirection,
-  { title: string; description: string; emptyTitle: string; emptyDescription: string }
-> = {
-  inbound: {
-    title: "Inbound logs",
-    description: "Every call your agents answered — transcripts, recordings and outcomes.",
-    emptyTitle: "No inbound calls yet",
-    emptyDescription:
-      "Once a caller reaches one of your numbers, the call lands here.",
-  },
-  outbound: {
-    title: "Outbound logs",
-    description: "Calls your agents placed — one-off, campaign and callback calls.",
-    emptyTitle: "No outbound calls yet",
-    emptyDescription: "Place a call and your agent will dial and handle the conversation.",
-  },
-};
 
 function presetToCreatedAfter(preset: DatePreset): string | undefined {
   if (preset === "") return undefined;
@@ -59,7 +41,22 @@ function presetToCreatedAfter(preset: DatePreset): string | undefined {
  * the selection decides which is visible.
  */
 export function CallLogsView({ direction }: { direction: CallDirection }) {
+  const t = useTranslations("calls");
   const { business } = useBusiness();
+  const copy =
+    direction === "inbound"
+      ? {
+          title: t("logs.inbound.title"),
+          description: t("logs.inbound.description"),
+          emptyTitle: t("logs.inbound.emptyTitle"),
+          emptyDescription: t("logs.inbound.emptyDescription"),
+        }
+      : {
+          title: t("logs.outbound.title"),
+          description: t("logs.outbound.description"),
+          emptyTitle: t("logs.outbound.emptyTitle"),
+          emptyDescription: t("logs.outbound.emptyDescription"),
+        };
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -99,7 +96,7 @@ export function CallLogsView({ direction }: { direction: CallDirection }) {
     direction === "outbound" ? (
       <Button onClick={() => setPlacing(true)}>
         <PlusIcon />
-        Place call
+        {t("actions.placeCall")}
       </Button>
     ) : undefined;
 
@@ -108,8 +105,8 @@ export function CallLogsView({ direction }: { direction: CallDirection }) {
     // the panes scroll internally; below lg the shell scrolls naturally.
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title={COPY[direction].title}
-        description={COPY[direction].description}
+        title={copy.title}
+        description={copy.description}
         actions={placeCallButton}
       />
 
@@ -117,7 +114,7 @@ export function CallLogsView({ direction }: { direction: CallDirection }) {
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
@@ -130,14 +127,14 @@ export function CallLogsView({ direction }: { direction: CallDirection }) {
             agents={agentsQuery.data}
             numbers={numbersQuery.data}
           />
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <CallList
               businessUuid={business.id}
               filters={apiFilters}
               selectedId={selectedId}
               onSelect={select}
-              emptyTitle={COPY[direction].emptyTitle}
-              emptyDescription={COPY[direction].emptyDescription}
+              emptyTitle={copy.emptyTitle}
+              emptyDescription={copy.emptyDescription}
               emptyAction={placeCallButton}
             />
           </div>
@@ -148,7 +145,7 @@ export function CallLogsView({ direction }: { direction: CallDirection }) {
           // pane scrolls its own tab panels, so no overflow here.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

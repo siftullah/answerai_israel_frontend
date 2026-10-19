@@ -2,6 +2,7 @@
 
 import { Fragment, useRef, useState } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -11,6 +12,7 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Separator } from "@/components/ui/separator";
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { LanguagePicker } from "@/components/language-picker";
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { activeNavTrail } from "@/components/layout/nav-config";
 import { ScrollContainerContext } from "@/components/layout/scroll-container-context";
@@ -30,9 +32,11 @@ function readSidebarCookie(): boolean {
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { business } = useBusiness();
   const pathname = usePathname();
+  const t = useTranslations("layout");
   const [defaultOpen] = useState(readSidebarCookie);
   const scrollRef = useRef<HTMLDivElement>(null);
 
+  // Message keys under layout.nav — translated where rendered below.
   const trail = activeNavTrail(pathname, business.id);
 
   return (
@@ -42,12 +46,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
       <AppSidebar />
       <SidebarInset>
         <header className="flex h-14 shrink-0 items-center gap-2 px-4">
-          <SidebarTrigger className="-ml-1" />
+          <SidebarTrigger className="-ms-1" />
           {trail.length > 0 && (
             <>
               <Separator
                 orientation="vertical"
-                className="mr-2 data-vertical:h-4 data-vertical:self-center"
+                className="me-2 data-vertical:h-4 data-vertical:self-center"
               />
               <Breadcrumb>
                 <BreadcrumbList>
@@ -55,12 +59,14 @@ export function AppShell({ children }: { children: React.ReactNode }) {
                     index < trail.length - 1 ? (
                       // Ancestors are toggle-only nav rows, not pages — plain text.
                       <Fragment key={crumb}>
-                        <BreadcrumbItem className="max-md:hidden">{crumb}</BreadcrumbItem>
+                        <BreadcrumbItem className="max-md:hidden">
+                          {t(`nav.${crumb}`)}
+                        </BreadcrumbItem>
                         <BreadcrumbSeparator className="max-md:hidden" />
                       </Fragment>
                     ) : (
                       <BreadcrumbItem key={crumb}>
-                        <BreadcrumbPage>{crumb}</BreadcrumbPage>
+                        <BreadcrumbPage>{t(`nav.${crumb}`)}</BreadcrumbPage>
                       </BreadcrumbItem>
                     )
                   )}
@@ -68,6 +74,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               </Breadcrumb>
             </>
           )}
+          <LanguagePicker className="ms-auto" />
         </header>
         <div
           ref={scrollRef}

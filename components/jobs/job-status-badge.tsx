@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import type { JobStatus } from "@/lib/api/types";
 import { JOB_STATUS_LABELS } from "@/lib/api/types";
@@ -31,11 +32,13 @@ export function JobStatusBadge({ status }: { status: JobStatus }) {
 
 /** Only the exceptions get a badge — normal priority is the quiet default. */
 export function JobPriorityBadge({ priority }: { priority: "low" | "normal" | "high" }) {
+  const t = useTranslations("jobs.priorityBadge");
+
   if (priority === "normal") return null;
 
   return (
     <Badge variant={priority === "high" ? "destructive" : "outline"}>
-      {priority === "high" ? "High priority" : "Low priority"}
+      {priority === "high" ? t("high") : t("low")}
     </Badge>
   );
 }

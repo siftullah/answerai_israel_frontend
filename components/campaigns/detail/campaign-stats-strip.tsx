@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import {
   BanIcon,
   CheckCircle2Icon,
@@ -72,21 +73,22 @@ function StatTile({
 
 /** The funnel at a glance — fed by the pacer's denormalized stats blob. */
 export function CampaignStatsStrip({ stats }: { stats: CampaignStats }) {
+  const t = useTranslations("campaigns.stats");
   const waiting = stats.pending + stats.queued + stats.retry_scheduled;
   const failed = stats.failed + stats.max_attempts;
   const blocked = stats.dnc_blocked + stats.invalid + stats.skipped;
 
   const waitingDetail = [
-    stats.queued > 0 ? `${stats.queued} queued` : null,
-    stats.retry_scheduled > 0 ? `${stats.retry_scheduled} awaiting retry` : null,
+    stats.queued > 0 ? t("queued", { count: stats.queued }) : null,
+    stats.retry_scheduled > 0 ? t("awaitingRetry", { count: stats.retry_scheduled }) : null,
   ]
     .filter(Boolean)
     .join(" · ");
 
   const blockedDetail = [
-    stats.dnc_blocked > 0 ? `${stats.dnc_blocked} on DNC` : null,
-    stats.invalid > 0 ? `${stats.invalid} invalid` : null,
-    stats.skipped > 0 ? `${stats.skipped} skipped` : null,
+    stats.dnc_blocked > 0 ? t("onDnc", { count: stats.dnc_blocked }) : null,
+    stats.invalid > 0 ? t("invalid", { count: stats.invalid }) : null,
+    stats.skipped > 0 ? t("skipped", { count: stats.skipped }) : null,
   ]
     .filter(Boolean)
     .join(" · ");
@@ -94,35 +96,44 @@ export function CampaignStatsStrip({ stats }: { stats: CampaignStats }) {
   return (
     <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 xl:grid-cols-6">
       <StatTile
-        label="Waiting"
+        label={t("waiting")}
         value={String(waiting)}
         detail={waitingDetail || undefined}
         icon={HourglassIcon}
         tone="info"
       />
-      <StatTile label="Calling" value={String(stats.calling)} icon={PhoneCallIcon} tone="primary" />
       <StatTile
-        label="Completed"
+        label={t("calling")}
+        value={String(stats.calling)}
+        icon={PhoneCallIcon}
+        tone="primary"
+      />
+      <StatTile
+        label={t("completed")}
         value={String(stats.completed)}
         icon={CheckCircle2Icon}
         tone="success"
       />
       <StatTile
-        label="Failed"
+        label={t("failed")}
         value={String(failed)}
-        detail={stats.max_attempts > 0 ? `${stats.max_attempts} hit max attempts` : undefined}
+        detail={
+          stats.max_attempts > 0
+            ? t("hitMaxAttempts", { count: stats.max_attempts })
+            : undefined
+        }
         icon={XCircleIcon}
         tone="destructive"
       />
       <StatTile
-        label="Blocked"
+        label={t("blocked")}
         value={String(blocked)}
         detail={blockedDetail || undefined}
         icon={BanIcon}
         tone="warning"
       />
       <StatTile
-        label="Minutes used"
+        label={t("minutesUsed")}
         value={stats.minutes_used.toFixed(1)}
         icon={TimerIcon}
         tone="cta"

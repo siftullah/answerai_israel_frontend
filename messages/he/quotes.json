@@ -1,0 +1,235 @@
+{
+  "meta": {
+    "title": "הצעות מחיר"
+  },
+  "page": {
+    "title": "הצעות מחיר",
+    "description": "תמחרו עבודות, שלחו לאישור ועקבו אחר הצעות שאושרו."
+  },
+  "newQuote": "הצעת מחיר חדשה",
+  "theCustomer": "הלקוח",
+  "thisContact": "איש הקשר הזה",
+  "tabs": {
+    "open": "פתוחות",
+    "expired": "פג תוקף",
+    "accepted": "אושר"
+  },
+  "empty": {
+    "open": {
+      "title": "אין הצעות מחיר פתוחות",
+      "description": "טיוטות והצעות מחיר שממתינות לתשובת הלקוח יופיעו כאן."
+    },
+    "expired": {
+      "title": "אין הצעות שפג תוקפן",
+      "description": "הצעות שתוקפן פג ללא תשובה יופיעו כאן — חדשו אותן או שלחו הצעה חדשה."
+    },
+    "accepted": {
+      "title": "עדיין אין הצעות מחיר שאושרו",
+      "description": "הצעות מחיר שהלקוחות שלכם מאשרים יופיעו כאן."
+    },
+    "all": {
+      "title": "עדיין אין הצעות מחיר",
+      "description": "תמחרו את העבודה הראשונה שלכם ושלחו לאישור הלקוח."
+    },
+    "noMatch": {
+      "title": "לא נמצאו הצעות מחיר תואמות",
+      "description": "נסו חיפוש אחר או הסירו חלק מהמסננים."
+    }
+  },
+  "stats": {
+    "awaitingResponse": "ממתינות לתשובה",
+    "withCustomers": "{count, plural, one {# הצעת מחיר אצל הלקוחות} other {# הצעות מחיר אצל הלקוחות}}",
+    "withCustomersExpiring": "{count, plural, one {# הצעת מחיר אצל הלקוחות} other {# הצעות מחיר אצל הלקוחות}} · התוקף של {expiring} יפוג בקרוב",
+    "nothingAwaiting": "אין הצעות שממתינות לתשובה",
+    "acceptedThisMonth": "אושרו החודש",
+    "acceptedAllTime": "{count, plural, one {# הצעת מחיר אושרה עד היום} other {# הצעות מחיר אושרו עד היום}}",
+    "winRate": "שיעור אישור",
+    "winRateDetail": "{accepted} מתוך {decided, plural, one {# הצעת מחיר שהתקבלה לגביה החלטה} other {# הצעות מחיר שהתקבלה לגביהן החלטה}}, ב-90 הימים האחרונים",
+    "noDecided": "אין הצעות מחיר שהתקבלה לגביהן החלטה ב-90 הימים האחרונים"
+  },
+  "list": {
+    "loadError": "לא ניתן לטעון את הצעות המחיר",
+    "searchPlaceholder": "חיפוש לפי מספר, כותרת או איש קשר…",
+    "searchLabel": "חיפוש הצעות מחיר לפי מספר, כותרת או שם איש קשר",
+    "filterLabel": "סינון הצעות מחיר",
+    "anyStatus": "כל סטטוס",
+    "removeFilter": "הסרת המסנן {status}"
+  },
+  "row": {
+    "callRequest": "בקשה להצעת מחיר משיחה — הוסיפו תמחור",
+    "draft": "טיוטה — טרם נשלחה",
+    "validUntil": "בתוקף עד {date}",
+    "accepted": "אושר ב-{date}",
+    "declined": "נדחה ב-{date}",
+    "expired": "התוקף פג ב-{date}",
+    "voided": "בוטל ב-{date}"
+  },
+  "labels": {
+    "customer": "לקוח",
+    "lineItems": "פריטים",
+    "type": "סוג",
+    "qty": "כמות",
+    "unit": "יחידה",
+    "unitPrice": "מחיר ליחידה",
+    "amount": "סכום",
+    "validUntil": "בתוקף עד",
+    "setOnSend": "ייקבע בשליחה",
+    "terms": "תנאים",
+    "internalNotes": "הערות פנימיות",
+    "deposit": "מקדמה",
+    "taxLine": "{label} ({rate}%)"
+  },
+  "actions": {
+    "send": "שליחת הצעת מחיר",
+    "sending": "בשליחה…",
+    "revive": "שחזור ושליחה מחדש",
+    "resend": "שליחה מחדש",
+    "resendQuote": "שליחה מחדש של הצעת המחיר",
+    "convertToInvoice": "המרה לחשבונית",
+    "viewInvoice": "צפייה בחשבונית",
+    "convertToJob": "המרה לעבודה",
+    "viewJob": "צפייה בעבודה",
+    "copyLink": "העתקת קישור",
+    "markAccepted": "סימון כמאושרת",
+    "markDeclined": "סימון כנדחתה",
+    "duplicate": "שכפול",
+    "void": "ביטול",
+    "voidQuote": "ביטול הצעת המחיר",
+    "voiding": "בביטול…",
+    "keepQuote": "השארת הצעת המחיר",
+    "deleteDraft": "מחיקת הטיוטה",
+    "keepDraft": "השארת הטיוטה",
+    "createDraft": "יצירת טיוטה",
+    "converting": "בהמרה…",
+    "viewContact": "צפייה באיש הקשר"
+  },
+  "detail": {
+    "back": "כל הצעות המחיר",
+    "noneSelected": {
+      "title": "לא נבחרה הצעת מחיר",
+      "description": "בחרו הצעת מחיר כדי לראות את פרטיה."
+    },
+    "notFound": {
+      "title": "הצעת המחיר לא נמצאה",
+      "description": "הצעת המחיר הזו לא קיימת או שהוסרה."
+    },
+    "loadError": "לא ניתן לטעון את הצעת המחיר הזו",
+    "title": "הצעת מחיר {number}",
+    "fromCallBadge": "מתוך שיחה",
+    "invoicedAsBadge": "הופקה חשבונית {number}",
+    "jobBadge": "עבודה {reference}",
+    "fields": {
+      "fromLead": "מליד",
+      "issued": "הונפקה",
+      "sent": "נשלחה",
+      "viewed": "נצפתה על ידי הלקוח",
+      "accepted": "אושרה",
+      "acceptedOnline": "באינטרנט דרך הקישור להצעת המחיר",
+      "acceptedInPortal": "תועד בפורטל",
+      "declined": "נדחתה",
+      "voided": "בוטלה",
+      "created": "נוצרה"
+    },
+    "noItemsFromCall": "אין פריטים עדיין — הבקשה הגיעה משיחה. ערכו את הטיוטה כדי לתמחר אותה.",
+    "noItems": "אין פריטים עדיין — ערכו את הטיוטה כדי להוסיף אותם.",
+    "depositPercent": "מקדמה ({percent}%)",
+    "internalNotesHint": "לעולם לא מוצגות ללקוח."
+  },
+  "form": {
+    "editTitle": "עריכת הצעת מחיר {number}",
+    "editDescription": "אפשר לערוך טיוטות עד לשליחתן.",
+    "newDescription": "תמחרו את העבודה ושלחו את ההצעה לאישור הלקוח.",
+    "title": "כותרת",
+    "titlePlaceholder": "נושא הצעת המחיר, למשל החלפת חיווט במטבח",
+    "issueDate": "תאריך הנפקה",
+    "validUntilHint": "אם השדה יישאר ריק, התוקף ייקבע בשליחה ל-{days, plural, one {# יום} other {# ימים}} לאחר תאריך ההנפקה.",
+    "addLine": "הוספת פריט",
+    "descriptionPlaceholder": "מה יבוצע או יסופק",
+    "lineDescription": "תיאור פריט {line}",
+    "lineType": "סוג פריט {line}",
+    "lineQuantity": "כמות לפריט {line}",
+    "lineUnitPrice": "מחיר ליחידה בשקלים לפריט {line}",
+    "lineTax": "פריט {line} חייב ב-{tax}",
+    "removeLine": "הסרת פריט {line}",
+    "deposit": {
+      "none": "ללא מקדמה",
+      "percent": "אחוז מהסכום הכולל",
+      "fixed": "סכום קבוע",
+      "percentLabel": "אחוז המקדמה",
+      "amountLabel": "סכום המקדמה",
+      "percentHint": "אחוז שלם מהסכום הכולל של הצעת המחיר.",
+      "amountHint": "סכום בשקלים לתשלום לפני תחילת העבודה.",
+      "toCommence": "מקדמה לתחילת העבודה"
+    },
+    "notesPlaceholder": "יוצג ללקוח בהצעת המחיר (לא חובה)",
+    "termsPlaceholder": "היקף העבודה, חריגים, תנאי תשלום…",
+    "internalNotesPlaceholder": "חישובי תמחור, פרטי שיחה — לא יוצגו ללקוח"
+  },
+  "sendDialog": {
+    "title": "שליחת הצעת מחיר {number}",
+    "description": "הצעת מחיר בסך {amount} תישלח באימייל אל {customer}, עם קישור לאישור מקוון. {dates}",
+    "datesIssuedValid": "תאריך הנפקה: {issued}, בתוקף עד {validUntil}.",
+    "datesIssuedNoValid": "תאריך הנפקה: {issued}, בתוקף עד {days, plural, one {# יום לאחר מכן} other {# ימים לאחר מכן}}.",
+    "datesUnset": "תאריך ההנפקה ייקבע להיום והצעת המחיר תהיה בתוקף למשך {days, plural, one {# יום} other {# ימים}}.",
+    "emailLabel": "שליחה לאימייל",
+    "emailHint": "השאירו ריק כדי לשלוח אל {email}.",
+    "invalidEmail": "הזינו כתובת אימייל תקינה",
+    "noEmailAlert": "לא שמורה כתובת אימייל עבור {name}. עדיין אפשר לשלוח — הצעת המחיר תהיה זמינה אונליין, ותוכלו לשתף את הקישור בהודעת טקסט או פנים אל פנים."
+  },
+  "resendDialog": {
+    "reviveTitle": "חידוש הצעת מחיר {number}",
+    "resendTitle": "שליחה חוזרת של הצעת מחיר {number}",
+    "reviveDescription": "הצעת המחיר תישלח שוב ללקוח עם תקופת תוקף חדשה.",
+    "resendDescription": "אימייל נוסף יישלח ללקוח עם אותו קישור לאישור.",
+    "validUntilPlaceholder": "{days, plural, one {# יום מהיום} other {# ימים מהיום}}",
+    "validUntilHint": "אם השדה יישאר ריק, הצעת המחיר תהיה בתוקף למשך {days, plural, one {# יום} other {# ימים}} מהיום."
+  },
+  "acceptDialog": {
+    "title": "לסמן שהצעת המחיר {number} אושרה?",
+    "description": "יירשם שהצעת המחיר בסך {amount} אושרה על ידי {customer}. לאחר מכן ניתן להמיר אותה לחשבונית.",
+    "descriptionExpired": "יירשם שהצעת המחיר בסך {amount} אושרה על ידי {customer} (למרות שפג תוקפה). לאחר מכן ניתן להמיר אותה לחשבונית.",
+    "confirm": "סימון אישור ההצעה"
+  },
+  "declineDialog": {
+    "title": "סימון דחיית הצעת מחיר {number}",
+    "description": "יירשם שהצעת המחיר בסך {amount} נדחתה על ידי {customer}. הדחייה סופית — לתמחור מחדש של העבודה, שכפלו את הצעת המחיר.",
+    "reasonLabel": "סיבה",
+    "reasonPlaceholder": "בחירה בספק אחר",
+    "reasonHint": "לא חובה — למה הלקוח דחה את ההצעה.",
+    "confirm": "סימון כנדחתה"
+  },
+  "convertDialog": {
+    "title": "להמיר את הצעת המחיר {number} לחשבונית?",
+    "description": "תיווצר טיוטת חשבונית בסך {amount} עם אותם פריטים ושיעורי מס, מוכנה לבדיקה ולשליחה אל {customer}. ניתן להמיר הצעת מחיר פעם אחת בלבד.",
+    "confirm": "יצירת חשבונית"
+  },
+  "convertToJobDialog": {
+    "title": "להמיר את הצעת המחיר {number} לעבודה?",
+    "description": "תיווצר עבודה בשווי {amount} (ללא מס) עם אותם פריטים, מוכנה לתזמון עבור {customer}. ניתן להמיר הצעת מחיר פעם אחת בלבד — ההצעה תישאר כאן עם ההיסטוריה שלה.",
+    "confirm": "יצירת עבודה"
+  },
+  "voidDialog": {
+    "title": "לבטל את הצעת המחיר {number}?",
+    "description": "הצעת המחיר בסך {amount} עבור {customer} תבוטל — לא יהיה אפשר עוד לאשר אותה דרך הקישור. ההצעה תישאר ברשומות, אך לא יהיה אפשר לפתוח אותה מחדש."
+  },
+  "deleteDialog": {
+    "title": "למחוק את הטיוטה {number}?",
+    "description": "הטיוטה והפריטים שלה יימחקו לצמיתות. לא ניתן לבטל את הפעולה."
+  },
+  "toasts": {
+    "draftCreated": "הטיוטה {number} נוצרה",
+    "draftDeleted": "הטיוטה {number} נמחקה",
+    "updated": "הצעת המחיר {number} עודכנה",
+    "sent": "הצעת המחיר {number} נשלחה",
+    "sentNoEmail": "הצעת המחיר {number} פעילה, אך לא נשלח אימייל — העתיקו את הקישור כדי לשתף אותה.",
+    "resent": "הצעת המחיר {number} נשלחה שוב",
+    "resentNoEmail": "הצעת המחיר {number} שוב פעילה, אך לא נשלח אימייל — העתיקו את הקישור כדי לשתף אותה.",
+    "accepted": "הצעת המחיר {number} אושרה",
+    "declined": "הצעת המחיר {number} סומנה כנדחתה",
+    "voided": "הצעת המחיר {number} בוטלה",
+    "convertedToInvoice": "נוצרה טיוטת חשבונית {invoice} מהצעת המחיר {quote}",
+    "convertedToJob": "העבודה {job} נוצרה מהצעת המחיר {quote} — קבעו לה מועד",
+    "linkCopied": "הקישור להצעת המחיר הועתק",
+    "copyFailed": "לא ניתן להעתיק — הקישור מוצג בדפדפן בכתובת {url}"
+  }
+}

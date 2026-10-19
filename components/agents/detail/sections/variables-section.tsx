@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray, useFormContext } from "react-hook-form";
 import { PlusIcon, Trash2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,7 +12,11 @@ import { AgentSection } from "@/components/agents/detail/agent-section";
 import { OVERRIDABLE_BUILTIN_LABELS, OVERRIDABLE_BUILTIN_VARIABLES } from "@/lib/api/types";
 import type { AgentSettingsValues } from "@/lib/validation/agent";
 
+const MAX_VARIABLES = 30;
+
 export function VariablesSection() {
+  const t = useTranslations("agents.sections.variables");
+  const tc = useTranslations("common");
   const form = useFormContext<AgentSettingsValues>();
   const { errors, disabled } = form.formState;
   const { fields, append, remove } = useFieldArray({
@@ -22,29 +27,25 @@ export function VariablesSection() {
   return (
     <AgentSection
       id="variables"
-      title="Variables"
-      description="Custom placeholders for your messages. Each one needs a value whenever a call is placed: the default only prefills the place-call form, and campaign recipients without a value are skipped. Variables still referenced in your messages can't be removed until the reference is deleted."
+      title={t("title")}
+      description={t("description")}
       actions={
         <Button
           type="button"
           variant="cta"
           size="sm"
-          disabled={disabled || fields.length >= 30}
+          disabled={disabled || fields.length >= MAX_VARIABLES}
           onClick={() => append({ name: "", default_value: "" })}
         >
           <PlusIcon />
-          Add variable
+          {t("add")}
         </Button>
       }
     >
       <div className="mb-6 flex flex-col gap-3">
         <div>
-          <p className="text-sm font-medium">Built-in variables</p>
-          <p className="text-sm text-muted-foreground">
-            Filled from the contact record on every call. Tick one to ask for it when placing a
-            call, so the caller can confirm or replace it, and to let campaigns supply it per
-            recipient. Recipients with no value for a ticked variable are skipped.
-          </p>
+          <p className="text-sm font-medium">{t("builtins.title")}</p>
+          <p className="text-sm text-muted-foreground">{t("builtins.description")}</p>
         </div>
         <Controller
           control={form.control}
@@ -80,8 +81,10 @@ export function VariablesSection() {
 
       {fields.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          No custom variables. Built-ins like {"{{business_name}}"} and {"{{contact_name}}"} are
-          always available.
+          {t("empty", {
+            businessToken: "{{business_name}}",
+            contactToken: "{{contact_name}}",
+          })}
         </p>
       ) : (
         <div className="flex flex-col gap-4">
@@ -91,7 +94,7 @@ export function VariablesSection() {
               <div key={row.id} className="flex items-start gap-3">
                 <Field className="flex-1" data-invalid={!!rowErrors?.name || undefined}>
                   {index === 0 && (
-                    <FieldLabel htmlFor={`variable-name-${index}`}>Name</FieldLabel>
+                    <FieldLabel htmlFor={`variable-name-${index}`}>{tc("labels.name")}</FieldLabel>
                   )}
                   <Input
                     id={`variable-name-${index}`}
@@ -104,11 +107,13 @@ export function VariablesSection() {
                 </Field>
                 <Field className="flex-1">
                   {index === 0 && (
-                    <FieldLabel htmlFor={`variable-default-${index}`}>Default value</FieldLabel>
+                    <FieldLabel htmlFor={`variable-default-${index}`}>
+                      {t("defaultLabel")}
+                    </FieldLabel>
                   )}
                   <Input
                     id={`variable-default-${index}`}
-                    placeholder="Empty by default"
+                    placeholder={t("defaultPlaceholder")}
                     {...form.register(`dynamic_variables.${index}.default_value`)}
                   />
                 </Field>
@@ -116,7 +121,7 @@ export function VariablesSection() {
                   type="button"
                   variant="ghost"
                   size="icon-sm"
-                  aria-label="Remove variable"
+                  aria-label={t("remove")}
                   disabled={disabled}
                   className={index === 0 ? "mt-6" : undefined}
                   onClick={() => remove(index)}
@@ -126,8 +131,10 @@ export function VariablesSection() {
               </div>
             );
           })}
-          {fields.length >= 30 && (
-            <p className="text-sm text-muted-foreground">Up to 30 variables per agent.</p>
+          {fields.length >= MAX_VARIABLES && (
+            <p className="text-sm text-muted-foreground">
+              {t("limit", { max: MAX_VARIABLES })}
+            </p>
           )}
         </div>
       )}

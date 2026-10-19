@@ -1,0 +1,287 @@
+{
+  "datetime": {
+    "today": "היום",
+    "yesterday": "אתמול"
+  },
+  "money": {
+    "noPrice": "ללא מחיר",
+    "customMessage": "הודעה מותאמת אישית",
+    "priceNotSet": "לא הוגדר מחיר",
+    "perHour": "{price}/שעה",
+    "perDay": "{price}/יום",
+    "perWeek": "{price}/שבוע",
+    "perMonth": "{price}/חודש",
+    "perYear": "{price}/שנה",
+    "duration": {
+      "hours": "{count, plural, one {# שעה} other {# שעות}}",
+      "days": "{count, plural, one {# יום} other {# ימים}}",
+      "weeks": "{count, plural, one {# שבוע} other {# שבועות}}",
+      "months": "{count, plural, one {# חודש} other {# חודשים}}",
+      "years": "{count, plural, one {# שנה} other {# שנים}}"
+    }
+  },
+  "tax": {
+    "defaultLabel": "מע\"מ",
+    "line": "מע\"מ ({rate}%)"
+  },
+  "endReason": {
+    "customer_ended_call": "המתקשר ניתק",
+    "agent_ended_call": "סוכן AI סיים את השיחה",
+    "transferred": "השיחה הועברה",
+    "no_conversation": "לא התקיימה שיחה",
+    "no_answer": "אין מענה",
+    "busy": "תפוס",
+    "canceled": "בוטל",
+    "failed": "נכשל",
+    "unknown": "לא ידוע"
+  },
+  "modules": {
+    "appointments": {
+      "label": "פגישות",
+      "description": "אפשרו לסוכן AI לבדוק את היומן ולקבוע למתקשרים פגישות במשבצות זמן פנויות, ואז נהלו את הפגישות."
+    },
+    "leads": {
+      "label": "לידים",
+      "description": "שמרו פניות מכירה משיחות כלידים שהצוות יוכל להמשיך לטפל בהם בהמשך."
+    },
+    "quotes": {
+      "label": "הצעות מחיר",
+      "description": "תמחרו עבודות, שלחו הצעות מחיר לאישור הלקוחות אונליין ותעדו בקשות להצעות מחיר משיחות."
+    },
+    "jobs": {
+      "label": "עבודות",
+      "description": "תעדו עבודות בשטח שסוכן AI מקבל בטלפון וקבעו מועד לביקור."
+    },
+    "invoices": {
+      "label": "חשבוניות",
+      "description": "הפיקו חשבוניות על עבודות שהושלמו ועקבו אחר התשלומים שהתקבלו."
+    },
+    "callbacks": {
+      "label": "שיחות חוזרות",
+      "description": "תזמנו שיחה חוזרת כשסוכן AI לא יכול לעזור למתקשר באותו רגע."
+    }
+  },
+  "tools": {
+    "lookup_contact": {
+      "label": "איתור מתקשר",
+      "description": "בדיקה אם המתקשר הוא איש קשר מוכר ופנייה אליו בשמו."
+    },
+    "save_contact_info": {
+      "label": "שמירת פרטי איש קשר",
+      "description": "שמירת השם, האימייל או החברה של המתקשר ברשומת איש הקשר שלו."
+    },
+    "add_to_dnc": {
+      "label": "בקשות \"אין להתקשר\"",
+      "description": "הוספת המתקשר לרשימת \"אין להתקשר\" לפי בקשתו."
+    },
+    "get_current_time": {
+      "label": "השעה הנוכחית",
+      "description": "מסירת השעה הנוכחית ומידע על האם העסק פתוח כרגע."
+    },
+    "get_call_history": {
+      "label": "היסטוריית שיחות",
+      "description": "שליפת שיחות קודמות של המתקשר עם כל סוכני ה-AI שלכם, כולל הערות ותמלולים."
+    },
+    "schedule_callback": {
+      "label": "תזמון שיחה חוזרת",
+      "description": "קביעת שיחה חוזרת למתקשר במועד שיבקש."
+    },
+    "check_availability": {
+      "label": "בדיקת זמינות",
+      "description": "איתור משבצות זמן פנויות לפגישות ביומן."
+    },
+    "book_appointment": {
+      "label": "קביעת פגישה",
+      "description": "קביעת פגישה למתקשר במשבצת זמן פנויה."
+    },
+    "cancel_appointment": {
+      "label": "ביטול פגישה",
+      "description": "ביטול פגישה קיימת עבור המתקשר."
+    },
+    "create_lead": {
+      "label": "יצירת ליד",
+      "description": "רישום ליד חדש מתוך השיחה."
+    },
+    "request_quote": {
+      "label": "בקשת הצעת מחיר",
+      "description": "רישום בקשה להצעת מחיר לעבודה שהמתקשר רוצה לתמחר; הצוות יכין את ההצעה בהמשך."
+    },
+    "create_job": {
+      "label": "יצירת עבודה",
+      "description": "רישום בקשת עבודה חדשה מהמתקשר."
+    },
+    "check_job_availability": {
+      "label": "בדיקת זמינות לעבודה",
+      "description": "איתור משבצות זמן פנויות לתיאום ביקור לביצוע עבודה."
+    },
+    "book_job": {
+      "label": "קביעת עבודה",
+      "description": "קביעת ביקור לביצוע עבודה במשבצת זמן פנויה."
+    }
+  },
+  "toolGroups": {
+    "core": "ליבה"
+  },
+  "apiErrors": {
+    "sessionExpired": "תוקף ההתחברות פג. התחברו שוב.",
+    "subscriptionRequired": "נדרש מנוי פעיל.",
+    "forbidden": "אין לכם הרשאה לבצע פעולה זו.",
+    "notFound": "לא נמצא.",
+    "linkInvalid": "הקישור הזה כבר לא תקף.",
+    "tokenExpired": "תוקף אסימון ההתחברות פג. נסו שוב.",
+    "invalidData": "הנתונים שנמסרו אינם תקינים.",
+    "tooManyAttempts": "יותר מדי ניסיונות. המתינו דקה ונסו שוב.",
+    "server": "משהו השתבש אצלנו. נסו שוב.",
+    "generic": "משהו השתבש. נסו שוב.",
+    "network": "שגיאת רשת — בדקו את החיבור שלכם.",
+    "unknown": "משהו השתבש."
+  },
+  "voices": {
+    "previewFailed": "לא ניתן להשמיע את דוגמת הקול."
+  },
+  "agentTemplates": {
+    "blank": {
+      "label": "התחלה מאפס",
+      "description": "סוכן AI ריק להגדרה מאפס."
+    },
+    "receptionist": {
+      "label": "סוכן קבלה",
+      "description": "עונה לשיחות, משיב לשאלות ומקבל הודעות."
+    },
+    "appointment_setter": {
+      "label": "תיאום פגישות",
+      "description": "קובע, בודק ומבטל פגישות עבור מתקשרים."
+    },
+    "after_hours": {
+      "label": "מחוץ לשעות הפעילות",
+      "description": "עונה לשיחות מחוץ לשעות הפעילות ואוסף פרטים."
+    },
+    "outbound_caller": {
+      "label": "שיחות יוצאות",
+      "description": "מתקשר לאנשי קשר במסגרת קמפיינים, שיחות חוזרות ושיחות מעקב."
+    },
+    "lead_qualifier": {
+      "label": "סינון לידים",
+      "description": "מתקשר ללידים חדשים, בודק את מידת העניין ומתעד פרטים."
+    }
+  },
+  "overridableBuiltin": {
+    "contact_name": "שם איש הקשר",
+    "contact_email": "האימייל הראשי של איש הקשר",
+    "contact_company": "החברה של איש הקשר",
+    "contact_address": "הכתובת של איש הקשר"
+  },
+  "appointmentStatus": {
+    "scheduled": "מתוזמן",
+    "confirmed": "מאושר",
+    "completed": "הושלם",
+    "canceled": "בוטל",
+    "no_show": "אי-הגעה"
+  },
+  "appointmentSource": {
+    "manual": "ידני",
+    "agent_call": "נקבעה על ידי סוכן AI בשיחה",
+    "api": "API"
+  },
+  "subscriptionStatus": {
+    "pending": "ממתין",
+    "active": "פעיל",
+    "past_due": "באיחור בתשלום",
+    "suspended": "מושהה",
+    "cancelled": "בוטל"
+  },
+  "billingInterval": {
+    "monthly": "חודשי",
+    "annual": "שנתי"
+  },
+  "billingChargeStatus": {
+    "pending": "בעיבוד",
+    "paid": "שולם",
+    "failed": "נכשל"
+  },
+  "billingChargeType": {
+    "initial": "חיוב ראשון",
+    "renewal": "חידוש",
+    "plan_change": "שינוי מסלול"
+  },
+  "callbackStatus": {
+    "scheduled": "מתוזמן",
+    "queued": "בחיוג",
+    "in_progress": "בתהליך",
+    "completed": "הושלם",
+    "no_answer": "אין מענה",
+    "failed": "נכשל",
+    "canceled": "בוטל"
+  },
+  "callbackType": {
+    "agent": "סוכן AI",
+    "team_member": "חבר צוות"
+  },
+  "callbackSource": {
+    "manual": "ידני",
+    "agent_call": "שיחת סוכן AI",
+    "api": "API"
+  },
+  "callbackOutcome": {
+    "reached": "נוצר קשר",
+    "voicemail": "הושארה הודעה קולית",
+    "no_answer": "אין מענה",
+    "handled": "טופל"
+  },
+  "invoiceStatus": {
+    "draft": "טיוטה",
+    "sent": "נשלח",
+    "paid": "שולם",
+    "overdue": "באיחור",
+    "void": "מבוטל"
+  },
+  "lineItemKind": {
+    "labour": "עבודה",
+    "material": "חומר"
+  },
+  "jobStatus": {
+    "open": "פתוח",
+    "scheduled": "מתוזמן",
+    "in_progress": "בתהליך",
+    "completed": "הושלם",
+    "canceled": "בוטל"
+  },
+  "jobPriority": {
+    "low": "נמוכה",
+    "normal": "רגילה",
+    "high": "גבוהה"
+  },
+  "jobSource": {
+    "manual": "נוסף ידנית",
+    "agent_call": "מתוך שיחה",
+    "api": "דרך ה-API",
+    "lead": "הומר מליד",
+    "quote": "הומר מהצעת מחיר"
+  },
+  "leadStatus": {
+    "new": "חדש",
+    "contacted": "נוצר קשר",
+    "qualified": "מתאים",
+    "won": "נסגר בהצלחה",
+    "lost": "אבוד"
+  },
+  "leadSource": {
+    "manual": "נוסף ידנית",
+    "agent_call": "משיחה",
+    "api": "דרך ה-API"
+  },
+  "quoteStatus": {
+    "draft": "טיוטה",
+    "sent": "נשלח",
+    "accepted": "אושר",
+    "declined": "נדחה",
+    "expired": "פג תוקף",
+    "void": "מבוטל"
+  },
+  "hoursMode": {
+    "inherit": "שעות פעילות",
+    "member": "זמינות",
+    "custom": "מותאם אישית",
+    "bypass": "תמיד"
+  }
+}

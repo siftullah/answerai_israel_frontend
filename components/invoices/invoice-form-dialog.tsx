@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useFieldArray, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { PlusIcon, XIcon } from "lucide-react";
@@ -85,10 +86,13 @@ function mapItemErrorKey(key: string): string {
   return key.replace(/\.unit_price_cents$/, ".unit_price");
 }
 
-const KIND_ITEMS = LINE_ITEM_KINDS.map((kind) => ({
-  value: kind,
-  label: LINE_ITEM_KIND_LABELS[kind],
-}));
+/** Built per render: the kind labels translate on access, so a module-level copy would freeze the locale. */
+function buildKindOptions() {
+  return LINE_ITEM_KINDS.map((kind) => ({
+    value: kind,
+    label: LINE_ITEM_KIND_LABELS[kind],
+  }));
+}
 
 /** One row of the items grid; mobile stacks description first, then the numbers. */
 const ROW_GRID =
@@ -105,6 +109,8 @@ function InvoiceFormBody({
   onOpenChange: (open: boolean) => void;
   onSaved?: (invoice: Invoice) => void;
 }) {
+  const t = useTranslations("invoices");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const createInvoice = useCreateInvoice(business.id);
   const updateInvoice = useUpdateInvoice(business.id);
@@ -117,8 +123,10 @@ function InvoiceFormBody({
     invoice?.contact ? contactStub(invoice.contact) : null
   );
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => invoiceFormSchema(tv), [tv]);
   const form = useForm<InvoiceFormValues>({
-    resolver: zodResolver(invoiceFormSchema),
+    resolver: zodResolver(schema),
     defaultValues: invoice
       ? invoiceToFormValues(invoice)
       : {
@@ -134,6 +142,7 @@ function InvoiceFormBody({
   const watchedItems = form.watch("items");
   const totals = computeInvoiceTotals(watchedItems, taxRateBp);
   const taxPercent = taxRateBp / 100;
+  const kindOptions = buildKindOptions();
 
   const saving = createInvoice.isPending || updateInvoice.isPending || replaceItems.isPending;
 
@@ -145,7 +154,7 @@ function InvoiceFormBody({
           id: invoice.id,
           items: toInvoiceItemsPayload(values.items),
         });
-        toast.success(`Invoice ${updated.number} updated`);
+        toast.success(t("toasts.updated", { number: updated.number }));
         onOpenChange(false);
       } catch (error) {
         applyServerErrors(form, error as Parameters<typeof applyServerErrors>[1], {
@@ -157,7 +166,7 @@ function InvoiceFormBody({
 
     createInvoice.mutate(toStoreInvoicePayload(values), {
       onSuccess: (created) => {
-        toast.success(`Draft ${created.number} created`);
+        toast.success(t("toasts.draftCreated", { number: created.number }));
         onSaved?.(created);
         onOpenChange(false);
       },
@@ -173,7 +182,7 @@ function InvoiceFormBody({
         id="invoice-form"
         onSubmit={onSubmit}
         noValidate
-        className="scrollbar-slim -mr-2 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pr-2"
+        className="scrollbar-slim -me-2 flex min-h-0 flex-1 flex-col gap-5 overflow-y-auto pe-2"
       >
         <div className="grid gap-4 sm:grid-cols-2">
           <Controller
@@ -181,7 +190,7 @@ function InvoiceFormBody({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined} className="sm:col-span-2">
-                <FieldLabel htmlFor="invoice-contact">Customer</FieldLabel>
+                <FieldLabel htmlFor="invoice-contact">{t("labels.customer")}</FieldLabel>
                 <ContactCombobox
                   id="invoice-contact"
                   selected={selectedContact}
@@ -205,14 +214,14 @@ function InvoiceFormBody({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="invoice-issue-date">Issue date</FieldLabel>
+                <FieldLabel htmlFor="invoice-issue-date">{t("form.issueDate")}</FieldLabel>
                 <DatePicker
                   id="invoice-issue-date"
                   ref={field.ref}
                   value={field.value}
                   onChange={field.onChange}
                   clearable
-                  placeholder="Set on send"
+                  placeholder={t("labels.setOnSend")}
                   invalid={!!fieldState.error}
                 />
                 {fieldState.error?.message && (
@@ -227,21 +236,21 @@ function InvoiceFormBody({
             control={form.control}
             render={({ field, fieldState }) => (
               <Field data-invalid={!!fieldState.error || undefined}>
-                <FieldLabel htmlFor="invoice-due-date">Due date</FieldLabel>
+                <FieldLabel htmlFor="invoice-due-date">{t("form.dueDate")}</FieldLabel>
                 <DatePicker
                   id="invoice-due-date"
                   ref={field.ref}
                   value={field.value}
                   onChange={field.onChange}
                   clearable
-                  placeholder="Set on send"
+                  placeholder={t("labels.setOnSend")}
                   invalid={!!fieldState.error}
                 />
                 {fieldState.error?.message ? (
                   <FieldError>{fieldState.error.message}</FieldError>
                 ) : (
                   <FieldDescription>
-                    Left blank, sending sets it {settings.net_days} days after the issue date.
+                    {t("form.dueDateHint", { days: settings.net_days })}
                   </FieldDescription>
                 )}
               </Field>
@@ -252,7 +261,7 @@ function InvoiceFormBody({
         {/* Line items */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm font-medium">Line items</span>
+            <span className="text-sm font-medium">{t("labels.lineItems")}</span>
             <Button
               type="button"
               variant="outline"
@@ -260,18 +269,18 @@ function InvoiceFormBody({
               onClick={() => itemsArray.append(emptyInvoiceItem())}
             >
               <PlusIcon />
-              Add line
+              {t("form.addLine")}
             </Button>
           </div>
 
           {/* Column labels (desktop) */}
           <div className={`hidden text-xs text-muted-foreground ${ROW_GRID}`}>
-            <span>Type</span>
-            <span>Description</span>
-            <span className="text-right">Qty</span>
-            <span className="text-right">Unit price</span>
+            <span>{t("labels.type")}</span>
+            <span>{tc("labels.description")}</span>
+            <span className="text-end">{t("labels.qty")}</span>
+            <span className="text-end">{t("labels.unitPrice")}</span>
             <span className="text-center">{taxLabel}</span>
-            <span className="text-right">Amount</span>
+            <span className="text-end">{t("labels.amount")}</span>
             <span />
           </div>
 
@@ -293,8 +302,8 @@ function InvoiceFormBody({
                   <div className="md:order-2">
                     <Input
                       {...form.register(`items.${index}.description`)}
-                      placeholder="What was done or supplied"
-                      aria-label={`Line ${index + 1} description`}
+                      placeholder={t("form.descriptionPlaceholder")}
+                      aria-label={t("form.lineDescription", { line: index + 1 })}
                       aria-invalid={!!rowErrors?.description}
                     />
                     {rowErrors?.description?.message && (
@@ -310,7 +319,7 @@ function InvoiceFormBody({
                       control={form.control}
                       render={({ field }) => (
                         <Select
-                          items={KIND_ITEMS}
+                          items={kindOptions}
                           value={field.value}
                           onValueChange={(value) =>
                             field.onChange((value as LineItemKind | null) ?? "labour")
@@ -318,12 +327,12 @@ function InvoiceFormBody({
                         >
                           <SelectTrigger
                             className="w-full"
-                            aria-label={`Line ${index + 1} type`}
+                            aria-label={t("form.lineType", { line: index + 1 })}
                           >
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
-                            {KIND_ITEMS.map((item) => (
+                            {kindOptions.map((item) => (
                               <SelectItem key={item.value} value={item.value}>
                                 {item.label}
                               </SelectItem>
@@ -339,8 +348,8 @@ function InvoiceFormBody({
                       <Input
                         {...form.register(`items.${index}.quantity`)}
                         inputMode="decimal"
-                        className="text-right"
-                        aria-label={`Line ${index + 1} quantity`}
+                        className="text-end"
+                        aria-label={t("form.lineQuantity", { line: index + 1 })}
                         aria-invalid={!!rowErrors?.quantity}
                       />
                       {rowErrors?.quantity?.message && (
@@ -355,8 +364,8 @@ function InvoiceFormBody({
                         {...form.register(`items.${index}.unit_price`)}
                         inputMode="decimal"
                         placeholder="0.00"
-                        className="text-right"
-                        aria-label={`Line ${index + 1} unit price in dollars`}
+                        className="text-end"
+                        aria-label={t("form.lineUnitPrice", { line: index + 1 })}
                         aria-invalid={!!rowErrors?.unit_price}
                       />
                       {rowErrors?.unit_price?.message && (
@@ -374,16 +383,16 @@ function InvoiceFormBody({
                           <Checkbox
                             checked={field.value}
                             onCheckedChange={(checked) => field.onChange(checked === true)}
-                            aria-label={`Line ${index + 1} attracts ${taxLabel}`}
+                            aria-label={t("form.lineTax", { line: index + 1, tax: taxLabel })}
                           />
-                          <span className="ml-1.5 text-xs text-muted-foreground md:hidden">
+                          <span className="ms-1.5 text-xs text-muted-foreground md:hidden">
                             {taxLabel}
                           </span>
                         </div>
                       )}
                     />
 
-                    <span className="ml-auto flex h-9 items-center text-sm font-medium tabular-nums md:order-6 md:ml-0 md:justify-end">
+                    <span className="ms-auto flex h-9 items-center text-sm font-medium tabular-nums md:order-6 md:ms-0 md:justify-end">
                       {amount !== null ? formatCents(amount) : "—"}
                     </span>
 
@@ -395,7 +404,7 @@ function InvoiceFormBody({
                         className="size-9 text-muted-foreground hover:text-destructive"
                         disabled={itemsArray.fields.length === 1}
                         onClick={() => itemsArray.remove(index)}
-                        aria-label={`Remove line ${index + 1}`}
+                        aria-label={t("form.removeLine", { line: index + 1 })}
                       >
                         <XIcon />
                       </Button>
@@ -415,12 +424,12 @@ function InvoiceFormBody({
         </div>
 
         <Field data-invalid={!!form.formState.errors.notes || undefined}>
-          <FieldLabel htmlFor="invoice-notes">Notes</FieldLabel>
+          <FieldLabel htmlFor="invoice-notes">{tc("labels.notes")}</FieldLabel>
           <Textarea
             id="invoice-notes"
             {...form.register("notes")}
             rows={2}
-            placeholder="Shown on the invoice email (optional)"
+            placeholder={t("form.notesPlaceholder")}
             aria-invalid={!!form.formState.errors.notes}
           />
           {form.formState.errors.notes?.message && (
@@ -429,12 +438,14 @@ function InvoiceFormBody({
         </Field>
 
         <Field data-invalid={!!form.formState.errors.payment_instructions || undefined}>
-          <FieldLabel htmlFor="invoice-payment-instructions">Payment instructions</FieldLabel>
+          <FieldLabel htmlFor="invoice-payment-instructions">
+            {t("labels.paymentInstructions")}
+          </FieldLabel>
           <Textarea
             id="invoice-payment-instructions"
             {...form.register("payment_instructions")}
             rows={2}
-            placeholder="Direct deposit — BSB, account number, reference…"
+            placeholder={t("form.paymentInstructionsPlaceholder")}
             aria-invalid={!!form.formState.errors.payment_instructions}
           />
           {form.formState.errors.payment_instructions?.message && (
@@ -447,17 +458,17 @@ function InvoiceFormBody({
       <div className="flex justify-end border-t border-border pt-3">
         <dl className="flex w-64 flex-col gap-1 text-sm">
           <div className="flex justify-between">
-            <dt className="text-muted-foreground">Subtotal</dt>
+            <dt className="text-muted-foreground">{tc("labels.subtotal")}</dt>
             <dd className="tabular-nums">{formatCents(totals.subtotal_cents)}</dd>
           </div>
           <div className="flex justify-between">
             <dt className="text-muted-foreground">
-              {taxLabel} ({taxPercent}%)
+              {t("labels.taxLine", { label: taxLabel, rate: taxPercent })}
             </dt>
             <dd className="tabular-nums">{formatCents(totals.tax_cents)}</dd>
           </div>
           <div className="flex justify-between text-base font-semibold">
-            <dt>Total</dt>
+            <dt>{tc("labels.total")}</dt>
             <dd className="tabular-nums">{formatCents(totals.total_cents)}</dd>
           </div>
         </dl>
@@ -471,10 +482,14 @@ function InvoiceFormBody({
 
       <DialogFooter>
         <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-          Cancel
+          {tc("actions.cancel")}
         </Button>
         <Button type="submit" form="invoice-form" disabled={saving}>
-          {saving ? "Saving…" : editing ? "Save changes" : "Create draft"}
+          {saving
+            ? tc("actions.saving")
+            : editing
+              ? tc("actions.saveChanges")
+              : t("actions.createDraft")}
         </Button>
       </DialogFooter>
     </>
@@ -498,6 +513,7 @@ export function InvoiceFormDialog({
   invoice?: Invoice;
   onSaved?: (invoice: Invoice) => void;
 }) {
+  const t = useTranslations("invoices");
   const { business } = useBusiness();
   const settingsQuery = useModuleSettings<InvoiceModuleSettings>(business.id, "invoices");
 
@@ -505,11 +521,11 @@ export function InvoiceFormDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="flex max-h-[90vh] flex-col sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>{invoice ? `Edit invoice ${invoice.number}` : "New invoice"}</DialogTitle>
+          <DialogTitle>
+            {invoice ? t("form.editTitle", { number: invoice.number }) : t("newInvoice")}
+          </DialogTitle>
           <DialogDescription>
-            {invoice
-              ? "Drafts stay editable until you send them."
-              : "Raise a draft, then send it when you're ready."}
+            {invoice ? t("form.editDescription") : t("form.newDescription")}
           </DialogDescription>
         </DialogHeader>
 

@@ -1,0 +1,329 @@
+{
+  "shared": {
+    "allAgents": "All agents",
+    "selectedAgents": "{count, plural, one {# selected} other {# selected}}",
+    "rowActions": "Actions for {name}",
+    "toggleAvailability": "Toggle availability of {name}",
+    "filterByAvailability": "Filter by availability",
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "price": "Price",
+    "agents": "Agents",
+    "nothingExtracted": "Nothing usable was extracted from that source.",
+    "reviewDraft": "Review draft",
+    "charCount": "{length} / {max}",
+    "descriptionPlaceholder": "What's included, who it's for, what makes it different…",
+    "faqAttachFailed": "Couldn't add FAQ \"{question}\": {message}",
+    "fileTooLarge": "The file must be 10 MB or smaller.",
+    "chooseFile": "Choose file",
+    "steps": {
+      "details": "Details",
+      "pricing": "Pricing",
+      "faqs": "FAQs",
+      "agents": "Agents",
+      "content": "Content"
+    }
+  },
+  "services": {
+    "title": "Services",
+    "description": "What your business offers and how your AI talks about it.",
+    "extract": {
+      "title": "Extract services",
+      "description": "Pull your service list from your website or a document. You review every row before anything is added."
+    },
+    "add": "Add service",
+    "searchPlaceholder": "Search services",
+    "loadError": "Couldn't load services",
+    "noMatches": "No services match your search.",
+    "empty": {
+      "title": "Add your first service",
+      "description": "Services tell your AI what the business offers, what it costs and how long it takes."
+    },
+    "deleteDialog": {
+      "title": "Delete {name}?",
+      "description": "Your AI will no longer know about this service. This can't be undone."
+    },
+    "review": {
+      "title": "Review extracted services",
+      "addCount": "{count, plural, =0 {Add} one {Add # service} other {Add # services}}",
+      "addedCount": "{count, plural, one {# service added} other {# services added}}"
+    },
+    "modal": {
+      "editTitle": "Edit service",
+      "namePlaceholder": "Gutter cleaning",
+      "availableHint": "Unavailable services stay listed here but your AI won't offer them."
+    },
+    "toasts": {
+      "added": "Service added",
+      "saved": "Service saved",
+      "deleted": "Service deleted"
+    }
+  },
+  "products": {
+    "title": "Products",
+    "description": "Products your AI can discuss and quote on calls.",
+    "extract": {
+      "title": "Extract products",
+      "description": "Pull your product list from your website or a document. You review every row before anything is added."
+    },
+    "add": "Add product",
+    "searchPlaceholder": "Search products",
+    "loadError": "Couldn't load products",
+    "noMatches": "No products match your search.",
+    "empty": {
+      "title": "Add your first product",
+      "description": "Products give your AI the catalog it can discuss and quote. Add them one by one or import a spreadsheet."
+    },
+    "deleteDialog": {
+      "title": "Delete {name}?",
+      "description": "Your AI will no longer know about this product. This can't be undone."
+    },
+    "review": {
+      "title": "Review extracted products",
+      "addCount": "{count, plural, =0 {Add} one {Add # product} other {Add # products}}",
+      "addedCount": "{count, plural, one {# product added} other {# products added}}"
+    },
+    "modal": {
+      "editTitle": "Edit product",
+      "namePlaceholder": "Colorbond gutter guard",
+      "availableHint": "Unavailable products stay listed here but your AI won't offer them."
+    },
+    "toasts": {
+      "added": "Product added",
+      "saved": "Product saved",
+      "deleted": "Product deleted"
+    },
+    "import": {
+      "title": "Import products",
+      "mapDescription": "Match your spreadsheet columns to product fields.",
+      "uploadDescription": "Upload a spreadsheet — CSV, TXT, XLS or XLSX, up to 10 MB.",
+      "invalidFileType": "Use a CSV, TXT, XLS or XLSX file.",
+      "matchHint": "Rows are matched to existing products by name.",
+      "column": "Column {number}",
+      "headerRow": "The first row contains column headings",
+      "notImported": "Not imported",
+      "priceHint": "One price column sets a fixed price; minimum + maximum make a range; a price message becomes a custom message. Imported products start enabled for all agents.",
+      "started": "Import started — you'll get a summary by email.",
+      "expired": "The upload expired — choose the file again.",
+      "fields": {
+        "priceSingle": "Price (single)",
+        "priceMin": "Price minimum",
+        "priceMax": "Price maximum",
+        "priceMessage": "Price message"
+      }
+    }
+  },
+  "faqs": {
+    "title": "FAQs",
+    "description": "Questions and answers your AI uses to help callers.",
+    "extract": {
+      "title": "Extract FAQs",
+      "description": "Pull questions and answers from your website or a document. You review every row before anything is added."
+    },
+    "add": "Add FAQ",
+    "manageCategories": "Manage categories",
+    "loadError": "Couldn't load FAQs",
+    "noneInCategory": "No FAQs in this category.",
+    "empty": {
+      "title": "Add your first FAQ",
+      "description": "These apply business-wide. FAQs created inside a service or product live with that item instead."
+    },
+    "noCategory": "No category",
+    "question": "Question",
+    "answer": "Answer",
+    "category": "Category",
+    "questionPlaceholder": "Do you offer free quotes?",
+    "answerPlaceholder": "Yes — we quote most jobs within one business day…",
+    "deleteDialog": {
+      "title": "Delete this FAQ?",
+      "description": "Your AI will stop using this answer. This can't be undone."
+    },
+    "review": {
+      "title": "Review extracted FAQs",
+      "addCount": "{count, plural, =0 {Add} one {Add # FAQ} other {Add # FAQs}}",
+      "addedCount": "{count, plural, one {# FAQ added} other {# FAQs added}}"
+    },
+    "modal": {
+      "editTitle": "Edit FAQ"
+    },
+    "owned": {
+      "description": "This copy belongs to this item only."
+    },
+    "categories": {
+      "title": "FAQ categories",
+      "description": "Group FAQs so they're easier to manage.",
+      "newPlaceholder": "New category",
+      "saveName": "Save name",
+      "cancelRename": "Cancel rename",
+      "rename": "Rename {name}",
+      "delete": "Delete {name}",
+      "empty": "No categories yet.",
+      "deleteDialog": {
+        "title": "Delete {name}?",
+        "description": "FAQs in this category keep their answers but lose the category."
+      }
+    },
+    "toasts": {
+      "added": "FAQ added",
+      "saved": "FAQ saved",
+      "deleted": "FAQ deleted",
+      "categoryDeleted": "Category deleted"
+    }
+  },
+  "policies": {
+    "title": "Policies",
+    "description": "Business policies your AI follows and explains to callers.",
+    "extract": {
+      "title": "Extract policies",
+      "description": "Pull policies from your website or a document. You review every row before anything is added."
+    },
+    "add": "Add policy",
+    "loadError": "Couldn't load policies",
+    "empty": {
+      "title": "Add your first policy",
+      "description": "Cancellations, refunds, warranties — the rules your AI should follow and explain."
+    },
+    "deleteDialog": {
+      "title": "Delete {name}?",
+      "description": "Your AI will stop following this policy. This can't be undone."
+    },
+    "review": {
+      "title": "Review extracted policies",
+      "addCount": "{count, plural, =0 {Add} one {Add # policy} other {Add # policies}}",
+      "addedCount": "{count, plural, one {# policy added} other {# policies added}}"
+    },
+    "modal": {
+      "editTitle": "Edit policy",
+      "namePlaceholder": "Cancellation policy",
+      "content": "Content",
+      "contentPlaceholder": "Bookings can be cancelled up to 24 hours ahead for a full refund…"
+    },
+    "toasts": {
+      "added": "Policy added",
+      "saved": "Policy saved",
+      "deleted": "Policy deleted"
+    }
+  },
+  "docs": {
+    "title": "Docs",
+    "description": "Documents that feed your AI's knowledge base.",
+    "add": "Add doc",
+    "loadError": "Couldn't load docs",
+    "empty": {
+      "title": "Add your first doc",
+      "description": "Upload a file, point at a web page, or paste text — your AI reads it all."
+    },
+    "source": {
+      "uploadedFile": "Uploaded file",
+      "webPage": "Web page",
+      "pastedText": "Pasted text",
+      "fromIntegrationFeed": "From {provider} — {feed}",
+      "fromProvider": "From {provider}",
+      "fromIntegration": "From integration"
+    },
+    "status": {
+      "ready": "Ready",
+      "error": "Error",
+      "uploading": "Uploading",
+      "processing": "Processing"
+    },
+    "deleteDialog": {
+      "title": "Delete {name}?",
+      "description": "Your AI will lose this knowledge. This can't be undone."
+    },
+    "form": {
+      "namePlaceholder": "Pricing guide",
+      "descriptionOptional": "Description (optional)",
+      "descriptionPlaceholder": "What this doc covers — helps you and your AI find it.",
+      "fileTypesHint": "PDF, DOCX, TXT, MD or HTML — up to 10 MB",
+      "invalidFileType": "Use a PDF, DOCX, TXT, MD or HTML file.",
+      "fileRequired": "Choose a file to upload.",
+      "content": "Content"
+    },
+    "create": {
+      "sourceStep": "Source",
+      "sources": {
+        "textTitle": "Paste text",
+        "textDescription": "Type or paste the content.",
+        "fileTitle": "Upload file",
+        "fileDescription": "PDF, DOCX, TXT, MD or HTML.",
+        "urlTitle": "Extract from URL",
+        "urlDescription": "AI reads a web page."
+      },
+      "pageUrl": "Page URL",
+      "urlHint": "We'll fetch the page and clean it up with AI — you can review and edit the content once it's ready.",
+      "text": "Text",
+      "textPlaceholder": "Paste the document's contents — your AI reads all of it."
+    },
+    "edit": {
+      "title": "Edit doc",
+      "fileStep": "File",
+      "urlPreparing": "The content is still being prepared — you can edit it once it's ready.",
+      "urlNotEditable": "Content for this doc is fetched from the source URL by the voice engine and can't be edited here.",
+      "fileNotEditable": "File content can't be edited inline — upload a new version to replace it.",
+      "chooseReplacement": "Choose replacement",
+      "replacesOnSave": "{name} — replaces on save"
+    },
+    "view": {
+      "integrationWithFeed": "From {provider} — {feed}. Content refreshes automatically and is managed from the Integrations section.",
+      "integrationNoFeed": "From {provider}. Content refreshes automatically and is managed from the Integrations section.",
+      "anIntegration": "an integration",
+      "urlPreparing": "We're reading the page and preparing the content — check back in a moment.",
+      "urlNotStored": "This doc is fetched directly from the source by the voice engine — its content isn't stored here. Add it again to get an editable copy.",
+      "openFile": "Open file",
+      "fileSize": {
+        "bytes": "{size} B",
+        "kilobytes": "{size} KB",
+        "megabytes": "{size} MB"
+      }
+    },
+    "toasts": {
+      "added": "Doc added — it'll be ready shortly",
+      "saved": "Doc saved",
+      "savedResyncing": "Doc saved — re-syncing now",
+      "deleted": "Doc deleted"
+    }
+  },
+  "integrations": {
+    "title": "Integrations",
+    "description": "Connect external platforms that feed your AI's knowledge.",
+    "loadError": "Couldn't load integrations",
+    "providerDescriptions": {
+      "realestateComAu": "Get property listings to feed your AI agents.",
+      "fallback": "Feeds your AI listings and data straight from {name}."
+    },
+    "status": {
+      "notConnected": "Not connected",
+      "connecting": "Connecting",
+      "connectingHint": "Finishing the first sync — this usually takes a few seconds.",
+      "error": "Error",
+      "errorHint": "Check the settings under Manage to retry.",
+      "connected": "Connected",
+      "lastSynced": "Last synced {date}"
+    },
+    "actions": {
+      "manage": "Manage",
+      "connect": "Connect",
+      "disconnect": "Disconnect"
+    },
+    "disconnectDialog": {
+      "title": "Disconnect {name}?",
+      "description": "Its property listings are removed from your AI's knowledge and its feeds stop updating."
+    },
+    "dialog": {
+      "manageTitle": "Manage {name}",
+      "connectTitle": "Connect {name}",
+      "manageDescription": "Changes re-run the sync straight away. Feeds you untick have their listings removed from your AI's knowledge.",
+      "connectDescription": "Enter your agency ID and choose which listing feeds keep your AI up to date.",
+      "agencyId": "Agency ID",
+      "agencyIdPlaceholder": "e.g. XNWXYZ",
+      "agencyIdHint": "Your realestate.com.au agency identifier — your account manager or Agency Admin can provide it.",
+      "feeds": "Listing feeds",
+      "saveResync": "Save & re-sync"
+    },
+    "toasts": {
+      "settingsSaved": "Settings saved — re-syncing now",
+      "connected": "{name} connected — syncing your listings now"
+    }
+  }
+}

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { CheckIcon, PrinterIcon, XIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -25,6 +26,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { LanguagePicker } from "@/components/language-picker";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   Table,
@@ -52,17 +54,22 @@ function displayQuantity(quantity: string): string {
 }
 
 function StatusBanner({ quote }: { quote: PublicQuote }) {
+  const t = useTranslations("publicQuote");
   const timeZone = quote.business.timezone;
+  const business = quote.business.name;
 
   if (quote.status === "accepted") {
     return (
       <Alert variant="success" className="print:hidden">
         <CheckIcon />
-        <AlertTitle>Quote accepted</AlertTitle>
+        <AlertTitle>{t("status.accepted.title")}</AlertTitle>
         <AlertDescription>
           {quote.accepted_at
-            ? `Accepted on ${formatDateTime(quote.accepted_at, timeZone)}. ${quote.business.name} will be in touch to get things moving.`
-            : `${quote.business.name} will be in touch to get things moving.`}
+            ? t("status.accepted.bodyWithDate", {
+                date: formatDateTime(quote.accepted_at, timeZone),
+                business,
+              })
+            : t("status.accepted.body", { business })}
         </AlertDescription>
       </Alert>
     );
@@ -72,11 +79,8 @@ function StatusBanner({ quote }: { quote: PublicQuote }) {
     return (
       <Alert className="print:hidden">
         <XIcon />
-        <AlertTitle>Quote declined</AlertTitle>
-        <AlertDescription>
-          You declined this quote. Changed your mind? Contact {quote.business.name} for a fresh
-          one.
-        </AlertDescription>
+        <AlertTitle>{t("status.declined.title")}</AlertTitle>
+        <AlertDescription>{t("status.declined.body", { business })}</AlertDescription>
       </Alert>
     );
   }
@@ -84,12 +88,14 @@ function StatusBanner({ quote }: { quote: PublicQuote }) {
   if (quote.status === "expired") {
     return (
       <Alert variant="warning" className="print:hidden">
-        <AlertTitle>This quote has expired</AlertTitle>
+        <AlertTitle>{t("status.expired.title")}</AlertTitle>
         <AlertDescription>
           {quote.valid_until
-            ? `It was valid until ${formatDateKey(quote.valid_until)}. `
-            : ""}
-          Contact {quote.business.name} and they can re-issue it.
+            ? t("status.expired.bodyWithDate", {
+                date: formatDateKey(quote.valid_until),
+                business,
+              })
+            : t("status.expired.body", { business })}
         </AlertDescription>
       </Alert>
     );
@@ -98,10 +104,8 @@ function StatusBanner({ quote }: { quote: PublicQuote }) {
   if (quote.status === "void") {
     return (
       <Alert className="print:hidden">
-        <AlertTitle>This quote has been withdrawn</AlertTitle>
-        <AlertDescription>
-          Contact {quote.business.name} if you were expecting to accept it.
-        </AlertDescription>
+        <AlertTitle>{t("status.void.title")}</AlertTitle>
+        <AlertDescription>{t("status.void.body", { business })}</AlertDescription>
       </Alert>
     );
   }
@@ -118,34 +122,41 @@ function AcceptDialog({
   token: string;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("publicQuote");
   const accept = useAcceptPublicQuote(token);
 
   const confirm = () => {
     accept.mutate(undefined, {
-      onSuccess: () => toast.success("Quote accepted — thank you!"),
+      onSuccess: () => toast.success(t("accept.toasts.accepted")),
       onError: (error) => toast.error(error.message),
       onSettled: () => onOpenChange(false),
     });
+  };
+
+  const summary = {
+    number: quote.number,
+    business: quote.business.name,
+    total: formatCents(quote.total_cents, quote.currency),
   };
 
   return (
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Accept this quote?</AlertDialogTitle>
+          <AlertDialogTitle>{t("accept.title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            You&apos;re accepting quote {quote.number} from {quote.business.name} for{" "}
-            {formatCents(quote.total_cents, quote.currency)}
             {quote.deposit_cents > 0
-              ? `, with ${formatCents(quote.deposit_cents, quote.currency)} payable to commence`
-              : ""}
-            . {quote.business.name} will be notified right away.
+              ? t("accept.descriptionWithDeposit", {
+                  ...summary,
+                  deposit: formatCents(quote.deposit_cents, quote.currency),
+                })
+              : t("accept.description", summary)}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Not yet</AlertDialogCancel>
+          <AlertDialogCancel>{t("accept.notYet")}</AlertDialogCancel>
           <AlertDialogAction disabled={accept.isPending} onClick={confirm}>
-            {accept.isPending ? "Accepting…" : "Accept quote"}
+            {accept.isPending ? t("accept.accepting") : t("accept.action")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
@@ -162,6 +173,8 @@ function DeclineDialog({
   token: string;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("publicQuote");
+  const tc = useTranslations("common");
   const decline = useDeclinePublicQuote(token);
   const [reason, setReason] = useState("");
 
@@ -170,7 +183,7 @@ function DeclineDialog({
     decline.mutate(
       { ...(trimmed !== "" ? { reason: trimmed } : {}) },
       {
-        onSuccess: () => toast.success("No worries — the quote has been declined."),
+        onSuccess: () => toast.success(t("decline.toasts.declined")),
         onError: (error) => toast.error(error.message),
         onSettled: () => onOpenChange(false),
       }
@@ -181,29 +194,28 @@ function DeclineDialog({
     <Dialog open onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Decline this quote</DialogTitle>
+          <DialogTitle>{t("decline.title")}</DialogTitle>
           <DialogDescription>
-            Lets {quote.business.name} know you won&apos;t be going ahead with quote{" "}
-            {quote.number}.
+            {t("decline.description", { business: quote.business.name, number: quote.number })}
           </DialogDescription>
         </DialogHeader>
 
         <Field>
-          <FieldLabel htmlFor="public-decline-reason">Reason</FieldLabel>
+          <FieldLabel htmlFor="public-decline-reason">{t("decline.reason")}</FieldLabel>
           <Textarea
             id="public-decline-reason"
             value={reason}
             onChange={(event) => setReason(event.target.value)}
             rows={3}
             maxLength={500}
-            placeholder="Optional — helps them quote you better next time"
+            placeholder={t("decline.reasonPlaceholder")}
           />
-          <FieldDescription>Optional.</FieldDescription>
+          <FieldDescription>{t("decline.reasonHint")}</FieldDescription>
         </Field>
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             type="button"
@@ -211,7 +223,7 @@ function DeclineDialog({
             onClick={submit}
             disabled={decline.isPending}
           >
-            {decline.isPending ? "Declining…" : "Decline quote"}
+            {decline.isPending ? t("decline.declining") : t("decline.action")}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -233,13 +245,11 @@ function LoadingDocument() {
 }
 
 function DeadLink() {
+  const t = useTranslations("publicQuote");
   return (
     <div className="flex flex-col items-center gap-2 py-24 text-center">
-      <h1 className="font-heading text-2xl font-semibold">This quote link isn&apos;t valid</h1>
-      <p className="max-w-sm text-sm text-muted-foreground">
-        The link may have been mistyped, or the quote is no longer available. Check the link in
-        your email, or contact the business that sent it.
-      </p>
+      <h1 className="font-heading text-2xl font-semibold">{t("deadLink.title")}</h1>
+      <p className="max-w-sm text-sm text-muted-foreground">{t("deadLink.body")}</p>
     </div>
   );
 }
@@ -254,6 +264,11 @@ export function PublicQuoteView() {
   return (
     <div className="min-h-screen bg-muted/40 print:bg-transparent">
       <div className="mx-auto flex max-w-3xl flex-col gap-4 px-4 py-8 sm:py-12 print:max-w-none print:p-0">
+        {/* Customers land here without an account — the language choice lives on the page. */}
+        <div className="flex items-center print:hidden">
+          <LanguagePicker className="ms-auto" />
+        </div>
+
         {quoteQuery.isPending && <LoadingDocument />}
 
         {quoteQuery.isError && <DeadLink />}
@@ -298,6 +313,8 @@ function QuoteDocument({
   onAccept: () => void;
   onDecline: () => void;
 }) {
+  const t = useTranslations("publicQuote");
+  const tc = useTranslations("common");
   const currency = quote.currency;
   const live = quote.status === "sent";
 
@@ -313,7 +330,7 @@ function QuoteDocument({
               // eslint-disable-next-line @next/next/no-img-element -- external host (backend media), unoptimized on purpose
               <img
                 src={quote.business.logo_url}
-                alt={`${quote.business.name} logo`}
+                alt={t("document.logoAlt", { business: quote.business.name })}
                 className="size-12 rounded-lg object-contain"
               />
             ) : null}
@@ -334,7 +351,9 @@ function QuoteDocument({
             </div>
           </div>
           <div className="flex flex-col items-end">
-            <span className="text-xs tracking-widest text-muted-foreground uppercase">Quote</span>
+            <span className="text-xs tracking-widest text-muted-foreground uppercase">
+              {t("document.quote")}
+            </span>
             <span className="font-heading text-xl font-semibold tracking-wide">
               {quote.number}
             </span>
@@ -348,17 +367,17 @@ function QuoteDocument({
           )}
           <dl className="grid grid-cols-2 gap-x-6 gap-y-3 rounded-2xl bg-muted/50 p-4 sm:grid-cols-3 print:bg-transparent print:p-0">
             <div className="flex flex-col gap-0.5">
-              <dt className="text-xs text-muted-foreground">Prepared for</dt>
+              <dt className="text-xs text-muted-foreground">{t("document.preparedFor")}</dt>
               <dd className="text-sm font-medium">{quote.contact.name}</dd>
             </div>
             <div className="flex flex-col gap-0.5">
-              <dt className="text-xs text-muted-foreground">Issued</dt>
+              <dt className="text-xs text-muted-foreground">{t("document.issued")}</dt>
               <dd className="text-sm font-medium">
                 {quote.issue_date ? formatDateKey(quote.issue_date) : "—"}
               </dd>
             </div>
             <div className="flex flex-col gap-0.5">
-              <dt className="text-xs text-muted-foreground">Valid until</dt>
+              <dt className="text-xs text-muted-foreground">{t("document.validUntil")}</dt>
               <dd className="text-sm font-medium">
                 {quote.valid_until ? formatDateKey(quote.valid_until) : "—"}
               </dd>
@@ -372,10 +391,10 @@ function QuoteDocument({
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Description</TableHead>
-                  <TableHead className="text-right">Qty</TableHead>
-                  <TableHead className="text-right">Unit</TableHead>
-                  <TableHead className="text-right">Amount</TableHead>
+                  <TableHead>{tc("labels.description")}</TableHead>
+                  <TableHead className="text-end">{t("document.qty")}</TableHead>
+                  <TableHead className="text-end">{t("document.unit")}</TableHead>
+                  <TableHead className="text-end">{t("document.amount")}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -384,13 +403,13 @@ function QuoteDocument({
                     <TableCell className="max-w-72 whitespace-normal">
                       {item.description}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">
+                    <TableCell className="text-end tabular-nums">
                       {displayQuantity(item.quantity)}
                     </TableCell>
-                    <TableCell className="text-right tabular-nums">
+                    <TableCell className="text-end tabular-nums">
                       {formatCents(item.unit_price_cents, currency)}
                     </TableCell>
-                    <TableCell className="text-right font-medium tabular-nums">
+                    <TableCell className="text-end font-medium tabular-nums">
                       {formatCents(item.amount_cents, currency)}
                     </TableCell>
                   </TableRow>
@@ -402,7 +421,7 @@ function QuoteDocument({
           <div className="flex justify-end">
             <dl className="flex w-64 flex-col gap-1.5 text-sm">
               <div className="flex justify-between">
-                <dt className="text-muted-foreground">Subtotal</dt>
+                <dt className="text-muted-foreground">{tc("labels.subtotal")}</dt>
                 <dd className="tabular-nums">{formatCents(quote.subtotal_cents, currency)}</dd>
               </div>
               <div className="flex justify-between">
@@ -410,14 +429,15 @@ function QuoteDocument({
                 <dd className="tabular-nums">{formatCents(quote.tax_cents, currency)}</dd>
               </div>
               <div className="flex justify-between border-t border-border pt-1.5 text-base font-semibold">
-                <dt>Total</dt>
+                <dt>{tc("labels.total")}</dt>
                 <dd className="tabular-nums">{formatCents(quote.total_cents, currency)}</dd>
               </div>
               {quote.deposit_cents > 0 && (
                 <div className="flex justify-between text-xs text-muted-foreground">
                   <dt>
-                    Deposit to commence
-                    {quote.deposit_type === "percent" ? ` (${quote.deposit_value}%)` : ""}
+                    {quote.deposit_type === "percent"
+                      ? t("document.depositPercent", { percent: String(quote.deposit_value) })
+                      : t("document.deposit")}
                   </dt>
                   <dd className="tabular-nums">
                     {formatCents(quote.deposit_cents, currency)}
@@ -430,14 +450,14 @@ function QuoteDocument({
 
         {quote.notes && (
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-sm font-semibold">Notes</h2>
+            <h2 className="text-sm font-semibold">{tc("labels.notes")}</h2>
             <p className="text-sm whitespace-pre-wrap text-muted-foreground">{quote.notes}</p>
           </div>
         )}
 
         {quote.terms && (
           <div className="flex flex-col gap-1.5">
-            <h2 className="text-sm font-semibold">Terms</h2>
+            <h2 className="text-sm font-semibold">{t("document.terms")}</h2>
             <p className="text-sm whitespace-pre-wrap text-muted-foreground">{quote.terms}</p>
           </div>
         )}
@@ -453,7 +473,7 @@ function QuoteDocument({
       <div className="flex flex-wrap items-center justify-end gap-2 print:hidden">
         <Button variant="ghost" size="sm" onClick={() => window.print()}>
           <PrinterIcon />
-          Print or save PDF
+          {t("document.print")}
         </Button>
         {live && (
           <>
@@ -463,11 +483,11 @@ function QuoteDocument({
               onClick={onDecline}
             >
               <XIcon />
-              Decline
+              {t("decline.button")}
             </Button>
             <Button size="lg" onClick={onAccept}>
               <CheckIcon />
-              Accept quote
+              {t("accept.action")}
             </Button>
           </>
         )}

@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -19,6 +21,7 @@ import { useBusiness } from "@/components/business/business-provider";
 import { useFaqCategories } from "@/hooks/use-faq-categories";
 import { useCreateFaq, useUpdateFaq } from "@/hooks/use-faqs";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import { displayLocale } from "@/lib/i18n/runtime";
 import type { Faq, FaqPayload } from "@/lib/api/types";
 import { faqSchema, toFaqPayload, toFaqValues, type FaqValues } from "@/lib/validation/faq";
 
@@ -38,12 +41,15 @@ export function FaqModal({
   onSubmitOverride?: (payload: FaqPayload) => void;
 }) {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.faqs");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
   const categoriesQuery = useFaqCategories(business.id);
 
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows the category's uuid.
   const categoryItems = [
-    { value: "none", label: "No category" },
+    { value: "none", label: t("noCategory") },
     ...(categoriesQuery.data ?? []).map((category) => ({
       value: category.id,
       label: category.name,
@@ -53,11 +59,21 @@ export function FaqModal({
   const update = useUpdateFaq(business.id);
 
   const editing = Boolean(source && "id" in source);
-  const title = onSubmitOverride ? "Review draft" : editing ? "Edit FAQ" : "Add FAQ";
-  const submitLabel = onSubmitOverride ? "Apply" : editing ? "Save changes" : "Add FAQ";
+  const title = onSubmitOverride
+    ? ts("reviewDraft")
+    : editing
+      ? t("modal.editTitle")
+      : t("add");
+  const submitLabel = onSubmitOverride
+    ? tc("actions.apply")
+    : editing
+      ? tc("actions.saveChanges")
+      : t("add");
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => faqSchema(tv), [tv]);
   const form = useForm<FaqValues>({
-    resolver: zodResolver(faqSchema),
+    resolver: zodResolver(schema),
     defaultValues: toFaqValues(source),
   });
   const { errors } = form.formState;
@@ -75,7 +91,7 @@ export function FaqModal({
         { id: (source as Faq).id, payload },
         {
           onSuccess: () => {
-            toast.success("FAQ saved");
+            toast.success(t("toasts.saved"));
             onOpenChange(false);
           },
           onError: (error) => applyServerErrors(form, error),
@@ -84,7 +100,7 @@ export function FaqModal({
     } else {
       create.mutate(payload, {
         onSuccess: () => {
-          toast.success("FAQ added");
+          toast.success(t("toasts.added"));
           onOpenChange(false);
         },
         onError: (error) => applyServerErrors(form, error),
@@ -104,15 +120,15 @@ export function FaqModal({
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Content",
+            title: ts("steps.content"),
             fields: ["question", "answer", "faq_category_id"],
             content: (
               <>
                 <Field data-invalid={!!errors.question || undefined}>
-                  <FieldLabel htmlFor="faq-question">Question</FieldLabel>
+                  <FieldLabel htmlFor="faq-question">{t("question")}</FieldLabel>
                   <Input
                     id="faq-question"
-                    placeholder="Do you offer free quotes?"
+                    placeholder={t("questionPlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.question}
                     {...form.register("question")}
@@ -121,22 +137,25 @@ export function FaqModal({
                 </Field>
 
                 <Field data-invalid={!!errors.answer || undefined}>
-                  <FieldLabel htmlFor="faq-answer">Answer</FieldLabel>
+                  <FieldLabel htmlFor="faq-answer">{t("answer")}</FieldLabel>
                   <Textarea
                     id="faq-answer"
                     className="min-h-40"
-                    placeholder="Yes — we quote most jobs within one business day…"
+                    placeholder={t("answerPlaceholder")}
                     aria-invalid={!!errors.answer}
                     {...form.register("answer")}
                   />
-                  <p className="text-right text-sm text-muted-foreground">
-                    {answerLength.toLocaleString()} / 5,000
+                  <p className="text-end text-sm text-muted-foreground">
+                    {ts("charCount", {
+                      length: answerLength.toLocaleString(displayLocale()),
+                      max: (5000).toLocaleString(displayLocale()),
+                    })}
                   </p>
                   {errors.answer && <FieldError>{errors.answer.message}</FieldError>}
                 </Field>
 
                 <Field>
-                  <FieldLabel htmlFor="faq-category">Category</FieldLabel>
+                  <FieldLabel htmlFor="faq-category">{t("category")}</FieldLabel>
                   <Controller
                     control={form.control}
                     name="faq_category_id"
@@ -168,7 +187,7 @@ export function FaqModal({
             ),
           },
           {
-            title: "Agents",
+            title: ts("steps.agents"),
             fields: ["agent_scope", "agent_ids"],
             content: <AgentScopeField idPrefix="faq" />,
           },

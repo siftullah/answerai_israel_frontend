@@ -1,0 +1,199 @@
+{
+  "common": {
+    "nameRequired": "Name is required",
+    "firstNameRequired": "First name is required",
+    "lastNameRequired": "Last name is required",
+    "businessNameRequired": "Business name is required",
+    "emailInvalid": "Enter a valid email address",
+    "urlInvalid": "Enter a full URL, including https://",
+    "contactRequired": "Choose a contact",
+    "dateRequired": "Pick a date",
+    "timeRequired": "Pick a time",
+    "fromNumberRequired": "Choose a number to call from",
+    "issueDateFirst": "Set an issue date first, or leave both to fill on send"
+  },
+  "phone": {
+    "required": "Enter a phone number",
+    "invalid": "Enter an Australian phone number, e.g. 0412 345 678"
+  },
+  "length": {
+    "name": "Keep the name under {max, number} characters",
+    "firstName": "Keep the first name under {max, number} characters",
+    "lastName": "Keep the last name under {max, number} characters",
+    "position": "Keep the position under {max, number} characters",
+    "company": "Keep the company under {max, number} characters",
+    "label": "Keep the label under {max, number} characters",
+    "title": "Keep the title under {max, number} characters",
+    "description": "Keep the description under {max, number} characters",
+    "notes": "Keep the notes under {max, number} characters",
+    "internalNotes": "Keep the internal notes under {max, number} characters",
+    "topic": "Keep the topic under {max, number} characters",
+    "reason": "Keep the reason under {max, number} characters",
+    "content": "Keep the content under {max, number} characters",
+    "question": "Keep the question under {max, number} characters",
+    "answer": "Keep the answer under {max, number} characters",
+    "message": "Keep the message under {max, number} characters",
+    "firstMessage": "Keep the first message under {max, number} characters",
+    "prompt": "Keep the prompt under {max, number} characters",
+    "terms": "Keep the terms under {max, number} characters",
+    "paymentInstructions": "Keep the payment instructions under {max, number} characters",
+    "url": "Keep the URL under {max, number} characters",
+    "address": "Keep the address under {max, number} characters",
+    "street": "Keep the street under {max, number} characters",
+    "suburb": "Keep the suburb under {max, number} characters",
+    "state": "Keep the state under {max, number} characters",
+    "postcode": "Keep the postcode under {max, number} characters",
+    "landmark": "Keep the landmark under {max, number} characters",
+    "baseLocation": "Keep the base location under {max, number} characters",
+    "generic": "Keep this under {max, number} characters",
+    "rule": "Keep each rule under {max, number} characters",
+    "category": "Each category must be {max, number} characters or fewer",
+    "agencyId": "Agency ID must be {max, number} characters or fewer",
+    "useFewer": "Use {max, number} characters or fewer"
+  },
+  "count": {
+    "variables": "Up to {max, plural, one {# variable} other {# variables}}",
+    "categories": "Up to {max, plural, one {# category} other {# categories}}",
+    "phoneNumbers": "Up to {max, plural, one {# phone number} other {# phone numbers}}",
+    "emails": "Up to {max, plural, one {# email address} other {# email addresses}}",
+    "tags": "Up to {max, plural, one {# tag} other {# tags}}",
+    "rules": "Up to {max, plural, one {# rule} other {# rules}}",
+    "recipients": "Up to {max, plural, one {# recipient} other {# recipients}} in total"
+  },
+  "range": {
+    "minutes": "Between {min, number} and {max, plural, one {# minute} other {# minutes}}",
+    "minutesWithDays": "Between {min, number} and {max, plural, one {# minute} other {# minutes}} ({days, plural, one {# day} other {# days}})",
+    "days": "Between {min, number} and {max, plural, one {# day} other {# days}}",
+    "bookings": "Between {min, number} and {max, plural, one {# booking} other {# bookings}}"
+  },
+  "weeklyHours": {
+    "windowRequired": "Add at least one time window for {day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}}",
+    "windowOrder": "Each window must end after it starts ({day, select, monday {monday} tuesday {tuesday} wednesday {wednesday} thursday {thursday} friday {friday} saturday {saturday} sunday {sunday} other {{day}}})"
+  },
+  "auth": {
+    "passwordRequired": "Password is required",
+    "passwordMin": "Password must be at least {min, number} characters"
+  },
+  "password": {
+    "currentRequired": "Enter your current password",
+    "min": "At least {min, number} characters",
+    "confirmationRequired": "Confirm your new password",
+    "mismatch": "Passwords don't match"
+  },
+  "agent": {
+    "voiceRequired": "Pick a voice — the agent can't take calls without one.",
+    "variableNameFormat": "Lowercase letters, digits and underscores only (max {max, number})",
+    "variableNameReserved": "This variable name is reserved",
+    "duplicateVariable": "Duplicate variable name",
+    "unknownVariable": "Unknown variable {token} — declare it under Variables or use a built-in."
+  },
+  "business": {
+    "timezoneRequired": "Pick a timezone"
+  },
+  "businessProfile": {
+    "yearRange": "Enter a year between {min} and {max}",
+    "travelRadiusRange": "Enter a distance between {min} and {max} km"
+  },
+  "call": {
+    "agentRequired": "Choose an agent to make the call",
+    "toNumberRequired": "Enter the number to call",
+    "variableValueRequired": "Enter a value for this variable"
+  },
+  "callback": {
+    "teamMemberRequired": "Choose a team member",
+    "outboundAgentRequired": "Choose an outbound agent"
+  },
+  "campaign": {
+    "agentRequired": "Pick an outbound agent",
+    "callerNumberRequired": "Pick a caller number",
+    "numberRequired": "Enter a number",
+    "wholeNumber": "Whole numbers only",
+    "concurrentMin": "At least {min, plural, one {# call} other {# calls}} at a time",
+    "concurrentMax": "At most {max, plural, one {# call} other {# calls}} at a time",
+    "attemptsMin": "At least {min, plural, one {# attempt} other {# attempts}}",
+    "attemptsMax": "At most {max, plural, one {# attempt} other {# attempts}}",
+    "retryDelayMin": "At least {minutes, plural, one {# minute} other {# minutes}} between attempts",
+    "retryDelayMax": "At most {hours, plural, one {# hour} other {# hours}} between attempts",
+    "startDateRequired": "Pick a start date",
+    "startTimeRequired": "Pick a start time",
+    "endDateRequired": "Pick an end date",
+    "endTimeRequired": "Pick an end time",
+    "endBeforeStart": "The end must be after the start"
+  },
+  "contact": {
+    "identityRequired": "Add a name, company or phone number",
+    "primaryRequired": "Mark exactly one as primary"
+  },
+  "dnc": {
+    "numberRequired": "Enter the number to block"
+  },
+  "document": {
+    "textRequired": "Paste the document text",
+    "textTooLong": "That text is too long",
+    "contentRequired": "The document needs some content"
+  },
+  "faq": {
+    "questionRequired": "Question is required",
+    "answerRequired": "Answer is required"
+  },
+  "integration": {
+    "agencyIdRequired": "Agency ID is required",
+    "feedsRequired": "Select at least one feed"
+  },
+  "invoice": {
+    "dueBeforeIssue": "The due date can't be before the issue date"
+  },
+  "job": {
+    "titleRequired": "Give the job a short title",
+    "estimatedMinutesRange": "Enter whole minutes between {min} and {max}",
+    "streetRequired": "Add the street address",
+    "cityRequired": "Add the suburb or city"
+  },
+  "knowledge": {
+    "agentScopeRequired": "Choose at least one agent",
+    "priceTypeRequired": "Choose how this is priced",
+    "priceRequired": "Enter a price",
+    "priceMinRequired": "Enter a minimum",
+    "priceMaxRequired": "Enter a maximum",
+    "priceMaxBelowMin": "Must be at least the minimum",
+    "priceMessageRequired": "Enter what to say instead of a price",
+    "durationUnitRequired": "Choose a unit",
+    "durationRange": "Enter a duration between {min} and {max}"
+  },
+  "lead": {
+    "titleRequired": "Give the lead a short title",
+    "valueInvalid": "Enter an amount like 1500 or 1500.50"
+  },
+  "lineItem": {
+    "descriptionRequired": "Describe the work or part",
+    "quantityInvalid": "Enter a quantity above zero",
+    "unitPriceInvalid": "Enter a price like 180 or 180.50",
+    "itemsRequired": "Add at least one line item"
+  },
+  "member": {
+    "roleRequired": "Choose a role"
+  },
+  "phoneNumber": {
+    "nameRequired": "Give this number a name",
+    "sipNumberRequired": "Enter the number your trunk carries"
+  },
+  "policy": {
+    "contentRequired": "Content is required"
+  },
+  "quote": {
+    "validUntilBeforeIssue": "The validity date can't be before the issue date",
+    "depositPercentRange": "Enter a whole percentage between {min} and {max}",
+    "depositAmountInvalid": "Enter an amount like 250 or 250.50"
+  },
+  "recipientRules": {
+    "emailInvalid": "\"{input}\" isn't a valid email address",
+    "recipientRequired": "Pick at least one recipient."
+  },
+  "transferTarget": {
+    "conditionRequired": "Describe when to transfer here",
+    "postDialDigitsFormat": "Digits, *, # or w only",
+    "memberRequired": "Pick a team member",
+    "memberPhoneMissing": "This member has no saved number — enter one",
+    "memberHoursNeedsMember": "Availability hours needs a linked team member"
+  }
+}

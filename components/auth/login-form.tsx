@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { CircleCheckIcon } from "lucide-react";
@@ -32,8 +34,12 @@ export function LoginForm() {
   const justReset = searchParams.get("reset") === "1";
   const returnTo = safeReturnPath(searchParams.get("return"));
 
+  const t = useTranslations("auth");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => loginSchema(tv), [tv]);
   const form = useForm<LoginValues>({
-    resolver: zodResolver(loginSchema),
+    resolver: zodResolver(schema),
     defaultValues: { email: "", password: "", remember: false },
   });
   const { errors } = form.formState;
@@ -49,23 +55,23 @@ export function LoginForm() {
     <PublicOnly>
       <div className="flex flex-col gap-5">
         <div className="flex flex-col gap-1">
-          <h1 className="font-heading text-2xl font-semibold">Welcome back</h1>
-          <p className="text-sm text-muted-foreground">Log in to your AnswerAI account.</p>
+          <h1 className="font-heading text-2xl font-semibold">{t("login.title")}</h1>
+          <p className="text-sm text-muted-foreground">{t("login.subtitle")}</p>
         </div>
 
         {justVerified && (
           <Alert>
             <CircleCheckIcon />
-            <AlertTitle>Email verified</AlertTitle>
-            <AlertDescription>You can log in now.</AlertDescription>
+            <AlertTitle>{t("login.verifiedAlert.title")}</AlertTitle>
+            <AlertDescription>{t("login.verifiedAlert.description")}</AlertDescription>
           </Alert>
         )}
 
         {justReset && (
           <Alert>
             <CircleCheckIcon />
-            <AlertTitle>Password reset</AlertTitle>
-            <AlertDescription>Log in with your new password.</AlertDescription>
+            <AlertTitle>{t("login.resetAlert.title")}</AlertTitle>
+            <AlertDescription>{t("login.resetAlert.description")}</AlertDescription>
           </Alert>
         )}
 
@@ -78,7 +84,7 @@ export function LoginForm() {
         <form onSubmit={onSubmit} noValidate>
           <FieldGroup className="gap-4">
             <Field data-invalid={!!errors.email || undefined}>
-              <FieldLabel htmlFor="email">Email</FieldLabel>
+              <FieldLabel htmlFor="email">{tc("labels.email")}</FieldLabel>
               <Input
                 id="email"
                 type="email"
@@ -91,12 +97,12 @@ export function LoginForm() {
 
             <Field data-invalid={!!errors.password || undefined}>
               <div className="flex items-center justify-between">
-                <FieldLabel htmlFor="password">Password</FieldLabel>
+                <FieldLabel htmlFor="password">{t("fields.password")}</FieldLabel>
                 <Link
                   href="/forgot-password"
                   className="text-sm text-primary underline-offset-4 hover:underline"
                 >
-                  Forgot password?
+                  {t("login.forgotPassword")}
                 </Link>
               </div>
               <PasswordInput
@@ -121,22 +127,25 @@ export function LoginForm() {
                 )}
               />
               <FieldLabel htmlFor="remember" className="font-normal">
-                Remember me
+                {t("login.rememberMe")}
               </FieldLabel>
             </Field>
 
             <Button type="submit" disabled={login.isPending}>
               {login.isPending && <Spinner />}
-              Log in
+              {t("login.submit")}
             </Button>
           </FieldGroup>
         </form>
 
         <p className="text-center text-sm text-muted-foreground">
-          Don&apos;t have an account?{" "}
-          <Link href="/register" className="text-primary underline-offset-4 hover:underline">
-            Sign up
-          </Link>
+          {t.rich("login.noAccount", {
+            link: (chunks) => (
+              <Link href="/register" className="text-primary underline-offset-4 hover:underline">
+                {chunks}
+              </Link>
+            ),
+          })}
         </p>
       </div>
     </PublicOnly>

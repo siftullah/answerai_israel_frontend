@@ -1,0 +1,152 @@
+{
+  "meta": {
+    "title": "Callbacks"
+  },
+  "labels": {
+    "agent": "Agent",
+    "assignee": "Assignee",
+    "type": "Type",
+    "topic": "Topic",
+    "outcome": "Outcome",
+    "contact": "Contact",
+    "callFrom": "Call from"
+  },
+  "placeholders": {
+    "agent": "Choose an outbound agent",
+    "assignee": "Choose a team member",
+    "number": "Choose a number"
+  },
+  "actions": {
+    "newCallback": "New callback",
+    "viewContact": "View contact",
+    "reschedule": "Reschedule",
+    "rescheduling": "Rescheduling…",
+    "complete": "Complete",
+    "markCompleted": "Mark completed",
+    "completing": "Completing…",
+    "scheduleCallback": "Schedule callback",
+    "scheduling": "Scheduling…",
+    "keepCallback": "Keep callback",
+    "cancelCallback": "Cancel callback"
+  },
+  "toasts": {
+    "scheduled": "Callback scheduled",
+    "updated": "Callback updated",
+    "rescheduled": "Callback rescheduled",
+    "completed": "Callback completed",
+    "canceled": "Callback canceled"
+  },
+  "view": {
+    "title": "Callbacks",
+    "description": "Call-backs promised to callers — dialed by your agents or handled by your team.",
+    "tabs": {
+      "open": "Open",
+      "dueToday": "Due today",
+      "history": "History"
+    },
+    "empty": {
+      "open": {
+        "title": "No open callbacks",
+        "description": "Call-backs your agents promise to callers — and ones you schedule yourself — will show up here."
+      },
+      "dueToday": {
+        "title": "Nothing due today",
+        "description": "Open callbacks scheduled for today will appear here."
+      },
+      "history": {
+        "title": "No callback history yet",
+        "description": "Completed, missed and canceled callbacks land here."
+      },
+      "noMatch": {
+        "title": "No callbacks match",
+        "description": "Try a different search or clear some filters."
+      }
+    }
+  },
+  "list": {
+    "loadFailed": "Couldn't load callbacks"
+  },
+  "badges": {
+    "overdue": "Overdue"
+  },
+  "filters": {
+    "searchPlaceholder": "Search topic or number…",
+    "searchAriaLabel": "Search callbacks by topic or phone number",
+    "filterAriaLabel": "Filter callbacks",
+    "any": "Any",
+    "source": "Source",
+    "overdueOnly": "Overdue only",
+    "removeFilter": "Remove {label} filter",
+    "clearAll": "Clear all"
+  },
+  "detail": {
+    "backToList": "All callbacks",
+    "emptyTitle": "No callback selected",
+    "emptyDescription": "Select a callback to see its details.",
+    "notFoundTitle": "Callback not found",
+    "notFoundMessage": "This callback doesn't exist or was removed.",
+    "loadFailedTitle": "Couldn't load this callback",
+    "scheduledFor": "Scheduled for",
+    "requestedIn": "requested in {timezone}",
+    "numberToCall": "Number to call",
+    "dialFrom": "Dial from",
+    "autoSelected": "Auto-selected",
+    "attempts": "Attempts",
+    "attemptsValue": "{attempts} of {max}",
+    "nextAttempt": "next {date}",
+    "reminderEmailed": "Reminder emailed",
+    "closed": "Closed",
+    "completed": "Completed",
+    "byName": "by {name}",
+    "created": "Created",
+    "linkedCalls": "Linked calls",
+    "promisedDuringCall": "Promised during a call",
+    "fulfilledByCall": "Fulfilled by this call",
+    "latestAttempt": "Latest attempt"
+  },
+  "createDialog": {
+    "title": "New callback",
+    "description": "Schedule a call back to a contact — handled by a team member or dialed by an AI agent.",
+    "dncWarning": "This contact is on your do-not-call list. The callback can still be scheduled, but consider whether they should be contacted.",
+    "noAssignees": "No team members with an account yet — invite one under <link>Team</link>.",
+    "noAgents": "No synced outbound agents — create one under <link>Agents</link> first.",
+    "noNumbers": "No dialable numbers — SIP numbers are inbound-only, so buy a platform number under <link>Phone numbers</link>.",
+    "retrySettings": "Retry settings",
+    "maxAttempts": "Max attempts",
+    "retryAfter": "Retry after",
+    "defaultOption": "{value} (default)",
+    "minutes": "{count, plural, one {# minute} other {# minutes}}",
+    "hours": "{count, plural, one {# hour} other {# hours}}",
+    "topicPlaceholder": "What is the callback about? (optional)",
+    "notesPlaceholder": "Context for whoever makes the call (optional)"
+  },
+  "editDialog": {
+    "title": "Edit callback",
+    "description": "Update the topic, notes or who handles the callback."
+  },
+  "rescheduleDialog": {
+    "title": "Reschedule callback",
+    "description": "Pick a new time. Call attempts restart, and the assignee's reminder will be sent again for the new time."
+  },
+  "completeDialog": {
+    "title": "Complete callback",
+    "descriptionNamed": "Record how the call back to {name} went.",
+    "descriptionUnnamed": "Record how the call back to the contact went.",
+    "notesPlaceholder": "What was discussed or agreed? (optional)"
+  },
+  "cancelDialog": {
+    "title": "Cancel this callback?",
+    "description": "{name} won't be called back at {date}. This can't be undone."
+  },
+  "contactPicker": {
+    "placeholder": "Choose a contact",
+    "searchPlaceholder": "Search contacts…",
+    "noMatches": "No contacts match.",
+    "newContact": "New contact",
+    "newContactNamed": "New contact \"{query}\"",
+    "unnamed": "Unnamed contact",
+    "onDnc": "On DNC",
+    "noPhone": "No phone number",
+    "loadMore": "Load more"
+  }
+}

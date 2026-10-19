@@ -1,16 +1,17 @@
 import type { ConnectedCalendarEvent, SystemCalendarItem } from "@/lib/api/types";
-import { LOCALE, dayKey, parseDateKey, zonedMinutesOfDay } from "@/lib/datetime";
+import { dayKey, parseDateKey, zonedMinutesOfDay } from "@/lib/datetime";
+import { labelMap } from "@/lib/i18n/label-map";
+import { displayLocale, runtimeLocale } from "@/lib/i18n/runtime";
 
 export type CalendarViewMode = "month" | "week" | "day";
 export type CalendarSource = "system" | "connected";
 
 export const CALENDAR_VIEW_MODES: readonly CalendarViewMode[] = ["month", "week", "day"];
 
-export const CALENDAR_VIEW_LABELS: Record<CalendarViewMode, string> = {
-  month: "Month",
-  week: "Week",
-  day: "Day",
-};
+export const CALENDAR_VIEW_LABELS: Record<CalendarViewMode, string> = labelMap(
+  "calendar.views",
+  ["month", "week", "day"]
+);
 
 /**
  * One renderable block, whichever source it came from. `tone` collapses status
@@ -167,7 +168,7 @@ export function layoutOverlaps(items: TimedGridEvent[]): PositionedGridEvent[] {
 /** "July 2026" */
 export function formatMonthTitle(key: string): string {
   const date = parseDateKey(key);
-  return date ? date.toLocaleDateString(LOCALE, { month: "long", year: "numeric" }) : key;
+  return date ? date.toLocaleDateString(displayLocale(), { month: "long", year: "numeric" }) : key;
 }
 
 /** "27 Jul – 2 Aug 2026" */
@@ -178,10 +179,10 @@ export function formatWeekTitle(startKey: string, endKey: string): string {
   const sameMonth =
     start.getMonth() === end.getMonth() && start.getFullYear() === end.getFullYear();
   const startLabel = start.toLocaleDateString(
-    LOCALE,
+    displayLocale(),
     sameMonth ? { day: "numeric" } : { day: "numeric", month: "short" }
   );
-  const endLabel = end.toLocaleDateString(LOCALE, {
+  const endLabel = end.toLocaleDateString(displayLocale(), {
     day: "numeric",
     month: "short",
     year: "numeric",
@@ -193,7 +194,7 @@ export function formatWeekTitle(startKey: string, endKey: string): string {
 export function formatDayTitle(key: string): string {
   const date = parseDateKey(key);
   return date
-    ? date.toLocaleDateString(LOCALE, {
+    ? date.toLocaleDateString(displayLocale(), {
         weekday: "long",
         day: "numeric",
         month: "long",
@@ -205,7 +206,7 @@ export function formatDayTitle(key: string): string {
 /** "Mon" */
 export function weekdayShort(key: string): string {
   const date = parseDateKey(key);
-  return date ? date.toLocaleDateString(LOCALE, { weekday: "short" }) : key;
+  return date ? date.toLocaleDateString(displayLocale(), { weekday: "short" }) : key;
 }
 
 /** Day-of-month number for headers and month cells. */
@@ -213,8 +214,16 @@ export function dayOfMonth(key: string): number {
   return Number(key.slice(8)) || 0;
 }
 
-/** "9 am" / "12 pm" — hour ruler labels. */
+/**
+ * Hour ruler labels in the active locale's clock, matching formatTimeOfDay:
+ * "9 am" / "12 pm" in English (12-hour), "9:00" / "14:00" in Hebrew and
+ * Arabic (24-hour, where a bare hour number would read ambiguously).
+ */
 export function hourLabel(hour: number): string {
-  const h = hour % 12 === 0 ? 12 : hour % 12;
-  return `${h} ${hour < 12 ? "am" : "pm"}`;
+  const twelveHour = runtimeLocale() === "en";
+  return new Date(2000, 0, 1, hour).toLocaleTimeString(displayLocale(), {
+    hour: "numeric",
+    minute: twelveHour ? undefined : "2-digit",
+    hour12: twelveHour,
+  });
 }

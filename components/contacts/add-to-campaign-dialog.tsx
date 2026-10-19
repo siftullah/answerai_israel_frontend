@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +41,8 @@ export function AddToCampaignDialog({
   /** Called after a successful add — the caller clears the selection. */
   onDone: () => void;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const [campaignId, setCampaignId] = useState<string | null>(null);
   const addFromContacts = useAddRecipientsFromContacts(business.id, campaignId ?? "");
@@ -73,9 +76,7 @@ export function AddToCampaignDialog({
       },
       onError: (error) =>
         toast.error(
-          error.reason === "campaign_locked"
-            ? "That campaign has finished — pick another one."
-            : error.message
+          error.reason === "campaign_locked" ? t("campaign.finished") : error.message
         ),
     });
   };
@@ -84,12 +85,12 @@ export function AddToCampaignDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Add to campaign</DialogTitle>
+          <DialogTitle>{t("addToCampaign")}</DialogTitle>
           <DialogDescription>
             {allMatching
-              ? "Everything matching your filters joins the campaign's recipient list."
-              : `${explicitCount} ${explicitCount === 1 ? "contact" : "contacts"} join the campaign's recipient list.`}{" "}
-            Contacts without a phone are skipped; do-not-call numbers are blocked.
+              ? t("campaign.descriptionAllMatching")
+              : t("campaign.descriptionCount", { count: explicitCount })}{" "}
+            {t("campaign.skippedNote")}
           </DialogDescription>
         </DialogHeader>
 
@@ -99,15 +100,13 @@ export function AddToCampaignDialog({
           </div>
         ) : campaigns.length === 0 ? (
           <div className="flex flex-col items-start gap-2 rounded-xl border border-dashed p-4">
-            <p className="text-sm text-muted-foreground">
-              No open campaigns — create one first, then add your audience.
-            </p>
+            <p className="text-sm text-muted-foreground">{t("campaign.noCampaigns")}</p>
             <Button
               variant="outline"
               size="sm"
               render={<Link href={`/b/${business.id}/calls/campaigns`} />}
             >
-              Go to campaigns
+              {t("campaign.goToCampaigns")}
             </Button>
           </div>
         ) : (
@@ -119,7 +118,7 @@ export function AddToCampaignDialog({
                 aria-pressed={campaignId === campaign.id}
                 onClick={() => setCampaignId(campaign.id)}
                 className={cn(
-                  "flex items-center justify-between gap-3 border-b px-3 py-2.5 text-left last:border-0 hover:bg-muted/30",
+                  "flex items-center justify-between gap-3 border-b px-3 py-2.5 text-start last:border-0 hover:bg-muted/30",
                   campaignId === campaign.id && "bg-primary/5 ring-1 ring-primary/40 ring-inset"
                 )}
               >
@@ -134,14 +133,13 @@ export function AddToCampaignDialog({
 
         {overIdCap && (
           <p className="text-sm text-destructive">
-            Up to {MAX_EXPLICIT_IDS} individually-picked contacts per batch — use
-            &ldquo;Select everything matching&rdquo; with filters instead.
+            {t("campaign.overCap", { max: MAX_EXPLICIT_IDS })}
           </p>
         )}
 
         <DialogFooter>
           <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button
             type="button"
@@ -149,7 +147,7 @@ export function AddToCampaignDialog({
             onClick={submit}
           >
             {addFromContacts.isPending && <Spinner />}
-            Add to campaign
+            {t("addToCampaign")}
           </Button>
         </DialogFooter>
       </DialogContent>

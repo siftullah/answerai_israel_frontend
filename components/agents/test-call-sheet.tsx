@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { ChevronDownIcon, WrenchIcon } from "lucide-react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
@@ -24,6 +25,8 @@ import { isApiError } from "@/lib/api/errors";
 import type { Agent, AgentTestCallTurn } from "@/lib/api/types";
 import { cn } from "@/lib/utils";
 
+const MAX_MESSAGE_LENGTH = 2000;
+
 interface TestRun {
   id: number;
   message: string;
@@ -34,6 +37,7 @@ interface TestRun {
 }
 
 function TurnBubble({ turn }: { turn: AgentTestCallTurn }) {
+  const t = useTranslations("agents.testCall");
   const isCaller = turn.role === "user";
   return (
     <div className={cn("flex flex-col gap-1", isCaller ? "items-end" : "items-start")}>
@@ -44,7 +48,7 @@ function TurnBubble({ turn }: { turn: AgentTestCallTurn }) {
         )}
       >
         {turn.message === "" ? (
-          <span className="text-muted-foreground italic">(silence)</span>
+          <span className="text-muted-foreground italic">{t("silence")}</span>
         ) : (
           turn.message
         )}
@@ -52,7 +56,7 @@ function TurnBubble({ turn }: { turn: AgentTestCallTurn }) {
       <div className="flex flex-wrap items-center gap-1.5 px-1">
         {turn.time_in_call_secs !== null && (
           <span className="text-[11px] text-muted-foreground">
-            {Math.round(turn.time_in_call_secs)}s
+            {t("seconds", { seconds: Math.round(turn.time_in_call_secs) })}
           </span>
         )}
         {turn.tool_calls.map((tool, index) => (
@@ -67,11 +71,12 @@ function TurnBubble({ turn }: { turn: AgentTestCallTurn }) {
 }
 
 function RunBlock({ run }: { run: TestRun }) {
+  const t = useTranslations("agents.testCall");
   return (
     <Collapsible defaultOpen className="rounded-2xl border">
-      <CollapsibleTrigger className="group flex w-full items-center gap-2 p-3 text-left">
+      <CollapsibleTrigger className="group flex w-full items-center gap-2 p-3 text-start">
         <span className="min-w-0 flex-1 truncate text-sm font-medium">
-          &ldquo;{run.message}&rdquo;
+          {t("quoted", { message: run.message })}
         </span>
         {run.status === "running" && <Spinner className="size-4 shrink-0" />}
         <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-data-panel-open:rotate-180" />
@@ -79,16 +84,13 @@ function RunBlock({ run }: { run: TestRun }) {
       <CollapsibleContent>
         <div className="flex flex-col gap-3 border-t p-3">
           {run.status === "running" && (
-            <p className="text-sm text-muted-foreground">
-              Simulating the conversation — this can take up to a minute…
-            </p>
+            <p className="text-sm text-muted-foreground">{t("simulating")}</p>
           )}
           {run.status === "error" &&
             (run.errorKind === "unpublished" ? (
               <Alert variant="warning">
                 <AlertDescription>
-                  {run.error} New agents publish automatically within a minute of their first
-                  save.
+                  {t("unpublished", { error: run.error ?? "" })}
                 </AlertDescription>
               </Alert>
             ) : (
@@ -100,9 +102,7 @@ function RunBlock({ run }: { run: TestRun }) {
             (run.transcript && run.transcript.length > 0 ? (
               run.transcript.map((turn, index) => <TurnBubble key={index} turn={turn} />)
             ) : (
-              <p className="text-sm text-muted-foreground">
-                The simulation returned no transcript.
-              </p>
+              <p className="text-sm text-muted-foreground">{t("noTranscript")}</p>
             ))}
         </div>
       </CollapsibleContent>
@@ -124,6 +124,8 @@ export function TestCallSheet({
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("agents.testCall");
+  const ta = useTranslations("agents");
   const testCall = useAgentTestCall(agent.id);
   const [message, setMessage] = useState("");
   const [runs, setRuns] = useState<TestRun[]>([]);
@@ -167,18 +169,13 @@ export function TestCallSheet({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent side="right" className="flex w-full flex-col gap-0 sm:max-w-lg">
         <SheetHeader>
-          <SheetTitle>Test {agent.name}</SheetTitle>
-          <SheetDescription>
-            Type the caller&apos;s opening line — the voice engine simulates the whole
-            conversation against the last published version, with tools mocked.
-          </SheetDescription>
+          <SheetTitle>{t("title", { name: agent.name })}</SheetTitle>
+          <SheetDescription>{t("description")}</SheetDescription>
         </SheetHeader>
 
         <div className="flex min-h-0 flex-1 flex-col gap-3 overflow-y-auto p-4">
           {runs.length === 0 ? (
-            <p className="text-sm text-muted-foreground">
-              No test runs yet. Try &ldquo;Hi, what are your opening hours?&rdquo;
-            </p>
+            <p className="text-sm text-muted-foreground">{t("empty")}</p>
           ) : (
             runs.map((run) => <RunBlock key={run.id} run={run} />)
           )}
@@ -189,9 +186,9 @@ export function TestCallSheet({
             value={message}
             onChange={(event) => setMessage(event.target.value)}
             rows={2}
-            maxLength={2000}
-            placeholder="What does the caller say first?"
-            aria-label="Caller's opening line"
+            maxLength={MAX_MESSAGE_LENGTH}
+            placeholder={t("placeholder")}
+            aria-label={t("inputLabel")}
             onKeyDown={(event) => {
               if (event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
@@ -200,7 +197,9 @@ export function TestCallSheet({
             }}
           />
           <div className="flex items-center justify-between">
-            <span className="text-xs text-muted-foreground">{message.length} / 2,000</span>
+            <span className="text-xs text-muted-foreground">
+              {ta("charCount", { count: message.length, max: MAX_MESSAGE_LENGTH })}
+            </span>
             <Button
               type="button"
               size="sm"
@@ -208,7 +207,7 @@ export function TestCallSheet({
               onClick={runTest}
             >
               {testCall.isPending && <Spinner />}
-              Run test
+              {t("run")}
             </Button>
           </div>
         </div>

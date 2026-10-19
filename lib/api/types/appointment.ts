@@ -1,5 +1,6 @@
 /** Mirrors app/Http/Resources/AppointmentResource.php */
 
+import { labelMap } from "@/lib/i18n/label-map";
 import type { CallDirection } from "./call";
 
 export const APPOINTMENT_STATUSES = [
@@ -11,13 +12,10 @@ export const APPOINTMENT_STATUSES = [
 ] as const;
 export type AppointmentStatus = (typeof APPOINTMENT_STATUSES)[number];
 
-export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = {
-  scheduled: "Scheduled",
-  confirmed: "Confirmed",
-  completed: "Completed",
-  canceled: "Canceled",
-  no_show: "No-show",
-};
+export const APPOINTMENT_STATUS_LABELS: Record<AppointmentStatus, string> = labelMap(
+  "lib.appointmentStatus",
+  ["scheduled", "confirmed", "completed", "canceled", "no_show"]
+);
 
 /** Statuses that can still transition — reschedule/cancel/complete apply. */
 export const UPCOMING_APPOINTMENT_STATUSES: readonly AppointmentStatus[] = [
@@ -28,11 +26,10 @@ export const UPCOMING_APPOINTMENT_STATUSES: readonly AppointmentStatus[] = [
 export const APPOINTMENT_SOURCES = ["manual", "agent_call", "api"] as const;
 export type AppointmentSource = (typeof APPOINTMENT_SOURCES)[number];
 
-export const APPOINTMENT_SOURCE_LABELS: Record<AppointmentSource, string> = {
-  manual: "Manual",
-  agent_call: "Booked by AI on a call",
-  api: "API",
-};
+export const APPOINTMENT_SOURCE_LABELS: Record<AppointmentSource, string> = labelMap(
+  "lib.appointmentSource",
+  ["manual", "agent_call", "api"]
+);
 
 export interface AppointmentRef {
   id: string;

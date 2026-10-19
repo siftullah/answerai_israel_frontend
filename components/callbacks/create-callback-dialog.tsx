@@ -1,6 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useMemo, useState } from "react";
+import { useTranslations } from "next-intl";
 import Link from "next/link";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -50,6 +51,7 @@ import {
 } from "@/lib/validation/callback";
 import { eligibleAgents } from "@/lib/validation/phone-number";
 import type { Callback, CallbackType, Contact } from "@/lib/api/types";
+import { CALLBACK_TYPE_LABELS } from "@/lib/api/types";
 
 function SelectField({
   name,
@@ -100,13 +102,9 @@ function SelectField({
 }
 
 const RETRY_ATTEMPT_OPTIONS = ["1", "2", "3", "4", "5"];
-const RETRY_DELAY_OPTIONS = [
-  { value: "5", label: "5 minutes" },
-  { value: "15", label: "15 minutes" },
-  { value: "30", label: "30 minutes" },
-  { value: "60", label: "1 hour" },
-  { value: "120", label: "2 hours" },
-];
+const RETRY_DELAY_MINUTES = [5, 15, 30, 60, 120];
+const DEFAULT_MAX_ATTEMPTS = 2;
+const DEFAULT_RETRY_DELAY_MINUTES = 30;
 
 /**
  * Manual callback creation, both types: a team-member task (email reminder,
@@ -134,8 +132,12 @@ export function CreateCallbackDialog({
 
   const [selectedContact, setSelectedContact] = useState<Contact | null>(null);
 
+  const t = useTranslations("callbacks");
+  const tc = useTranslations("common");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => createCallbackSchema(tv), [tv]);
   const form = useForm<CreateCallbackValues>({
-    resolver: zodResolver(createCallbackSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultCreateCallbackValues(defaults),
   });
   const type = form.watch("type");
@@ -150,10 +152,19 @@ export function CreateCallbackDialog({
     (member) => member.has_account && member.user
   );
 
+  const delayLabel = (minutes: number) =>
+    minutes % 60 === 0
+      ? t("createDialog.hours", { count: minutes / 60 })
+      : t("createDialog.minutes", { count: minutes });
+  const retryDelayOptions = RETRY_DELAY_MINUTES.map((minutes) => ({
+    value: String(minutes),
+    label: delayLabel(minutes),
+  }));
+
   const onSubmit = form.handleSubmit((values) => {
     createCallback.mutate(toStoreCallbackPayload(values, business.timezone), {
       onSuccess: (callback) => {
-        toast.success("Callback scheduled");
+        toast.success(t("toasts.scheduled"));
         onOpenChange(false);
         onCreated(callback);
       },
@@ -165,11 +176,8 @@ export function CreateCallbackDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-lg">
         <DialogHeader>
-          <DialogTitle>New callback</DialogTitle>
-          <DialogDescription>
-            Schedule a call back to a contact — handled by a team member or dialed by an AI
-            agent.
-          </DialogDescription>
+          <DialogTitle>{t("createDialog.title")}</DialogTitle>
+          <DialogDescription>{t("createDialog.description")}</DialogDescription>
         </DialogHeader>
 
         <FormProvider {...form}>
@@ -183,15 +191,17 @@ export function CreateCallbackDialog({
                   onValueChange={(value) => field.onChange(value as CallbackType)}
                 >
                   <TabsList className="w-full">
-                    <TabsTrigger value="team_member">Team member</TabsTrigger>
-                    <TabsTrigger value="agent">AI agent</TabsTrigger>
+                    <TabsTrigger value="team_member">
+                      {CALLBACK_TYPE_LABELS.team_member}
+                    </TabsTrigger>
+                    <TabsTrigger value="agent">{CALLBACK_TYPE_LABELS.agent}</TabsTrigger>
                   </TabsList>
                 </Tabs>
               )}
             />
 
             <Field data-invalid={!!contactError || undefined}>
-              <FieldLabel htmlFor="create-callback-contact">Contact</FieldLabel>
+              <FieldLabel htmlFor="create-callback-contact">{t("labels.contact")}</FieldLabel>
               <ContactCombobox
                 id="create-callback-contact"
                 selected={selectedContact}
@@ -207,10 +217,7 @@ export function CreateCallbackDialog({
             {selectedContact?.on_dnc && (
               <Alert variant="warning">
                 <TriangleAlertIcon />
-                <AlertDescription>
-                  This contact is on your do-not-call list. The callback can still be
-                  scheduled, but consider whether they should be contacted.
-                </AlertDescription>
+                <AlertDescription>{t("createDialog.dncWarning")}</AlertDescription>
               </Alert>
             )}
 
@@ -223,68 +230,61 @@ export function CreateCallbackDialog({
             {type === "team_member" ? (
               <SelectField
                 name="assignee_user_id"
-                label="Assignee"
-                placeholder="Choose a team member"
+                label={t("labels.assignee")}
+                placeholder={t("placeholders.assignee")}
                 options={assignees.map((member) => ({
                   value: member.user?.id ?? "",
                   label: member.name,
                 }))}
-                emptyNote={
-                  <>
-                    No team members with an account yet — invite one under{" "}
+                emptyNote={t.rich("createDialog.noAssignees", {
+                  link: (chunks) => (
                     <Link
                       href={`/b/${business.id}/business-profile/team`}
                       className="text-primary hover:underline"
                     >
-                      Team
+                      {chunks}
                     </Link>
-                    .
-                  </>
-                }
+                  ),
+                })}
               />
             ) : (
               <>
                 <SelectField
                   name="agent_id"
-                  label="Agent"
-                  placeholder="Choose an outbound agent"
+                  label={t("labels.agent")}
+                  placeholder={t("placeholders.agent")}
                   options={agents.map((agent) => ({ value: agent.id, label: agent.name }))}
-                  emptyNote={
-                    <>
-                      No synced outbound agents — create one under{" "}
+                  emptyNote={t.rich("createDialog.noAgents", {
+                    link: (chunks) => (
                       <Link
                         href={`/b/${business.id}/agents`}
                         className="text-primary hover:underline"
                       >
-                        Agents
-                      </Link>{" "}
-                      first.
-                    </>
-                  }
+                        {chunks}
+                      </Link>
+                    ),
+                  })}
                 />
                 <SelectField
                   name="caller_phone_number_id"
-                  label="Call from"
-                  placeholder="Choose a number"
+                  label={t("labels.callFrom")}
+                  placeholder={t("placeholders.number")}
                   options={numbers.map((number) => ({
                     value: number.id,
                     label: number.friendly_name
                       ? `${number.friendly_name} (${formatE164(number.e164)})`
                       : formatE164(number.e164),
                   }))}
-                  emptyNote={
-                    <>
-                      No dialable numbers — SIP numbers are inbound-only, so buy a platform
-                      number under{" "}
+                  emptyNote={t.rich("createDialog.noNumbers", {
+                    link: (chunks) => (
                       <Link
                         href={`/b/${business.id}/phone-numbers`}
                         className="text-primary hover:underline"
                       >
-                        Phone numbers
+                        {chunks}
                       </Link>
-                      .
-                    </>
-                  }
+                    ),
+                  })}
                 />
                 <Collapsible className="flex flex-col gap-3">
                   <CollapsibleTrigger
@@ -297,7 +297,7 @@ export function CreateCallbackDialog({
                       />
                     }
                   >
-                    Retry settings
+                    {t("createDialog.retrySettings")}
                     <ChevronDownIcon className="transition-transform group-data-panel-open:rotate-180" />
                   </CollapsibleTrigger>
                   <CollapsibleContent className="grid grid-cols-2 gap-3">
@@ -306,13 +306,18 @@ export function CreateCallbackDialog({
                       control={form.control}
                       render={({ field }) => {
                         const items = [
-                          { value: "", label: "2 (default)" },
+                          {
+                            value: "",
+                            label: t("createDialog.defaultOption", {
+                              value: DEFAULT_MAX_ATTEMPTS,
+                            }),
+                          },
                           ...RETRY_ATTEMPT_OPTIONS.map((n) => ({ value: n, label: n })),
                         ];
                         return (
                           <Field>
                             <FieldLabel htmlFor="create-callback-max-attempts">
-                              Max attempts
+                              {t("createDialog.maxAttempts")}
                             </FieldLabel>
                             <Select
                               items={items}
@@ -344,13 +349,18 @@ export function CreateCallbackDialog({
                       control={form.control}
                       render={({ field }) => {
                         const items = [
-                          { value: "", label: "30 minutes (default)" },
-                          ...RETRY_DELAY_OPTIONS,
+                          {
+                            value: "",
+                            label: t("createDialog.defaultOption", {
+                              value: delayLabel(DEFAULT_RETRY_DELAY_MINUTES),
+                            }),
+                          },
+                          ...retryDelayOptions,
                         ];
                         return (
                           <Field>
                             <FieldLabel htmlFor="create-callback-retry-delay">
-                              Retry after
+                              {t("createDialog.retryAfter")}
                             </FieldLabel>
                             <Select
                               items={items}
@@ -383,11 +393,11 @@ export function CreateCallbackDialog({
             )}
 
             <Field data-invalid={!!form.formState.errors.topic || undefined}>
-              <FieldLabel htmlFor="create-callback-topic">Topic</FieldLabel>
+              <FieldLabel htmlFor="create-callback-topic">{t("labels.topic")}</FieldLabel>
               <Input
                 id="create-callback-topic"
                 {...form.register("topic")}
-                placeholder="What is the callback about? (optional)"
+                placeholder={t("createDialog.topicPlaceholder")}
                 aria-invalid={!!form.formState.errors.topic}
               />
               {form.formState.errors.topic?.message && (
@@ -396,11 +406,11 @@ export function CreateCallbackDialog({
             </Field>
 
             <Field data-invalid={!!form.formState.errors.notes || undefined}>
-              <FieldLabel htmlFor="create-callback-notes">Notes</FieldLabel>
+              <FieldLabel htmlFor="create-callback-notes">{tc("labels.notes")}</FieldLabel>
               <Textarea
                 id="create-callback-notes"
                 {...form.register("notes")}
-                placeholder="Context for whoever makes the call (optional)"
+                placeholder={t("createDialog.notesPlaceholder")}
                 rows={3}
                 aria-invalid={!!form.formState.errors.notes}
               />
@@ -417,10 +427,12 @@ export function CreateCallbackDialog({
 
             <DialogFooter>
               <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-                Cancel
+                {tc("actions.cancel")}
               </Button>
               <Button type="submit" disabled={createCallback.isPending}>
-                {createCallback.isPending ? "Scheduling…" : "Schedule callback"}
+                {createCallback.isPending
+                  ? t("actions.scheduling")
+                  : t("actions.scheduleCallback")}
               </Button>
             </DialogFooter>
           </form>

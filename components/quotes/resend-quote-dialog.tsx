@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { SendIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -34,6 +35,8 @@ export function ResendQuoteDialog({
   businessUuid: string;
   quote: Quote;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const resendQuote = useResendQuote(businessUuid);
   const settingsQuery = useModuleSettings<QuoteModuleSettings>(businessUuid, "quotes");
 
@@ -49,11 +52,9 @@ export function ResendQuoteDialog({
       {
         onSuccess: ({ emailed }) => {
           if (emailed) {
-            toast.success(`Quote ${quote.number} re-sent`);
+            toast.success(t("toasts.resent", { number: quote.number }));
           } else {
-            toast.warning(
-              `Quote ${quote.number} is live again, but no email went out — copy the link to share it.`
-            );
+            toast.warning(t("toasts.resentNoEmail", { number: quote.number }));
           }
           onOpenChange(false);
         },
@@ -67,27 +68,29 @@ export function ResendQuoteDialog({
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>
-            {expired ? `Revive quote ${quote.number}` : `Re-send quote ${quote.number}`}
+            {expired
+              ? t("resendDialog.reviveTitle", { number: quote.number })
+              : t("resendDialog.resendTitle", { number: quote.number })}
           </DialogTitle>
           <DialogDescription>
             {expired
-              ? "Puts the quote back in front of the customer with a fresh validity window."
-              : "Sends the customer another email with the same accept link."}
+              ? t("resendDialog.reviveDescription")
+              : t("resendDialog.resendDescription")}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <Field>
-            <FieldLabel htmlFor="resend-valid-until">Valid until</FieldLabel>
+            <FieldLabel htmlFor="resend-valid-until">{t("labels.validUntil")}</FieldLabel>
             <DatePicker
               id="resend-valid-until"
               value={validUntil}
               onChange={setValidUntil}
               clearable
-              placeholder={`${validDays} days from today`}
+              placeholder={t("resendDialog.validUntilPlaceholder", { days: validDays })}
             />
             <FieldDescription>
-              Left blank, the quote stays valid {validDays} days from today.
+              {t("resendDialog.validUntilHint", { days: validDays })}
             </FieldDescription>
           </Field>
 
@@ -100,11 +103,15 @@ export function ResendQuoteDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="button" onClick={submit} disabled={resendQuote.isPending}>
             <SendIcon />
-            {resendQuote.isPending ? "Sending…" : expired ? "Revive & re-send" : "Re-send quote"}
+            {resendQuote.isPending
+              ? t("actions.sending")
+              : expired
+                ? t("actions.revive")
+                : t("actions.resendQuote")}
           </Button>
         </DialogFooter>
       </DialogContent>

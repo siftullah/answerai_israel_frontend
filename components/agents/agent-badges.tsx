@@ -1,17 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import type { AgentPurpose, AgentSyncStatus } from "@/lib/api/types";
 
 export function AgentPurposeBadge({ purpose }: { purpose: AgentPurpose }) {
+  const t = useTranslations("agents.purpose");
   if (purpose === "consult") return null;
-  if (purpose === "inbound") return <Badge variant="info">Inbound</Badge>;
+  if (purpose === "inbound") return <Badge variant="info">{t("inbound.label")}</Badge>;
   // Violet — far enough from the info blue that the pair reads at a glance.
   return (
     <Badge className="bg-violet-500/10 text-violet-600 dark:bg-violet-500/20 dark:text-violet-400">
-      Outbound
+      {t("outbound.label")}
     </Badge>
   );
 }
@@ -24,16 +26,16 @@ export function AgentSyncBadge({
   status: AgentSyncStatus;
   error?: string | null;
 }) {
-  if (status === "in_sync") return <Badge variant="success">In sync</Badge>;
+  const t = useTranslations("agents.badges.sync");
+  if (status === "in_sync") return <Badge variant="success">{t("inSync")}</Badge>;
   if (status === "error") {
     return (
       <Tooltip>
         <TooltipTrigger render={<Badge variant="destructive" className="cursor-default" />}>
-          Sync error
+          {t("error")}
         </TooltipTrigger>
         <TooltipContent className="max-w-72">
-          {error ?? "The last publish to the voice engine failed."} Retries automatically every
-          15 minutes.
+          {t("errorTooltip", { error: error ?? t("errorFallback") })}
         </TooltipContent>
       </Tooltip>
     );
@@ -41,7 +43,7 @@ export function AgentSyncBadge({
   return (
     <Badge variant="info" className="gap-1.5">
       <Spinner className="size-3" />
-      {status === "syncing" ? "Syncing" : "Publishing"}
+      {status === "syncing" ? t("syncing") : t("publishing")}
     </Badge>
   );
 }

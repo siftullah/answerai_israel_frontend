@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +14,7 @@ import {
 import { SubscriptionStatusBadge } from "@/components/billing/billing-badges";
 import { formatCents } from "@/lib/money";
 import { formatDate } from "@/lib/datetime";
-import { BILLING_INTERVAL_LABELS, type Subscription } from "@/lib/api/types";
+import type { Subscription } from "@/lib/api/types";
 
 export function CurrentPlanCard({
   businessUuid,
@@ -28,6 +29,7 @@ export function CurrentPlanCard({
   privileged: boolean;
   onCancel: () => void;
 }) {
+  const t = useTranslations("settings.billing");
   const plan = subscription.plan;
   const price =
     plan === undefined
@@ -47,25 +49,28 @@ export function CurrentPlanCard({
     <Card>
       <CardHeader>
         <div className="flex flex-wrap items-center gap-2">
-          <CardTitle>{plan?.name ?? "Subscription"}</CardTitle>
+          <CardTitle>{plan?.name ?? t("currentPlan.fallbackTitle")}</CardTitle>
           <SubscriptionStatusBadge status={subscription.status} />
         </div>
         <CardDescription>
           {price !== null
-            ? `${formatCents(price)}/${subscription.interval === "monthly" ? "month" : "year"} + VAT · ${BILLING_INTERVAL_LABELS[subscription.interval]} billing`
-            : `${BILLING_INTERVAL_LABELS[subscription.interval]} billing`}
+            ? t("currentPlan.priceLine", {
+                price: formatCents(price),
+                interval: subscription.interval,
+              })
+            : t("currentPlan.billingLine", { interval: subscription.interval })}
         </CardDescription>
       </CardHeader>
       <CardContent className="flex flex-col gap-2 text-sm">
         {cancelled && subscription.cancelled_at && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-muted-foreground">Ended</span>
+            <span className="text-muted-foreground">{t("currentPlan.ended")}</span>
             <span>{formatDate(subscription.cancelled_at, timezone)}</span>
           </div>
         )}
         {!cancelled && subscription.current_period_start && subscription.current_period_end && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-muted-foreground">Current usage period</span>
+            <span className="text-muted-foreground">{t("currentPlan.usagePeriod")}</span>
             <span>
               {formatDate(subscription.current_period_start, timezone)} –{" "}
               {formatDate(subscription.current_period_end, timezone)}
@@ -74,13 +79,13 @@ export function CurrentPlanCard({
         )}
         {!cancelled && paidBeyondPeriod && subscription.plan_paid_until && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-muted-foreground">Plan paid until</span>
+            <span className="text-muted-foreground">{t("currentPlan.paidUntil")}</span>
             <span>{formatDate(subscription.plan_paid_until, timezone)}</span>
           </div>
         )}
         {subscription.credit_balance_cents > 0 && (
           <div className="flex items-center justify-between gap-4">
-            <span className="text-muted-foreground">Account credit</span>
+            <span className="text-muted-foreground">{t("currentPlan.credit")}</span>
             <span className="font-medium text-success">
               {formatCents(subscription.credit_balance_cents)}
             </span>
@@ -90,13 +95,17 @@ export function CurrentPlanCard({
       {privileged && (
         <CardFooter className="gap-2">
           {cancelled ? (
-            <Button render={<Link href={`/b/${businessUuid}/plans`} />}>Choose a plan</Button>
+            <Button render={<Link href={`/b/${businessUuid}/plans`} />}>
+              {t("choosePlan")}
+            </Button>
           ) : (
             <>
-              <Button render={<Link href={`/b/${businessUuid}/plans`} />}>Change plan</Button>
+              <Button render={<Link href={`/b/${businessUuid}/plans`} />}>
+                {t("currentPlan.changePlan")}
+              </Button>
               {!subscription.cancel_at_period_end && (
                 <Button variant="destructive-outline" onClick={onCancel}>
-                  Cancel subscription
+                  {t("cancelSubscription")}
                 </Button>
               )}
             </>

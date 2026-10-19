@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ChipInput } from "@/components/ui/chip-input";
 
 const MAX_CATEGORIES = 10;
@@ -15,6 +16,7 @@ export function CategoriesField({
   onChange: (value: string[]) => void;
   invalid?: boolean;
 }) {
+  const t = useTranslations("businessProfile.categories");
   return (
     <ChipInput
       id="categories"
@@ -22,8 +24,8 @@ export function CategoriesField({
       onChange={onChange}
       max={MAX_CATEGORIES}
       maxItemLength={MAX_LENGTH}
-      placeholder="Type a category and press Enter"
-      limitPlaceholder="Category limit reached"
+      placeholder={t("placeholder")}
+      limitPlaceholder={t("limitReached")}
       invalid={invalid}
     />
   );

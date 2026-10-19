@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { AlarmClockIcon, BanknoteIcon, CircleCheckBigIcon } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { formatCents } from "@/lib/money";
@@ -42,10 +43,6 @@ function StatTile({
   );
 }
 
-function plural(count: number, noun: string): string {
-  return `${count} ${noun}${count === 1 ? "" : "s"}`;
-}
-
 /** The money-at-a-glance strip: what's out there, what's late, what landed. */
 export function InvoiceStatTiles({
   counts,
@@ -54,6 +51,8 @@ export function InvoiceStatTiles({
   counts: InvoiceCounts | undefined;
   className?: string;
 }) {
+  const t = useTranslations("invoices.stats");
+
   if (!counts) {
     return (
       <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", className)}>
@@ -68,31 +67,23 @@ export function InvoiceStatTiles({
     <div className={cn("grid grid-cols-1 gap-3 sm:grid-cols-3", className)}>
       <StatTile
         icon={BanknoteIcon}
-        label="Outstanding"
+        label={t("outstanding")}
         amountCents={counts.outstanding_cents}
-        detail={
-          counts.awaiting_payment > 0
-            ? `${plural(counts.awaiting_payment, "invoice")} awaiting payment`
-            : "Nothing awaiting payment"
-        }
+        detail={t("awaitingPayment", { count: counts.awaiting_payment })}
         tone="info"
       />
       <StatTile
         icon={AlarmClockIcon}
-        label="Overdue"
+        label={t("overdue")}
         amountCents={counts.overdue_cents}
-        detail={
-          counts.overdue > 0
-            ? `${plural(counts.overdue, "invoice")} past due`
-            : "Nothing past due"
-        }
+        detail={t("pastDue", { count: counts.overdue })}
         tone="destructive"
       />
       <StatTile
         icon={CircleCheckBigIcon}
-        label="Paid this month"
+        label={t("paidThisMonth")}
         amountCents={counts.paid_this_month_cents}
-        detail={`${plural(counts.paid, "invoice")} paid all time`}
+        detail={t("paidAllTime", { count: counts.paid })}
         tone="success"
       />
     </div>

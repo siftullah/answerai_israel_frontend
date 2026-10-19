@@ -1,0 +1,58 @@
+{
+  "metaDescription": "AI voice agents that answer every call for your business.",
+  "nav": {
+    "dashboard": "Dashboard",
+    "contacts": "Contacts",
+    "allContacts": "All contacts",
+    "dnc": "Do not call (DNC)",
+    "calls": "Calls",
+    "inboundLogs": "Inbound logs",
+    "outboundLogs": "Outbound logs",
+    "callbacks": "Callbacks",
+    "campaigns": "Campaigns",
+    "calendar": "Calendar",
+    "appointments": "Appointments",
+    "leads": "Leads",
+    "quotes": "Quotes",
+    "jobs": "Jobs",
+    "invoices": "Invoices",
+    "businessProfile": "Business profile",
+    "phoneNumbers": "Phone numbers",
+    "agents": "Agents",
+    "settings": "Settings",
+    "profile": "Profile",
+    "notifications": "Notifications",
+    "billing": "Billing",
+    "plans": "Plans",
+    "overview": "Overview",
+    "knowledgeBase": "Knowledge base",
+    "basicInfo": "Basic info",
+    "services": "Services",
+    "products": "Products",
+    "faqs": "FAQs",
+    "policies": "Policies",
+    "docs": "Docs",
+    "integrations": "Integrations",
+    "operations": "Operations",
+    "team": "Team",
+    "transfers": "Transfers",
+    "modules": "Modules"
+  },
+  "sidebar": {
+    "setupGroup": "Setup AI"
+  },
+  "navUser": {
+    "switchBusiness": "Switch business"
+  },
+  "sectionNav": {
+    "label": "Business profile sections"
+  },
+  "settingsNav": {
+    "label": "Settings sections"
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "The page you are looking for doesn't exist or has moved.",
+    "backHome": "Back to AnswerAI"
+  }
+}

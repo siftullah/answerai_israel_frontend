@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -24,13 +25,15 @@ export function ReopenJobDialog({
   job: Job;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("jobs");
+  const tc = useTranslations("common");
   const reopenJob = useReopenJob(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
   // would unmount the mutation observer and skip these callbacks.
   const confirm = () => {
     reopenJob.mutate(job.id, {
-      onSuccess: () => toast.success(`${job.reference} reopened — book a new time when ready`),
+      onSuccess: () => toast.success(t("toasts.reopened", { reference: job.reference })),
       onError: (error) => toast.error(error.message),
       onSettled: () => onOpenChange(false),
     });
@@ -40,16 +43,13 @@ export function ReopenJobDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Reopen {job.reference}?</AlertDialogTitle>
-          <AlertDialogDescription>
-            The job goes back to open and unscheduled — any previous booking stays cleared, so
-            schedule a fresh visit when you&apos;re ready. Its history is kept.
-          </AlertDialogDescription>
+          <AlertDialogTitle>{t("reopen.title", { reference: job.reference })}</AlertDialogTitle>
+          <AlertDialogDescription>{t("reopen.description")}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={reopenJob.isPending} onClick={confirm}>
-            {reopenJob.isPending ? "Reopening…" : "Reopen job"}
+            {reopenJob.isPending ? t("reopen.reopening") : t("reopen.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

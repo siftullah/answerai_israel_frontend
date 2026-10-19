@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { XIcon } from "lucide-react";
 import { toast } from "sonner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
@@ -31,6 +32,8 @@ export function MarkLostLeadDialog({
   businessUuid: string;
   lead: Lead;
 }) {
+  const t = useTranslations("leads.markLost");
+  const tc = useTranslations("common");
   const updateLead = useUpdateLead(businessUuid);
   const addNote = useAddLeadNote(businessUuid);
   const [reason, setReason] = useState("");
@@ -41,8 +44,10 @@ export function MarkLostLeadDialog({
     try {
       await updateLead.mutateAsync({ id: lead.id, payload: { status: "lost" } });
       // The reason rides the timeline as a note — best effort once lost stuck.
-      if (trimmed !== "") await addNote.mutateAsync({ id: lead.id, note: `Lost — ${trimmed}` });
-      toast.success("Lead marked as lost");
+      if (trimmed !== "") {
+        await addNote.mutateAsync({ id: lead.id, note: t("note", { reason: trimmed }) });
+      }
+      toast.success(t("toast"));
       onOpenChange(false);
     } catch (error) {
       setServerError((error as ApiError).message);
@@ -55,24 +60,25 @@ export function MarkLostLeadDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Mark this lead as lost</DialogTitle>
+          <DialogTitle>{t("title")}</DialogTitle>
           <DialogDescription>
-            Closes &ldquo;{lead.title}&rdquo; without a win. You can reopen it later if{" "}
-            {lead.contact?.name ?? "the contact"} comes back.
+            {lead.contact?.name
+              ? t("descriptionNamed", { title: lead.title, name: lead.contact.name })
+              : t("description", { title: lead.title })}
           </DialogDescription>
         </DialogHeader>
 
         <div className="flex flex-col gap-4">
           <Field>
-            <FieldLabel htmlFor="lost-lead-reason">Reason</FieldLabel>
+            <FieldLabel htmlFor="lost-lead-reason">{t("reason")}</FieldLabel>
             <Input
               id="lost-lead-reason"
               value={reason}
               onChange={(event) => setReason(event.target.value)}
               maxLength={500}
-              placeholder="Went with another provider"
+              placeholder={t("reasonPlaceholder")}
             />
-            <FieldDescription>Optional — added to the lead&apos;s timeline.</FieldDescription>
+            <FieldDescription>{t("reasonHint")}</FieldDescription>
           </Field>
 
           {serverError && (
@@ -84,11 +90,11 @@ export function MarkLostLeadDialog({
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Cancel
+            {tc("actions.cancel")}
           </Button>
           <Button type="button" variant="destructive" onClick={submit} disabled={saving}>
             <XIcon />
-            {saving ? "Saving…" : "Mark as lost"}
+            {saving ? tc("actions.saving") : t("confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

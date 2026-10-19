@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "title": "לידים"
+  },
+  "page": {
+    "title": "לידים",
+    "description": "פניות מכירה שנקלטו משיחות או נוספו על ידי הצוות, במעקב עד לסגירה בהצלחה או לאובדן.",
+    "newLead": "ליד חדש"
+  },
+  "tabs": {
+    "open": "פתוחים",
+    "won": "נסגרו בהצלחה",
+    "lost": "אבדו"
+  },
+  "empty": {
+    "open": {
+      "title": "אין לידים פתוחים",
+      "description": "פניות מכירה שסוכן ה-AI שלכם קולט בשיחות יופיעו כאן."
+    },
+    "won": {
+      "title": "עדיין אין לידים שנסגרו בהצלחה",
+      "description": "לידים שהופכים לעבודה יופיעו כאן."
+    },
+    "lost": {
+      "title": "אין לידים שאבדו",
+      "description": "לידים שלא הבשילו לעסקה יופיעו כאן."
+    },
+    "all": {
+      "title": "עדיין אין לידים",
+      "description": "הוסיפו את הליד הראשון, או תנו לסוכן ה-AI שלכם לקלוט לידים משיחות."
+    },
+    "noMatch": {
+      "title": "לא נמצאו לידים תואמים",
+      "description": "נסו חיפוש אחר או הסירו חלק מהמסננים."
+    }
+  },
+  "fields": {
+    "contact": "איש קשר",
+    "estimatedValue": "שווי משוער",
+    "expectedClose": "מועד סגירה צפוי",
+    "assignee": "אחראי",
+    "unassigned": "לא משויך",
+    "noTargetDate": "ללא תאריך יעד",
+    "notValued": "טרם הוערך",
+    "unnamedContact": "איש קשר ללא שם"
+  },
+  "stats": {
+    "pipeline": "צבר מכירות",
+    "openLeads": "{count, plural, one {# ליד פתוח} other {# לידים פתוחים}}",
+    "openLeadsWithNew": "{count, plural, one {# ליד פתוח} other {# לידים פתוחים}} · {newCount, number} חדשים",
+    "noOpenLeads": "אין לידים פתוחים",
+    "wonThisMonth": "נסגרו בהצלחה החודש",
+    "wonAllTime": "{count, plural, one {# ליד שנסגר בהצלחה} other {# לידים שנסגרו בהצלחה}} בסך הכול",
+    "winRate": "שיעור הצלחה",
+    "winRateDetail": "{won, number} מתוך {decided, plural, one {# ליד שנסגר} other {# לידים שנסגרו}}, ב-90 הימים האחרונים",
+    "noClosedLeads": "אין לידים שנסגרו ב-90 הימים האחרונים"
+  },
+  "list": {
+    "loadError": "לא ניתן לטעון את הלידים"
+  },
+  "row": {
+    "won": "נסגר בהצלחה",
+    "wonOn": "נסגר בהצלחה ב-{date}",
+    "lost": "אבד",
+    "lostOn": "אבד ב-{date}",
+    "closeExpected": "סגירה צפויה ב-{date}",
+    "capturedFromCall": "נקלט משיחה ב-{date}",
+    "addedOn": "נוסף ב-{date}"
+  },
+  "filters": {
+    "searchPlaceholder": "חיפוש לפי כותרת או איש קשר…",
+    "searchLabel": "חיפוש לידים לפי כותרת או שם איש קשר",
+    "filterLabel": "סינון לידים",
+    "anyStatus": "כל סטטוס",
+    "anyone": "כולם",
+    "sort": "מיון",
+    "newestFirst": "החדשים ביותר תחילה",
+    "highestValue": "השווי הגבוה ביותר",
+    "closingSoonest": "מועד הסגירה הקרוב ביותר",
+    "removeFilter": "הסרת המסנן {label}"
+  },
+  "detail": {
+    "allLeads": "כל הלידים",
+    "noneSelectedTitle": "לא נבחר ליד",
+    "noneSelectedDescription": "בחרו ליד כדי לראות את הפרטים וההיסטוריה שלו.",
+    "notFoundTitle": "הליד לא נמצא",
+    "notFoundMessage": "הליד הזה לא קיים או הוסר.",
+    "loadErrorTitle": "לא ניתן לטעון את הליד הזה",
+    "viewContact": "הצגת איש קשר",
+    "markContacted": "סימון כנוצר קשר",
+    "markQualified": "סימון כמתאים",
+    "markWon": "סימון כנסגר בהצלחה",
+    "markLost": "סימון כאבוד",
+    "reopen": "פתיחה מחדש",
+    "createQuote": "יצירת הצעת מחיר",
+    "creatingQuote": "ביצירה…",
+    "convertToJob": "המרה לעבודה",
+    "markedAs": "הליד סומן כ{status, select, contacted {contacted} qualified {qualified} other {{status}}}",
+    "quoteDrafted": "טיוטה {number} נוצרה — הוסיפו תמחור",
+    "source": "מקור",
+    "capturedOn": "תאריך קליטה",
+    "callOn": "שיחה ב-{date}",
+    "won": "נסגר בהצלחה",
+    "closed": "נסגר",
+    "created": "נוצר"
+  },
+  "timeline": {
+    "title": "פעילות",
+    "placeholder": "הוסיפו הערה — שיחות שבוצעו, מעקב, תמחור…",
+    "label": "הוספת הערה לליד הזה",
+    "adding": "בהוספה…",
+    "addNote": "הוספת הערה",
+    "loadError": "לא ניתן לטעון את ציר הזמן",
+    "empty": "אין עדיין פעילות — הערות ושינויי סטטוס יופיעו כאן."
+  },
+  "form": {
+    "newTitle": "ליד חדש",
+    "editTitle": "עריכת ליד",
+    "newDescription": "תעדו פניית מכירה להמשך טיפול של הצוות.",
+    "editDescription": "עדכנו את הפרטים — שינויי סטטוס מתבצעים דרך פעולות הליד.",
+    "title": "כותרת",
+    "titlePlaceholder": "מה מבוקש, למשל החלפת חיווט במטבח",
+    "valueHint": "שווי משוער של העבודה, בשקלים.",
+    "notesPlaceholder": "מה התבקש, תקציב, לוח זמנים… (אופציונלי)",
+    "notesHint": "ההערה הראשונה בציר הזמן של פעילות הליד.",
+    "submitAdd": "הוספת ליד",
+    "added": "הליד נוסף",
+    "updated": "הליד עודכן"
+  },
+  "markWon": {
+    "title": "לסמן את הליד הזה כנסגר בהצלחה?",
+    "description": "הליד “{title}” ייסגר בהצלחה. אפשר לפתוח אותו מחדש בהמשך אם המצב ישתנה.",
+    "descriptionWithValue": "הליד “{title}” ייסגר בהצלחה, ו-{value} ייכללו בסכום הכולל של החודש. אפשר לפתוח אותו מחדש בהמשך אם המצב ישתנה.",
+    "confirm": "סימון כנסגר בהצלחה",
+    "toast": "הליד סומן כנסגר בהצלחה"
+  },
+  "markLost": {
+    "title": "סימון הליד הזה כאבוד",
+    "description": "סגירת “{title}” ללא עסקה. אפשר לפתוח אותו מחדש בהמשך אם איש הקשר יחזור.",
+    "descriptionNamed": "סגירת “{title}” ללא עסקה. אפשר לפתוח אותו מחדש בהמשך אם {name} יחזור.",
+    "reason": "סיבה",
+    "reasonPlaceholder": "בחירה בספק אחר",
+    "reasonHint": "לא חובה — תתווסף לציר הזמן של הליד.",
+    "confirm": "סימון כאבוד",
+    "toast": "הליד סומן כאבוד",
+    "note": "אבוד — {reason}"
+  },
+  "reopen": {
+    "title": "לפתוח מחדש את הליד הזה?",
+    "description": "החזרת “{title}” לתהליך המכירה בסטטוס נוצר קשר.",
+    "descriptionWon": "החזרת “{title}” לתהליך המכירה בסטטוס נוצר קשר והסרתו מסיכומי הלידים שנסגרו בהצלחה.",
+    "confirm": "פתיחת הליד מחדש",
+    "toast": "הליד נפתח מחדש"
+  },
+  "convert": {
+    "title": "להמיר את הליד הזה לעבודה?",
+    "description": "יצירת עבודה עבור “{title}” עם איש הקשר משויך, מוכנה לתזמון. הליד נשאר כאן עם ההיסטוריה שלו.",
+    "descriptionNamed": "יצירת עבודה עבור “{title}” עם {name} משויך, מוכנה לתזמון. הליד נשאר כאן עם ההיסטוריה שלו.",
+    "confirm": "המרה לעבודה",
+    "converting": "המרה מתבצעת…",
+    "toast": "עבודה {reference} נוצרה"
+  },
+  "delete": {
+    "title": "למחוק את הליד הזה?",
+    "description": "“{title}” וציר הזמן של הפעילות שלו יימחקו לצמיתות. כדי לשמור את ההיסטוריה, סמנו אותו כאבוד במקום למחוק.",
+    "keep": "השארת הליד",
+    "confirm": "מחיקת הליד",
+    "toast": "הליד נמחק"
+  }
+}

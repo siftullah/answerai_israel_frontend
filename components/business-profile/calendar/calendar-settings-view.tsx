@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -33,13 +35,6 @@ import {
 } from "@/hooks/use-business-calendar-settings";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
 import { SLOT_INTERVALS, type CalendarBusinessSettings } from "@/lib/api/types";
-
-// Base UI's SelectValue renders the raw value unless the root knows the
-// item labels — without this the trigger shows e.g. "15" instead of "15 minutes".
-const INTERVAL_ITEMS = SLOT_INTERVALS.map((interval) => ({
-  value: String(interval),
-  label: `${interval} minutes`,
-}));
 import {
   calendarSettingsSchema,
   toCalendarSettingsPayload,
@@ -48,21 +43,22 @@ import {
 } from "@/lib/validation/calendar-settings";
 
 export function CalendarSettingsView() {
+  const t = useTranslations("businessProfile.calendar");
   const { business } = useBusiness();
   const settingsQuery = useBusinessCalendarSettings(business.id);
 
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Calendar"
-        description="Booking defaults for appointments and callbacks. Members can carry their own overrides."
+        title={t("title")}
+        description={t("description")}
       />
 
       {settingsQuery.isPending ? (
         <Skeleton className="h-96 w-full max-w-2xl" />
       ) : settingsQuery.isError ? (
         <ErrorState
-          title="Couldn't load calendar settings"
+          title={t("loadError")}
           message={settingsQuery.error.message}
           onRetry={() => settingsQuery.refetch()}
         />
@@ -80,10 +76,22 @@ function SettingsForm({
   businessUuid: string;
   settings: CalendarBusinessSettings;
 }) {
+  const t = useTranslations("businessProfile.calendar");
+  const ts = useTranslations("businessProfile.shared");
+  const tc = useTranslations("common");
   const update = useUpdateBusinessCalendarSettings(businessUuid);
 
+  // Base UI's SelectValue renders the raw value unless the root knows the
+  // item labels — without this the trigger shows e.g. "15" instead of "15 minutes".
+  const intervalItems = SLOT_INTERVALS.map((interval) => ({
+    value: String(interval),
+    label: t("intervalMinutes", { count: interval }),
+  }));
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => calendarSettingsSchema(tv), [tv]);
   const form = useForm<CalendarSettingsValues>({
-    resolver: zodResolver(calendarSettingsSchema),
+    resolver: zodResolver(schema),
     defaultValues: toCalendarSettingsValues(settings),
   });
   const { errors, isDirty } = form.formState;
@@ -93,7 +101,7 @@ function SettingsForm({
     update.mutate(toCalendarSettingsPayload(values), {
       onSuccess: (updated) => {
         form.reset(toCalendarSettingsValues(updated));
-        toast.success("Calendar settings saved");
+        toast.success(t("toasts.saved"));
       },
       onError: (error) => applyServerErrors(form, error),
     });
@@ -109,18 +117,18 @@ function SettingsForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Booking rules</CardTitle>
-          <CardDescription>How slots are offered when your AI books for callers.</CardDescription>
+          <CardTitle>{t("bookingRules.title")}</CardTitle>
+          <CardDescription>{t("bookingRules.description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           <Field>
-            <FieldLabel htmlFor="slot_interval_minutes">Slot interval</FieldLabel>
+            <FieldLabel htmlFor="slot_interval_minutes">{t("bookingRules.slotInterval")}</FieldLabel>
             <Controller
               control={form.control}
               name="slot_interval_minutes"
               render={({ field }) => (
                 <Select
-                  items={INTERVAL_ITEMS}
+                  items={intervalItems}
                   value={field.value || null}
                   onValueChange={(value) => field.onChange((value as string | null) ?? "")}
                 >
@@ -128,7 +136,7 @@ function SettingsForm({
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    {INTERVAL_ITEMS.map((item) => (
+                    {intervalItems.map((item) => (
                       <SelectItem key={item.value} value={item.value}>
                         {item.label}
                       </SelectItem>
@@ -140,27 +148,27 @@ function SettingsForm({
           </Field>
 
           <Field data-invalid={!!errors.min_notice_minutes || undefined}>
-            <FieldLabel htmlFor="min_notice_minutes">Minimum notice (minutes)</FieldLabel>
+            <FieldLabel htmlFor="min_notice_minutes">{t("bookingRules.minNotice")}</FieldLabel>
             <Input
               id="min_notice_minutes"
               inputMode="numeric"
-              placeholder="120"
+              placeholder={t("bookingRules.minNoticePlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.min_notice_minutes}
               {...form.register("min_notice_minutes")}
             />
-            <p className="text-sm text-muted-foreground">2 hours = 120.</p>
+            <p className="text-sm text-muted-foreground">{t("bookingRules.minNoticeHint")}</p>
             {errors.min_notice_minutes && (
               <FieldError>{errors.min_notice_minutes.message}</FieldError>
             )}
           </Field>
 
           <Field data-invalid={!!errors.max_horizon_days || undefined}>
-            <FieldLabel htmlFor="max_horizon_days">Booking horizon (days)</FieldLabel>
+            <FieldLabel htmlFor="max_horizon_days">{t("bookingRules.horizon")}</FieldLabel>
             <Input
               id="max_horizon_days"
               inputMode="numeric"
-              placeholder="60"
+              placeholder={t("bookingRules.horizonPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.max_horizon_days}
               {...form.register("max_horizon_days")}
@@ -171,11 +179,11 @@ function SettingsForm({
           </Field>
 
           <Field data-invalid={!!errors.buffer_minutes || undefined}>
-            <FieldLabel htmlFor="buffer_minutes">Buffer between bookings (minutes)</FieldLabel>
+            <FieldLabel htmlFor="buffer_minutes">{t("bookingRules.buffer")}</FieldLabel>
             <Input
               id="buffer_minutes"
               inputMode="numeric"
-              placeholder="15"
+              placeholder={t("bookingRules.bufferPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.buffer_minutes}
               {...form.register("buffer_minutes")}
@@ -196,17 +204,17 @@ function SettingsForm({
               )}
             />
             <FieldLabel htmlFor="limit_bookings" className="font-normal">
-              Limit bookings per day
+              {t("bookingRules.limitBookings")}
             </FieldLabel>
           </Field>
 
           {limitBookings && (
             <Field data-invalid={!!errors.max_bookings_per_day || undefined}>
-              <FieldLabel htmlFor="max_bookings_per_day">Maximum per day</FieldLabel>
+              <FieldLabel htmlFor="max_bookings_per_day">{t("bookingRules.maxPerDay")}</FieldLabel>
               <Input
                 id="max_bookings_per_day"
                 inputMode="numeric"
-                placeholder="8"
+                placeholder={t("bookingRules.maxPerDayPlaceholder")}
                 autoComplete="off"
                 aria-invalid={!!errors.max_bookings_per_day}
                 {...form.register("max_bookings_per_day")}
@@ -221,18 +229,18 @@ function SettingsForm({
 
       <Card>
         <CardHeader>
-          <CardTitle>Durations</CardTitle>
-          <CardDescription>Default lengths for AI-booked slots.</CardDescription>
+          <CardTitle>{t("durations.title")}</CardTitle>
+          <CardDescription>{t("durations.description")}</CardDescription>
         </CardHeader>
         <CardContent className="grid gap-5 sm:grid-cols-2">
           <Field data-invalid={!!errors.appointment_duration_minutes || undefined}>
             <FieldLabel htmlFor="appointment_duration_minutes">
-              Appointment (minutes)
+              {t("durations.appointment")}
             </FieldLabel>
             <Input
               id="appointment_duration_minutes"
               inputMode="numeric"
-              placeholder="30"
+              placeholder={t("durations.appointmentPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.appointment_duration_minutes}
               {...form.register("appointment_duration_minutes")}
@@ -243,11 +251,11 @@ function SettingsForm({
           </Field>
 
           <Field data-invalid={!!errors.callback_duration_minutes || undefined}>
-            <FieldLabel htmlFor="callback_duration_minutes">Callback (minutes)</FieldLabel>
+            <FieldLabel htmlFor="callback_duration_minutes">{t("durations.callback")}</FieldLabel>
             <Input
               id="callback_duration_minutes"
               inputMode="numeric"
-              placeholder="15"
+              placeholder={t("durations.callbackPlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.callback_duration_minutes}
               {...form.register("callback_duration_minutes")}
@@ -262,12 +270,12 @@ function SettingsForm({
       <div className="flex items-center justify-end gap-2">
         {isDirty && (
           <Button type="button" variant="ghost" onClick={() => form.reset()}>
-            Discard changes
+            {ts("discardChanges")}
           </Button>
         )}
         <Button type="submit" disabled={!isDirty || update.isPending}>
           {update.isPending && <Spinner />}
-          Save changes
+          {tc("actions.saveChanges")}
         </Button>
       </div>
     </form>

@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { CalendarIcon, PlusIcon } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -30,32 +31,6 @@ export type AppointmentTab = "upcoming" | "today" | "needs_review" | "history";
 const OPEN_STATUSES = UPCOMING_APPOINTMENT_STATUSES.join(",");
 const TERMINAL_STATUSES = "completed,canceled,no_show";
 
-const COPY: Record<AppointmentTab, { emptyTitle: string; emptyDescription: string }> = {
-  upcoming: {
-    emptyTitle: "No upcoming appointments",
-    emptyDescription:
-      "Bookings taken by your AI agents — and ones you add yourself — will show up here.",
-  },
-  today: {
-    emptyTitle: "Nothing booked today",
-    emptyDescription: "Appointments starting today will appear here.",
-  },
-  needs_review: {
-    emptyTitle: "Nothing to review",
-    emptyDescription:
-      "Open bookings whose time has passed land here until you record an outcome.",
-  },
-  history: {
-    emptyTitle: "No appointment history yet",
-    emptyDescription: "Completed, canceled and no-show bookings land here.",
-  },
-};
-
-const NO_MATCH_COPY = {
-  emptyTitle: "No appointments match",
-  emptyDescription: "Try a different search or clear some filters.",
-};
-
 /**
  * Master-detail shell mirroring the callbacks page: list rail + detail pane on
  * one divider. Only the selected appointment lives in the URL (?appointment=…);
@@ -63,6 +38,7 @@ const NO_MATCH_COPY = {
  * but the pane still renders any uuid.
  */
 export function AppointmentsView() {
+  const t = useTranslations("appointments");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -132,22 +108,32 @@ export function AppointmentsView() {
   const newAppointmentButton = (
     <Button onClick={() => setCreating(true)}>
       <PlusIcon />
-      New appointment
+      {t("page.newAppointment")}
     </Button>
   );
 
-  const copy = hasActiveFilters ? NO_MATCH_COPY : COPY[tab];
+  const emptyCopy: Record<AppointmentTab | "noMatch", { title: string; description: string }> = {
+    upcoming: { title: t("empty.upcoming.title"), description: t("empty.upcoming.description") },
+    today: { title: t("empty.today.title"), description: t("empty.today.description") },
+    needs_review: {
+      title: t("empty.needsReview.title"),
+      description: t("empty.needsReview.description"),
+    },
+    history: { title: t("empty.history.title"), description: t("empty.history.description") },
+    noMatch: { title: t("empty.noMatch.title"), description: t("empty.noMatch.description") },
+  };
+  const copy = emptyCopy[hasActiveFilters ? "noMatch" : tab];
 
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Appointments"
-        description="Bookings taken by your AI agents and your team."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={
           <>
             <Button variant="outline" render={<Link href={`/b/${business.id}/calendar`} />}>
               <CalendarIcon />
-              Open calendar
+              {t("page.openCalendar")}
             </Button>
             {newAppointmentButton}
           </>
@@ -157,14 +143,14 @@ export function AppointmentsView() {
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
           <Tabs value={tab} onValueChange={(value) => changeTab(value as AppointmentTab)}>
             <TabsList className="w-full">
               <TabsTrigger value="upcoming">
-                Upcoming
+                {t("tabs.upcoming")}
                 {counts !== undefined && counts.upcoming > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.upcoming}
@@ -172,7 +158,7 @@ export function AppointmentsView() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="today">
-                Today
+                {t("tabs.today")}
                 {counts !== undefined && counts.today > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.today}
@@ -180,14 +166,14 @@ export function AppointmentsView() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="needs_review">
-                Review
+                {t("tabs.needsReview")}
                 {counts !== undefined && counts.needs_review > 0 && (
                   <Badge variant="warning" className="h-5">
                     {counts.needs_review}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="history">History</TabsTrigger>
+              <TabsTrigger value="history">{t("tabs.history")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -200,15 +186,15 @@ export function AppointmentsView() {
             members={membersQuery.data}
           />
 
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <AppointmentList
               businessUuid={business.id}
               filters={apiFilters}
               selectedId={selectedId}
               nowMs={nowMs}
               onSelect={select}
-              emptyTitle={copy.emptyTitle}
-              emptyDescription={copy.emptyDescription}
+              emptyTitle={copy.title}
+              emptyDescription={copy.description}
               emptyAction={hasActiveFilters ? undefined : newAppointmentButton}
             />
           </div>
@@ -218,7 +204,7 @@ export function AppointmentsView() {
           // Keyed so switching appointments starts the pane back at the top.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

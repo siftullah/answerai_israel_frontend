@@ -1,3 +1,5 @@
+import { displayLocale, rt, runtimeLocale } from "@/lib/i18n/runtime";
+
 /** 187 → "3:07"; 3727 → "1:02:07". */
 export function formatDuration(totalSeconds: number): string {
   const seconds = Math.max(0, Math.round(totalSeconds));
@@ -14,14 +16,18 @@ export function formatOffset(t0Secs: number): string {
 }
 
 /**
- * Display locale for every date and time formatter. en-IL, not he-IL: Latin
- * digits, English month names, day-month-year order and no bidi marks (the
- * same reasoning as lib/money.ts). en-IL defaults to a 24-hour clock, so the
- * time formatters pass `hour12: true` to keep the am/pm display.
+ * Display locale for every date and time formatter follows the UI language
+ * (i18n/config intlLocales): en-IL / he-IL / ar-PS, all with Latin digits
+ * and no bidi marks (the same reasoning as lib/money.ts). English keeps the
+ * 12-hour am/pm clock the design calls for; Hebrew and Arabic read 24-hour.
  */
-export const LOCALE = "en-IL";
+function hour12(): boolean {
+  return runtimeLocale() === "en";
+}
 
-const TIME = { hour: "numeric", minute: "2-digit", hour12: true } as const;
+function timeOptions(): Intl.DateTimeFormatOptions {
+  return { hour: "numeric", minute: "2-digit", hour12: hour12() };
+}
 
 /**
  * Timestamps arrive from the API in UTC. Every formatter takes the business
@@ -32,13 +38,13 @@ const TIME = { hour: "numeric", minute: "2-digit", hour12: true } as const;
 
 /** Bare time of day: "10:32 am" — for rows already under a day heading. */
 export function formatTimeOfDay(iso: string, timeZone?: string): string {
-  return new Date(iso).toLocaleTimeString(LOCALE, { ...TIME, timeZone });
+  return new Date(iso).toLocaleTimeString(displayLocale(), { ...timeOptions(), timeZone });
 }
 
 /** Compact date + time for list rows: "27 Jul 2026 - 03:15 PM". */
 export function formatDateAndTime(iso: string, timeZone?: string): string {
   const date = new Date(iso);
-  const day = date.toLocaleDateString(LOCALE, {
+  const day = date.toLocaleDateString(displayLocale(), {
     timeZone,
     day: "numeric",
     month: "short",
@@ -47,7 +53,12 @@ export function formatDateAndTime(iso: string, timeZone?: string): string {
   // Leading-zero hour + uppercase AM/PM is what the design calls for; the
   // locale renders "03:15 pm", and the string is only digits, ":" and am/pm.
   const time = date
-    .toLocaleTimeString(LOCALE, { timeZone, hour: "2-digit", minute: "2-digit", hour12: true })
+    .toLocaleTimeString(displayLocale(), {
+      timeZone,
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: hour12(),
+    })
     .toUpperCase();
   return `${day} - ${time}`;
 }
@@ -67,14 +78,14 @@ export function dayKey(iso: string, timeZone?: string): string {
 export function formatDayHeading(iso: string, timeZone?: string): string {
   const key = dayKey(iso, timeZone);
   const nowKey = dayKey(new Date().toISOString(), timeZone);
-  if (key === nowKey) return "Today";
+  if (key === nowKey) return rt("lib.datetime.today");
 
   const yesterday = new Date();
   yesterday.setDate(yesterday.getDate() - 1);
-  if (key === dayKey(yesterday.toISOString(), timeZone)) return "Yesterday";
+  if (key === dayKey(yesterday.toISOString(), timeZone)) return rt("lib.datetime.yesterday");
 
   const sameYear = key.slice(0, 4) === nowKey.slice(0, 4);
-  return new Date(iso).toLocaleDateString(LOCALE, {
+  return new Date(iso).toLocaleDateString(displayLocale(), {
     timeZone,
     weekday: sameYear ? "short" : undefined,
     day: "numeric",
@@ -85,18 +96,18 @@ export function formatDayHeading(iso: string, timeZone?: string): string {
 
 /** Full timestamp for detail views: "24 Jul 2026, 10:32 am". */
 export function formatDateTime(iso: string, timeZone?: string): string {
-  return new Date(iso).toLocaleString(LOCALE, {
+  return new Date(iso).toLocaleString(displayLocale(), {
     timeZone,
     day: "numeric",
     month: "short",
     year: "numeric",
-    ...TIME,
+    ...timeOptions(),
   });
 }
 
 /** Date only, no time — for expiry/updated columns: "24 Jul 2026". */
 export function formatDate(iso: string, timeZone?: string): string {
-  return new Date(iso).toLocaleDateString(LOCALE, {
+  return new Date(iso).toLocaleDateString(displayLocale(), {
     timeZone,
     day: "numeric",
     month: "short",
@@ -203,7 +214,7 @@ export function toDateKey(date: Date): string {
 export function formatDateKey(key: string): string {
   const date = parseDateKey(key);
   return date
-    ? date.toLocaleDateString(LOCALE, { day: "numeric", month: "long", year: "numeric" })
+    ? date.toLocaleDateString(displayLocale(), { day: "numeric", month: "long", year: "numeric" })
     : key;
 }
 

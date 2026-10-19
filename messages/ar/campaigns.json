@@ -1,0 +1,315 @@
+{
+  "meta": {
+    "title": "الحملات",
+    "detailTitle": "حملة"
+  },
+  "status": {
+    "draft": "مسودة",
+    "scheduled": "مجدول",
+    "running": "قيد التشغيل",
+    "paused": "متوقف مؤقتًا",
+    "completed": "مكتمل",
+    "canceled": "ملغى"
+  },
+  "recipientStatus": {
+    "pending": "قيد الانتظار",
+    "queued": "في قائمة الانتظار",
+    "calling": "جارٍ الاتصال",
+    "completed": "مكتمل",
+    "retry_scheduled": "إعادة المحاولة مجدولة",
+    "failed": "فشل",
+    "max_attempts": "تم بلوغ الحد الأقصى للمحاولات",
+    "dnc_blocked": "في قائمة عدم الاتصال (DNC)",
+    "invalid": "غير صالح",
+    "skipped": "تم التخطي",
+    "canceled": "ملغى"
+  },
+  "startErrors": {
+    "campaign_not_startable": "يمكن بدء الحملات المسودة أو المجدولة فقط.",
+    "campaign_agent_not_ready": "يجب أن يكون وكيل الذكاء الاصطناعي نشطًا ومنشورًا ومخصصًا للمكالمات الصادرة قبل أن تتمكن الحملة من الاتصال.",
+    "campaign_number_not_ready": "رقم المتصل غير نشط بعد.",
+    "campaign_number_not_dialable": "لا يمكن استخدام أرقام SIP لإجراء مكالمات الحملات — اختر أحد أرقام Twilio لديك.",
+    "campaign_no_recipients": "أضف مستلمًا واحدًا على الأقل قبل البدء.",
+    "campaign_locked": "انتهت هذه الحملة ولم يعد بالإمكان تعديلها."
+  },
+  "filters": {
+    "byStatus": "تصفية حسب الحالة",
+    "allStatuses": "جميع الحالات"
+  },
+  "a11y": {
+    "actionsFor": "إجراءات لـ {name}",
+    "selectItem": "اختر {name}"
+  },
+  "list": {
+    "title": "الحملات",
+    "description": "مكالمات صادرة جماعية — يتصل وكيل الذكاء الاصطناعي بالأرقام في القائمة، ويعيد المحاولات غير الناجحة، ويتخطى المسجلين في سجل عدم الاتصال.",
+    "newCampaign": "حملة جديدة",
+    "searchPlaceholder": "بحث في الحملات",
+    "loadError": "تعذر تحميل الحملات",
+    "noMatches": "لا توجد حملات تطابق عوامل التصفية.",
+    "emptyTitle": "لا توجد حملات بعد",
+    "emptyDescription": "أنشئ حملة، وحمّل قائمة الأرقام أو جهات الاتصال، وسيتولى وكيل الذكاء الاصطناعي للمكالمات الصادرة إجراء الاتصالات.",
+    "noAgent": "لا يوجد وكيل ذكاء اصطناعي",
+    "fromNumber": "من {number}",
+    "noCallerNumber": "لا يوجد رقم متصل"
+  },
+  "table": {
+    "agent": "وكيل الذكاء الاصطناعي",
+    "callerNumber": "رقم المتصل",
+    "progress": "التقدم",
+    "created": "تاريخ الإنشاء"
+  },
+  "progress": {
+    "noRecipients": "لا يوجد مستلمون",
+    "doneOfTotal": "{done} من {total}"
+  },
+  "actions": {
+    "start": "بدء",
+    "startNow": "بدء الآن",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "duplicate": "إنشاء نسخة",
+    "cancelCampaign": "إلغاء الحملة"
+  },
+  "toasts": {
+    "created": "تم إنشاء الحملة كمسودة — أضف المستلمين الآن",
+    "updated": "تم تحديث الحملة",
+    "scheduled": "تمت جدولة الحملة — يبدأ الاتصال في وقت البدء",
+    "started": "تم بدء الحملة",
+    "paused": "تم إيقاف الحملة مؤقتًا",
+    "resumed": "تم استئناف الحملة",
+    "duplicated": "تم إنشاء نسخة من الحملة كمسودة",
+    "canceled": "تم إلغاء الحملة",
+    "deleted": "تم حذف الحملة",
+    "noRecipientsHint": "أضف أرقامًا، أو اختر جهات اتصال، أو استورد جدول بيانات أدناه."
+  },
+  "cancelDialog": {
+    "title": "إلغاء {name}؟",
+    "description": "يؤدي الإلغاء إلى إيقاف الاتصال وإلغاء جميع المكالمات في قائمة الانتظار والاتصال بالمستلمين المتبقين. لا يمكن التراجع عن هذا الإجراء.",
+    "keepRunning": "متابعة التشغيل"
+  },
+  "deleteDialog": {
+    "title": "حذف {name}؟",
+    "description": "سيؤدي هذا إلى حذف الحملة وقائمة مستلميها. ستبقى المكالمات التي أجرتها في سجل المكالمات."
+  },
+  "create": {
+    "title": "حملة جديدة",
+    "description": "اختر وكيل الذكاء الاصطناعي الذي سيجري المكالمات والرقم الذي سيتصل منه — يمكنك تغيير كل شيء آخر لاحقًا.",
+    "submit": "إنشاء حملة",
+    "steps": {
+      "basics": "المعلومات الأساسية",
+      "pacingSchedule": "وتيرة الاتصال والجدولة"
+    }
+  },
+  "form": {
+    "namePlaceholder": "مثال: متابعات تموز",
+    "agent": "وكيل الذكاء الاصطناعي",
+    "agentPlaceholder": "اختر وكيل ذكاء اصطناعي للمكالمات الصادرة",
+    "noAgents": "لا يوجد وكلاء ذكاء اصطناعي جاهزون للمكالمات الصادرة — أنشئ وكيلًا ضمن قسم وكلاء الذكاء الاصطناعي وانشره أولًا.",
+    "agentHint": "لا يمكن إجراء مكالمات الحملات إلا عبر وكلاء الذكاء الاصطناعي النشطين والمنشورين للمكالمات الصادرة.",
+    "callerNumber": "رقم المتصل",
+    "numberPlaceholder": "اختر الرقم الذي ستُجرى منه المكالمات",
+    "noNumbers": "لا توجد أرقام مؤهلة — تُجرى مكالمات الحملات من أرقام Twilio النشطة لديك (لا يمكن لأرقام SIP إجراء مكالمات الحملات).",
+    "numberHint": "يظهر هذا الرقم للمستلمين في معرّف المتصل.",
+    "startDate": "تاريخ البدء",
+    "startTime": "وقت البدء",
+    "endDate": "تاريخ الانتهاء",
+    "endTime": "وقت الانتهاء",
+    "scheduleHint": "الأوقات حسب المنطقة الزمنية لنشاطك التجاري. اترك الحقول فارغة لبدء الحملة يدويًا ومتابعتها حتى اكتمال الاتصال بجميع المستلمين.",
+    "maxConcurrent": "المكالمات المتزامنة",
+    "maxAttempts": "المحاولات لكل شخص",
+    "retryDelay": "إعادة المحاولة بعد (دقائق)",
+    "retryOn": "إعادة المحاولة عند انتهاء المكالمة بحالة",
+    "retryOnHint": "أي نتيجة أخرى — مكالمات تم الرد عليها، أرقام غير صالحة — تُعد نهائية بعد محاولة واحدة.",
+    "retryReasons": {
+      "no_answer": "لا رد",
+      "busy": "مشغول",
+      "failed": "فشل المكالمة"
+    }
+  },
+  "detail": {
+    "notFoundTitle": "لم يتم العثور على الحملة",
+    "notFoundMessage": "هذه الحملة غير موجودة أو تم حذفها.",
+    "loadError": "تعذّر تحميل هذه الحملة",
+    "moreActions": "مزيد من إجراءات الحملة",
+    "subline": {
+      "from": "من {number}",
+      "starts": "تبدأ {date}",
+      "finished": "انتهت في {date}"
+    }
+  },
+  "tabs": {
+    "recipients": "المستلمون",
+    "recipientsSubtitle": "كل من تتصل بهم هذه الحملة",
+    "calls": "المكالمات",
+    "callsSubtitle": "كل محاولات الاتصال التي أجرتها هذه الحملة",
+    "settingsSubtitle": "الجدولة، ووتيرة الاتصال، والساعات، والمتغيرات"
+  },
+  "stats": {
+    "waiting": "قيد الانتظار",
+    "calling": "جارٍ الاتصال",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "blocked": "محظور",
+    "minutesUsed": "الدقائق المستخدمة",
+    "queued": "{count, plural, zero {{count} في قائمة الانتظار} one {{count} في قائمة الانتظار} two {{count} في قائمة الانتظار} few {{count} في قائمة الانتظار} many {{count} في قائمة الانتظار} other {{count} في قائمة الانتظار}}",
+    "awaitingRetry": "{count, plural, zero {{count} بانتظار إعادة المحاولة} one {{count} بانتظار إعادة المحاولة} two {{count} بانتظار إعادة المحاولة} few {{count} بانتظار إعادة المحاولة} many {{count} بانتظار إعادة المحاولة} other {{count} بانتظار إعادة المحاولة}}",
+    "onDnc": "{count, plural, zero {{count} في قائمة عدم الاتصال (DNC)} one {{count} في قائمة عدم الاتصال (DNC)} two {{count} في قائمة عدم الاتصال (DNC)} few {{count} في قائمة عدم الاتصال (DNC)} many {{count} في قائمة عدم الاتصال (DNC)} other {{count} في قائمة عدم الاتصال (DNC)}}",
+    "invalid": "{count, plural, zero {{count} غير صالح} one {{count} غير صالح} two {{count} غير صالحين} few {{count} غير صالحين} many {{count} غير صالح} other {{count} غير صالح}}",
+    "skipped": "{count, plural, zero {تم تخطي {count}} one {تم تخطي {count}} two {تم تخطي {count}} few {تم تخطي {count}} many {تم تخطي {count}} other {تم تخطي {count}}}",
+    "hitMaxAttempts": "{count, plural, zero {بلغ {count} الحد الأقصى للمحاولات} one {بلغ {count} الحد الأقصى للمحاولات} two {بلغ {count} الحد الأقصى للمحاولات} few {بلغ {count} الحد الأقصى للمحاولات} many {بلغ {count} الحد الأقصى للمحاولات} other {بلغ {count} الحد الأقصى للمحاولات}}"
+  },
+  "calls": {
+    "searchPlaceholder": "ابحث عن رقم أو متصل",
+    "filterByStatus": "تصفية حسب حالة المكالمة",
+    "emptyTitle": "لا توجد مكالمات بعد",
+    "emptyDescription": "تظهر المكالمات هنا عندما تُجري الحملة اتصالاتها. ابدأ الحملة للبدء.",
+    "status": {
+      "queued": "في قائمة الانتظار",
+      "initiating": "جارٍ بدء الاتصال",
+      "ringing": "جارٍ الرنين",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "busy": "مشغول",
+      "no_answer": "لا رد",
+      "failed": "فشل",
+      "canceled": "ملغى"
+    }
+  },
+  "settings": {
+    "locked": "انتهت هذه الحملة — الإعدادات للقراءة فقط. أنشئ نسخة منها لتشغيل الإعدادات نفسها مجددًا.",
+    "basicsTitle": "المعلومات الأساسية",
+    "basicsDescription": "وكيل الذكاء الاصطناعي الذي يتحدث والرقم الظاهر في معرّف المتصل.",
+    "scheduleTitle": "الجدولة",
+    "scheduleDescription": "فترة اختيارية — يبدأ الاتصال ويتوقف تلقائيًا.",
+    "clearSchedule": "مسح الجدولة",
+    "hoursTitle": "ساعات الاتصال",
+    "hoursDescription": "الأوقات المسموح فيها للحملة بالاتصال. خارج هذه الفترات، تنتظر الحملة.",
+    "hoursInherit": "ساعات العمل",
+    "hoursInheritDescription": "تتبع ساعات عمل نشاطك التجاري.",
+    "hoursCustom": "ساعات مخصصة",
+    "hoursCustomDescription": "حدّد أيامًا وأوقاتًا محددة لهذه الحملة.",
+    "pacingTitle": "وتيرة الاتصال وإعادة المحاولة",
+    "pacingDescription": "كثافة اتصالات الحملة، والحالات التي تستحق إعادة المحاولة.",
+    "variablesTitle": "المتغيرات الافتراضية",
+    "variablesDescription": "قيم لمتغيرات وكيل الذكاء الاصطناعي على مستوى الحملة. تحل قيم كل مستلم محلها.",
+    "variablesPickAgent": "اختر وكيل الذكاء الاصطناعي أولًا — تظهر متغيراته المعرّفة هنا.",
+    "variablesNone": "لا توجد لهذا الوكيل متغيرات يمكن تعيينها لكل حملة. تُملأ المتغيرات المدمجة مثل {contactName} و{businessName} تلقائيًا في كل مكالمة.",
+    "variablesPlaceholder": "قيمة بديلة للمستلمين الذين ليس لديهم قيمة خاصة",
+    "variablesHint": "يُتخطى المستلم بدلًا من الاتصال به إذا لم تتوفر قيمة لمتغير هنا أو في صفه. لا تُستخدم القيمة الافتراضية لوكيل الذكاء الاصطناعي مطلقًا في مكالمات الحملة."
+  },
+  "recipients": {
+    "searchPlaceholder": "البحث بالهاتف أو الاسم",
+    "retryAllFailed": "إعادة محاولة كل ما فشل أو تم تخطيه",
+    "importCsv": "استيراد CSV",
+    "fromContacts": "من جهات الاتصال",
+    "add": "إضافة مستلمين",
+    "loadError": "تعذّر تحميل المستلمين",
+    "noMatches": "لا يوجد مستلمون يطابقون عوامل التصفية.",
+    "emptyTitle": "لا يوجد مستلمون بعد",
+    "emptyDescription": "أضف أرقامًا يدويًا، أو اختر أشخاصًا من جهات الاتصال، أو استورد جدول بيانات — ثم ابدأ الحملة.",
+    "toasts": {
+      "retried": "تم إدراج المستلم في قائمة الانتظار لمحاولة أخرى",
+      "requeued": "تمت إعادة إدراج {count, plural, zero {{count} من المستلمين} one {{count} مستلم} two {{count} من المستلمين} few {{count} مستلمين} many {{count} مستلمًا} other {{count} مستلم}} في قائمة الانتظار",
+      "nothingToRetry": "لا شيء لإعادة المحاولة",
+      "removed": "تمت إزالة المستلم",
+      "bulkRemoved": "تمت إزالة {count, plural, zero {{count} من المستلمين} one {{count} مستلم} two {{count} من المستلمين} few {{count} مستلمين} many {{count} مستلمًا} other {{count} مستلم}}",
+      "bulkRemovedWithSkipped": "تمت إزالة {count, plural, zero {{count} من المستلمين} one {{count} مستلم} two {{count} من المستلمين} few {{count} مستلمين} many {{count} مستلمًا} other {{count} مستلم}} — وتم تخطي {skipped, plural, zero {{skipped} من المستلمين} one {{skipped} مستلم} two {{skipped} من المستلمين} few {{skipped} مستلمين} many {{skipped} مستلمًا} other {{skipped} مستلم}} (في مكالمة حاليًا)"
+    },
+    "errors": {
+      "notRetryable": "يمكن إعادة محاولة الاتصال فقط بالمستلمين الذين فشل الاتصال بهم أو تم تخطيهم.",
+      "canceledNoRetry": "لا يمكن إعادة محاولة الاتصال بالمستلمين في الحملات الملغاة.",
+      "onCall": "لا يمكن إزالة مستلم يجري مكالمة الآن.",
+      "locked": "انتهت هذه الحملة — لم يعد بالإمكان إضافة مستلمين."
+    },
+    "removeDialog": {
+      "title": "إزالة {phone}؟",
+      "description": "لن تتصل به هذه الحملة. يمكن إضافة الرقم مجددًا لاحقًا."
+    },
+    "bulkRemoveDialog": {
+      "title": "إزالة {count, plural, zero {{count} من المستلمين} one {{count} مستلم} two {{count} من المستلمين} few {{count} مستلمين} many {{count} مستلمًا} other {{count} مستلم}}؟",
+      "description": "لن تتصل بهم هذه الحملة. سيتم تخطي أي مستلم يجري مكالمة حاليًا."
+    },
+    "bulk": {
+      "retryCount": "إعادة المحاولة لـ {count}",
+      "clearSelection": "إلغاء التحديد"
+    },
+    "table": {
+      "selectAll": "تحديد جميع المستلمين المحمّلين",
+      "variables": "المتغيرات",
+      "attempts": "المحاولات",
+      "nextAttempt": "المحاولة التالية",
+      "lastResult": "آخر نتيجة",
+      "unnamedContact": "جهة اتصال بلا اسم",
+      "attemptsOf": "{attempts} من {max}",
+      "company": "الشركة",
+      "address": "العنوان"
+    },
+    "retryDialog": {
+      "titleSingle": "إعادة محاولة الاتصال بـ {phone}؟",
+      "titleIds": "إعادة محاولة الاتصال بـ {count, plural, zero {{count} من المستلمين} one {{count} مستلم} two {{count} من المستلمين} few {{count} مستلمين} many {{count} مستلمًا} other {{count} مستلم}}؟",
+      "titleAllFailed": "إعادة محاولة الاتصال بكل مستلم فشل الاتصال به أو تم تخطيه؟",
+      "description": "يُعاد تعيين عدد المحاولات إلى الصفر ويبدأ الاتصال مجددًا.",
+      "descriptionIds": "تُعاد أعداد المحاولات إلى الصفر ويبدأ الاتصال مجددًا. تبقى الصفوف التي لم تفشل أو يتم تخطيها دون تغيير.",
+      "reopens": "هذه الحملة مكتملة — إعادة المحاولة تعيد فتحها، ويُستأنف الاتصال في دورة التشغيل التالية.",
+      "endPassed": "لقد مضى تاريخ الانتهاء، لذا ستكتمل الحملة مجددًا دون الاتصال بأحد. مدّد تاريخ الانتهاء أو أزله أولًا.",
+      "openSettings": "فتح الإعدادات"
+    },
+    "addDialog": {
+      "description": "أرقام أسترالية فقط — أي رقم آخر يُعد غير صالح. تُتخطى الأرقام المدرجة في قائمة عدم الاتصال تلقائيًا.",
+      "phonePlaceholder": "الهاتف، مثل 0412 345 678",
+      "namePlaceholder": "الاسم (اختياري)",
+      "rowPhone": "هاتف المستلم {index}",
+      "rowName": "اسم المستلم {index}",
+      "rowVariable": "{variable} للمستلم {index}",
+      "removeRow": "إزالة المستلم {index}",
+      "addAnother": "إضافة مستلم آخر",
+      "bigListHint": "للقوائم الأكبر، استخدم الاستيراد من CSV.",
+      "submit": "{count, plural, =0 {إضافة مستلمين} zero {إضافة {count} مستلمين} one {إضافة {count} مستلم} two {إضافة {count} مستلمين} few {إضافة {count} مستلمين} many {إضافة {count} مستلمًا} other {إضافة {count} مستلم}}"
+    },
+    "fromContactsDialog": {
+      "title": "إضافة من جهات الاتصال",
+      "description": "يُضاف الرقم الأساسي لكل جهة اتصال إلى الحملة. تُتخطّى جهات الاتصال التي بلا هاتف؛ وتُحظر أرقام قائمة عدم الاتصال تلقائيًا.",
+      "searchPlaceholder": "ابحث بالاسم أو الشركة أو الهاتف",
+      "allTags": "كل الوسوم",
+      "filterByTag": "تصفية حسب الوسم",
+      "noMatches": "لا توجد جهات اتصال مطابقة.",
+      "selectAllLoaded": "تحديد كل جهات الاتصال المحمّلة",
+      "allMatchingSelected": "تم تحديد كل ما يطابق عوامل التصفية",
+      "selectAllMatching": "تحديد كل ما يطابق",
+      "onDnc": "في قائمة عدم الاتصال (DNC)",
+      "noPhone": "بلا هاتف",
+      "loadMore": "تحميل المزيد",
+      "overCap": "الحد الأقصى {max} جهة اتصال محددة فرديًا لكل دفعة — استخدم «تحديد كل ما يطابق» مع عوامل التصفية بدلًا من ذلك.",
+      "addAllMatching": "إضافة كل ما يطابق",
+      "addCount": "{count, plural, zero {إضافة {count} إلى الحملة} one {إضافة {count} إلى الحملة} two {إضافة {count} إلى الحملة} few {إضافة {count} إلى الحملة} many {إضافة {count} إلى الحملة} other {إضافة {count} إلى الحملة}}"
+    },
+    "importDialog": {
+      "title": "استيراد المستلمين",
+      "uploadDescription": "ارفع جدول بيانات — CSV أو TXT أو XLS أو XLSX، بحجم يصل إلى 10 ميغابايت.",
+      "mappingDescription": "طابق أعمدة جدول البيانات مع حقول الحملة.",
+      "invalidType": "استخدم ملف CSV أو TXT أو XLS أو XLSX.",
+      "tooLarge": "يجب ألا يتجاوز حجم الملف 10 ميغابايت.",
+      "notImported": "لم يُستورد",
+      "columnNumber": "العمود {number}",
+      "started": "بدأ الاستيراد — تظهر الصفوف تباعًا أثناء معالجتها.",
+      "expired": "انتهت صلاحية الرفع — اختر الملف مجددًا.",
+      "chooseFile": "اختيار ملف",
+      "matchHint": "تُطابق الصفوف مع جهات اتصالك حسب رقم الهاتف.",
+      "hasHeaderRow": "يحتوي الصف الأول على عناوين الأعمدة",
+      "phoneColumn": "عمود الهاتف",
+      "nameColumn": "عمود الاسم",
+      "variables": "المتغيرات",
+      "variablesHint": "املأ متغيرات وكيل الذكاء الاصطناعي لكل مستلم من أحد الأعمدة.",
+      "footnote": "تظل الأرقام غير الصالحة وأرقام قائمة عدم الاتصال ظاهرة في القائمة مع السبب، فلا يختفي شيء دون توضيح. تُتخطّى الأرقام المكررة."
+    }
+  },
+  "summary": {
+    "added": "{count, plural, zero {تمت إضافة {count}} one {تمت إضافة {count}} two {تمت إضافة {count}} few {تمت إضافة {count}} many {تمت إضافة {count}} other {تمت إضافة {count}}}",
+    "duplicates": "{count, plural, zero {{count} في الحملة بالفعل} one {{count} في الحملة بالفعل} two {{count} في الحملة بالفعل} few {{count} في الحملة بالفعل} many {{count} في الحملة بالفعل} other {{count} في الحملة بالفعل}}",
+    "dncBlocked": "{count, plural, zero {{count} في قائمة عدم الاتصال} one {{count} في قائمة عدم الاتصال} two {{count} في قائمة عدم الاتصال} few {{count} في قائمة عدم الاتصال} many {{count} في قائمة عدم الاتصال} other {{count} في قائمة عدم الاتصال}}",
+    "invalid": "{count, plural, zero {{count} غير صالح} one {{count} غير صالح} two {{count} غير صالحين} few {{count} غير صالحة} many {{count} غير صالح} other {{count} غير صالح}}",
+    "noPhone": "{count, plural, zero {{count} بلا رقم هاتف} one {{count} بلا رقم هاتف} two {{count} بلا رقم هاتف} few {{count} بلا رقم هاتف} many {{count} بلا رقم هاتف} other {{count} بلا رقم هاتف}}",
+    "nothingToAdd": "لا شيء لإضافته"
+  }
+}

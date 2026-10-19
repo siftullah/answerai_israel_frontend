@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useBusinessProfile } from "@/hooks/use-business-profile";
 
 /**
@@ -8,11 +9,12 @@ import { useBusinessProfile } from "@/hooks/use-business-profile";
  * so totals preview correctly while the profile loads.
  */
 export function useTaxDefaults(businessUuid: string) {
+  const t = useTranslations("lib");
   const profileQuery = useBusinessProfile(businessUuid);
 
   return {
     taxRateBp: profileQuery.data?.tax_rate_bp ?? 1800,
-    taxLabel: profileQuery.data?.tax_label ?? "VAT",
+    taxLabel: profileQuery.data?.tax_label ?? t("tax.defaultLabel"),
     isPending: profileQuery.isPending,
   };
 }

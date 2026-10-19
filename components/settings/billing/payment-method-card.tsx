@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { CreditCardIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -25,6 +26,7 @@ export function PaymentMethodCard({
   retriesFailedCharge: boolean;
   onUpdateCard: () => void;
 }) {
+  const t = useTranslations("settings.billing");
   const card = subscription.payment_method;
   const now = new Date();
   // Cards expire at the END of their expiry month.
@@ -35,11 +37,8 @@ export function PaymentMethodCard({
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Payment method</CardTitle>
-        <CardDescription>
-          Charged for renewals, usage and plan changes. Card details are held by Stripe —
-          never on our servers.
-        </CardDescription>
+        <CardTitle>{t("paymentMethod.title")}</CardTitle>
+        <CardDescription>{t("paymentMethod.description")}</CardDescription>
       </CardHeader>
       <CardContent>
         {card ? (
@@ -47,18 +46,21 @@ export function PaymentMethodCard({
             <CreditCardIcon className="size-5 shrink-0 text-muted-foreground" />
             <div className="flex flex-col">
               <span className="flex items-center gap-2 text-sm font-medium">
-                <span className="capitalize">{card.brand}</span> •••• {card.last4}
-                {expired && <Badge variant="destructive">Expired</Badge>}
+                <span className="capitalize">{card.brand}</span>{" "}
+                <span dir="ltr">•••• {card.last4}</span>
+                {expired && <Badge variant="destructive">{t("paymentMethod.expired")}</Badge>}
               </span>
               <span className="text-sm text-muted-foreground">
-                Expires {String(card.exp_month).padStart(2, "0")}/{card.exp_year}
+                {t("paymentMethod.expires", {
+                  date: `${String(card.exp_month).padStart(2, "0")}/${card.exp_year}`,
+                })}
               </span>
             </div>
           </div>
         ) : (
           <div className="flex items-center gap-3 text-muted-foreground">
             <CreditCardIcon className="size-5 shrink-0" />
-            <p className="text-sm">No card on file yet.</p>
+            <p className="text-sm">{t("paymentMethod.noCard")}</p>
           </div>
         )}
       </CardContent>
@@ -66,15 +68,13 @@ export function PaymentMethodCard({
         <CardFooter className="flex-col items-start gap-2">
           {card ? (
             <Button variant="cta" onClick={onUpdateCard}>
-              Update card
+              {t("updateCard")}
             </Button>
           ) : (
-            <Button onClick={onUpdateCard}>Add card</Button>
+            <Button onClick={onUpdateCard}>{t("addCard")}</Button>
           )}
           {retriesFailedCharge && (
-            <p className="text-xs text-muted-foreground">
-              Saving a new card immediately retries the failed charge.
-            </p>
+            <p className="text-xs text-muted-foreground">{t("paymentMethod.retryNote")}</p>
           )}
         </CardFooter>
       )}

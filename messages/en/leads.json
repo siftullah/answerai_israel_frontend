@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "title": "Leads"
+  },
+  "page": {
+    "title": "Leads",
+    "description": "Sales enquiries captured from calls or logged by your team, tracked to won or lost.",
+    "newLead": "New lead"
+  },
+  "tabs": {
+    "open": "Open",
+    "won": "Won",
+    "lost": "Lost"
+  },
+  "empty": {
+    "open": {
+      "title": "No open leads",
+      "description": "Sales enquiries your agent captures on calls will show up here."
+    },
+    "won": {
+      "title": "No won leads yet",
+      "description": "Leads that turn into work land here."
+    },
+    "lost": {
+      "title": "Nothing lost",
+      "description": "Leads that don't work out land here."
+    },
+    "all": {
+      "title": "No leads yet",
+      "description": "Log your first lead, or let your agent capture them from calls."
+    },
+    "noMatch": {
+      "title": "No leads match",
+      "description": "Try a different search or clear some filters."
+    }
+  },
+  "fields": {
+    "contact": "Contact",
+    "estimatedValue": "Estimated value",
+    "expectedClose": "Expected close",
+    "assignee": "Assignee",
+    "unassigned": "Unassigned",
+    "noTargetDate": "No target date",
+    "notValued": "Not valued yet",
+    "unnamedContact": "Unnamed contact"
+  },
+  "stats": {
+    "pipeline": "Pipeline",
+    "openLeads": "{count, plural, one {# open lead} other {# open leads}}",
+    "openLeadsWithNew": "{count, plural, one {# open lead} other {# open leads}} · {newCount, number} new",
+    "noOpenLeads": "No open leads",
+    "wonThisMonth": "Won this month",
+    "wonAllTime": "{count, plural, one {# lead} other {# leads}} won all time",
+    "winRate": "Win rate",
+    "winRateDetail": "{won, number} of {decided, plural, one {# closed lead} other {# closed leads}}, last 90 days",
+    "noClosedLeads": "No closed leads in the last 90 days"
+  },
+  "list": {
+    "loadError": "Couldn't load leads"
+  },
+  "row": {
+    "won": "Won",
+    "wonOn": "Won {date}",
+    "lost": "Lost",
+    "lostOn": "Lost {date}",
+    "closeExpected": "Close expected {date}",
+    "capturedFromCall": "Captured from a call {date}",
+    "addedOn": "Added {date}"
+  },
+  "filters": {
+    "searchPlaceholder": "Search title or contact…",
+    "searchLabel": "Search leads by title or contact name",
+    "filterLabel": "Filter leads",
+    "anyStatus": "Any status",
+    "anyone": "Anyone",
+    "sort": "Sort",
+    "newestFirst": "Newest first",
+    "highestValue": "Highest value",
+    "closingSoonest": "Closing soonest",
+    "removeFilter": "Remove {label} filter"
+  },
+  "detail": {
+    "allLeads": "All leads",
+    "noneSelectedTitle": "No lead selected",
+    "noneSelectedDescription": "Select a lead to see its details and history.",
+    "notFoundTitle": "Lead not found",
+    "notFoundMessage": "This lead doesn't exist or was removed.",
+    "loadErrorTitle": "Couldn't load this lead",
+    "viewContact": "View contact",
+    "markContacted": "Mark contacted",
+    "markQualified": "Mark qualified",
+    "markWon": "Mark won",
+    "markLost": "Mark lost",
+    "reopen": "Reopen",
+    "createQuote": "Create quote",
+    "creatingQuote": "Creating…",
+    "convertToJob": "Convert to job",
+    "markedAs": "Lead marked as {status, select, contacted {contacted} qualified {qualified} other {{status}}}",
+    "quoteDrafted": "Draft {number} created — price it up",
+    "source": "Source",
+    "capturedOn": "Captured on",
+    "callOn": "Call {date}",
+    "won": "Won",
+    "closed": "Closed",
+    "created": "Created"
+  },
+  "timeline": {
+    "title": "Activity",
+    "placeholder": "Add a note — calls made, follow-ups, pricing…",
+    "label": "Add a note to this lead",
+    "adding": "Adding…",
+    "addNote": "Add note",
+    "loadError": "Couldn't load the timeline",
+    "empty": "Nothing yet — notes and status changes will show up here."
+  },
+  "form": {
+    "newTitle": "New lead",
+    "editTitle": "Edit lead",
+    "newDescription": "Log a sales enquiry for the team to follow up.",
+    "editDescription": "Update the details — status changes happen from the lead's actions.",
+    "title": "Title",
+    "titlePlaceholder": "What they're after, e.g. Kitchen rewire",
+    "valueHint": "Rough worth of the work, in dollars.",
+    "notesPlaceholder": "What they asked for, budget, timing… (optional)",
+    "notesHint": "Starts the lead's activity timeline.",
+    "submitAdd": "Add lead",
+    "added": "Lead added",
+    "updated": "Lead updated"
+  },
+  "markWon": {
+    "title": "Mark this lead as won?",
+    "description": "Closes “{title}” as won. You can reopen it later if things change.",
+    "descriptionWithValue": "Closes “{title}” as won and counts {value} toward the month's total. You can reopen it later if things change.",
+    "confirm": "Mark as won",
+    "toast": "Lead marked as won"
+  },
+  "markLost": {
+    "title": "Mark this lead as lost",
+    "description": "Closes “{title}” without a win. You can reopen it later if the contact comes back.",
+    "descriptionNamed": "Closes “{title}” without a win. You can reopen it later if {name} comes back.",
+    "reason": "Reason",
+    "reasonPlaceholder": "Went with another provider",
+    "reasonHint": "Optional — added to the lead's timeline.",
+    "confirm": "Mark as lost",
+    "toast": "Lead marked as lost",
+    "note": "Lost — {reason}"
+  },
+  "reopen": {
+    "title": "Reopen this lead?",
+    "description": "Puts “{title}” back in the pipeline as Contacted.",
+    "descriptionWon": "Puts “{title}” back in the pipeline as Contacted and removes it from the won totals.",
+    "confirm": "Reopen lead",
+    "toast": "Lead reopened"
+  },
+  "convert": {
+    "title": "Convert this lead to a job?",
+    "description": "Creates a job for “{title}” with the contact attached, ready to schedule. The lead stays here with its history.",
+    "descriptionNamed": "Creates a job for “{title}” with {name} attached, ready to schedule. The lead stays here with its history.",
+    "confirm": "Convert to job",
+    "converting": "Converting…",
+    "toast": "Job {reference} created"
+  },
+  "delete": {
+    "title": "Delete this lead?",
+    "description": "“{title}” and its activity timeline are removed for good. Mark it lost instead if you want to keep the history.",
+    "keep": "Keep lead",
+    "confirm": "Delete lead",
+    "toast": "Lead deleted"
+  }
+}

@@ -1,6 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -41,15 +43,18 @@ export function CreateCampaignModal({
   const agents = campaignReadyAgents(agentsQuery.data);
   const numbers = callablePhoneNumbers(numbersQuery.data);
 
+  const t = useTranslations("campaigns");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => campaignCreateSchema(tv), [tv]);
   const form = useForm<CampaignCreateValues>({
-    resolver: zodResolver(campaignCreateSchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultCampaignCreateValues(),
   });
 
   const onSubmit = form.handleSubmit((values) => {
     createCampaign.mutate(toCampaignCreatePayload(values, business.timezone), {
       onSuccess: (campaign) => {
-        toast.success("Campaign created as a draft — add recipients next");
+        toast.success(t("toasts.created"));
         onOpenChange(false);
         router.push(`/b/${business.id}/calls/campaigns/${campaign.id}`);
       },
@@ -63,15 +68,15 @@ export function CreateCampaignModal({
       <EntityModal
         open={open}
         onOpenChange={onOpenChange}
-        title="New campaign"
-        description="Pick who calls and from which number — everything else can change later."
-        submitLabel="Create campaign"
+        title={t("create.title")}
+        description={t("create.description")}
+        submitLabel={t("create.submit")}
         pending={createCampaign.isPending}
         isDirty={form.formState.isDirty}
         onSubmit={onSubmit}
         steps={[
           {
-            title: "Basics",
+            title: t("create.steps.basics"),
             fields: ["name", "agent_id", "caller_phone_number_id"],
             content: (
               <CampaignBasicsFields
@@ -83,7 +88,7 @@ export function CreateCampaignModal({
             ),
           },
           {
-            title: "Pacing & schedule",
+            title: t("create.steps.pacingSchedule"),
             fields: [
               "start_date",
               "start_time",

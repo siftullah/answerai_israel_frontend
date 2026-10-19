@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   EllipsisVerticalIcon,
   EyeIcon,
@@ -55,19 +56,26 @@ import { useDeleteDocument, useDocuments } from "@/hooks/use-documents";
 import { useViewMode } from "@/hooks/use-view-mode";
 import type { KnowledgeDocument } from "@/lib/api/types";
 
-function sourceDescriptor(doc: KnowledgeDocument): string {
-  switch (doc.source_type) {
-    case "file":
-      return doc.file?.name ?? "Uploaded file";
-    case "url":
-      return doc.source_url ?? "Web page";
-    case "text":
-      return "Pasted text";
-    case "integration":
-      return doc.integration?.provider_name
-        ? `From ${doc.integration.provider_name} — ${doc.integration.feed_name ?? doc.integration.feed}`
-        : "From integration";
-  }
+function useSourceDescriptor(): (doc: KnowledgeDocument) => string {
+  const t = useTranslations("knowledge.docs.source");
+  return (doc) => {
+    switch (doc.source_type) {
+      case "file":
+        return doc.file?.name ?? t("uploadedFile");
+      case "url":
+        return doc.source_url ?? t("webPage");
+      case "text":
+        return t("pastedText");
+      case "integration": {
+        const provider = doc.integration?.provider_name;
+        const feed = doc.integration?.feed_name ?? doc.integration?.feed;
+        if (!provider) return t("fromIntegration");
+        return feed
+          ? t("fromIntegrationFeed", { provider, feed })
+          : t("fromProvider", { provider });
+      }
+    }
+  };
 }
 
 function DocRowActions({
@@ -84,12 +92,18 @@ function DocRowActions({
   // Integration docs are system-managed: the sync recreates/overwrites them,
   // so they're view-only here — edit/delete lives in the Integrations section.
   const manageable = doc.source_type !== "integration";
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${doc.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={ts("rowActions", { name: doc.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
@@ -97,17 +111,17 @@ function DocRowActions({
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={onView}>
           <EyeIcon />
-          View
+          {tc("actions.view")}
         </DropdownMenuItem>
         {manageable && (
           <>
             <DropdownMenuItem onClick={onEdit}>
               <PencilIcon />
-              Edit
+              {tc("actions.edit")}
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onClick={onDelete}>
               <Trash2Icon />
-              Delete
+              {tc("actions.delete")}
             </DropdownMenuItem>
           </>
         )}
@@ -118,6 +132,10 @@ function DocRowActions({
 
 export function DocsView() {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.docs");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
+  const sourceDescriptor = useSourceDescriptor();
 
   const docsQuery = useDocuments(business.id);
   const deleteDoc = useDeleteDocument(business.id);
@@ -131,12 +149,12 @@ export function DocsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Docs"
-        description="Documents that feed your AI's knowledge base."
+        title={t("title")}
+        description={t("description")}
         actions={
           <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon />
-            Add doc
+            {t("add")}
           </Button>
         }
       />
@@ -148,21 +166,19 @@ export function DocsView() {
         </div>
       ) : docsQuery.isError ? (
         <ErrorState
-          title="Couldn't load docs"
+          title={t("loadError")}
           message={docsQuery.error.message}
           onRetry={() => docsQuery.refetch()}
         />
       ) : docsQuery.data.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>
-            <EmptyTitle>Add your first doc</EmptyTitle>
-            <EmptyDescription>
-              Upload a file, point at a web page, or paste text — your AI reads it all.
-            </EmptyDescription>
+            <EmptyTitle>{t("empty.title")}</EmptyTitle>
+            <EmptyDescription>{t("empty.description")}</EmptyDescription>
           </EmptyHeader>
           <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon />
-            Add doc
+            {t("add")}
           </Button>
         </Empty>
       ) : (
@@ -196,9 +212,11 @@ export function DocsView() {
                   <div className="mt-auto flex flex-wrap items-center gap-2 border-t pt-3 text-sm text-muted-foreground">
                     <DocStatusBadge doc={doc} />
                     {doc.agent_scope === "all" ? (
-                      <span>All agents</span>
+                      <span>{ts("allAgents")}</span>
                     ) : (
-                      <Badge variant="secondary">{doc.agent_ids.length} selected</Badge>
+                      <Badge variant="secondary">
+                        {ts("selectedAgents", { count: doc.agent_ids.length })}
+                      </Badge>
                     )}
                   </div>
                 </div>
@@ -209,9 +227,9 @@ export function DocsView() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Agents</TableHead>
+                <TableHead>{tc("labels.name")}</TableHead>
+                <TableHead>{tc("labels.status")}</TableHead>
+                <TableHead>{ts("agents")}</TableHead>
                 <TableHead className="w-10" />
               </TableRow>
             </TableHeader>
@@ -233,9 +251,11 @@ export function DocsView() {
                   </TableCell>
                   <TableCell>
                     {doc.agent_scope === "all" ? (
-                      <span className="text-muted-foreground">All agents</span>
+                      <span className="text-muted-foreground">{ts("allAgents")}</span>
                     ) : (
-                      <Badge variant="secondary">{doc.agent_ids.length} selected</Badge>
+                      <Badge variant="secondary">
+                        {ts("selectedAgents", { count: doc.agent_ids.length })}
+                      </Badge>
                     )}
                   </TableCell>
                   <TableCell>
@@ -292,24 +312,24 @@ export function DocsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Your AI will lose this knowledge. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteDoc.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Doc deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

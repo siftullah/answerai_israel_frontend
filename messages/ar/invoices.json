@@ -1,0 +1,164 @@
+{
+  "meta": {
+    "title": "الفواتير"
+  },
+  "page": {
+    "title": "الفواتير",
+    "description": "أصدر فواتير للأعمال المكتملة وتابع ما تم دفعه."
+  },
+  "newInvoice": "فاتورة جديدة",
+  "theCustomer": "العميل",
+  "thisContact": "جهة الاتصال هذه",
+  "tabs": {
+    "open": "مفتوح",
+    "overdue": "متأخر السداد",
+    "paid": "مدفوع"
+  },
+  "empty": {
+    "open": {
+      "title": "لا توجد فواتير مفتوحة",
+      "description": "ستظهر هنا المسودات والفواتير التي تنتظر الدفع."
+    },
+    "overdue": {
+      "title": "لا توجد فواتير متأخرة السداد",
+      "description": "ستظهر هنا الفواتير التي تجاوزت تاريخ استحقاقها دون سداد."
+    },
+    "paid": {
+      "title": "لا توجد فواتير مدفوعة بعد",
+      "description": "ستظهر هنا الفواتير التي تحددها كمدفوعة."
+    },
+    "all": {
+      "title": "لا توجد فواتير بعد",
+      "description": "أصدر فاتورتك الأولى للأعمال المكتملة."
+    },
+    "noMatch": {
+      "title": "لا توجد فواتير مطابقة",
+      "description": "جرّب بحثًا مختلفًا أو أزل بعض عوامل التصفية."
+    }
+  },
+  "stats": {
+    "outstanding": "غير مسدد",
+    "awaitingPayment": "{count, plural, =0 {لا توجد فواتير بانتظار الدفع} zero {لا توجد فواتير بانتظار الدفع} one {{count} فاتورة بانتظار الدفع} two {{count} من الفواتير بانتظار الدفع} few {{count} فواتير بانتظار الدفع} many {{count} فاتورة بانتظار الدفع} other {{count} فاتورة بانتظار الدفع}}",
+    "overdue": "متأخر السداد",
+    "pastDue": "{count, plural, =0 {لا توجد فواتير متأخرة السداد} zero {لا توجد فواتير متأخرة السداد} one {{count} فاتورة متأخرة السداد} two {{count} من الفواتير متأخرة السداد} few {{count} فواتير متأخرة السداد} many {{count} فاتورة متأخرة السداد} other {{count} فاتورة متأخرة السداد}}",
+    "paidThisMonth": "المدفوع هذا الشهر",
+    "paidAllTime": "{count, plural, zero {لا توجد فواتير مدفوعة إجمالًا} one {{count} فاتورة مدفوعة إجمالًا} two {{count} من الفواتير مدفوعة إجمالًا} few {{count} فواتير مدفوعة إجمالًا} many {{count} فاتورة مدفوعة إجمالًا} other {{count} فاتورة مدفوعة إجمالًا}}"
+  },
+  "list": {
+    "loadError": "تعذّر تحميل الفواتير",
+    "searchPlaceholder": "بحث بالرقم أو جهة الاتصال…",
+    "searchLabel": "بحث في الفواتير بالرقم أو اسم جهة الاتصال",
+    "filterLabel": "تصفية الفواتير",
+    "anyStatus": "أي حالة",
+    "removeFilter": "إزالة عامل التصفية {status}"
+  },
+  "row": {
+    "draft": "مسودة — لم تُرسل بعد",
+    "due": "تستحق في {date}",
+    "wasDue": "كانت مستحقة في {date}",
+    "paid": "تم الدفع في {date}",
+    "voided": "أُلغيت في {date}"
+  },
+  "labels": {
+    "customer": "العميل",
+    "lineItems": "البنود",
+    "type": "النوع",
+    "qty": "الكمية",
+    "unit": "الوحدة",
+    "unitPrice": "سعر الوحدة",
+    "amount": "المبلغ",
+    "paymentInstructions": "تعليمات الدفع",
+    "setOnSend": "يُحدّد عند الإرسال",
+    "taxLine": "{label} ({rate}%)"
+  },
+  "actions": {
+    "send": "إرسال الفاتورة",
+    "sending": "جارٍ الإرسال…",
+    "markPaid": "تحديد كمدفوع",
+    "duplicate": "إنشاء نسخة",
+    "void": "إبطال",
+    "voidInvoice": "إبطال الفاتورة",
+    "voiding": "جارٍ الإبطال…",
+    "keepInvoice": "الاحتفاظ بالفاتورة",
+    "deleteDraft": "حذف المسودة",
+    "keepDraft": "الاحتفاظ بالمسودة",
+    "createDraft": "إنشاء مسودة",
+    "viewContact": "عرض جهة الاتصال"
+  },
+  "detail": {
+    "back": "جميع الفواتير",
+    "noneSelected": {
+      "title": "لم تُحدّد فاتورة",
+      "description": "اختر فاتورة لعرض تفاصيلها."
+    },
+    "notFound": {
+      "title": "الفاتورة غير موجودة",
+      "description": "هذه الفاتورة غير موجودة أو تمت إزالتها."
+    },
+    "loadError": "تعذّر تحميل هذه الفاتورة",
+    "title": "فاتورة {number}",
+    "fromJobBadge": "من {reference}",
+    "fields": {
+      "fromJob": "من أمر عمل",
+      "issued": "تاريخ الإصدار",
+      "due": "تاريخ الاستحقاق",
+      "sent": "تاريخ الإرسال",
+      "paid": "تاريخ الدفع",
+      "voided": "تاريخ الإبطال",
+      "created": "تاريخ الإنشاء"
+    }
+  },
+  "form": {
+    "editTitle": "تعديل الفاتورة {number}",
+    "editDescription": "تبقى المسودات قابلة للتعديل حتى إرسالها.",
+    "newDescription": "أنشئ مسودة، ثم أرسلها عندما تكون جاهزًا.",
+    "issueDate": "تاريخ الإصدار",
+    "dueDate": "تاريخ الاستحقاق",
+    "dueDateHint": "إذا تُرك فارغًا، يُضبط عند الإرسال بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يوم} few {{days} أيام} many {{days} يومًا} other {{days} يوم}} من تاريخ الإصدار.",
+    "addLine": "إضافة بند",
+    "descriptionPlaceholder": "ما تم إنجازه أو توريده",
+    "lineDescription": "وصف البند {line}",
+    "lineType": "نوع البند {line}",
+    "lineQuantity": "كمية البند {line}",
+    "lineUnitPrice": "سعر الوحدة للبند {line} بالدولار",
+    "lineTax": "يخضع البند {line} لضريبة {tax}",
+    "removeLine": "إزالة البند {line}",
+    "notesPlaceholder": "تظهر في رسالة الفاتورة الإلكترونية (اختياري)",
+    "paymentInstructionsPlaceholder": "إيداع مباشر — BSB، رقم الحساب، المرجع…"
+  },
+  "sendDialog": {
+    "title": "إرسال الفاتورة {number}",
+    "description": "تُرسل فاتورة بقيمة {amount} إلى {customer} عبر البريد الإلكتروني. {dates}",
+    "datesIssuedDue": "تاريخ الإصدار {issued}، وتاريخ الاستحقاق {due}.",
+    "datesIssuedNoDue": "تاريخ الإصدار {issued}، والاستحقاق بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يوم} few {{days} أيام} many {{days} يومًا} other {{days} يوم}}.",
+    "datesUnset": "سيُضبط تاريخ الإصدار على اليوم وتاريخ الاستحقاق بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يوم} few {{days} أيام} many {{days} يومًا} other {{days} يوم}}.",
+    "emailLabel": "إرسال بالبريد الإلكتروني إلى",
+    "emailHint": "اتركه فارغًا للإرسال إلى {email}.",
+    "invalidEmail": "أدخل عنوان بريد إلكتروني صالحًا",
+    "noEmailError": "ليس لجهة الاتصال هذه بريد إلكتروني — أدخل عنوانًا للإرسال إليه",
+    "noEmailAlert": "لا يوجد عنوان بريد إلكتروني مسجّل لـ {name}. أدخل عنوانًا أعلاه، وإلا فستُعلّم الفاتورة كمرسلة دون إرسال بريد إلكتروني إلى أحد."
+  },
+  "markPaidDialog": {
+    "title": "تعيين الفاتورة {number} كمدفوعة",
+    "description": "يسجّل استلام مبلغ {amount} من {customer}.",
+    "referenceLabel": "مرجع الدفع",
+    "referencePlaceholder": "تحويل بنكي #88213",
+    "referenceHint": "اختياري — طريقة استلام الدفعة."
+  },
+  "voidDialog": {
+    "title": "إبطال الفاتورة {number}؟",
+    "description": "لن يُحتسب مبلغ {amount} المستحق على {customer} ضمن المبالغ غير المسددة. تبقى الفاتورة في السجل، لكن لا يمكن إعادة فتحها."
+  },
+  "deleteDialog": {
+    "title": "حذف المسودة {number}؟",
+    "description": "ستُحذف المسودة وبنودها نهائيًا. لا يمكن التراجع عن هذا الإجراء."
+  },
+  "toasts": {
+    "draftCreated": "تم إنشاء المسودة {number}",
+    "draftDeleted": "تم حذف المسودة {number}",
+    "updated": "تم تحديث الفاتورة {number}",
+    "sent": "تم إرسال الفاتورة {number}",
+    "markedPaid": "تم تعيين الفاتورة {number} كمدفوعة",
+    "voided": "تم إبطال الفاتورة {number}"
+  }
+}

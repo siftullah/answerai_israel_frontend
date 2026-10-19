@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ChevronRightIcon } from "lucide-react";
 import {
   Collapsible,
@@ -32,13 +33,14 @@ import {
 import type { ModuleKey } from "@/lib/api/types";
 
 export function NavMain() {
+  const t = useTranslations("layout");
   return (
     <>
       <SidebarGroup className="py-1.5">
         <NavItems items={navMain} />
       </SidebarGroup>
       <SidebarGroup className="mt-4 py-1.5">
-        <SidebarGroupLabel className="h-7">Setup AI</SidebarGroupLabel>
+        <SidebarGroupLabel className="h-7">{t("sidebar.setupGroup")}</SidebarGroupLabel>
         <NavItems items={navSetup} />
       </SidebarGroup>
     </>
@@ -49,6 +51,7 @@ function NavItems({ items }: { items: NavItem[] }) {
   const { business, modules } = useBusiness();
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
+  const t = useTranslations("layout");
 
   const enabled = new Set<ModuleKey>(
     modules.filter((m) => m.enabled).map((m) => m.key)
@@ -56,7 +59,7 @@ function NavItems({ items }: { items: NavItem[] }) {
   const visible = (entry: NavItem | NavChild) => !entry.module || enabled.has(entry.module);
 
   const renderLeaf = (item: NavItem, href: string) => (
-    <SidebarMenuItem key={item.title}>
+    <SidebarMenuItem key={item.segment}>
       <SidebarMenuButton
         className="h-9 gap-2.5 px-3 text-[15px] [&_svg]:size-5"
         isActive={isNavActive(pathname, href, item.exact)}
@@ -64,7 +67,7 @@ function NavItems({ items }: { items: NavItem[] }) {
         render={<Link href={href} onClick={() => setOpenMobile(false)} />}
       >
         <item.icon />
-        <span>{item.title}</span>
+        <span>{t(`nav.${item.title}`)}</span>
       </SidebarMenuButton>
     </SidebarMenuItem>
   );
@@ -75,7 +78,7 @@ function NavItems({ items }: { items: NavItem[] }) {
         const href = navHref(business.id, item);
         const children = item.children?.filter(visible) ?? [];
         return children.length > 0 ? (
-          <NavBranch key={item.title} item={item} href={href} subItems={children} />
+          <NavBranch key={item.segment} item={item} href={href} subItems={children} />
         ) : (
           renderLeaf(item, href)
         );
@@ -97,6 +100,7 @@ function NavBranch({
   const { business } = useBusiness();
   const pathname = usePathname();
   const { setOpenMobile } = useSidebar();
+  const t = useTranslations("layout");
 
   const branchActive = isNavActive(pathname, href);
 
@@ -116,21 +120,21 @@ function NavBranch({
         render={<SidebarMenuButton className="h-9 gap-2.5 px-3 text-[15px] [&_svg]:size-5" />}
       >
         <item.icon />
-        <span>{item.title}</span>
-        <ChevronRightIcon className="ml-auto transition-transform group-aria-expanded/menu-button:rotate-90" />
+        <span>{t(`nav.${item.title}`)}</span>
+        <ChevronRightIcon className="ms-auto transition-transform group-aria-expanded/menu-button:rotate-90" />
       </CollapsibleTrigger>
       <CollapsibleContent>
         <SidebarMenuSub>
           {subItems.map((child) => {
             const childHref = navHref(business.id, child);
             return (
-              <SidebarMenuSubItem key={child.title}>
+              <SidebarMenuSubItem key={child.segment}>
                 <SidebarMenuSubButton
                   className="h-8 gap-2.5 text-[15px]"
                   isActive={isNavActive(pathname, childHref, child.exact)}
                   render={<Link href={childHref} onClick={() => setOpenMobile(false)} />}
                 >
-                  <span>{child.title}</span>
+                  <span>{t(`nav.${child.title}`)}</span>
                 </SidebarMenuSubButton>
               </SidebarMenuSubItem>
             );

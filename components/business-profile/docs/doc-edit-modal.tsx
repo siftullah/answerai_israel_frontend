@@ -1,6 +1,7 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useMemo, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ExternalLinkIcon, FileIcon, UploadIcon } from "lucide-react";
@@ -29,6 +30,7 @@ import {
   useUpdateDocument,
 } from "@/hooks/use-documents";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import { displayLocale } from "@/lib/i18n/runtime";
 import type { ApiError } from "@/lib/api/errors";
 import type {
   KnowledgeDocument,
@@ -47,14 +49,16 @@ import {
 function NameFields() {
   const form = useFormContext<DocumentEditValues>();
   const { errors } = form.formState;
+  const t = useTranslations("knowledge.docs");
+  const tc = useTranslations("common");
 
   return (
     <>
       <Field data-invalid={!!errors.name || undefined}>
-        <FieldLabel htmlFor="doc-edit-name">Name</FieldLabel>
+        <FieldLabel htmlFor="doc-edit-name">{tc("labels.name")}</FieldLabel>
         <Input
           id="doc-edit-name"
-          placeholder="Pricing guide"
+          placeholder={t("form.namePlaceholder")}
           autoComplete="off"
           aria-invalid={!!errors.name}
           {...form.register("name")}
@@ -63,11 +67,11 @@ function NameFields() {
       </Field>
 
       <Field data-invalid={!!errors.description || undefined}>
-        <FieldLabel htmlFor="doc-edit-description">Description (optional)</FieldLabel>
+        <FieldLabel htmlFor="doc-edit-description">{t("form.descriptionOptional")}</FieldLabel>
         <Textarea
           id="doc-edit-description"
           className="min-h-24"
-          placeholder="What this doc covers — helps you and your AI find it."
+          placeholder={t("form.descriptionPlaceholder")}
           aria-invalid={!!errors.description}
           {...form.register("description")}
         />
@@ -96,9 +100,14 @@ function DocContentEditForm({
 }) {
   const { business } = useBusiness();
   const update = useUpdateDocument(business.id);
+  const t = useTranslations("knowledge.docs");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => documentContentEditSchema(tv), [tv]);
   const form = useForm<DocumentContentEditValues>({
-    resolver: zodResolver(documentContentEditSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: detail.name,
       description: detail.description ?? "",
@@ -124,7 +133,7 @@ function DocContentEditForm({
       },
       {
         onSuccess: () => {
-          toast.success(contentChanged ? "Doc saved — re-syncing now" : "Doc saved");
+          toast.success(contentChanged ? t("toasts.savedResyncing") : t("toasts.saved"));
           onOpenChange(false);
         },
         onError: (error) => applyServerErrors(form, error),
@@ -134,12 +143,12 @@ function DocContentEditForm({
 
   const steps: EntityModalStep[] = [
     {
-      title: "Name",
+      title: tc("labels.name"),
       fields: ["name", "description"],
       content: <NameFields />,
     },
     {
-      title: "Content",
+      title: ts("steps.content"),
       fields: ["body"],
       content: (
         <Field data-invalid={!!errors.body || undefined}>
@@ -154,22 +163,25 @@ function DocContentEditForm({
               <ExternalLinkIcon className="size-3.5 shrink-0" />
             </a>
           )}
-          <FieldLabel htmlFor="doc-edit-body">Content</FieldLabel>
+          <FieldLabel htmlFor="doc-edit-body">{t("form.content")}</FieldLabel>
           <Textarea
             id="doc-edit-body"
             className="min-h-64"
             aria-invalid={!!errors.body}
             {...form.register("body")}
           />
-          <p className="text-right text-sm text-muted-foreground">
-            {bodyLength.toLocaleString()} / {MAX_DOCUMENT_TEXT.toLocaleString()}
+          <p className="text-end text-sm text-muted-foreground">
+            {ts("charCount", {
+              length: bodyLength.toLocaleString(displayLocale()),
+              max: MAX_DOCUMENT_TEXT.toLocaleString(displayLocale()),
+            })}
           </p>
           {errors.body && <FieldError>{errors.body.message}</FieldError>}
         </Field>
       ),
     },
     {
-      title: "Agents",
+      title: ts("steps.agents"),
       fields: ["agent_scope", "agent_ids"],
       content: <AgentScopeField idPrefix="doc-edit" />,
     },
@@ -180,9 +192,9 @@ function DocContentEditForm({
       <EntityModal
         open
         onOpenChange={onOpenChange}
-        title="Edit doc"
+        title={t("edit.title")}
         onSubmit={onSubmit}
-        submitLabel="Save changes"
+        submitLabel={tc("actions.saveChanges")}
         pending={update.isPending}
         isDirty={form.formState.isDirty}
         steps={steps}
@@ -207,8 +219,14 @@ function DocMetaEditForm({
   const [newFile, setNewFile] = useState<File | null>(null);
   const [fileError, setFileError] = useState<string | null>(null);
 
+  const t = useTranslations("knowledge.docs");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => documentEditSchema(tv), [tv]);
   const form = useForm<DocumentEditValues>({
-    resolver: zodResolver(documentEditSchema),
+    resolver: zodResolver(schema),
     defaultValues: {
       name: detail.name,
       description: detail.description ?? "",
@@ -221,11 +239,11 @@ function DocMetaEditForm({
     if (!picked) return;
     const name = picked.name.toLowerCase();
     if (!FILE_EXTENSIONS.some((ext) => name.endsWith(ext))) {
-      setFileError("Use a PDF, DOCX, TXT, MD or HTML file.");
+      setFileError(t("form.invalidFileType"));
       return;
     }
     if (picked.size > MAX_FILE_BYTES) {
-      setFileError("The file must be 10 MB or smaller.");
+      setFileError(ts("fileTooLarge"));
       return;
     }
     setFileError(null);
@@ -249,7 +267,7 @@ function DocMetaEditForm({
       }
     }
 
-    toast.success(newFile ? "Doc saved — re-syncing now" : "Doc saved");
+    toast.success(newFile ? t("toasts.savedResyncing") : t("toasts.saved"));
     onOpenChange(false);
   });
 
@@ -257,16 +275,14 @@ function DocMetaEditForm({
 
   const steps: EntityModalStep[] = [
     {
-      title: "Name",
+      title: tc("labels.name"),
       fields: ["name", "description"],
       content: (
         <>
           <NameFields />
           {detail.source_type === "url" && (
             <p className="text-sm text-muted-foreground">
-              {preparing
-                ? "The content is still being prepared — you can edit it once it's ready."
-                : "Content for this doc is fetched from the source URL by the voice engine and can't be edited here."}
+              {preparing ? t("edit.urlPreparing") : t("edit.urlNotEditable")}
             </p>
           )}
         </>
@@ -275,7 +291,7 @@ function DocMetaEditForm({
     ...(detail.source_type === "file"
       ? [
           {
-            title: "File",
+            title: t("edit.fileStep"),
             fields: [],
             content: (
               <div className="flex flex-col gap-3">
@@ -285,10 +301,7 @@ function DocMetaEditForm({
                     <p className="truncate text-sm font-medium">{detail.file.name}</p>
                   </div>
                 )}
-                <p className="text-sm text-muted-foreground">
-                  File content can&apos;t be edited inline — upload a new version to
-                  replace it.
-                </p>
+                <p className="text-sm text-muted-foreground">{t("edit.fileNotEditable")}</p>
                 <div className="flex items-center gap-2">
                   <input
                     ref={fileInputRef}
@@ -306,12 +319,12 @@ function DocMetaEditForm({
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <UploadIcon />
-                    Choose replacement
+                    {t("edit.chooseReplacement")}
                   </Button>
                   <span className="truncate text-sm text-muted-foreground">
                     {newFile
-                      ? `${newFile.name} — replaces on save`
-                      : "PDF, DOCX, TXT, MD or HTML — up to 10 MB"}
+                      ? t("edit.replacesOnSave", { name: newFile.name })
+                      : t("form.fileTypesHint")}
                   </span>
                 </div>
                 {fileError && <p className="text-sm text-destructive">{fileError}</p>}
@@ -321,7 +334,7 @@ function DocMetaEditForm({
         ]
       : []),
     {
-      title: "Agents",
+      title: ts("steps.agents"),
       fields: ["agent_scope", "agent_ids"],
       content: <AgentScopeField idPrefix="doc-edit" />,
     },
@@ -332,9 +345,9 @@ function DocMetaEditForm({
       <EntityModal
         open
         onOpenChange={onOpenChange}
-        title="Edit doc"
+        title={t("edit.title")}
         onSubmit={onSubmit}
-        submitLabel="Save changes"
+        submitLabel={tc("actions.saveChanges")}
         pending={update.isPending || replaceFile.isPending}
         isDirty={form.formState.isDirty || newFile !== null}
         steps={steps}
@@ -358,6 +371,8 @@ export function DocEditModal({
   doc: KnowledgeDocument;
 }) {
   const { business } = useBusiness();
+  const t = useTranslations("knowledge.docs");
+  const tc = useTranslations("common");
   const detailQuery = useDocument(business.id, open ? doc.id : null);
 
   if (!detailQuery.isSuccess) {
@@ -365,13 +380,13 @@ export function DocEditModal({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="sm:max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Edit doc</DialogTitle>
+            <DialogTitle>{t("edit.title")}</DialogTitle>
           </DialogHeader>
           {detailQuery.isError ? (
             <div className="flex flex-col items-start gap-3">
               <p className="text-sm text-destructive">{detailQuery.error.message}</p>
               <Button variant="outline" size="sm" onClick={() => detailQuery.refetch()}>
-                Try again
+                {tc("actions.tryAgain")}
               </Button>
             </div>
           ) : (

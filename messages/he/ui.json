@@ -1,0 +1,53 @@
+{
+  "breadcrumb": {
+    "label": "נתיב ניווט"
+  },
+  "sidebar": {
+    "title": "סרגל צד",
+    "description": "מציג את סרגל הצד בנייד.",
+    "toggle": "הצגה/הסתרה של סרגל הצד"
+  },
+  "command": {
+    "title": "לוח פקודות",
+    "description": "חפשו פקודה להפעלה…"
+  },
+  "datePicker": {
+    "placeholder": "בחרו תאריך",
+    "clear": "ניקוי התאריך"
+  },
+  "calendar": {
+    "nextMonth": "מעבר לחודש הבא",
+    "previousMonth": "מעבר לחודש הקודם",
+    "chooseMonth": "בחירת חודש",
+    "chooseYear": "בחירת שנה",
+    "weekNumberHeader": "מספר שבוע",
+    "weekNumber": "שבוע {number}",
+    "dayToday": "היום, {date}",
+    "daySelected": "{date}, נבחר",
+    "dayTodaySelected": "היום, {date}, נבחר"
+  },
+  "chipInput": {
+    "limitReached": "הגעתם למגבלה",
+    "remove": "הסרת {item}"
+  },
+  "spinner": {
+    "loading": "בטעינה"
+  },
+  "passwordInput": {
+    "show": "הצגת סיסמה",
+    "hide": "הסתרת סיסמה"
+  },
+  "audioPlayer": {
+    "failed": "לא ניתן להשמיע את ההקלטה. נסו לטעון מחדש את הדף.",
+    "back": "10 שניות אחורה",
+    "forward": "10 שניות קדימה",
+    "play": "השמעת ההקלטה",
+    "pause": "השהיית ההקלטה",
+    "seek": "מעבר למיקום בהקלטה",
+    "speed": "מהירות השמעה {speed}x",
+    "download": "הורדת ההקלטה"
+  },
+  "unsavedChanges": {
+    "title": "שינויים שלא נשמרו"
+  }
+}

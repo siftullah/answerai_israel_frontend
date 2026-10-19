@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { ArrowUpRightIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -14,6 +15,12 @@ import {
   useContactLeads,
 } from "@/hooks/use-contact-activity";
 import type { Contact } from "@/lib/api/types";
+import {
+  APPOINTMENT_STATUS_LABELS,
+  INVOICE_STATUS_LABELS,
+  JOB_STATUS_LABELS,
+  LEAD_STATUS_LABELS,
+} from "@/lib/api/types";
 import { formatDateTime } from "@/lib/datetime";
 import { formatCents } from "@/lib/money";
 
@@ -28,6 +35,9 @@ function Group({
   isPending: boolean;
   rows: { key: string; primary: string; secondary?: string | null; href?: string }[] | null;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
+
   return (
     <div className="flex flex-col gap-1.5">
       <div className="flex items-center justify-between gap-2">
@@ -36,14 +46,14 @@ function Group({
           href={href}
           className="inline-flex items-center gap-0.5 text-xs text-primary hover:underline"
         >
-          Open
-          <ArrowUpRightIcon className="size-3" />
+          {tc("actions.open")}
+          <ArrowUpRightIcon className="size-3 rtl:-scale-x-100" />
         </Link>
       </div>
       {isPending ? (
         <Skeleton className="h-8 w-full" />
       ) : !rows || rows.length === 0 ? (
-        <p className="text-sm text-muted-foreground">None yet</p>
+        <p className="text-sm text-muted-foreground">{t("activity.noneYet")}</p>
       ) : (
         <ul className="flex flex-col gap-1">
           {rows.map((row) => {
@@ -82,7 +92,11 @@ function Group({
   );
 }
 
-function humanizeStatus(status: string): string {
+/** Related-record statuses arrive as plain strings; known ones use the
+ * translated label maps, anything newer falls back to the humanized value. */
+function statusLabel(labels: Partial<Record<string, string>>, status: string): string {
+  const known = labels[status];
+  if (known) return known;
   const spaced = status.replace(/[_-]+/g, " ");
   return spaced.charAt(0).toUpperCase() + spaced.slice(1);
 }
@@ -92,6 +106,7 @@ function humanizeStatus(status: string): string {
  * module-gated card of appointments/leads/jobs/invoices.
  */
 export function ContactActivity({ contact }: { contact: Contact }) {
+  const t = useTranslations("contacts");
   const { business } = useBusiness();
   const router = useRouter();
 
@@ -112,24 +127,24 @@ export function ContactActivity({ contact }: { contact: Contact }) {
     <div className="flex min-w-0 flex-1 flex-col gap-6">
       {anyModule && (
         <div className="flex flex-col gap-4 rounded-2xl border bg-card p-5">
-          <p className="font-medium">Related records</p>
+          <p className="font-medium">{t("activity.relatedRecords")}</p>
           {appointmentsEnabled && (
             <Group
-              title="Appointments"
+              title={t("activity.appointments")}
               href={`${base}/appointments`}
               isPending={appointments.isPending}
               rows={
                 appointments.data?.map((appointment) => ({
                   key: appointment.id,
                   primary: formatDateTime(appointment.starts_at, business.timezone),
-                  secondary: humanizeStatus(appointment.status),
+                  secondary: statusLabel(APPOINTMENT_STATUS_LABELS, appointment.status),
                 })) ?? null
               }
             />
           )}
           {leadsEnabled && (
             <Group
-              title="Leads"
+              title={t("activity.leads")}
               href={`${base}/leads`}
               isPending={leads.isPending}
               rows={
@@ -139,7 +154,7 @@ export function ContactActivity({ contact }: { contact: Contact }) {
                     lead.value_cents !== null
                       ? `${lead.title} — ${formatCents(lead.value_cents)}`
                       : lead.title,
-                  secondary: humanizeStatus(lead.status),
+                  secondary: statusLabel(LEAD_STATUS_LABELS, lead.status),
                   href: `${base}/leads?lead=${lead.id}`,
                 })) ?? null
               }
@@ -147,14 +162,14 @@ export function ContactActivity({ contact }: { contact: Contact }) {
           )}
           {jobsEnabled && (
             <Group
-              title="Jobs"
+              title={t("activity.jobs")}
               href={`${base}/jobs`}
               isPending={jobs.isPending}
               rows={
                 jobs.data?.map((job) => ({
                   key: job.id,
                   primary: `${job.reference} — ${job.title}`,
-                  secondary: humanizeStatus(job.status),
+                  secondary: statusLabel(JOB_STATUS_LABELS, job.status),
                   href: `${base}/jobs?job=${job.id}`,
                 })) ?? null
               }
@@ -162,14 +177,14 @@ export function ContactActivity({ contact }: { contact: Contact }) {
           )}
           {invoicesEnabled && (
             <Group
-              title="Invoices"
+              title={t("activity.invoices")}
               href={`${base}/invoices`}
               isPending={invoices.isPending}
               rows={
                 invoices.data?.map((invoice) => ({
                   key: invoice.id,
                   primary: `${invoice.number} — ${formatCents(invoice.total_cents)}`,
-                  secondary: humanizeStatus(invoice.status),
+                  secondary: statusLabel(INVOICE_STATUS_LABELS, invoice.status),
                 })) ?? null
               }
             />
@@ -178,14 +193,14 @@ export function ContactActivity({ contact }: { contact: Contact }) {
       )}
 
       <div className="flex flex-col gap-3">
-        <p className="font-medium">Calls</p>
+        <p className="font-medium">{t("activity.calls")}</p>
         <CallList
           businessUuid={business.id}
           filters={{ contact_id: contact.id }}
           selectedId={null}
           onSelect={(call) => router.push(`/b/${business.id}/calls/${call.id}`)}
-          emptyTitle="No calls yet"
-          emptyDescription="Inbound and outbound calls with this contact will appear here."
+          emptyTitle={t("noCallsYet")}
+          emptyDescription={t("activity.noCallsDescription")}
         />
       </div>
     </div>

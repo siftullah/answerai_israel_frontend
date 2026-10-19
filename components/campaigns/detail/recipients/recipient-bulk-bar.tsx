@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { RotateCcwIcon, Trash2Icon, XIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -23,13 +24,19 @@ export function RecipientBulkBar({
   onDelete: () => void;
   onClear: () => void;
 }) {
+  const t = useTranslations("campaigns.recipients.bulk");
+  const tc = useTranslations("common");
   return (
     <div className="sticky bottom-4 z-20 mx-auto flex w-fit max-w-full flex-wrap items-center gap-1.5 rounded-2xl border bg-card px-3 py-2 shadow-lg">
-      <span className="px-1.5 text-sm font-medium whitespace-nowrap">{count} selected</span>
+      <span className="px-1.5 text-sm font-medium whitespace-nowrap">
+        {tc("pagination.selectedCount", { count })}
+      </span>
       <Separator orientation="vertical" className="mx-1 h-5" />
       <Button variant="ghost" size="sm" disabled={retryableCount === 0} onClick={onRetry}>
         <RotateCcwIcon />
-        Retry{retryableCount > 0 && retryableCount !== count ? ` ${retryableCount}` : ""}
+        {retryableCount > 0 && retryableCount !== count
+          ? t("retryCount", { count: retryableCount })
+          : tc("actions.retry")}
       </Button>
       <Button
         variant="ghost"
@@ -38,10 +45,10 @@ export function RecipientBulkBar({
         onClick={onDelete}
       >
         <Trash2Icon />
-        Remove
+        {tc("actions.remove")}
       </Button>
       <Separator orientation="vertical" className="mx-1 h-5" />
-      <Button variant="ghost" size="icon-sm" aria-label="Clear selection" onClick={onClear}>
+      <Button variant="ghost" size="icon-sm" aria-label={t("clearSelection")} onClick={onClear}>
         <XIcon />
       </Button>
     </div>

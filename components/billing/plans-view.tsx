@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import {
   ArrowLeftIcon,
   CheckIcon,
@@ -17,6 +18,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Spinner } from "@/components/ui/spinner";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { ErrorState } from "@/components/error-state";
+import { LanguagePicker } from "@/components/language-picker";
 import { Logo } from "@/components/logo";
 import { useBusiness } from "@/components/business/business-provider";
 import { CardCaptureDialog } from "@/components/billing/card-capture-dialog";
@@ -27,7 +29,9 @@ import { usePlans } from "@/hooks/use-plans";
 import { useBilling } from "@/hooks/use-billing";
 import { cn } from "@/lib/utils";
 import { formatCents } from "@/lib/money";
-import { LOCALE, formatDate } from "@/lib/datetime";
+import { formatDate } from "@/lib/datetime";
+import { displayLocale } from "@/lib/i18n/runtime";
+import type { Translator } from "@/lib/i18n/types";
 import {
   BILLING_INTERVAL_LABELS,
   PLAN_ENTITLEMENT_DEFAULTS,
@@ -48,15 +52,18 @@ const HERO_GRADIENT =
 
 const CONTACT_SALES_HREF = "mailto:info@answerai.co.il?subject=Custom%20plan%20enquiry";
 
-const PLAN_DESCRIPTIONS: Record<string, string> = {
-  starter: "Essential coverage for small businesses",
-  growth: "Most popular for growing businesses",
-  scale: "Advanced capacity for busy teams",
-};
-
-function planDescription(plan: Plan): string {
-  if (!plan.is_public) return "Tailored specifically for your business";
-  return PLAN_DESCRIPTIONS[plan.slug] ?? "Flexible plan for your business";
+function planDescription(plan: Plan, t: Translator): string {
+  if (!plan.is_public) return t("descriptions.custom");
+  switch (plan.slug) {
+    case "starter":
+      return t("descriptions.starter");
+    case "growth":
+      return t("descriptions.growth");
+    case "scale":
+      return t("descriptions.scale");
+    default:
+      return t("descriptions.fallback");
+  }
 }
 
 /** Label vs the current plan: cheaper schedules, dearer charges now. */
@@ -66,7 +73,11 @@ function effectiveMonthlyCents(plan: Plan, interval: BillingInterval): number {
     : Math.round(plan.annual_price_cents / 12);
 }
 
-/** The pricing block never drops ".00" — always two decimals. */
+/**
+ * The pricing block never drops ".00" — always two decimals. "en-IL" in every
+ * UI language on purpose, like lib/money's formatCents: he-IL wraps ₪ and the
+ * digits in bidi marks.
+ */
 function formatCents2(cents: number): string {
   return new Intl.NumberFormat("en-IL", {
     style: "currency",
@@ -76,12 +87,9 @@ function formatCents2(cents: number): string {
   }).format(cents / 100);
 }
 
-function retentionLabel(days: number): string {
-  if (days % 365 === 0) {
-    const years = days / 365;
-    return years === 1 ? "1 year" : `${years} years`;
-  }
-  return `${days} days`;
+function retentionLabel(days: number, t: Translator): string {
+  if (days % 365 === 0) return t("values.years", { count: days / 365 });
+  return t("values.days", { count: days });
 }
 
 type CardAction =
@@ -96,12 +104,13 @@ function cardAction(
   plan: Plan,
   interval: BillingInterval,
   subscription: Subscription | null,
-  privileged: boolean
+  privileged: boolean,
+  t: Translator
 ): CardAction {
   if (!privileged) return { kind: "none" };
 
   if (!subscription || subscription.status === "cancelled") {
-    return { kind: "subscribe", label: `Choose ${plan.name}` };
+    return { kind: "subscribe", label: t("cta.choose", { plan: plan.name }) };
   }
 
   const isCurrent = subscription.plan?.id === plan.id && subscription.interval === interval;
@@ -112,7 +121,7 @@ function cardAction(
       // re-runs subscribe, which repoints the pending row.
       return isCurrent
         ? { kind: "activate" }
-        : { kind: "subscribe", label: `Switch to ${plan.name}` };
+        : { kind: "subscribe", label: t("cta.switchPlan", { plan: plan.name }) };
     case "suspended":
       // Plan changes need a billable subscription — payment first.
       return { kind: "none" };
@@ -129,12 +138,12 @@ function cardAction(
       const target = effectiveMonthlyCents(plan, interval);
       const label =
         target > current
-          ? `Upgrade to ${plan.name}`
+          ? t("cta.upgrade", { plan: plan.name })
           : target < current
-            ? `Downgrade to ${plan.name}`
+            ? t("cta.downgrade", { plan: plan.name })
             : plan.id === subscription.plan.id
-              ? `Switch to ${BILLING_INTERVAL_LABELS[interval].toLowerCase()} billing`
-              : `Switch to ${plan.name}`;
+              ? t("cta.switchInterval", { interval })
+              : t("cta.switchPlan", { plan: plan.name });
       return { kind: "change", label };
     }
   }
@@ -143,6 +152,8 @@ function cardAction(
 /* ----------------------------- Feature matrix ----------------------------- */
 
 interface FeatureRow {
+  /** Stable React key — the label is translated. */
+  id: string;
   label: string;
   tooltip: string;
   /** One entry per plan, aligned with the plans array. */
@@ -152,11 +163,13 @@ interface FeatureRow {
 }
 
 interface FeatureCategory {
+  /** Stable React key — the name is translated. */
+  id: string;
   name: string;
   rows: FeatureRow[];
 }
 
-function buildFeatureCategories(plans: Plan[]): FeatureCategory[] {
+function buildFeatureCategories(plans: Plan[], t: Translator): FeatureCategory[] {
   const entitlements: Required<PlanEntitlements>[] = plans.map((p) => ({
     ...PLAN_ENTITLEMENT_DEFAULTS,
     ...p.entitlements,
@@ -165,127 +178,146 @@ function buildFeatureCategories(plans: Plan[]): FeatureCategory[] {
   // Rows every plan includes render as green checks across the board — the
   // table doubles as the feature list, so the baseline offering shows too.
   const everyPlan = plans.map(() => true);
+  const custom = t("custom");
+  const perMonth = (amount: string) => t("values.perMonth", { amount });
+  const perMin = (amount: string) => t("values.perMin", { amount });
+  const count = (n: number) => n.toLocaleString(displayLocale());
 
   return [
     {
-      name: "Included usage",
+      id: "usage",
+      name: t("categories.usage"),
       rows: [
         {
-          label: "Inbound AI minutes",
-          tooltip:
-            "AI-answered inbound call minutes included every month. Overage rates apply beyond this allowance.",
-          values: entitlements.map((e) => `${e.inbound_minutes_included.toLocaleString()} / month`),
-          custom: "Custom",
+          id: "inboundMinutes",
+          label: t("features.inboundMinutes.label"),
+          tooltip: t("features.inboundMinutes.tooltip"),
+          values: entitlements.map((e) => perMonth(count(e.inbound_minutes_included))),
+          custom,
         },
         {
-          label: "Inbound overage",
-          tooltip: "Per-minute rate for inbound AI minutes beyond the monthly allowance.",
-          values: entitlements.map((e) => `${formatCents(e.inbound_overage_cents_per_min)} / min`),
-          custom: "Custom",
+          id: "inboundOverage",
+          label: t("features.inboundOverage.label"),
+          tooltip: t("features.inboundOverage.tooltip"),
+          values: entitlements.map((e) => perMin(formatCents(e.inbound_overage_cents_per_min))),
+          custom,
         },
         {
-          label: "Outbound calls (PAYG)",
-          tooltip:
-            "Per-minute rate for AI outbound calls. Pay as you go — billed monthly for what you use, no allowance to buy.",
-          values: entitlements.map((e) => `${formatCents(e.outbound_cents_per_min)} / min`),
-          custom: "Custom",
+          id: "outbound",
+          label: t("features.outbound.label"),
+          tooltip: t("features.outbound.tooltip"),
+          values: entitlements.map((e) => perMin(formatCents(e.outbound_cents_per_min))),
+          custom,
         },
         {
-          label: "Transfer minutes",
-          tooltip: "Minutes of calls transferred to your team included every month.",
-          values: entitlements.map((e) => `${e.transfer_pool_minutes.toLocaleString()} / month`),
-          custom: "Custom",
+          id: "transferMinutes",
+          label: t("features.transferMinutes.label"),
+          tooltip: t("features.transferMinutes.tooltip"),
+          values: entitlements.map((e) => perMonth(count(e.transfer_pool_minutes))),
+          custom,
         },
         {
-          label: "Transfer overage",
-          tooltip: "Per-minute rate for transferred minutes beyond the monthly pool.",
-          values: entitlements.map((e) => `${formatCents(e.transfer_overage_cents_per_min)} / min`),
-          custom: "Custom",
+          id: "transferOverage",
+          label: t("features.transferOverage.label"),
+          tooltip: t("features.transferOverage.tooltip"),
+          values: entitlements.map((e) => perMin(formatCents(e.transfer_overage_cents_per_min))),
+          custom,
         },
       ],
     },
     {
-      name: "Capacity",
+      id: "capacity",
+      name: t("categories.capacity"),
       rows: [
         {
-          label: "AI agents",
-          tooltip: "How many AI receptionists you can run, each with its own number, script and hours.",
-          values: entitlements.map((e) => String(e.max_agents)),
-          custom: "Custom",
+          id: "agents",
+          label: t("features.agents.label"),
+          tooltip: t("features.agents.tooltip"),
+          values: entitlements.map((e) => count(e.max_agents)),
+          custom,
         },
         {
-          label: "Phone numbers included",
-          tooltip: "Dedicated phone numbers included with the plan.",
-          values: entitlements.map((e) => String(e.included_numbers)),
-          custom: "Custom",
+          id: "includedNumbers",
+          label: t("features.includedNumbers.label"),
+          tooltip: t("features.includedNumbers.tooltip"),
+          values: entitlements.map((e) => count(e.included_numbers)),
+          custom,
         },
         {
-          label: "Extra phone numbers",
-          tooltip: "Monthly price for each additional number beyond those included.",
-          values: entitlements.map((e) => `${formatCents(e.additional_number_cents)} / month`),
-          custom: "Custom",
+          id: "extraNumbers",
+          label: t("features.extraNumbers.label"),
+          tooltip: t("features.extraNumbers.tooltip"),
+          values: entitlements.map((e) => perMonth(formatCents(e.additional_number_cents))),
+          custom,
         },
         {
-          label: "Team seats",
-          tooltip: "Team member accounts that can access this business.",
-          values: entitlements.map((e) => String(e.max_seats)),
-          custom: "Custom",
+          id: "seats",
+          label: t("features.seats.label"),
+          tooltip: t("features.seats.tooltip"),
+          values: entitlements.map((e) => count(e.max_seats)),
+          custom,
         },
       ],
     },
     {
-      name: "Features",
+      id: "features",
+      name: t("categories.features"),
       rows: [
         {
-          label: "24/7 AI call answering",
-          tooltip:
-            "Your AI receptionist answers every inbound call around the clock — no missed calls, no voicemail.",
+          id: "answering",
+          label: t("features.answering.label"),
+          tooltip: t("features.answering.tooltip"),
           values: everyPlan,
           custom: true,
         },
         {
-          label: "Call recordings & transcripts",
-          tooltip: "Every call is recorded and transcribed so you can review conversations any time.",
+          id: "recordings",
+          label: t("features.recordings.label"),
+          tooltip: t("features.recordings.tooltip"),
           values: everyPlan,
           custom: true,
         },
         {
-          label: "Appointment booking",
-          tooltip: "The AI books appointments straight into your calendar during the call.",
+          id: "booking",
+          label: t("features.booking.label"),
+          tooltip: t("features.booking.tooltip"),
           values: everyPlan,
           custom: true,
         },
         {
-          label: "Lead capture",
-          tooltip: "Caller details and enquiries are captured automatically as leads.",
+          id: "leadCapture",
+          label: t("features.leadCapture.label"),
+          tooltip: t("features.leadCapture.tooltip"),
           values: everyPlan,
           custom: true,
         },
         {
-          label: "Quotes, jobs & invoices",
-          tooltip: "Turn calls into quotes, jobs and invoices without re-typing details.",
+          id: "quotesJobsInvoices",
+          label: t("features.quotesJobsInvoices.label"),
+          tooltip: t("features.quotesJobsInvoices.tooltip"),
           values: everyPlan,
           custom: true,
         },
         {
-          label: "Screened transfers",
-          tooltip:
-            "The AI announces the caller and reason first, so your team can accept or decline before being connected.",
+          id: "screenedTransfers",
+          label: t("features.screenedTransfers.label"),
+          tooltip: t("features.screenedTransfers.tooltip"),
           values: entitlements.map((e) => e.screened_transfers),
-          custom: "Custom",
+          custom,
         },
         {
-          label: "AI data extraction",
-          tooltip:
-            "Automatically pulls structured details — contact info, job requests, quote details — out of every call.",
+          id: "extraction",
+          label: t("features.extraction.label"),
+          tooltip: t("features.extraction.tooltip"),
           values: entitlements.map((e) => e.ai_extraction),
-          custom: "Custom",
+          custom,
         },
         {
-          label: "Recording retention",
-          tooltip: "How long call recordings are kept before automatic deletion.",
-          values: entitlements.map((e) => retentionLabel(e.recording_retention_days)),
-          custom: "Custom",
+          id: "retention",
+          label: t("features.retention.label"),
+          tooltip: t("features.retention.tooltip"),
+          values: entitlements.map((e) => retentionLabel(e.recording_retention_days, t)),
+          custom,
         },
       ],
     },
@@ -305,7 +337,7 @@ function FeatureLabel({
 }) {
   return (
     <Tooltip>
-      <TooltipTrigger className="flex cursor-default items-center gap-1.5 text-left">
+      <TooltipTrigger className="flex cursor-default items-center gap-1.5 text-start">
         <span
           className={
             desktop ? "text-sm font-medium text-foreground" : "text-xs text-muted-foreground sm:text-sm"
@@ -352,6 +384,7 @@ function FeatureValue({
 
 /** Big price with shekels/agorot split, strikethrough monthly when annual. */
 function PriceBlock({ plan, interval }: { plan: Plan; interval: BillingInterval }) {
+  const t = useTranslations("billing.plans");
   const perMonthCents = effectiveMonthlyCents(plan, interval);
   const shekels = Math.floor(perMonthCents / 100);
   const cents = perMonthCents % 100;
@@ -363,14 +396,15 @@ function PriceBlock({ plan, interval }: { plan: Plan; interval: BillingInterval 
           {formatCents2(plan.monthly_price_cents)}
         </div>
       )}
+      {/* "en-IL" like formatCents2: Latin grouping, no bidi marks around ₪. */}
       <div className="font-heading text-3xl font-semibold text-foreground">
         ₪{shekels.toLocaleString("en-IL")}
         <span className="text-sm">.{String(cents).padStart(2, "0")}</span>
       </div>
-      <div className="text-sm text-muted-foreground">/month</div>
+      <div className="text-sm text-muted-foreground">{t("price.perMonth")}</div>
       {interval === "annual" && (
         <div className="mt-1 text-xs text-muted-foreground">
-          ({formatCents2(plan.annual_price_cents)}/year)
+          {t("price.perYear", { amount: formatCents2(plan.annual_price_cents) })}
         </div>
       )}
     </div>
@@ -392,6 +426,7 @@ function PlanCta({
   onChange: () => void;
   onActivate: () => void;
 }) {
+  const t = useTranslations("billing.plans");
   const isCustom = !plan.is_public;
   // Custom plans carry the cyan CTA accent; the framed column gets the
   // primary fill; everything else stays quiet.
@@ -402,19 +437,19 @@ function PlanCta({
       // Owner-specified grayed brand blue for the locked current plan.
       return (
         <Button className="w-full bg-[#0057a8] text-white" disabled>
-          Current plan
+          {t("currentPlan")}
         </Button>
       );
     case "scheduled":
       return (
         <Button className="w-full" variant="outline" disabled>
-          Scheduled
+          {t("cta.scheduled")}
         </Button>
       );
     case "activate":
       return (
         <Button className="w-full" variant={isCustom ? "cta" : "default"} onClick={onActivate}>
-          Add card &amp; activate
+          {t("cta.activate")}
         </Button>
       );
     case "subscribe":
@@ -432,7 +467,7 @@ function PlanCta({
     case "none":
       return (
         <Button className="w-full" variant="outline" disabled>
-          {plan.is_public ? plan.name : "Custom"}
+          {plan.is_public ? plan.name : t("custom")}
         </Button>
       );
   }
@@ -446,6 +481,7 @@ function PageFrame({
   backHref: string | null;
   children: React.ReactNode;
 }) {
+  const t = useTranslations("billing.plans");
   const logout = useLogout();
 
   return (
@@ -453,11 +489,11 @@ function PageFrame({
       <div className="mx-auto max-w-6xl px-6 py-4">
         <div className="flex items-center justify-between gap-3">
           <Logo className="h-16" />
-          <div className="flex items-center gap-2">
+          <div className="ms-auto flex items-center gap-2">
             {backHref && (
               <Button variant="cta" render={<Link href={backHref} />}>
-                <ArrowLeftIcon />
-                Back to billing
+                <ArrowLeftIcon className="rtl:-scale-x-100" />
+                {t("header.backToBilling")}
               </Button>
             )}
             <Button
@@ -466,8 +502,9 @@ function PageFrame({
               disabled={logout.isPending}
             >
               {logout.isPending ? <Spinner /> : <LogOutIcon />}
-              {logout.isPending ? "Signing out…" : "Sign out"}
+              {logout.isPending ? t("header.signingOut") : t("header.signOut")}
             </Button>
+            <LanguagePicker />
           </div>
         </div>
       </div>
@@ -479,6 +516,7 @@ function PageFrame({
 /* --------------------------------- Page ---------------------------------- */
 
 export function PlansView() {
+  const t = useTranslations("billing.plans");
   const { business, membership } = useBusiness();
   const privileged =
     membership.role.slug === "owner" || membership.role.slug === "admin";
@@ -528,7 +566,7 @@ export function PlansView() {
       <PageFrame backHref={null}>
         <div className="relative z-10 flex justify-center px-6 pt-14">
           <ErrorState
-            title="Couldn't load plans"
+            title={t("loadError")}
             message={failed.error?.message ?? ""}
             onRetry={() => {
               void plansQuery.refetch();
@@ -560,14 +598,14 @@ export function PlansView() {
   // column, tenancy-style. A real custom plan renders as a live column.
   const showCustomTeaser = !customPlan;
 
-  const categories = buildFeatureCategories(plans);
+  const categories = buildFeatureCategories(plans, t);
   const columnCount = plans.length + 1 + (showCustomTeaser ? 1 : 0);
   const gridStyle = { gridTemplateColumns: `repeat(${columnCount}, minmax(0, 1fr))` };
 
   const ribbonFor = (plan: Plan): string | null => {
-    if (plan.id === currentPlanId) return "Current plan";
-    if (!plan.is_public) return "Custom";
-    if (plan.id === highlightId && isNewSubscriber) return "Most Popular";
+    if (plan.id === currentPlanId) return t("currentPlan");
+    if (!plan.is_public) return t("custom");
+    if (plan.id === highlightId && isNewSubscriber) return t("mostPopular");
     return null;
   };
 
@@ -578,7 +616,7 @@ export function PlansView() {
   const ctaFor = (plan: Plan) => (
     <PlanCta
       plan={plan}
-      action={cardAction(plan, interval, subscription, privileged)}
+      action={cardAction(plan, interval, subscription, privileged, t)}
       framed={plan.id === highlightId}
       onSubscribe={() => setSubscribeTarget(plan)}
       onChange={() => setChangeTarget(plan)}
@@ -588,10 +626,21 @@ export function PlansView() {
 
   // The promo's end date, for the "ends 31 March" copy; null when no promo runs.
   const promoEndsAt = setupFeePromoEndsAt();
-  const promoEndsLabel = promoEndsAt?.toLocaleDateString(LOCALE, {
+  const promoEndsLabel = promoEndsAt?.toLocaleDateString(displayLocale(), {
     day: "numeric",
     month: "long",
   });
+  const promoValues = {
+    was: formatCents(SETUP_FEE_CENTS),
+    now: formatCents(SETUP_FEE_PROMO_CENTS),
+    s: (chunks: React.ReactNode) => <s className="text-muted-foreground">{chunks}</s>,
+    strong: (chunks: React.ReactNode) => <span className="font-semibold">{chunks}</span>,
+  };
+  const billingLink = (chunks: React.ReactNode) => (
+    <Link className="underline underline-offset-4" href={billingHref}>
+      {chunks}
+    </Link>
+  );
 
   const hasAlerts =
     status === "suspended" ||
@@ -607,13 +656,10 @@ export function PlansView() {
       <div className="relative z-10 px-6 pt-10 sm:pt-14">
         <div className="mx-auto max-w-4xl text-center">
           <h1 className="mb-4 font-heading text-3xl leading-tight font-semibold text-foreground sm:text-4xl lg:text-5xl">
-            Choose the right plan
-            <br />
-            for your business
+            {t.rich("hero.title", { br: () => <br /> })}
           </h1>
           <p className="mx-auto mb-6 max-w-3xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-            Choose the perfect plan that fits your needs—whether you&apos;re a small business or
-            a large established corporation.
+            {t("hero.subtitle")}
           </p>
         </div>
       </div>
@@ -640,35 +686,28 @@ export function PlansView() {
                     variant="success"
                     className={cn(interval === "annual" && "bg-white/20 text-white dark:text-white")}
                   >
-                    Save 10%
+                    {t("notes.saveAnnual")}
                   </Badge>
                 )}
               </button>
             ))}
           </div>
-          <p className="mt-3 text-xs text-muted-foreground">All prices are in ILS (₪), excluding VAT.</p>
-          <p className="mt-1.5 text-xs text-muted-foreground">
-            Annual plans pay the year up front; usage charges still bill monthly.
-          </p>
-          <p className="mt-1.5 text-xs text-muted-foreground">
-            Upgrades apply immediately with credit for unused time; downgrades take effect at the
-            end of the current period.
-          </p>
+          <p className="mt-3 text-xs text-muted-foreground">{t("notes.prices")}</p>
+          <p className="mt-1.5 text-xs text-muted-foreground">{t("notes.annual")}</p>
+          <p className="mt-1.5 text-xs text-muted-foreground">{t("notes.changes")}</p>
           {setupFeeDue && setupFeePromoActive() && (
             <div className="mt-4 flex flex-wrap items-center justify-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm text-foreground">
-              <Badge variant="success">Limited offer</Badge>
+              <Badge variant="success">{t("setupFee.limitedOffer")}</Badge>
               <span>
-                One-time setup &amp; onboarding fee{" "}
-                <s className="text-muted-foreground">{formatCents(SETUP_FEE_CENTS)}</s>{" "}
-                <span className="font-semibold">{formatCents(SETUP_FEE_PROMO_CENTS)}</span> + VAT
-                {promoEndsLabel && ` — ends ${promoEndsLabel}`}
+                {promoEndsLabel
+                  ? t.rich("setupFee.promoEnds", { ...promoValues, date: promoEndsLabel })
+                  : t.rich("setupFee.promo", promoValues)}
               </span>
             </div>
           )}
           {setupFeeDue && (
             <p className="mt-1.5 text-xs text-muted-foreground">
-              First subscriptions include a one-time {formatCents(currentSetupFeeCents())} + VAT
-              setup &amp; onboarding fee — never charged again, including on plan changes.
+              {t("setupFee.firstSubscription", { fee: formatCents(currentSetupFeeCents()) })}
             </p>
           )}
         </div>
@@ -680,83 +719,75 @@ export function PlansView() {
           <div className="mx-auto flex max-w-4xl flex-col gap-3">
             {status === "suspended" && (
               <Alert variant="destructive">
-                <AlertTitle>Your subscription is suspended</AlertTitle>
+                <AlertTitle>{t("alerts.suspended.title")}</AlertTitle>
                 <AlertDescription className="flex flex-wrap items-center gap-2">
-                  <span>
-                    A payment failed and service is paused. Update your card to retry the charge and
-                    restore service — plan changes come after that.
-                  </span>
+                  <span>{t("alerts.suspended.body")}</span>
                   <Button size="sm" variant="destructive" render={<Link href={billingHref} />}>
-                    Fix payment
+                    {t("alerts.suspended.action")}
                   </Button>
                 </AlertDescription>
               </Alert>
             )}
             {status === "past_due" && (
               <Alert variant="warning">
-                <AlertTitle>Your last payment failed</AlertTitle>
+                <AlertTitle>{t("alerts.pastDue.title")}</AlertTitle>
                 <AlertDescription>
-                  We&apos;ll retry automatically, or{" "}
-                  <Link className="underline underline-offset-4" href={billingHref}>
-                    update your card
-                  </Link>{" "}
-                  to retry now. You can still change plans in the meantime.
+                  {t.rich("alerts.pastDue.body", { link: billingLink })}
                 </AlertDescription>
               </Alert>
             )}
             {status === "pending" && privileged && (
               <Alert variant="info">
-                <AlertTitle>Almost there — add a card to activate</AlertTitle>
+                <AlertTitle>{t("alerts.pending.title")}</AlertTitle>
                 <AlertDescription className="flex flex-wrap items-center gap-2">
                   <span>
                     {subscription?.plan
-                      ? `${subscription.plan.name} (${BILLING_INTERVAL_LABELS[subscription.interval].toLowerCase()}) is reserved for you. Your subscription starts once a card is added.`
-                      : "Your subscription starts once a card is added."}
+                      ? t("alerts.pending.bodyWithPlan", {
+                          plan: subscription.plan.name,
+                          interval: subscription.interval,
+                        })
+                      : t("alerts.pending.body")}
                   </span>
                   <Button size="sm" onClick={() => setCardOpen(true)}>
-                    Add card
+                    {t("alerts.pending.action")}
                   </Button>
                 </AlertDescription>
               </Alert>
             )}
             {subscription?.cancel_at_period_end && status !== "cancelled" && (
               <Alert variant="warning">
-                <AlertTitle>Cancellation scheduled</AlertTitle>
+                <AlertTitle>{t("alerts.cancellation.title")}</AlertTitle>
                 <AlertDescription>
-                  Your subscription ends on{" "}
                   {subscription.current_period_end
-                    ? formatDate(subscription.current_period_end, business.timezone)
-                    : "the current period's end"}
-                  . You can resume it from the{" "}
-                  <Link className="underline underline-offset-4" href={billingHref}>
-                    billing page
-                  </Link>
-                  .
+                    ? t.rich("alerts.cancellation.body", {
+                        date: formatDate(subscription.current_period_end, business.timezone),
+                        link: billingLink,
+                      })
+                    : t.rich("alerts.cancellation.bodyNoDate", { link: billingLink })}
                 </AlertDescription>
               </Alert>
             )}
             {subscription?.pending_plan && (
               <Alert variant="info">
-                <AlertTitle>Plan change scheduled</AlertTitle>
+                <AlertTitle>{t("alerts.planChange.title")}</AlertTitle>
                 <AlertDescription>
-                  Your plan changes to {subscription.pending_plan.name} (
-                  {BILLING_INTERVAL_LABELS[
-                    subscription.pending_interval ?? subscription.interval
-                  ].toLowerCase()}
-                  ) on{" "}
                   {subscription.current_period_end
-                    ? formatDate(subscription.current_period_end, business.timezone)
-                    : "the next renewal"}
-                  . Choosing a different plan below replaces this change.
+                    ? t("alerts.planChange.body", {
+                        plan: subscription.pending_plan.name,
+                        interval: subscription.pending_interval ?? subscription.interval,
+                        date: formatDate(subscription.current_period_end, business.timezone),
+                      })
+                    : t("alerts.planChange.bodyNoDate", {
+                        plan: subscription.pending_plan.name,
+                        interval: subscription.pending_interval ?? subscription.interval,
+                      })}
                 </AlertDescription>
               </Alert>
             )}
             {!privileged && (
               <Alert>
-                <AlertTitle>View only</AlertTitle>
-                <AlertDescription>
-                  Subscriptions are managed by the business owner and admins.
-                </AlertDescription>
+                <AlertTitle>{t("alerts.viewOnly.title")}</AlertTitle>
+                <AlertDescription>{t("alerts.viewOnly.body")}</AlertDescription>
               </Alert>
             )}
           </div>
@@ -794,7 +825,7 @@ export function PlansView() {
                       </div>
                     )}
                     <h3 className="text-lg font-semibold text-foreground sm:text-xl">{plan.name}</h3>
-                    <p className="mt-1 text-sm text-muted-foreground">{planDescription(plan)}</p>
+                    <p className="mt-1 text-sm text-muted-foreground">{planDescription(plan, t)}</p>
                     <div className="mt-4">
                       <PriceBlock plan={plan} interval={interval} />
                     </div>
@@ -803,14 +834,14 @@ export function PlansView() {
 
                   <div className="mt-6 space-y-4">
                     {categories.map((category) => (
-                      <div key={category.name}>
+                      <div key={category.id}>
                         <h4 className="mb-2 text-sm font-semibold text-foreground">
                           {category.name}
                         </h4>
                         <div className="space-y-2">
                           {category.rows.map((row) => (
                             <div
-                              key={row.label}
+                              key={row.id}
                               className="flex items-center justify-between gap-3"
                             >
                               <FeatureLabel label={row.label} tooltip={row.tooltip} />
@@ -829,34 +860,36 @@ export function PlansView() {
             {showCustomTeaser && (
               <div className="rounded-lg border border-border bg-card p-4 sm:p-6">
                 <div className="text-center">
-                  <h3 className="text-lg font-semibold text-foreground sm:text-xl">Custom</h3>
+                  <h3 className="text-lg font-semibold text-foreground sm:text-xl">
+                    {t("custom")}
+                  </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Tailored solution for your needs
+                    {t("customTeaser.description")}
                   </p>
                   <div className="mt-4">
                     <div className="font-heading text-3xl font-semibold text-foreground">
-                      Custom
+                      {t("custom")}
                     </div>
                     <div className="mt-1 text-sm text-muted-foreground">
-                      Contact us for pricing
+                      {t("customTeaser.pricing")}
                     </div>
                   </div>
                   <div className="mt-4">
                     <Button className="w-full" variant="cta" render={<a href={CONTACT_SALES_HREF} />}>
-                      Contact Sales
+                      {t("customTeaser.contactSales")}
                     </Button>
                   </div>
                 </div>
 
                 <div className="mt-6 space-y-4">
                   {categories.map((category) => (
-                    <div key={category.name}>
+                    <div key={category.id}>
                       <h4 className="mb-2 text-sm font-semibold text-foreground">
                         {category.name}
                       </h4>
                       <div className="space-y-2">
                         {category.rows.map((row) => (
-                          <div key={row.label} className="flex items-center justify-between gap-3">
+                          <div key={row.id} className="flex items-center justify-between gap-3">
                             <FeatureLabel label={row.label} tooltip={row.tooltip} />
                             <div className="shrink-0">
                               <FeatureValue value={row.custom} />
@@ -892,7 +925,7 @@ export function PlansView() {
                     {ribbon && (
                       <div
                         className={cn(
-                          "absolute -top-px left-1/2 -translate-x-1/2 rounded-b-lg px-3 py-1 text-xs font-medium whitespace-nowrap",
+                          "absolute -top-px start-1/2 -translate-x-1/2 rtl:translate-x-1/2 rounded-b-lg px-3 py-1 text-xs font-medium whitespace-nowrap",
                           ribbonClass(plan)
                         )}
                       >
@@ -901,7 +934,7 @@ export function PlansView() {
                     )}
                     <h3 className="text-lg font-semibold text-foreground">{plan.name}</h3>
                     <p className="mt-1 min-h-10 text-sm text-muted-foreground">
-                      {planDescription(plan)}
+                      {planDescription(plan, t)}
                     </p>
                     <div className="mt-4">
                       <PriceBlock plan={plan} interval={interval} />
@@ -912,22 +945,22 @@ export function PlansView() {
               })}
               {showCustomTeaser && (
                 <div className="relative flex flex-col p-6 text-center">
-                  <h3 className="text-lg font-semibold text-foreground">Custom</h3>
+                  <h3 className="text-lg font-semibold text-foreground">{t("custom")}</h3>
                   <p className="mt-1 min-h-10 text-sm text-muted-foreground">
-                    Tailored solution for your needs
+                    {t("customTeaser.description")}
                   </p>
                   <div className="mt-4">
                     {/* Invisible placeholders keep the row aligned in annual mode. */}
                     {interval === "annual" && <div className="text-sm opacity-0">–</div>}
                     <div className="font-heading text-3xl font-semibold text-foreground">
-                      Custom
+                      {t("custom")}
                     </div>
-                    <div className="text-sm text-muted-foreground">Contact us for pricing</div>
+                    <div className="text-sm text-muted-foreground">{t("customTeaser.pricing")}</div>
                     {interval === "annual" && <div className="mt-1 text-xs opacity-0">–</div>}
                   </div>
                   <div className="mt-auto pt-4">
                     <Button className="w-full" variant="cta" render={<a href={CONTACT_SALES_HREF} />}>
-                      Contact Sales
+                      {t("customTeaser.contactSales")}
                     </Button>
                   </div>
                 </div>
@@ -938,7 +971,7 @@ export function PlansView() {
             {categories.map((category, categoryIndex) => {
               const isLastCategory = categoryIndex === categories.length - 1;
               return (
-                <div key={category.name}>
+                <div key={category.id}>
                   <div className="bg-muted/50 px-6 py-4">
                     <h4 className="text-lg font-semibold text-foreground">{category.name}</h4>
                   </div>
@@ -951,7 +984,7 @@ export function PlansView() {
                     const rowBorder = !(isLastRow && isLastCategory) && "border-b border-border/60";
 
                     return (
-                      <div key={row.label} className="grid" style={gridStyle}>
+                      <div key={row.id} className="grid" style={gridStyle}>
                         <div className={cn("flex items-center p-4", rowBorder)}>
                           <FeatureLabel label={row.label} tooltip={row.tooltip} desktop />
                         </div>
@@ -991,7 +1024,7 @@ export function PlansView() {
                               className={cn(
                                 "flex items-center justify-center p-4",
                                 (planIndex < plans.length - 1 || showCustomTeaser) &&
-                                  "border-r border-border/60",
+                                  "border-e border-border/60",
                                 rowBorder
                               )}
                             >

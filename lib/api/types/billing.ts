@@ -3,6 +3,9 @@
  * the GET /billing aggregate and POST /billing/change-plan/preview shapes.
  */
 
+import { rt } from "@/lib/i18n/runtime";
+import { labelMap } from "@/lib/i18n/label-map";
+
 export const SUBSCRIPTION_STATUSES = [
   "pending",
   "active",
@@ -12,39 +15,34 @@ export const SUBSCRIPTION_STATUSES = [
 ] as const;
 export type SubscriptionStatus = (typeof SUBSCRIPTION_STATUSES)[number];
 
-export const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = {
-  pending: "Pending",
-  active: "Active",
-  past_due: "Past due",
-  suspended: "Suspended",
-  cancelled: "Cancelled",
-};
+export const SUBSCRIPTION_STATUS_LABELS: Record<SubscriptionStatus, string> = labelMap(
+  "lib.subscriptionStatus",
+  ["pending", "active", "past_due", "suspended", "cancelled"]
+);
 
 export const BILLING_INTERVALS = ["monthly", "annual"] as const;
 export type BillingInterval = (typeof BILLING_INTERVALS)[number];
 
-export const BILLING_INTERVAL_LABELS: Record<BillingInterval, string> = {
-  monthly: "Monthly",
-  annual: "Annual",
-};
+export const BILLING_INTERVAL_LABELS: Record<BillingInterval, string> = labelMap(
+  "lib.billingInterval",
+  ["monthly", "annual"]
+);
 
 export const BILLING_CHARGE_STATUSES = ["pending", "paid", "failed"] as const;
 export type BillingChargeStatus = (typeof BILLING_CHARGE_STATUSES)[number];
 
-export const BILLING_CHARGE_STATUS_LABELS: Record<BillingChargeStatus, string> = {
-  pending: "Processing",
-  paid: "Paid",
-  failed: "Failed",
-};
+export const BILLING_CHARGE_STATUS_LABELS: Record<BillingChargeStatus, string> = labelMap(
+  "lib.billingChargeStatus",
+  ["pending", "paid", "failed"]
+);
 
 export const BILLING_CHARGE_TYPES = ["initial", "renewal", "plan_change"] as const;
 export type BillingChargeType = (typeof BILLING_CHARGE_TYPES)[number];
 
-export const BILLING_CHARGE_TYPE_LABELS: Record<BillingChargeType, string> = {
-  initial: "First charge",
-  renewal: "Renewal",
-  plan_change: "Plan change",
-};
+export const BILLING_CHARGE_TYPE_LABELS: Record<BillingChargeType, string> = labelMap(
+  "lib.billingChargeType",
+  ["initial", "renewal", "plan_change"]
+);
 
 /**
  * The plan's entitlements JSON. Every key is optional: custom plan rows may
@@ -119,8 +117,17 @@ export function currentSetupFeeCents(now: Date = new Date()): number {
 /** VAT in basis points (18%), for preview figures the backend hasn't priced. */
 export const TAX_BP = 1800;
 
-/** The tax line label on every breakdown — "VAT (18%)", derived from TAX_BP. */
+/**
+ * The tax line label on every breakdown — "VAT (18%)", derived from TAX_BP.
+ * English only: a module constant can't follow the UI language, so render
+ * taxLineLabel() instead.
+ */
 export const TAX_LINE_LABEL = `VAT (${TAX_BP / 100}%)`;
+
+/** TAX_LINE_LABEL in the active UI language. */
+export function taxLineLabel(): string {
+  return rt("lib.tax.line", { rate: TAX_BP / 100 });
+}
 
 export interface Plan {
   id: string;

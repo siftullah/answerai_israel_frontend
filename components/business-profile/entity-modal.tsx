@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { useFormContext, useFormState } from "react-hook-form";
 import { CheckIcon } from "lucide-react";
 import {
@@ -67,6 +68,8 @@ export function EntityModal({
   pending?: boolean;
   isDirty: boolean;
 }) {
+  const t = useTranslations("businessProfile.entityModal");
+  const tc = useTranslations("common");
   const form = useFormContext();
   const { errors, submitCount } = useFormState();
 
@@ -205,7 +208,7 @@ export function EntityModal({
                   disabled={pending}
                   onClick={() => setActiveStep((current) => Math.max(current - 1, 0))}
                 >
-                  Back
+                  {tc("actions.back")}
                 </Button>
               )}
               {isLast ? (
@@ -220,7 +223,7 @@ export function EntityModal({
                 </Button>
               ) : (
                 <Button key="next" type="button" onClick={() => void handleNext()}>
-                  Next
+                  {tc("actions.next")}
                 </Button>
               )}
             </DialogFooter>
@@ -231,18 +234,18 @@ export function EntityModal({
       <AlertDialog open={confirmDiscard} onOpenChange={setConfirmDiscard}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Discard changes?</AlertDialogTitle>
-            <AlertDialogDescription>Your edits haven&apos;t been saved.</AlertDialogDescription>
+            <AlertDialogTitle>{t("discardDialog.title")}</AlertDialogTitle>
+            <AlertDialogDescription>{t("discardDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep editing</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.keepEditing")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 setConfirmDiscard(false);
                 onOpenChange(false);
               }}
             >
-              Discard
+              {tc("actions.discard")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

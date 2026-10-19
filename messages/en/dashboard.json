@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "Dashboard"
+  },
+  "header": {
+    "welcome": "Welcome back",
+    "welcomeName": "Welcome back, {name}"
+  },
+  "hours": {
+    "openUntil": "Open · closes {time}",
+    "openNow": "Open now",
+    "closedUntil": "Closed · opens {time}",
+    "closedToday": "Closed today"
+  },
+  "health": {
+    "agentsTitle": "{count, plural, one {An agent is failing to sync} other {# agents are failing to sync}}",
+    "agentsDescription": "Callers may reach an outdated version. <link>Review agents</link>",
+    "numbersTitle": "{count, plural, one {A phone number needs attention} other {# phone numbers need attention}}",
+    "numbersDescription": "Provisioning failed — callers can't get through on it. <link>Fix phone numbers</link>",
+    "calendarTitle": "Your calendar connection is failing",
+    "calendarDescription": "New bookings aren't syncing to your external calendar. <link>Reconnect</link>"
+  },
+  "loadError": "Couldn't load your overview",
+  "activity": {
+    "callsToday": "Calls today",
+    "directionSplit": "{inbound} inbound · {outbound} outbound",
+    "noCallsToday": "No calls yet today",
+    "answeredByAi": "Answered by AI",
+    "transferred": "{count} passed to your team",
+    "handledEndToEnd": "Handled end to end",
+    "missed": "Missed",
+    "missedDetail": "Busy, failed or rang out",
+    "nothingMissed": "Nothing slipped through",
+    "minutesThisMonth": "Minutes this month",
+    "avgPerCall": "Avg {duration} per call",
+    "noTalkTime": "No talk time yet"
+  },
+  "callVolume": {
+    "title": "Call volume",
+    "total": "{count, plural, one {# call} other {# calls}} in the last 14 days",
+    "period": "Last 14 days",
+    "vsPriorWeek": "vs prior week",
+    "emptyTitle": "No calls yet",
+    "emptyDescription": "Once your AI starts answering, daily volume shows up here.",
+    "inbound": "Inbound",
+    "outbound": "Outbound"
+  },
+  "needsAttention": {
+    "title": "Needs attention",
+    "description": "Where a human makes the difference",
+    "allClear": "All clear",
+    "allClearDescription": "Nothing needs your attention right now.",
+    "callbacksOverdue": "{count, plural, one {<num>#</num> callback overdue} other {<num>#</num> callbacks overdue}}",
+    "invoicesOverdue": "{count, plural, one {<num>#</num> invoice overdue · {amount}} other {<num>#</num> invoices overdue · {amount}}}",
+    "jobsHighPriority": "{count, plural, one {<num>#</num> high-priority job open} other {<num>#</num> high-priority jobs open}}",
+    "appointmentsToReview": "{count, plural, one {<num>#</num> appointment to review} other {<num>#</num> appointments to review}}",
+    "quotesExpiring": "{count, plural, one {<num>#</num> quote expiring soon} other {<num>#</num> quotes expiring soon}}",
+    "leadsNew": "{count, plural, one {<num>#</num> new lead to action} other {<num>#</num> new leads to action}}",
+    "callbacksDueToday": "{count, plural, one {<num>#</num> callback due today} other {<num>#</num> callbacks due today}}"
+  },
+  "answerRate": {
+    "title": "Answer rate",
+    "period": "Last 7 days",
+    "emptyTitle": "No calls this week",
+    "emptyDescription": "The gauge fills in once calls come through.",
+    "seriesAnswered": "Answered",
+    "gaugeCaption": "answered",
+    "summary": "{answered} of {total, plural, one {# call} other {# calls}} answered",
+    "delta": "{sign}{points, plural, one {# pt} other {# pts}} vs prior week"
+  },
+  "busiestHours": {
+    "title": "Busiest hours",
+    "peak": "Peak around {range} · last 14 days",
+    "period": "Last 14 days",
+    "emptyTitle": "No calls yet",
+    "emptyDescription": "Once calls come in, you'll see when your phone runs hottest.",
+    "seriesCalls": "Calls"
+  },
+  "today": {
+    "title": "Today",
+    "description": "Appointments, jobs and callbacks",
+    "openCalendar": "Open calendar",
+    "emptyTitle": "Nothing scheduled",
+    "emptyDescription": "Bookings your AI makes on calls land here automatically.",
+    "kinds": {
+      "appointment": "Appointment",
+      "callback": "Callback",
+      "job": "Job"
+    }
+  },
+  "recentCalls": {
+    "title": "Recent calls",
+    "description": "What your AI has been handling",
+    "emptyTitle": "No calls yet",
+    "emptyDescription": "Calls your AI answers or places will appear here.",
+    "noSummary": "No summary"
+  },
+  "captured": {
+    "title": "Captured by your AI",
+    "period": "This month, from calls",
+    "footer": "Created automatically — no manual entry.",
+    "items": {
+      "leads": "Leads",
+      "appointments": "Appointments",
+      "quotes": "Quote requests",
+      "jobs": "Jobs",
+      "callbacks": "Callbacks"
+    }
+  },
+  "snapshots": {
+    "leads": {
+      "title": "Leads",
+      "moneyLabel": "Open pipeline",
+      "open": "{count} open",
+      "new": "{count} new"
+    },
+    "quotes": {
+      "title": "Quotes",
+      "moneyLabel": "Awaiting response",
+      "awaiting": "{count} awaiting",
+      "expiringSoon": "{count} expiring soon"
+    },
+    "jobs": {
+      "title": "Jobs",
+      "moneyLabel": "Active value",
+      "active": "{count} active",
+      "today": "{count} today"
+    },
+    "invoices": {
+      "title": "Invoices",
+      "moneyLabel": "Outstanding",
+      "awaitingPayment": "{count} awaiting payment",
+      "overdue": "{count} overdue"
+    }
+  }
+}

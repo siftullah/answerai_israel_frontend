@@ -1,16 +1,23 @@
 import { z } from "zod";
 import type { BusinessPolicy, BusinessPolicyPayload } from "@/lib/api/types";
+import type { Translator } from "@/lib/i18n/types";
 import { agentScopeFields, refineAgentScope } from "@/lib/validation/knowledge";
 
-export const policySchema = z
-  .object({
-    name: z.string().min(1, "Name is required").max(150, "Keep the name under 150 characters"),
-    content: z.string().min(1, "Content is required").max(10000, "Keep the content under 10,000 characters"),
-    ...agentScopeFields,
-  })
-  .superRefine((values, ctx) => refineAgentScope(values, ctx));
+/** `t` is a translator scoped to the `validation` namespace. */
+export function policySchema(t: Translator) {
+  return z
+    .object({
+      name: z.string().min(1, t("common.nameRequired")).max(150, t("length.name", { max: 150 })),
+      content: z
+        .string()
+        .min(1, t("policy.contentRequired"))
+        .max(10000, t("length.content", { max: 10000 })),
+      ...agentScopeFields,
+    })
+    .superRefine((values, ctx) => refineAgentScope(t, values, ctx));
+}
 
-export type PolicyValues = z.infer<typeof policySchema>;
+export type PolicyValues = z.infer<ReturnType<typeof policySchema>>;
 
 export function toPolicyValues(source: BusinessPolicy | BusinessPolicyPayload | null): PolicyValues {
   return {

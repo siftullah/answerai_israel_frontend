@@ -1,0 +1,105 @@
+{
+  "meta": {
+    "title": "פגישות"
+  },
+  "page": {
+    "title": "פגישות",
+    "description": "פגישות שנקבעו על ידי סוכני ה-AI והצוות שלכם.",
+    "openCalendar": "פתיחת היומן",
+    "newAppointment": "פגישה חדשה"
+  },
+  "tabs": {
+    "upcoming": "קרובות",
+    "today": "היום",
+    "needsReview": "לבדיקה",
+    "history": "היסטוריה"
+  },
+  "empty": {
+    "upcoming": {
+      "title": "אין פגישות קרובות",
+      "description": "פגישות שסוכני ה-AI שלכם קובעים — וגם פגישות שתוסיפו בעצמכם — יופיעו כאן."
+    },
+    "today": {
+      "title": "לא נקבעו פגישות להיום",
+      "description": "פגישות שמתחילות היום יופיעו כאן."
+    },
+    "needsReview": {
+      "title": "אין מה לבדוק",
+      "description": "פגישות פתוחות שמועדן עבר יופיעו כאן עד שתתעדו את התוצאה."
+    },
+    "history": {
+      "title": "אין עדיין היסטוריית פגישות",
+      "description": "פגישות שהושלמו, בוטלו או סומנו כאי-הגעה יופיעו כאן."
+    },
+    "noMatch": {
+      "title": "לא נמצאו פגישות תואמות",
+      "description": "נסו חיפוש אחר או הסירו חלק מהמסננים."
+    }
+  },
+  "unassigned": "ללא שיוך",
+  "list": {
+    "loadError": "לא ניתן לטעון את הפגישות"
+  },
+  "row": {
+    "needsReview": "נדרשת בדיקה",
+    "bookedByAi": "נקבעה על ידי AI בשיחה"
+  },
+  "filters": {
+    "searchPlaceholder": "חיפוש איש קשר…",
+    "searchLabel": "חיפוש פגישות לפי שם איש קשר",
+    "filterLabel": "סינון פגישות",
+    "source": "מקור",
+    "assignee": "אחראי",
+    "any": "הכל",
+    "everyone": "כולם",
+    "removeFilter": "הסרת המסנן {label}",
+    "clearAll": "ניקוי הכל"
+  },
+  "detail": {
+    "back": "כל הפגישות",
+    "noSelection": {
+      "title": "לא נבחרה פגישה",
+      "description": "בחרו פגישה כדי לראות את הפרטים שלה."
+    },
+    "notFound": {
+      "title": "הפגישה לא נמצאה",
+      "description": "הפגישה הזו לא קיימת או שהוסרה."
+    },
+    "loadError": "לא ניתן לטעון את הפגישה הזו",
+    "meta": {
+      "when": "מועד",
+      "duration": "{count, plural, one {# דקה} other {# דקות}}",
+      "assignee": "אחראי",
+      "source": "מקור",
+      "booked": "נקבעה",
+      "cancelReason": "סיבת הביטול"
+    },
+    "actions": {
+      "viewContact": "הצגת איש הקשר",
+      "viewOnCalendar": "הצגה ביומן",
+      "complete": "סימון כהושלם",
+      "noShow": "אי-הגעה",
+      "reschedule": "שינוי מועד",
+      "reassign": "שינוי שיוך"
+    },
+    "notes": {
+      "title": "הערות",
+      "add": "הוספת הערות",
+      "placeholder": "כל מה שהצוות צריך לדעת",
+      "label": "הערות לפגישה",
+      "save": "שמירת הערות",
+      "empty": "אין הערות עדיין."
+    },
+    "call": {
+      "title": "נקבעה בשיחה",
+      "inbound": "שיחה נכנסת",
+      "outbound": "שיחה יוצאת"
+    }
+  },
+  "toasts": {
+    "notesSaved": "ההערות נשמרו",
+    "confirmed": "הפגישה אושרה",
+    "completed": "הפגישה הושלמה",
+    "noShow": "סומן כאי-הגעה"
+  }
+}

@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import { Checkbox } from "@/components/ui/checkbox";
 import {
@@ -50,6 +51,9 @@ export function ContactsTable({
   onAddToDnc: (e164: string) => void;
   onDelete: (contact: Contact) => void;
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
+
   return (
     <DataTableShell>
       <Table>
@@ -57,18 +61,18 @@ export function ContactsTable({
           <TableRow>
             <TableHead className="w-10">
               <Checkbox
-                aria-label="Select all loaded contacts"
+                aria-label={t("list.selectAllLoaded")}
                 checked={selection.headerChecked}
                 indeterminate={selection.headerIndeterminate}
                 onCheckedChange={selection.onToggleAll}
               />
             </TableHead>
-            <TableHead>Name</TableHead>
-            <TableHead>Phone</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Tags</TableHead>
-            <TableHead>Source</TableHead>
-            <TableHead>Last call</TableHead>
+            <TableHead>{tc("labels.name")}</TableHead>
+            <TableHead>{tc("labels.phone")}</TableHead>
+            <TableHead>{tc("labels.email")}</TableHead>
+            <TableHead>{t("fields.tags")}</TableHead>
+            <TableHead>{t("fields.source")}</TableHead>
+            <TableHead>{t("fields.lastCall")}</TableHead>
             <TableHead className="w-10" />
           </TableRow>
         </TableHeader>
@@ -80,7 +84,7 @@ export function ContactsTable({
               <TableRow key={contact.id}>
                 <TableCell>
                   <Checkbox
-                    aria-label={`Select ${contactDisplayName(contact)}`}
+                    aria-label={t("selectContact", { name: contactDisplayName(contact) })}
                     checked={selection.isSelected(contact.id)}
                     onCheckedChange={() => selection.onToggleRow(contact.id)}
                   />
@@ -101,7 +105,7 @@ export function ContactsTable({
                         >
                           {contactDisplayName(contact)}
                         </Link>
-                        {contact.on_dnc && <Badge variant="destructive">On DNC</Badge>}
+                        {contact.on_dnc && <Badge variant="destructive">{t("onDnc")}</Badge>}
                       </div>
                       {contact.name && contact.company && (
                         <span className="max-w-52 truncate text-sm font-normal text-muted-foreground">

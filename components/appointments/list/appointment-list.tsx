@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useTranslations } from "next-intl";
 import {
   Empty,
   EmptyDescription,
@@ -39,6 +40,7 @@ export function AppointmentList({
   emptyDescription: string;
   emptyAction?: React.ReactNode;
 }) {
+  const t = useTranslations("appointments");
   const { business } = useBusiness();
   const query = useAppointmentsInfinite(businessUuid, filters);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -74,7 +76,7 @@ export function AppointmentList({
   if (query.isError) {
     return (
       <ErrorState
-        title="Couldn't load appointments"
+        title={t("list.loadError")}
         message={query.error.message}
         onRetry={() => query.refetch()}
       />

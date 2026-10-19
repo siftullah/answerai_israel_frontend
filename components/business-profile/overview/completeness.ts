@@ -10,12 +10,14 @@ import type {
   Service,
   TransferTarget,
 } from "@/lib/api/types";
+import { rt } from "@/lib/i18n/runtime";
 
 /** Minimum members for the team tile to count (owner alone isn't a team). */
 const MIN_TEAM_MEMBERS = 2;
 
 export interface SectionTile {
   key: string;
+  /** Message key under layout.nav — rendered via t(`nav.${title}`). */
   title: string;
   /** Path segment under /b/{uuid} (matches section-nav-config). */
   segment: string;
@@ -47,9 +49,6 @@ export interface CompletenessInput {
   providers: IntegrationProviderInfo[] | null;
 }
 
-const count = (n: number, singular: string, plural = `${singular}s`) =>
-  `${n} ${n === 1 ? singular : plural}`;
-
 export function buildCompleteness(input: CompletenessInput): Completeness {
   const basicInfoDone = input.profile
     ? Boolean(input.profile.description && input.profile.public_phone)
@@ -78,103 +77,106 @@ export function buildCompleteness(input: CompletenessInput): Completeness {
   const pendingSetup = input.providers?.some(
     (provider) => provider.connection?.status === "pending_setup"
   );
+  const integrationsLabel = connectedNow
+    ? rt("businessProfile.overview.tiles.integrations.connected")
+    : pendingSetup
+      ? rt("businessProfile.overview.tiles.integrations.connecting")
+      : rt("businessProfile.overview.tiles.integrations.optional");
 
   const tiles: SectionTile[] = [
     {
       key: "basic-info",
-      title: "Basic info",
+      title: "basicInfo",
       segment: "business-profile/basic-info",
       done: basicInfoDone,
-      stat: basicInfoDone === null ? null : basicInfoDone ? "Set" : "—",
-      summary: "Details set",
-      cta: "Add your details",
+      stat: basicInfoDone === null ? null : basicInfoDone ? rt("businessProfile.overview.tiles.basicInfo.set") : "—",
+      summary: rt("businessProfile.overview.tiles.basicInfo.summary"),
+      cta: rt("businessProfile.overview.tiles.basicInfo.cta"),
     },
     {
       key: "services",
-      title: "Services",
+      title: "services",
       segment: "business-profile/services",
       done: servicesDone,
       stat: input.services ? String(input.services.length) : null,
-      summary: count(input.services?.length ?? 0, "service"),
-      cta: "Add a service",
+      summary: rt("businessProfile.overview.tiles.services.summary", { count: input.services?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.services.cta"),
     },
     {
       key: "products",
-      title: "Products",
+      title: "products",
       segment: "business-profile/products",
       done: productsDone,
       stat: input.products ? String(input.products.length) : null,
-      summary: count(input.products?.length ?? 0, "product"),
-      cta: "Add a product",
+      summary: rt("businessProfile.overview.tiles.products.summary", { count: input.products?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.products.cta"),
     },
     {
       key: "faqs",
-      title: "FAQs",
+      title: "faqs",
       segment: "business-profile/faqs",
       done: input.faqs ? input.faqs.length > 0 : null,
       stat: input.faqs ? String(input.faqs.length) : null,
-      summary: count(input.faqs?.length ?? 0, "FAQ"),
-      cta: "Add an FAQ",
+      summary: rt("businessProfile.overview.tiles.faqs.summary", { count: input.faqs?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.faqs.cta"),
     },
     {
       key: "policies",
-      title: "Policies",
+      title: "policies",
       segment: "business-profile/policies",
       done: input.policies ? input.policies.length > 0 : null,
       stat: input.policies ? String(input.policies.length) : null,
-      summary: count(input.policies?.length ?? 0, "policy", "policies"),
-      cta: "Add a policy",
+      summary: rt("businessProfile.overview.tiles.policies.summary", { count: input.policies?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.policies.cta"),
     },
     {
       key: "docs",
-      title: "Docs",
+      title: "docs",
       segment: "business-profile/docs",
       done: input.documents ? readyDocs.length > 0 : null,
       stat: input.documents ? String(input.documents.length) : null,
-      summary: count(input.documents?.length ?? 0, "doc"),
-      cta: "Add a doc",
+      summary: rt("businessProfile.overview.tiles.docs.summary", { count: input.documents?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.docs.cta"),
     },
     {
       key: "team",
-      title: "Team",
+      title: "team",
       segment: "business-profile/team",
       done: input.members ? input.members.length >= MIN_TEAM_MEMBERS : null,
       stat: input.members ? String(input.members.length) : null,
-      summary: count(input.members?.length ?? 0, "member"),
-      cta: "Add your team",
+      summary: rt("businessProfile.overview.tiles.team.summary", { count: input.members?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.team.cta"),
     },
     {
       key: "transfers",
-      title: "Transfers",
+      title: "transfers",
       segment: "business-profile/transfers",
       done: input.targets ? input.targets.length > 0 : null,
       stat: input.targets ? String(input.targets.length) : null,
-      summary: count(input.targets?.length ?? 0, "target"),
-      cta: "Add a target",
+      summary: rt("businessProfile.overview.tiles.transfers.summary", { count: input.targets?.length ?? 0 }),
+      cta: rt("businessProfile.overview.tiles.transfers.cta"),
     },
     {
       key: "calendar",
-      title: "Calendar",
+      title: "calendar",
       segment: "business-profile/calendar",
       done: input.calendar ? true : null,
-      stat: input.calendar ? `${input.calendar.slot_interval_minutes} min` : null,
-      summary: input.calendar ? `${input.calendar.slot_interval_minutes}-min slots` : "",
-      cta: "Review defaults",
+      stat: input.calendar
+        ? rt("businessProfile.overview.tiles.calendar.stat", { minutes: input.calendar.slot_interval_minutes })
+        : null,
+      summary: input.calendar
+        ? rt("businessProfile.overview.tiles.calendar.summary", { minutes: input.calendar.slot_interval_minutes })
+        : "",
+      cta: rt("businessProfile.overview.tiles.calendar.cta"),
     },
     {
       key: "integrations",
-      title: "Integrations",
+      title: "integrations",
       segment: "business-profile/integrations",
       done: input.providers ? Boolean(liveConnection) : null,
-      stat: input.providers
-        ? connectedNow
-          ? "Connected"
-          : pendingSetup
-            ? "Connecting"
-            : "Optional"
-        : null,
-      summary: connectedNow ? "Connected" : pendingSetup ? "Connecting" : "Optional",
-      cta: "Optional",
+      stat: input.providers ? integrationsLabel : null,
+      summary: integrationsLabel,
+      cta: rt("businessProfile.overview.tiles.integrations.optional"),
     },
   ];
 

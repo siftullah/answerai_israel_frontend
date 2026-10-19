@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { Controller, FormProvider, useForm, useFormContext } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -75,10 +76,13 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
 
   const locked = TERMINAL_CAMPAIGN_STATUSES.includes(campaign.status);
 
+  const t = useTranslations("campaigns");
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => campaignSettingsSchema(tv), [tv]);
   // Mounted under CampaignDetailBody key={campaign.id}, so defaults are read
   // exactly once per campaign — 4s polling can never clobber in-flight edits.
   const form = useForm<CampaignSettingsValues>({
-    resolver: zodResolver(campaignSettingsSchema),
+    resolver: zodResolver(schema),
     defaultValues: toCampaignSettingsValues(campaign, business.timezone),
   });
   const hoursMode = form.watch("hours_mode");
@@ -98,7 +102,7 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
   const submit = form.handleSubmit((values) => {
     updateCampaign.mutate(toCampaignSettingsPayload(values, business.timezone), {
       onSuccess: (updated) => {
-        toast.success("Campaign updated");
+        toast.success(t("toasts.updated"));
         form.reset(toCampaignSettingsValues(updated, business.timezone));
       },
       onError: (error) =>
@@ -118,10 +122,7 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
         <fieldset disabled={locked} className="flex min-w-0 flex-col gap-4">
           {locked && (
             <Alert>
-              <AlertDescription>
-                This campaign has finished — settings are read-only. Duplicate it to run
-                the same setup again.
-              </AlertDescription>
+              <AlertDescription>{t("settings.locked")}</AlertDescription>
             </Alert>
           )}
           {rootServerError && (
@@ -131,15 +132,15 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
           )}
 
           <SettingsSection
-            title="Basics"
-            description="The agent doing the talking and the number on the caller ID."
+            title={t("settings.basicsTitle")}
+            description={t("settings.basicsDescription")}
           >
             <CampaignBasicsFields agents={agents} numbers={numbers} />
           </SettingsSection>
 
           <SettingsSection
-            title="Schedule"
-            description="An optional window — dialing starts and stops on its own."
+            title={t("settings.scheduleTitle")}
+            description={t("settings.scheduleDescription")}
           >
             <CampaignScheduleFields />
             <Button
@@ -158,13 +159,13 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
                 }
               }}
             >
-              Clear schedule
+              {t("settings.clearSchedule")}
             </Button>
           </SettingsSection>
 
           <SettingsSection
-            title="Calling hours"
-            description="When the campaign is allowed to dial. Outside these windows it simply waits."
+            title={t("settings.hoursTitle")}
+            description={t("settings.hoursDescription")}
           >
             <Controller
               control={form.control}
@@ -177,13 +178,13 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
                   options={[
                     {
                       value: "inherit",
-                      label: "Business hours",
-                      description: "Follows your trading hours.",
+                      label: t("settings.hoursInherit"),
+                      description: t("settings.hoursInheritDescription"),
                     },
                     {
                       value: "custom",
-                      label: "Custom hours",
-                      description: "Set specific days and times for this campaign.",
+                      label: t("settings.hoursCustom"),
+                      description: t("settings.hoursCustomDescription"),
                     },
                   ]}
                 />
@@ -208,15 +209,15 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
           </SettingsSection>
 
           <SettingsSection
-            title="Pacing & retries"
-            description="How hard the campaign pushes, and what counts as worth another try."
+            title={t("settings.pacingTitle")}
+            description={t("settings.pacingDescription")}
           >
             <CampaignPacingFields />
           </SettingsSection>
 
           <SettingsSection
-            title="Default variables"
-            description="Campaign-wide values for the agent's placeholders. Per-recipient values override these."
+            title={t("settings.variablesTitle")}
+            description={t("settings.variablesDescription")}
           >
             <DefaultVariablesSection businessUuid={business.id} />
           </SettingsSection>
@@ -235,15 +236,12 @@ export function CampaignSettingsTab({ campaign }: { campaign: Campaign }) {
 }
 
 function DefaultVariablesSection({ businessUuid }: { businessUuid: string }) {
+  const t = useTranslations("campaigns.settings");
   const form = useFormContext<CampaignSettingsValues>();
   const agentId = form.watch("agent_id");
 
   if (agentId === "") {
-    return (
-      <p className="text-sm text-muted-foreground">
-        Pick an agent first — its declared variables appear here.
-      </p>
-    );
+    return <p className="text-sm text-muted-foreground">{t("variablesPickAgent")}</p>;
   }
   // Remount per agent so the field array re-keys to the new declared set.
   return <DefaultVariablesFields key={agentId} businessUuid={businessUuid} agentId={agentId} />;
@@ -256,6 +254,7 @@ function DefaultVariablesFields({
   businessUuid: string;
   agentId: string;
 }) {
+  const t = useTranslations("campaigns.settings");
   const form = useFormContext<CampaignSettingsValues>();
   const agentQuery = useAgent(businessUuid, agentId);
   const declared = agentCallVariables(agentQuery.data?.config);
@@ -291,8 +290,10 @@ function DefaultVariablesFields({
   if (declared.length === 0) {
     return (
       <p className="text-sm text-muted-foreground">
-        This agent has no variables to set per campaign. Built-ins like {"{{contact_name}}"}{" "}
-        and {"{{business_name}}"} are filled automatically on every call.
+        {t("variablesNone", {
+          contactName: "{{contact_name}}",
+          businessName: "{{business_name}}",
+        })}
       </p>
     );
   }
@@ -307,17 +308,14 @@ function DefaultVariablesFields({
             </FieldLabel>
             <Input
               id={`campaign-variable-${pair.name}`}
-              placeholder="Fallback for recipients without their own value"
+              placeholder={t("variablesPlaceholder")}
               autoComplete="off"
               {...form.register(`default_variables.${index}.value`)}
             />
           </Field>
         ))}
       </div>
-      <p className="text-sm text-muted-foreground">
-        A recipient with no value for a variable, here or on its own row, is skipped rather
-        than called. The agent&apos;s own default is never used for campaign calls.
-      </p>
+      <p className="text-sm text-muted-foreground">{t("variablesHint")}</p>
     </div>
   );
 }

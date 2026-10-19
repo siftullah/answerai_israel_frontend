@@ -1,14 +1,6 @@
+import { useTranslations } from "next-intl";
 import { Badge } from "@/components/ui/badge";
 import type { CampaignRecipientStatus, CampaignStatus } from "@/lib/api/types";
-
-const STATUS_LABELS: Record<CampaignStatus, string> = {
-  draft: "Draft",
-  scheduled: "Scheduled",
-  running: "Running",
-  paused: "Paused",
-  completed: "Completed",
-  canceled: "Canceled",
-};
 
 const STATUS_VARIANTS: Record<
   CampaignStatus,
@@ -23,29 +15,16 @@ const STATUS_VARIANTS: Record<
 };
 
 export function CampaignStatusBadge({ status }: { status: CampaignStatus }) {
+  const t = useTranslations("campaigns");
   return (
     <Badge variant={STATUS_VARIANTS[status]}>
       {status === "running" && (
         <span className="size-1.5 animate-pulse rounded-full bg-current" aria-hidden />
       )}
-      {STATUS_LABELS[status]}
+      {t(`status.${status}`)}
     </Badge>
   );
 }
-
-const RECIPIENT_LABELS: Record<CampaignRecipientStatus, string> = {
-  pending: "Pending",
-  queued: "Queued",
-  calling: "Calling",
-  completed: "Completed",
-  retry_scheduled: "Retry scheduled",
-  failed: "Failed",
-  max_attempts: "Max attempts",
-  dnc_blocked: "On DNC",
-  invalid: "Invalid",
-  skipped: "Skipped",
-  canceled: "Canceled",
-};
 
 const RECIPIENT_VARIANTS: Record<
   CampaignRecipientStatus,
@@ -69,12 +48,13 @@ export function CampaignRecipientStatusBadge({
 }: {
   status: CampaignRecipientStatus;
 }) {
+  const t = useTranslations("campaigns");
   return (
     <Badge variant={RECIPIENT_VARIANTS[status]}>
       {status === "calling" && (
         <span className="size-1.5 animate-pulse rounded-full bg-current" aria-hidden />
       )}
-      {RECIPIENT_LABELS[status]}
+      {t(`recipientStatus.${status}`)}
     </Badge>
   );
 }

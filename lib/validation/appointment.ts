@@ -4,30 +4,34 @@ import type { ApiError } from "@/lib/api/errors";
 import type { StoreAppointmentPayload } from "@/lib/api/types";
 import { zonedDateTimeToUtcIso } from "@/lib/datetime";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import type { Translator } from "@/lib/i18n/types";
 
 /**
  * Staff bookings deliberately skip slot enforcement server-side (double-booking
  * is allowed), so the only backend rejections are shape ones — `starts_at`
  * after:now being the interesting case, remapped onto the time field.
+ * Schema factories take a translator scoped to the `validation` namespace.
  */
-export const createAppointmentSchema = z
-  .object({
-    contact_id: z.string().min(1, "Choose a contact"),
-    /** User uuid; "" = the unassigned pool. */
-    member_id: z.string(),
-    date: z.string().min(1, "Pick a date"),
-    /** A slot's UTC instant, or "" when a custom time is typed instead. */
-    slot_iso: z.string(),
-    time: z.string(),
-    notes: z.string().max(2000, "Keep the notes under 2,000 characters"),
-  })
-  .superRefine((values, ctx) => {
-    if (!values.slot_iso && !values.time) {
-      ctx.addIssue({ code: "custom", path: ["time"], message: "Pick a time" });
-    }
-  });
+export function createAppointmentSchema(t: Translator) {
+  return z
+    .object({
+      contact_id: z.string().min(1, t("common.contactRequired")),
+      /** User uuid; "" = the unassigned pool. */
+      member_id: z.string(),
+      date: z.string().min(1, t("common.dateRequired")),
+      /** A slot's UTC instant, or "" when a custom time is typed instead. */
+      slot_iso: z.string(),
+      time: z.string(),
+      notes: z.string().max(2000, t("length.notes", { max: 2000 })),
+    })
+    .superRefine((values, ctx) => {
+      if (!values.slot_iso && !values.time) {
+        ctx.addIssue({ code: "custom", path: ["time"], message: t("common.timeRequired") });
+      }
+    });
+}
 
-export type CreateAppointmentValues = z.infer<typeof createAppointmentSchema>;
+export type CreateAppointmentValues = z.infer<ReturnType<typeof createAppointmentSchema>>;
 
 export function defaultCreateAppointmentValues(
   overrides: Partial<CreateAppointmentValues> = {}
@@ -56,19 +60,23 @@ export function toStoreAppointmentPayload(
   };
 }
 
-export const rescheduleAppointmentSchema = z
-  .object({
-    date: z.string().min(1, "Pick a date"),
-    slot_iso: z.string(),
-    time: z.string(),
-  })
-  .superRefine((values, ctx) => {
-    if (!values.slot_iso && !values.time) {
-      ctx.addIssue({ code: "custom", path: ["time"], message: "Pick a time" });
-    }
-  });
+export function rescheduleAppointmentSchema(t: Translator) {
+  return z
+    .object({
+      date: z.string().min(1, t("common.dateRequired")),
+      slot_iso: z.string(),
+      time: z.string(),
+    })
+    .superRefine((values, ctx) => {
+      if (!values.slot_iso && !values.time) {
+        ctx.addIssue({ code: "custom", path: ["time"], message: t("common.timeRequired") });
+      }
+    });
+}
 
-export type RescheduleAppointmentValues = z.infer<typeof rescheduleAppointmentSchema>;
+export type RescheduleAppointmentValues = z.infer<
+  ReturnType<typeof rescheduleAppointmentSchema>
+>;
 
 export function toRescheduleAppointmentPayload(
   values: RescheduleAppointmentValues,

@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -24,13 +25,14 @@ export function VoidInvoiceDialog({
   invoice: Invoice;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("invoices");
   const voidInvoice = useVoidInvoice(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
   // would unmount the mutation observer and skip these callbacks.
   const confirm = () => {
     voidInvoice.mutate(invoice.id, {
-      onSuccess: () => toast.success(`Invoice ${invoice.number} voided`),
+      onSuccess: () => toast.success(t("toasts.voided", { number: invoice.number })),
       onError: (error) => toast.error(error.message),
       onSettled: () => onOpenChange(false),
     });
@@ -40,21 +42,22 @@ export function VoidInvoiceDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Void invoice {invoice.number}?</AlertDialogTitle>
+          <AlertDialogTitle>{t("voidDialog.title", { number: invoice.number })}</AlertDialogTitle>
           <AlertDialogDescription>
-            The {formatCents(invoice.total_cents, invoice.currency)} owed by{" "}
-            {invoice.contact?.name ?? "the customer"} stops counting as outstanding. The invoice
-            stays on record but can&apos;t be reopened.
+            {t("voidDialog.description", {
+              amount: formatCents(invoice.total_cents, invoice.currency),
+              customer: invoice.contact?.name ?? t("theCustomer"),
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Keep invoice</AlertDialogCancel>
+          <AlertDialogCancel>{t("actions.keepInvoice")}</AlertDialogCancel>
           <AlertDialogAction
             variant="destructive"
             disabled={voidInvoice.isPending}
             onClick={confirm}
           >
-            {voidInvoice.isPending ? "Voiding…" : "Void invoice"}
+            {voidInvoice.isPending ? t("actions.voiding") : t("actions.voidInvoice")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

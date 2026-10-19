@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 import {
@@ -45,15 +46,7 @@ import { cn } from "@/lib/utils";
 
 type StatusFilter = "all" | CampaignStatus;
 
-const STATUS_OPTIONS: { value: StatusFilter; label: string }[] = [
-  { value: "all", label: "All" },
-  { value: "draft", label: "Draft" },
-  { value: "scheduled", label: "Scheduled" },
-  { value: "running", label: "Running" },
-  { value: "paused", label: "Paused" },
-  { value: "completed", label: "Completed" },
-  { value: "canceled", label: "Canceled" },
-];
+const STATUS_OPTIONS: StatusFilter[] = ["all", ...CAMPAIGN_STATUSES];
 
 /** Segmented pill group (agents StatusFilter recipe). */
 function StatusFilterGroup({
@@ -63,26 +56,28 @@ function StatusFilterGroup({
   value: StatusFilter;
   onChange: (value: StatusFilter) => void;
 }) {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   return (
     <div
       role="group"
-      aria-label="Filter by status"
+      aria-label={t("filters.byStatus")}
       className="flex shrink-0 flex-wrap items-center gap-0.5 rounded-full bg-muted p-1"
     >
       {STATUS_OPTIONS.map((option) => (
         <button
-          key={option.value}
+          key={option}
           type="button"
-          aria-pressed={value === option.value}
-          onClick={() => onChange(option.value)}
+          aria-pressed={value === option}
+          onClick={() => onChange(option)}
           className={cn(
             "flex h-8 items-center rounded-full px-3.5 text-sm font-medium transition-colors outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50",
-            value === option.value
+            value === option
               ? "bg-background text-foreground shadow-sm ring-1 ring-foreground/10"
               : "text-muted-foreground hover:text-foreground"
           )}
         >
-          {option.label}
+          {option === "all" ? tc("labels.all") : t(`status.${option}`)}
         </button>
       ))}
     </div>
@@ -90,6 +85,8 @@ function StatusFilterGroup({
 }
 
 export function CampaignsView() {
+  const t = useTranslations("campaigns");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
 
@@ -147,27 +144,25 @@ export function CampaignsView() {
       startCampaign.mutate(campaign.id, {
         onSuccess: (started) =>
           toast.success(
-            started.status === "scheduled"
-              ? "Campaign scheduled — dialing begins at the start time"
-              : "Campaign started"
+            started.status === "scheduled" ? t("toasts.scheduled") : t("toasts.started")
           ),
         onError: (error) => toast.error(campaignActionErrorMessage(error)),
       }),
     onPause: (campaign) =>
       pauseCampaign.mutate(campaign.id, {
-        onSuccess: () => toast.success("Campaign paused"),
+        onSuccess: () => toast.success(t("toasts.paused")),
         onError: (error) => toast.error(campaignActionErrorMessage(error)),
       }),
     onResume: (campaign) =>
       resumeCampaign.mutate(campaign.id, {
-        onSuccess: () => toast.success("Campaign resumed"),
+        onSuccess: () => toast.success(t("toasts.resumed")),
         onError: (error) => toast.error(campaignActionErrorMessage(error)),
       }),
     onCancel: (campaign) => setCanceling(campaign),
     onDuplicate: (campaign) =>
       duplicateCampaign.mutate(campaign.id, {
         onSuccess: (copy) => {
-          toast.success("Campaign duplicated as a draft");
+          toast.success(t("toasts.duplicated"));
           router.push(`/b/${business.id}/calls/campaigns/${copy.id}`);
         },
         onError: (error) => toast.error(error.message),
@@ -178,12 +173,12 @@ export function CampaignsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Campaigns"
-        description="Bulk outbound calling — your AI works through a list, retries the misses, and skips the do-not-call register."
+        title={t("list.title")}
+        description={t("list.description")}
         actions={
           <Button onClick={() => setCreateOpen(true)}>
             <PlusIcon />
-            New campaign
+            {t("list.newCampaign")}
           </Button>
         }
       />
@@ -192,12 +187,12 @@ export function CampaignsView() {
         <Input
           value={search}
           onChange={(event) => setSearch(event.target.value)}
-          placeholder="Search campaigns"
+          placeholder={t("list.searchPlaceholder")}
           className="w-full sm:w-72"
           autoComplete="off"
         />
         <StatusFilterGroup value={status} onChange={setStatus} />
-        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ml-auto" />
+        <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ms-auto" />
       </div>
 
       {campaignsQuery.isPending ? (
@@ -208,27 +203,24 @@ export function CampaignsView() {
         </div>
       ) : campaignsQuery.isError ? (
         <ErrorState
-          title="Couldn't load campaigns"
+          title={t("list.loadError")}
           message={campaignsQuery.error.message}
           onRetry={() => campaignsQuery.refetch()}
         />
       ) : campaigns.length === 0 ? (
         hasFilters ? (
           <p className="py-8 text-center text-sm text-muted-foreground">
-            No campaigns match your filters.
+            {t("list.noMatches")}
           </p>
         ) : (
           <Empty className="border border-dashed">
             <EmptyHeader>
-              <EmptyTitle>No campaigns yet</EmptyTitle>
-              <EmptyDescription>
-                Create one, load your list of numbers or contacts, and your outbound agent
-                does the calling.
-              </EmptyDescription>
+              <EmptyTitle>{t("list.emptyTitle")}</EmptyTitle>
+              <EmptyDescription>{t("list.emptyDescription")}</EmptyDescription>
             </EmptyHeader>
             <Button onClick={() => setCreateOpen(true)}>
               <PlusIcon />
-              New campaign
+              {t("list.newCampaign")}
             </Button>
           </Empty>
         )
@@ -275,25 +267,24 @@ export function CampaignsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Cancel {canceling?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              Canceling stops dialing and cancels every queued call and remaining
-              recipient. This can&apos;t be undone.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("cancelDialog.title", { name: canceling?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("cancelDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Keep running</AlertDialogCancel>
+            <AlertDialogCancel>{t("cancelDialog.keepRunning")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!canceling) return;
                 cancelCampaign.mutate(canceling.id, {
-                  onSuccess: () => toast.success("Campaign canceled"),
+                  onSuccess: () => toast.success(t("toasts.canceled")),
                   onError: (error) => toast.error(campaignActionErrorMessage(error)),
                 });
                 setCanceling(null);
               }}
             >
-              Cancel campaign
+              {t("actions.cancelCampaign")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -307,25 +298,24 @@ export function CampaignsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
-            <AlertDialogDescription>
-              This removes the campaign and its recipient list. Calls it already made stay
-              in your call logs.
-            </AlertDialogDescription>
+            <AlertDialogTitle>
+              {t("deleteDialog.title", { name: deleting?.name ?? "" })}
+            </AlertDialogTitle>
+            <AlertDialogDescription>{t("deleteDialog.description")}</AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteCampaign.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Campaign deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

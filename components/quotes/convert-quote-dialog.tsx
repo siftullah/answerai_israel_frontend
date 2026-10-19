@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -29,6 +30,8 @@ export function ConvertQuoteDialog({
   quote: Quote;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("quotes");
+  const tc = useTranslations("common");
   const router = useRouter();
   const convertQuote = useConvertQuoteToInvoice(businessUuid);
 
@@ -37,7 +40,9 @@ export function ConvertQuoteDialog({
   const confirm = () => {
     convertQuote.mutate(quote.id, {
       onSuccess: (invoice) => {
-        toast.success(`Invoice ${invoice.number} drafted from quote ${quote.number}`);
+        toast.success(
+          t("toasts.convertedToInvoice", { invoice: invoice.number, quote: quote.number })
+        );
         router.push(`/b/${businessUuid}/invoices?invoice=${invoice.id}`);
       },
       onError: (error) => toast.error(error.message),
@@ -49,17 +54,18 @@ export function ConvertQuoteDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Convert quote {quote.number} to an invoice?</AlertDialogTitle>
+          <AlertDialogTitle>{t("convertDialog.title", { number: quote.number })}</AlertDialogTitle>
           <AlertDialogDescription>
-            Drafts an invoice for {formatCents(quote.total_cents, quote.currency)} with the same
-            line items and tax rates, ready to review and send to{" "}
-            {quote.contact?.name ?? "the customer"}. A quote converts once.
+            {t("convertDialog.description", {
+              amount: formatCents(quote.total_cents, quote.currency),
+              customer: quote.contact?.name ?? t("theCustomer"),
+            })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={convertQuote.isPending} onClick={confirm}>
-            {convertQuote.isPending ? "Converting…" : "Create invoice"}
+            {convertQuote.isPending ? t("actions.converting") : t("convertDialog.confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

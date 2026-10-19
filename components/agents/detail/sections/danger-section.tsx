@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { AgentSection } from "@/components/agents/detail/agent-section";
@@ -38,18 +39,17 @@ export function DangerSection({
   archivePending: boolean;
   onDelete: () => void;
 }) {
+  const t = useTranslations("agents.sections.danger");
+  const ta = useTranslations("agents");
+  const tc = useTranslations("common");
   const archived = agent.status === "archived";
 
   return (
-    <AgentSection
-      id="danger"
-      title="Danger zone"
-      description="Actions that affect this agent's live behaviour."
-    >
+    <AgentSection id="danger" title={t("title")} description={t("description")}>
       <div className="flex flex-col divide-y">
         <DangerRow
-          title="Rotate tool token"
-          description="The tool token authenticates this agent's live actions — bookings, contact lookups — against your account. Rotating invalidates the old token instantly; the voice engine receives the new one automatically."
+          title={ta("actions.rotateToolToken")}
+          description={t("rotate.description")}
           action={
             <Button
               type="button"
@@ -58,17 +58,13 @@ export function DangerSection({
               disabled={archived}
               onClick={onRotateToken}
             >
-              Rotate token
+              {ta("actions.rotateToken")}
             </Button>
           }
         />
         <DangerRow
-          title={archived ? "Restore agent" : "Archive agent"}
-          description={
-            archived
-              ? "Make the agent active again so it can take calls and be edited."
-              : "Deactivates the agent and hides it from pickers. Nothing is deleted — restore it any time."
-          }
+          title={archived ? t("restore.title") : t("archive.title")}
+          description={archived ? t("restore.description") : t("archive.description")}
           action={
             <Button
               type="button"
@@ -78,16 +74,16 @@ export function DangerSection({
               onClick={onArchiveToggle}
             >
               {archivePending && <Spinner />}
-              {archived ? "Restore" : "Archive"}
+              {archived ? ta("actions.restore") : ta("actions.archive")}
             </Button>
           }
         />
         <DangerRow
-          title="Delete agent"
-          description="Permanently deletes the agent and unpublishes it from the voice engine. Phone numbers that route here are left unassigned."
+          title={t("delete.title")}
+          description={t("delete.description")}
           action={
             <Button type="button" variant="destructive" size="sm" onClick={onDelete}>
-              Delete
+              {tc("actions.delete")}
             </Button>
           }
         />

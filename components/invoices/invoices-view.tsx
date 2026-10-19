@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { PlusIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -41,30 +42,6 @@ const TAB_REFINE: Record<InvoiceTab, readonly InvoiceStatus[]> = {
   all: INVOICE_STATUSES,
 };
 
-const COPY: Record<InvoiceTab, { emptyTitle: string; emptyDescription: string }> = {
-  open: {
-    emptyTitle: "No open invoices",
-    emptyDescription: "Drafts and invoices awaiting payment will show up here.",
-  },
-  overdue: {
-    emptyTitle: "Nothing overdue",
-    emptyDescription: "Invoices that pass their due date unpaid land here.",
-  },
-  paid: {
-    emptyTitle: "No paid invoices yet",
-    emptyDescription: "Invoices you mark as paid will appear here.",
-  },
-  all: {
-    emptyTitle: "No invoices yet",
-    emptyDescription: "Raise your first invoice for completed work.",
-  },
-};
-
-const NO_MATCH_COPY = {
-  emptyTitle: "No invoices match",
-  emptyDescription: "Try a different search or clear some filters.",
-};
-
 /**
  * Master-detail shell mirroring the callbacks/appointments pages: list rail +
  * detail pane on one divider, with the money stat strip above. Only the
@@ -73,6 +50,8 @@ const NO_MATCH_COPY = {
  * renders any uuid.
  */
 export function InvoicesView() {
+  const t = useTranslations("invoices");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const router = useRouter();
   const pathname = usePathname();
@@ -113,17 +92,24 @@ export function InvoicesView() {
   const newInvoiceButton = (
     <Button onClick={() => setCreating(true)}>
       <PlusIcon />
-      New invoice
+      {t("newInvoice")}
     </Button>
   );
 
-  const copy = hasActiveFilters ? NO_MATCH_COPY : COPY[tab];
+  const emptyCopy: Record<InvoiceTab | "noMatch", { title: string; description: string }> = {
+    open: { title: t("empty.open.title"), description: t("empty.open.description") },
+    overdue: { title: t("empty.overdue.title"), description: t("empty.overdue.description") },
+    paid: { title: t("empty.paid.title"), description: t("empty.paid.description") },
+    all: { title: t("empty.all.title"), description: t("empty.all.description") },
+    noMatch: { title: t("empty.noMatch.title"), description: t("empty.noMatch.description") },
+  };
+  const copy = emptyCopy[hasActiveFilters ? "noMatch" : tab];
 
   return (
     <div className="flex flex-col gap-5 lg:min-h-0 lg:flex-1">
       <PageHeader
-        title="Invoices"
-        description="Raise invoices for completed work and track what's been paid."
+        title={t("page.title")}
+        description={t("page.description")}
         actions={newInvoiceButton}
       />
 
@@ -135,14 +121,14 @@ export function InvoicesView() {
       <div className="flex flex-col lg:min-h-0 lg:flex-1 lg:flex-row">
         <div
           className={cn(
-            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-r lg:pr-5",
+            "min-h-0 flex-col gap-3 lg:flex lg:w-96 lg:shrink-0 lg:border-e lg:pe-5",
             selectedId ? "hidden" : "flex"
           )}
         >
           <Tabs value={tab} onValueChange={(value) => changeTab(value as InvoiceTab)}>
             <TabsList className="w-full">
               <TabsTrigger value="open">
-                Open
+                {t("tabs.open")}
                 {counts !== undefined && counts.open > 0 && (
                   <Badge variant="outline" className="h-5">
                     {counts.open}
@@ -150,15 +136,15 @@ export function InvoicesView() {
                 )}
               </TabsTrigger>
               <TabsTrigger value="overdue">
-                Overdue
+                {t("tabs.overdue")}
                 {counts !== undefined && counts.overdue > 0 && (
                   <Badge variant="destructive" className="h-5">
                     {counts.overdue}
                   </Badge>
                 )}
               </TabsTrigger>
-              <TabsTrigger value="paid">Paid</TabsTrigger>
-              <TabsTrigger value="all">All</TabsTrigger>
+              <TabsTrigger value="paid">{t("tabs.paid")}</TabsTrigger>
+              <TabsTrigger value="all">{tc("labels.all")}</TabsTrigger>
             </TabsList>
           </Tabs>
 
@@ -170,14 +156,14 @@ export function InvoicesView() {
             statuses={TAB_REFINE[tab]}
           />
 
-          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pr-1.5 lg:-mr-3">
+          <div className="scrollbar-slim min-h-0 flex-1 lg:overflow-y-auto lg:pe-1.5 lg:-me-3">
             <InvoiceList
               businessUuid={business.id}
               filters={apiFilters}
               selectedId={selectedId}
               onSelect={select}
-              emptyTitle={copy.emptyTitle}
-              emptyDescription={copy.emptyDescription}
+              emptyTitle={copy.title}
+              emptyDescription={copy.description}
               emptyAction={hasActiveFilters ? undefined : newInvoiceButton}
             />
           </div>
@@ -187,7 +173,7 @@ export function InvoicesView() {
           // Keyed so switching invoices starts the pane back at the top.
           key={selectedId ?? "empty"}
           className={cn(
-            "min-h-0 min-w-0 flex-1 lg:pl-8",
+            "min-h-0 min-w-0 flex-1 lg:ps-8",
             selectedId ? "flex" : "hidden lg:flex"
           )}
         >

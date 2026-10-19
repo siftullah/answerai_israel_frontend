@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo } from "react";
-import { dayKey } from "@/lib/datetime";
+import { useTranslations } from "next-intl";
+import { dayKey, formatDateKey } from "@/lib/datetime";
 import { cn } from "@/lib/utils";
 import {
   dayOfMonth,
@@ -35,6 +36,7 @@ export function MonthGrid({
   onSelectEvent: (event: GridEvent) => void;
   onSelectDay: (dateKey: string) => void;
 }) {
+  const t = useTranslations("calendar.grid");
   const byDay = useMemo(() => {
     const map = new Map<string, GridEvent[]>();
     for (const event of events) {
@@ -55,7 +57,7 @@ export function MonthGrid({
         {dayKeys.slice(0, 7).map((key) => (
           <div
             key={key}
-            className="border-l py-2 text-center text-sm text-muted-foreground first:border-l-0"
+            className="border-s py-2 text-center text-sm text-muted-foreground first:border-s-0"
           >
             {weekdayShort(key)}
           </div>
@@ -75,8 +77,8 @@ export function MonthGrid({
             <div
               key={key}
               className={cn(
-                "flex min-h-24 flex-col gap-1 border-b border-l p-1.5 first:border-l-0",
-                index % 7 === 0 && "border-l-0",
+                "flex min-h-24 flex-col gap-1 border-b border-s p-1.5 first:border-s-0",
+                index % 7 === 0 && "border-s-0",
                 index >= 35 && "border-b-0",
                 !inMonth && "bg-muted/30"
               )}
@@ -89,7 +91,7 @@ export function MonthGrid({
                   !inMonth && "text-muted-foreground",
                   isToday && "bg-primary font-medium text-primary-foreground hover:bg-primary/90"
                 )}
-                aria-label={`Open ${key} in day view`}
+                aria-label={t("openDay", { date: formatDateKey(key) })}
               >
                 {dayOfMonth(key)}
               </button>
@@ -109,7 +111,7 @@ export function MonthGrid({
                     onClick={() => onSelectDay(key)}
                     className="self-start rounded-sm px-1 text-xs text-muted-foreground hover:bg-muted hover:text-foreground"
                   >
-                    +{overflow} more
+                    {t("more", { count: overflow })}
                   </button>
                 )}
               </div>

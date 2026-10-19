@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -28,6 +29,7 @@ export function CancelJobDialog({
   job: Job;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("jobs");
   const cancelJob = useCancelJob(businessUuid);
   const [reason, setReason] = useState("");
 
@@ -38,7 +40,7 @@ export function CancelJobDialog({
     cancelJob.mutate(
       { id: job.id, ...(trimmed !== "" ? { reason: trimmed } : {}) },
       {
-        onSuccess: () => toast.success(`${job.reference} canceled`),
+        onSuccess: () => toast.success(t("toasts.canceled", { reference: job.reference })),
         onError: (error) => toast.error(error.message),
         onSettled: () => onOpenChange(false),
       }
@@ -49,32 +51,30 @@ export function CancelJobDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Cancel {job.reference}?</DialogTitle>
+          <DialogTitle>{t("cancel.title", { reference: job.reference })}</DialogTitle>
           <DialogDescription>
-            {job.scheduled_start
-              ? "The booked visit is called off and the customer gets a cancellation email."
-              : "The job is closed as canceled — it can be reopened later."}
+            {job.scheduled_start ? t("cancel.descriptionBooked") : t("cancel.descriptionOpen")}
           </DialogDescription>
         </DialogHeader>
 
         <Field>
-          <FieldLabel htmlFor="cancel-job-reason">Reason</FieldLabel>
+          <FieldLabel htmlFor="cancel-job-reason">{t("cancel.reason")}</FieldLabel>
           <Input
             id="cancel-job-reason"
             value={reason}
             maxLength={200}
             onChange={(event) => setReason(event.target.value)}
-            placeholder="Customer postponed, no access… (optional)"
+            placeholder={t("cancel.reasonPlaceholder")}
           />
-          <FieldDescription>Kept on the job — and quoted in the customer email.</FieldDescription>
+          <FieldDescription>{t("cancel.reasonHint")}</FieldDescription>
         </Field>
 
         <DialogFooter>
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-            Keep job
+            {t("keepJob")}
           </Button>
           <Button variant="destructive" disabled={cancelJob.isPending} onClick={confirm}>
-            {cancelJob.isPending ? "Canceling…" : "Cancel job"}
+            {cancelJob.isPending ? t("cancel.canceling") : t("cancel.confirm")}
           </Button>
         </DialogFooter>
       </DialogContent>

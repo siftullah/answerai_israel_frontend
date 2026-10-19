@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Controller, useFormContext, useWatch } from "react-hook-form";
 import { Field, FieldError, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -13,16 +14,9 @@ import {
 import { Switch } from "@/components/ui/switch";
 import { DURATION_UNITS, type DurationUnit } from "@/lib/api/types";
 
-const UNIT_LABELS: Record<DurationUnit, string> = {
-  hours: "Hours",
-  days: "Days",
-  weeks: "Weeks",
-  months: "Months",
-  years: "Years",
-};
-
 /** Service duration block (has_duration, duration_quantity, duration_unit). */
 export function DurationEditor() {
+  const t = useTranslations("businessProfile.durationEditor");
   const form = useFormContext();
   const hasDuration = useWatch({ name: "has_duration" }) as boolean;
   const { errors } = form.formState;
@@ -30,11 +24,19 @@ export function DurationEditor() {
   const quantityError = (errors.duration_quantity as { message?: string } | undefined)?.message;
   const unitError = (errors.duration_unit as { message?: string } | undefined)?.message;
 
+  const unitLabels: Record<DurationUnit, string> = {
+    hours: t("units.hours"),
+    days: t("units.days"),
+    weeks: t("units.weeks"),
+    months: t("units.months"),
+    years: t("units.years"),
+  };
+
   // Base UI's SelectValue renders the raw value unless the root knows the
   // item labels — without this the trigger shows e.g. "hours".
   const unitItems = DURATION_UNITS.map((unit) => ({
     value: unit,
-    label: UNIT_LABELS[unit],
+    label: unitLabels[unit],
   }));
 
   return (
@@ -52,18 +54,18 @@ export function DurationEditor() {
           )}
         />
         <FieldLabel htmlFor="has_duration" className="font-normal">
-          Has a set duration
+          {t("hasDuration")}
         </FieldLabel>
       </Field>
 
       {hasDuration && (
         <div className="grid grid-cols-2 gap-4">
           <Field data-invalid={!!quantityError || undefined}>
-            <FieldLabel htmlFor="duration_quantity">Duration</FieldLabel>
+            <FieldLabel htmlFor="duration_quantity">{t("duration")}</FieldLabel>
             <Input
               id="duration_quantity"
               inputMode="decimal"
-              placeholder="2"
+              placeholder={t("durationPlaceholder")}
               autoComplete="off"
               aria-invalid={!!quantityError}
               {...form.register("duration_quantity")}
@@ -72,7 +74,7 @@ export function DurationEditor() {
           </Field>
 
           <Field data-invalid={!!unitError || undefined}>
-            <FieldLabel htmlFor="duration_unit">Unit</FieldLabel>
+            <FieldLabel htmlFor="duration_unit">{t("unit")}</FieldLabel>
             <Controller
               control={form.control}
               name="duration_unit"
@@ -87,7 +89,7 @@ export function DurationEditor() {
                     className="w-full"
                     aria-invalid={!!unitError}
                   >
-                    <SelectValue placeholder="Choose" />
+                    <SelectValue placeholder={t("choose")} />
                   </SelectTrigger>
                   <SelectContent>
                     {unitItems.map((item) => (

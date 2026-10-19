@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import {
   AlertDialog,
@@ -25,6 +26,8 @@ export function MarkWonLeadDialog({
   lead: Lead;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("leads.markWon");
+  const tc = useTranslations("common");
   const updateLead = useUpdateLead(businessUuid);
 
   // The dialog stays mounted until the request settles — closing immediately
@@ -33,7 +36,7 @@ export function MarkWonLeadDialog({
     updateLead.mutate(
       { id: lead.id, payload: { status: "won" } },
       {
-        onSuccess: () => toast.success("Lead marked as won"),
+        onSuccess: () => toast.success(t("toast")),
         onError: (error) => toast.error(error.message),
         onSettled: () => onOpenChange(false),
       }
@@ -44,19 +47,20 @@ export function MarkWonLeadDialog({
     <AlertDialog open onOpenChange={onOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>Mark this lead as won?</AlertDialogTitle>
+          <AlertDialogTitle>{t("title")}</AlertDialogTitle>
           <AlertDialogDescription>
-            Closes &ldquo;{lead.title}&rdquo; as won
             {lead.value_cents !== null
-              ? ` and counts ${formatCents(lead.value_cents, lead.currency ?? "ILS")} toward the month's total`
-              : ""}
-            . You can reopen it later if things change.
+              ? t("descriptionWithValue", {
+                  title: lead.title,
+                  value: formatCents(lead.value_cents, lead.currency ?? "ILS"),
+                })
+              : t("description", { title: lead.title })}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel>Cancel</AlertDialogCancel>
+          <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
           <AlertDialogAction disabled={updateLead.isPending} onClick={confirm}>
-            {updateLead.isPending ? "Saving…" : "Mark as won"}
+            {updateLead.isPending ? tc("actions.saving") : t("confirm")}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

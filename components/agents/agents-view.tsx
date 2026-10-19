@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useTranslations } from "next-intl";
 import {
   ArchiveIcon,
   ArchiveRestoreIcon,
@@ -68,11 +69,6 @@ import type { Agent, AgentStatus, PhoneNumber } from "@/lib/api/types";
 import { formatE164 } from "@/lib/phone";
 import { cn } from "@/lib/utils";
 
-const STATUS_OPTIONS = [
-  { value: "active", label: "Active" },
-  { value: "archived", label: "Archived" },
-] as const;
-
 function StatusFilter({
   value,
   onChange,
@@ -80,13 +76,19 @@ function StatusFilter({
   value: AgentStatus;
   onChange: (value: AgentStatus) => void;
 }) {
+  const t = useTranslations("agents");
+  const tc = useTranslations("common");
+  const statusOptions = [
+    { value: "active", label: tc("labels.active") },
+    { value: "archived", label: t("badges.archived") },
+  ] as const;
   return (
     <div
       role="group"
-      aria-label="Filter by status"
+      aria-label={t("list.filterByStatus")}
       className="flex shrink-0 items-center gap-0.5 rounded-full bg-muted p-1"
     >
-      {STATUS_OPTIONS.map((option) => (
+      {statusOptions.map((option) => (
         <button
           key={option.value}
           type="button"
@@ -119,34 +121,40 @@ function AgentRowActions({
   onRestore: () => void;
   onDelete: () => void;
 }) {
+  const t = useTranslations("agents");
+  const tc = useTranslations("common");
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-sm" aria-label={`Actions for ${agent.name}`} />
+          <Button
+            variant="ghost"
+            size="icon-sm"
+            aria-label={t("list.actionsFor", { name: agent.name })}
+          />
         }
       >
         <EllipsisVerticalIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem render={<Link href={detailHref} />}>
-          <ArrowUpRightIcon />
-          Open
+          <ArrowUpRightIcon className="rtl:-scale-x-100" />
+          {tc("actions.open")}
         </DropdownMenuItem>
         {agent.status === "archived" ? (
           <DropdownMenuItem onClick={onRestore}>
             <ArchiveRestoreIcon />
-            Restore
+            {t("actions.restore")}
           </DropdownMenuItem>
         ) : (
           <DropdownMenuItem onClick={onArchive}>
             <ArchiveIcon />
-            Archive
+            {t("actions.archive")}
           </DropdownMenuItem>
         )}
         <DropdownMenuItem variant="destructive" onClick={onDelete}>
           <Trash2Icon />
-          Delete
+          {tc("actions.delete")}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -155,6 +163,8 @@ function AgentRowActions({
 
 export function AgentsView() {
   const { business } = useBusiness();
+  const t = useTranslations("agents");
+  const tc = useTranslations("common");
 
   const agentsQuery = useAgents(business.id);
   const voicesQuery = useVoices(business.id);
@@ -185,7 +195,8 @@ export function AgentsView() {
     const voiceId = agent.config?.voice_id;
     if (!voiceId) return "—";
     return (
-      voicesQuery.data?.find((voice) => voice.id === voiceId)?.display_name ?? "Unknown voice"
+      voicesQuery.data?.find((voice) => voice.id === voiceId)?.display_name ??
+      t("list.unknownVoice")
     );
   };
 
@@ -197,13 +208,13 @@ export function AgentsView() {
 
   const handleArchive = (agent: Agent) =>
     archiveAgent.mutate(agent.id, {
-      onSuccess: () => toast.success(`${agent.name} archived`),
+      onSuccess: () => toast.success(t("list.toasts.archived", { name: agent.name })),
       onError: (error) => toast.error(error.message),
     });
 
   const handleRestore = (agent: Agent) =>
     restoreAgent.mutate(agent.id, {
-      onSuccess: () => toast.success(`${agent.name} restored`),
+      onSuccess: () => toast.success(t("list.toasts.restored", { name: agent.name })),
       onError: (error) => toast.error(error.message),
     });
 
@@ -212,12 +223,12 @@ export function AgentsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader
-        title="Agents"
-        description="The AI voice agents that answer and make your calls."
+        title={t("list.title")}
+        description={t("list.description")}
         actions={
           <Button onClick={() => setCreating(true)}>
             <PlusIcon />
-            New agent
+            {t("list.newAgent")}
           </Button>
         }
       />
@@ -229,22 +240,19 @@ export function AgentsView() {
         </div>
       ) : agentsQuery.isError ? (
         <ErrorState
-          title="Couldn't load agents"
+          title={t("list.loadError")}
           message={agentsQuery.error.message}
           onRetry={() => agentsQuery.refetch()}
         />
       ) : agents.length === 0 ? (
         <Empty className="border border-dashed">
           <EmptyHeader>
-            <EmptyTitle>Create your first agent</EmptyTitle>
-            <EmptyDescription>
-              Start from a template — receptionist, appointment setter, outbound caller — or
-              build one from scratch.
-            </EmptyDescription>
+            <EmptyTitle>{t("list.empty.title")}</EmptyTitle>
+            <EmptyDescription>{t("list.empty.description")}</EmptyDescription>
           </EmptyHeader>
           <Button onClick={() => setCreating(true)}>
             <PlusIcon />
-            New agent
+            {t("list.newAgent")}
           </Button>
         </Empty>
       ) : (
@@ -253,22 +261,22 @@ export function AgentsView() {
             <Input
               value={search}
               onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search agents…"
+              placeholder={t("list.searchPlaceholder")}
               className="max-w-xs"
-              aria-label="Search agents"
+              aria-label={t("list.searchLabel")}
             />
             <StatusFilter value={statusFilter} onChange={setStatusFilter} />
-            <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ml-auto" />
+            <ViewModeToggle mode={viewMode} onChange={setViewMode} className="ms-auto" />
           </div>
 
           {visible.length === 0 ? (
             <Empty>
               <EmptyHeader>
-                <EmptyTitle>No agents match</EmptyTitle>
+                <EmptyTitle>{t("list.noMatch.title")}</EmptyTitle>
                 <EmptyDescription>
                   {statusFilter === "archived"
-                    ? "Nothing has been archived."
-                    : "Try a different search, or check the archived filter."}
+                    ? t("list.noMatch.archived")
+                    : t("list.noMatch.active")}
                 </EmptyDescription>
               </EmptyHeader>
             </Empty>
@@ -320,13 +328,13 @@ export function AgentsView() {
                         {voiceName(agent)}
                       </p>
                       <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">
-                        {agent.description ?? "No description yet."}
+                        {agent.description ?? t("list.noDescription")}
                       </p>
                     </div>
                     <div className="relative z-10 mt-auto flex items-center gap-2 border-t pt-3">
                       <AgentPurposeBadge purpose={agent.purpose} />
                       {archived ? (
-                        <Badge variant="ghost">Archived</Badge>
+                        <Badge variant="ghost">{t("badges.archived")}</Badge>
                       ) : (
                         <AgentSyncBadge status={agent.sync_status} error={agent.sync_error} />
                       )}
@@ -340,11 +348,11 @@ export function AgentsView() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Purpose</TableHead>
-                    <TableHead>Voice</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Updated</TableHead>
+                    <TableHead>{tc("labels.name")}</TableHead>
+                    <TableHead>{t("list.columns.purpose")}</TableHead>
+                    <TableHead>{t("list.columns.voice")}</TableHead>
+                    <TableHead>{tc("labels.status")}</TableHead>
+                    <TableHead>{t("list.columns.updated")}</TableHead>
                     <TableHead className="w-10" />
                   </TableRow>
                 </TableHeader>
@@ -372,7 +380,7 @@ export function AgentsView() {
                       </TableCell>
                       <TableCell>
                         {agent.status === "archived" ? (
-                          <Badge variant="ghost">Archived</Badge>
+                          <Badge variant="ghost">{t("badges.archived")}</Badge>
                         ) : (
                           <AgentSyncBadge status={agent.sync_status} error={agent.sync_error} />
                         )}
@@ -415,33 +423,33 @@ export function AgentsView() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete {deleting?.name}?</AlertDialogTitle>
+            <AlertDialogTitle>{t("deleteDialog.title", { name: deleting?.name ?? "" })}</AlertDialogTitle>
             <AlertDialogDescription>
-              This permanently deletes the agent and unpublishes it from the voice engine.
+              {t("deleteDialog.description")}
               {deletingNumbers.length > 0 && (
                 <>
                   {" "}
-                  {deletingNumbers.length}{" "}
-                  {deletingNumbers.length === 1 ? "phone number" : "phone numbers"} currently
-                  route to this agent and will be left unassigned:{" "}
-                  {deletingNumbers.map((number) => formatE164(number.e164)).join(", ")}.
+                  {t("deleteDialog.routedNumbers", {
+                    count: deletingNumbers.length,
+                    numbers: deletingNumbers.map((number) => formatE164(number.e164)).join(", "),
+                  })}
                 </>
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>{tc("actions.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={() => {
                 if (!deleting) return;
                 deleteAgent.mutate(deleting.id, {
-                  onSuccess: () => toast.success("Agent deleted"),
+                  onSuccess: () => toast.success(t("toasts.deleted")),
                   onError: (error) => toast.error(error.message),
                 });
                 setDeleting(null);
               }}
             >
-              Delete
+              {tc("actions.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

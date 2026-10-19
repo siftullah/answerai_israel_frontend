@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -14,6 +16,7 @@ import {
   useUpdateBusinessPolicy,
 } from "@/hooks/use-business-policies";
 import { applyServerErrors } from "@/lib/forms/apply-server-errors";
+import { displayLocale } from "@/lib/i18n/runtime";
 import type { BusinessPolicy, BusinessPolicyPayload } from "@/lib/api/types";
 import {
   policySchema,
@@ -37,12 +40,26 @@ export function PolicyModal({
   const create = useCreateBusinessPolicy(business.id);
   const update = useUpdateBusinessPolicy(business.id);
 
-  const editing = Boolean(source && "id" in source);
-  const title = onSubmitOverride ? "Review draft" : editing ? "Edit policy" : "Add policy";
-  const submitLabel = onSubmitOverride ? "Apply" : editing ? "Save changes" : "Add policy";
+  const t = useTranslations("knowledge.policies");
+  const ts = useTranslations("knowledge.shared");
+  const tc = useTranslations("common");
 
+  const editing = Boolean(source && "id" in source);
+  const title = onSubmitOverride
+    ? ts("reviewDraft")
+    : editing
+      ? t("modal.editTitle")
+      : t("add");
+  const submitLabel = onSubmitOverride
+    ? tc("actions.apply")
+    : editing
+      ? tc("actions.saveChanges")
+      : t("add");
+
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => policySchema(tv), [tv]);
   const form = useForm<PolicyValues>({
-    resolver: zodResolver(policySchema),
+    resolver: zodResolver(schema),
     defaultValues: toPolicyValues(source),
   });
   const { errors } = form.formState;
@@ -60,7 +77,7 @@ export function PolicyModal({
         { id: (source as BusinessPolicy).id, payload },
         {
           onSuccess: () => {
-            toast.success("Policy saved");
+            toast.success(t("toasts.saved"));
             onOpenChange(false);
           },
           onError: (error) => applyServerErrors(form, error),
@@ -69,7 +86,7 @@ export function PolicyModal({
     } else {
       create.mutate(payload, {
         onSuccess: () => {
-          toast.success("Policy added");
+          toast.success(t("toasts.added"));
           onOpenChange(false);
         },
         onError: (error) => applyServerErrors(form, error),
@@ -89,15 +106,15 @@ export function PolicyModal({
         isDirty={form.formState.isDirty}
         steps={[
           {
-            title: "Content",
+            title: ts("steps.content"),
             fields: ["name", "content"],
             content: (
               <>
                 <Field data-invalid={!!errors.name || undefined}>
-                  <FieldLabel htmlFor="policy-name">Name</FieldLabel>
+                  <FieldLabel htmlFor="policy-name">{tc("labels.name")}</FieldLabel>
                   <Input
                     id="policy-name"
-                    placeholder="Cancellation policy"
+                    placeholder={t("modal.namePlaceholder")}
                     autoComplete="off"
                     aria-invalid={!!errors.name}
                     {...form.register("name")}
@@ -106,16 +123,19 @@ export function PolicyModal({
                 </Field>
 
                 <Field data-invalid={!!errors.content || undefined}>
-                  <FieldLabel htmlFor="policy-content">Content</FieldLabel>
+                  <FieldLabel htmlFor="policy-content">{t("modal.content")}</FieldLabel>
                   <Textarea
                     id="policy-content"
                     className="min-h-72"
-                    placeholder="Bookings can be cancelled up to 24 hours ahead for a full refund…"
+                    placeholder={t("modal.contentPlaceholder")}
                     aria-invalid={!!errors.content}
                     {...form.register("content")}
                   />
-                  <p className="text-right text-sm text-muted-foreground">
-                    {contentLength.toLocaleString()} / 10,000
+                  <p className="text-end text-sm text-muted-foreground">
+                    {ts("charCount", {
+                      length: contentLength.toLocaleString(displayLocale()),
+                      max: (10000).toLocaleString(displayLocale()),
+                    })}
                   </p>
                   {errors.content && <FieldError>{errors.content.message}</FieldError>}
                 </Field>
@@ -123,7 +143,7 @@ export function PolicyModal({
             ),
           },
           {
-            title: "Agents",
+            title: ts("steps.agents"),
             fields: ["agent_scope", "agent_ids"],
             content: <AgentScopeField idPrefix="policy" />,
           },

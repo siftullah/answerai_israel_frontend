@@ -1,0 +1,136 @@
+{
+  "meta": {
+    "title": "لوحة التحكم"
+  },
+  "header": {
+    "welcome": "مرحبًا بعودتك",
+    "welcomeName": "مرحبًا بعودتك، {name}"
+  },
+  "hours": {
+    "openUntil": "مفتوح · يغلق {time}",
+    "openNow": "مفتوح الآن",
+    "closedUntil": "مغلق · يفتح {time}",
+    "closedToday": "مغلق اليوم"
+  },
+  "health": {
+    "agentsTitle": "{count, plural, zero {لا يوجد وكلاء ذكاء اصطناعي تتعذر مزامنتهم} one {تتعذر مزامنة وكيل الذكاء الاصطناعي} two {تتعذر مزامنة وكيلَي الذكاء الاصطناعي} few {تتعذر مزامنة {count} من وكلاء الذكاء الاصطناعي} many {تتعذر مزامنة {count} من وكلاء الذكاء الاصطناعي} other {تتعذر مزامنة {count} من وكلاء الذكاء الاصطناعي}}",
+    "agentsDescription": "قد يتلقى المتصلون ردًا من إصدار قديم. <link>مراجعة وكلاء الذكاء الاصطناعي</link>",
+    "numbersTitle": "{count, plural, zero {لا توجد أرقام هاتف تحتاج إلى الاهتمام} one {رقم هاتف يحتاج إلى الاهتمام} two {رقما هاتف يحتاجان إلى الاهتمام} few {{count} أرقام هاتف تحتاج إلى الاهتمام} many {{count} رقم هاتف يحتاج إلى الاهتمام} other {{count} من أرقام الهاتف تحتاج إلى الاهتمام}}",
+    "numbersDescription": "فشل تفعيل الرقم — لا يستطيع المتصلون الوصول عبره. <link>إصلاح أرقام الهاتف</link>",
+    "calendarTitle": "يتعذر الاتصال بتقويمك",
+    "calendarDescription": "لا تتم مزامنة الحجوزات الجديدة مع تقويمك الخارجي. <link>إعادة الاتصال</link>"
+  },
+  "loadError": "تعذر تحميل النظرة العامة",
+  "activity": {
+    "callsToday": "مكالمات اليوم",
+    "directionSplit": "{inbound} واردة · {outbound} صادرة",
+    "noCallsToday": "لا مكالمات حتى الآن اليوم",
+    "answeredByAi": "ردّ عليها الذكاء الاصطناعي",
+    "transferred": "تم تحويل {count} إلى فريقك",
+    "handledEndToEnd": "تمت معالجتها بالكامل",
+    "missed": "فائتة",
+    "missedDetail": "مشغول أو فشل الاتصال أو لم يتم الرد",
+    "nothingMissed": "لم تفت أي مكالمة",
+    "minutesThisMonth": "دقائق هذا الشهر",
+    "avgPerCall": "المتوسط {duration} لكل مكالمة",
+    "noTalkTime": "لا وقت تحدث حتى الآن"
+  },
+  "callVolume": {
+    "title": "حجم المكالمات",
+    "total": "{count, plural, zero {{count} مكالمات} one {{count} مكالمة} two {مكالمتان ({count})} few {{count} مكالمات} many {{count} مكالمة} other {{count} مكالمة}} خلال آخر 14 يومًا",
+    "period": "آخر 14 يومًا",
+    "vsPriorWeek": "مقارنة بالأسبوع السابق",
+    "emptyTitle": "لا مكالمات حتى الآن",
+    "emptyDescription": "سيظهر حجم المكالمات اليومي هنا عندما يبدأ وكيل الذكاء الاصطناعي بالرد.",
+    "inbound": "واردة",
+    "outbound": "صادرة"
+  },
+  "needsAttention": {
+    "title": "بحاجة إلى انتباه",
+    "description": "حيث يصنع التدخل البشري الفرق",
+    "allClear": "كل شيء على ما يرام",
+    "allClearDescription": "لا شيء يحتاج إلى انتباهك الآن.",
+    "callbacksOverdue": "{count, plural, zero {<num>{count}</num> مكالمات معاودة الاتصال متأخرة} one {<num>{count}</num> مكالمة معاودة الاتصال متأخرة} two {مكالمتا معاودة الاتصال متأخرتان (<num>{count}</num>)} few {<num>{count}</num> مكالمات معاودة الاتصال متأخرة} many {<num>{count}</num> مكالمة معاودة الاتصال متأخرة} other {<num>{count}</num> مكالمة معاودة الاتصال متأخرة}}",
+    "invoicesOverdue": "{count, plural, zero {<num>{count}</num> فواتير متأخرة السداد · {amount}} one {<num>{count}</num> فاتورة متأخرة السداد · {amount}} two {فاتورتان متأخرتا السداد (<num>{count}</num>) · {amount}} few {<num>{count}</num> فواتير متأخرة السداد · {amount}} many {<num>{count}</num> فاتورة متأخرة السداد · {amount}} other {<num>{count}</num> فاتورة متأخرة السداد · {amount}}}",
+    "jobsHighPriority": "{count, plural, zero {<num>{count}</num> أوامر عمل مفتوحة ذات أولوية عالية} one {<num>{count}</num> أمر عمل مفتوح ذو أولوية عالية} two {أمرا عمل مفتوحان ذوا أولوية عالية (<num>{count}</num>)} few {<num>{count}</num> أوامر عمل مفتوحة ذات أولوية عالية} many {<num>{count}</num> أمر عمل مفتوح ذو أولوية عالية} other {<num>{count}</num> أمر عمل مفتوح ذو أولوية عالية}}",
+    "appointmentsToReview": "{count, plural, zero {<num>{count}</num> مواعيد للمراجعة} one {<num>{count}</num> موعد للمراجعة} two {موعدان للمراجعة (<num>{count}</num>)} few {<num>{count}</num> مواعيد للمراجعة} many {<num>{count}</num> موعدًا للمراجعة} other {<num>{count}</num> موعد للمراجعة}}",
+    "quotesExpiring": "{count, plural, zero {<num>{count}</num> عروض أسعار تنتهي صلاحيتها قريبًا} one {<num>{count}</num> عرض سعر تنتهي صلاحيته قريبًا} two {عرضا سعر تنتهي صلاحيتهما قريبًا (<num>{count}</num>)} few {<num>{count}</num> عروض أسعار تنتهي صلاحيتها قريبًا} many {<num>{count}</num> عرض سعر تنتهي صلاحيته قريبًا} other {<num>{count}</num> عرض سعر تنتهي صلاحيته قريبًا}}",
+    "leadsNew": "{count, plural, zero {<num>{count}</num> عملاء محتملين جدد بانتظار إجراء} one {<num>{count}</num> عميل محتمل جديد بانتظار إجراء} two {عميلان محتملان جديدان بانتظار إجراء (<num>{count}</num>)} few {<num>{count}</num> عملاء محتملين جدد بانتظار إجراء} many {<num>{count}</num> عميلًا محتملًا جديدًا بانتظار إجراء} other {<num>{count}</num> عميل محتمل جديد بانتظار إجراء}}",
+    "callbacksDueToday": "{count, plural, zero {<num>{count}</num> مكالمات معاودة الاتصال مستحقة اليوم} one {<num>{count}</num> مكالمة معاودة الاتصال مستحقة اليوم} two {مكالمتا معاودة الاتصال مستحقتان اليوم (<num>{count}</num>)} few {<num>{count}</num> مكالمات معاودة الاتصال مستحقة اليوم} many {<num>{count}</num> مكالمة معاودة الاتصال مستحقة اليوم} other {<num>{count}</num> مكالمة معاودة الاتصال مستحقة اليوم}}"
+  },
+  "answerRate": {
+    "title": "نسبة الرد",
+    "period": "آخر 7 أيام",
+    "emptyTitle": "لا مكالمات هذا الأسبوع",
+    "emptyDescription": "يمتلئ المؤشر عند ورود المكالمات.",
+    "seriesAnswered": "تم الرد",
+    "gaugeCaption": "تم الرد عليها",
+    "summary": "تم الرد على {answered} من أصل {total, plural, zero {{total} مكالمة} one {{total} مكالمة} two {{total} مكالمتين} few {{total} مكالمات} many {{total} مكالمة} other {{total} مكالمة}}",
+    "delta": "{sign}{points, plural, zero {{points} نقطة} one {{points} نقطة} two {{points} نقطتين} few {{points} نقاط} many {{points} نقطة} other {{points} نقطة}} مقارنة بالأسبوع السابق"
+  },
+  "busiestHours": {
+    "title": "ساعات الذروة",
+    "peak": "الذروة نحو {range} · آخر 14 يومًا",
+    "period": "آخر 14 يومًا",
+    "emptyTitle": "لا توجد مكالمات بعد",
+    "emptyDescription": "عند ورود المكالمات، ستظهر هنا أوقات ذروة الاتصالات.",
+    "seriesCalls": "المكالمات"
+  },
+  "today": {
+    "title": "اليوم",
+    "description": "المواعيد وأوامر العمل ومكالمات معاودة الاتصال",
+    "openCalendar": "فتح التقويم",
+    "emptyTitle": "لا شيء مجدول",
+    "emptyDescription": "تظهر هنا تلقائيًا الحجوزات التي يجريها وكيل الذكاء الاصطناعي أثناء المكالمات.",
+    "kinds": {
+      "appointment": "موعد",
+      "callback": "مكالمة معاودة الاتصال",
+      "job": "أمر عمل"
+    }
+  },
+  "recentCalls": {
+    "title": "المكالمات الأخيرة",
+    "description": "ما تعامل معه وكيل الذكاء الاصطناعي",
+    "emptyTitle": "لا توجد مكالمات بعد",
+    "emptyDescription": "ستظهر هنا المكالمات التي يجيب عنها وكيل الذكاء الاصطناعي أو يجريها.",
+    "noSummary": "لا يوجد ملخص"
+  },
+  "captured": {
+    "title": "ما سجّله وكيل الذكاء الاصطناعي",
+    "period": "هذا الشهر، من المكالمات",
+    "footer": "أُنشئت تلقائيًا — دون إدخال يدوي.",
+    "items": {
+      "leads": "العملاء المحتملون",
+      "appointments": "المواعيد",
+      "quotes": "طلبات عروض الأسعار",
+      "jobs": "أوامر العمل",
+      "callbacks": "مكالمات معاودة الاتصال"
+    }
+  },
+  "snapshots": {
+    "leads": {
+      "title": "العملاء المحتملون",
+      "moneyLabel": "قيمة الفرص البيعية المفتوحة",
+      "open": "{count} مفتوح",
+      "new": "{count} جديد"
+    },
+    "quotes": {
+      "title": "عروض الأسعار",
+      "moneyLabel": "بانتظار الرد",
+      "awaiting": "{count} قيد الانتظار",
+      "expiringSoon": "{count} تنتهي صلاحيتها قريبًا"
+    },
+    "jobs": {
+      "title": "أوامر العمل",
+      "moneyLabel": "قيمة أوامر العمل النشطة",
+      "active": "{count} نشط",
+      "today": "{count} اليوم"
+    },
+    "invoices": {
+      "title": "الفواتير",
+      "moneyLabel": "المبالغ غير المسددة",
+      "awaitingPayment": "{count} بانتظار الدفع",
+      "overdue": "{count} متأخرة السداد"
+    }
+  }
+}

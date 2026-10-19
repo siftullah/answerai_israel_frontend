@@ -1,5 +1,7 @@
 "use client";
 
+import { useMemo } from "react";
+import { useTranslations } from "next-intl";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
@@ -42,11 +44,15 @@ export function AddDncDialog({
   onOpenChange: (open: boolean) => void;
   prefill?: { e164: string };
 }) {
+  const t = useTranslations("contacts");
+  const tc = useTranslations("common");
   const { business } = useBusiness();
   const addEntry = useAddDncEntry(business.id);
 
+  const tv = useTranslations("validation");
+  const schema = useMemo(() => dncEntrySchema(tv), [tv]);
   const form = useForm<DncEntryValues>({
-    resolver: zodResolver(dncEntrySchema),
+    resolver: zodResolver(schema),
     defaultValues: defaultDncEntryValues(prefill?.e164 ?? ""),
   });
   const { errors } = form.formState;
@@ -54,7 +60,7 @@ export function AddDncDialog({
   const onSubmit = form.handleSubmit((values) => {
     addEntry.mutate(toDncEntryPayload(values), {
       onSuccess: () => {
-        toast.success("Number added to the do-not-call list");
+        toast.success(t("dnc.add.added"));
         onOpenChange(false);
       },
       onError: (error) => applyServerErrors(form, error),
@@ -65,11 +71,8 @@ export function AddDncDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Block a number</DialogTitle>
-          <DialogDescription>
-            Your AI will never place an outbound call to this number. Re-adding a
-            blocked number updates its reason.
-          </DialogDescription>
+          <DialogTitle>{t("dnc.add.title")}</DialogTitle>
+          <DialogDescription>{t("dnc.add.description")}</DialogDescription>
         </DialogHeader>
 
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
@@ -80,11 +83,11 @@ export function AddDncDialog({
           )}
 
           <Field data-invalid={!!errors.e164 || undefined}>
-            <FieldLabel htmlFor="dnc-number">Phone number</FieldLabel>
+            <FieldLabel htmlFor="dnc-number">{t("dnc.add.phoneNumber")}</FieldLabel>
             <Input
               id="dnc-number"
               type="tel"
-              placeholder="0412 345 678"
+              placeholder={t("phonePlaceholder")}
               autoComplete="off"
               aria-invalid={!!errors.e164}
               {...form.register("e164")}
@@ -93,11 +96,11 @@ export function AddDncDialog({
           </Field>
 
           <Field data-invalid={!!errors.reason || undefined}>
-            <FieldLabel htmlFor="dnc-reason">Reason (optional)</FieldLabel>
+            <FieldLabel htmlFor="dnc-reason">{t("reasonOptional")}</FieldLabel>
             <Textarea
               id="dnc-reason"
               rows={2}
-              placeholder="e.g. Asked us to stop calling"
+              placeholder={t("dnc.add.reasonPlaceholder")}
               aria-invalid={!!errors.reason}
               {...form.register("reason")}
             />
@@ -106,11 +109,11 @@ export function AddDncDialog({
 
           <DialogFooter>
             <Button type="button" variant="ghost" onClick={() => onOpenChange(false)}>
-              Cancel
+              {tc("actions.cancel")}
             </Button>
             <Button type="submit" disabled={addEntry.isPending}>
               {addEntry.isPending && <Spinner />}
-              Block number
+              {t("dnc.add.submit")}
             </Button>
           </DialogFooter>
         </form>

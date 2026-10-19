@@ -1,0 +1,657 @@
+{
+  "meta": {
+    "overview": "Business profile",
+    "basicInfo": "Basic info",
+    "calendar": "Calendar",
+    "docs": "Docs",
+    "faqs": "FAQs",
+    "integrations": "Integrations",
+    "modules": "Modules",
+    "policies": "Policies",
+    "products": "Products",
+    "services": "Services",
+    "team": "Team",
+    "transfers": "Transfers"
+  },
+  "shared": {
+    "charCount": "{count, number} / {max, number}",
+    "discardChanges": "Discard changes"
+  },
+  "overview": {
+    "subtitle": "Business profile",
+    "computing": "Working out what's done…",
+    "progress": "{done} of {total} sections done",
+    "aiCard": {
+      "title": "Set up faster with AI",
+      "description": "Extract services, FAQs, policies and more from your website — you review everything before it's saved."
+    },
+    "tiles": {
+      "basicInfo": {
+        "set": "Set",
+        "summary": "Details set",
+        "cta": "Add your details"
+      },
+      "services": {
+        "summary": "{count, plural, one {# service} other {# services}}",
+        "cta": "Add a service"
+      },
+      "products": {
+        "summary": "{count, plural, one {# product} other {# products}}",
+        "cta": "Add a product"
+      },
+      "faqs": {
+        "summary": "{count, plural, one {# FAQ} other {# FAQs}}",
+        "cta": "Add an FAQ"
+      },
+      "policies": {
+        "summary": "{count, plural, one {# policy} other {# policies}}",
+        "cta": "Add a policy"
+      },
+      "docs": {
+        "summary": "{count, plural, one {# doc} other {# docs}}",
+        "cta": "Add a doc"
+      },
+      "team": {
+        "summary": "{count, plural, one {# member} other {# members}}",
+        "cta": "Add your team"
+      },
+      "transfers": {
+        "summary": "{count, plural, one {# target} other {# targets}}",
+        "cta": "Add a target"
+      },
+      "calendar": {
+        "stat": "{minutes} min",
+        "summary": "{minutes}-min slots",
+        "cta": "Review defaults"
+      },
+      "integrations": {
+        "connected": "Connected",
+        "connecting": "Connecting",
+        "optional": "Optional"
+      }
+    }
+  },
+  "agentScope": {
+    "title": "Agent access",
+    "description": "Which AI agents can use this.",
+    "noAgents": "No agents yet — create an agent first, then pick it here.",
+    "purpose": {
+      "inbound": "Inbound",
+      "outbound": "Outbound",
+      "consult": "Consult"
+    },
+    "scope": {
+      "all": "All agents",
+      "allDescription": "Current and future agents can use this.",
+      "selected": "Selected agents",
+      "selectedDescription": "Pick exactly which agents get it."
+    }
+  },
+  "durationEditor": {
+    "hasDuration": "Has a set duration",
+    "duration": "Duration",
+    "durationPlaceholder": "2",
+    "unit": "Unit",
+    "choose": "Choose",
+    "units": {
+      "hours": "Hours",
+      "days": "Days",
+      "weeks": "Weeks",
+      "months": "Months",
+      "years": "Years"
+    }
+  },
+  "entityModal": {
+    "discardDialog": {
+      "title": "Discard changes?",
+      "description": "Your edits haven't been saved."
+    }
+  },
+  "faqAttachment": {
+    "composer": {
+      "question": "Question",
+      "questionPlaceholder": "Do you offer free quotes?",
+      "answer": "Answer",
+      "answerPlaceholder": "Yes — we quote most jobs within one business day…",
+      "save": "Save FAQ",
+      "errors": {
+        "bothRequired": "Add both a question and an answer.",
+        "tooLong": "Keep the question under 500 and the answer under 5,000 characters."
+      }
+    },
+    "own": {
+      "title": "{owner, select, service {This service's own FAQs} other {This product's own FAQs}}",
+      "description": "{owner, select, service {Only used when discussing this service — they live here, not on the FAQs page.} other {Only used when discussing this product — they live here, not on the FAQs page.}}",
+      "add": "Add FAQ",
+      "editAria": "Edit {question}",
+      "deleteAria": "Delete {question}",
+      "removeAria": "Remove {question}",
+      "empty": "{owner, select, service {No own FAQs yet — add answers specific to this service.} other {No own FAQs yet — add answers specific to this product.}}"
+    },
+    "business": {
+      "title": "Business-wide FAQs",
+      "inheritHint": "All selected — new business FAQs apply automatically.",
+      "customHint": "A custom selection — new business FAQs won't apply until you tick them.",
+      "empty": "No business-wide FAQs yet — add them in the FAQs section.",
+      "searchPlaceholder": "Search FAQs",
+      "selectNone": "Select none",
+      "noMatch": "No FAQs match your search.",
+      "copyTitle": "{owner, select, service {Make a copy just for this service} other {Make a copy just for this product}}",
+      "copyAria": "{owner, select, service {Copy FAQ into this service} other {Copy FAQ into this product}}"
+    },
+    "deleteDialog": {
+      "title": "Delete this FAQ?",
+      "description": "{owner, select, service {Only this service's own FAQ is removed — business-wide FAQs are unaffected.} other {Only this product's own FAQ is removed — business-wide FAQs are unaffected.}}"
+    },
+    "toasts": {
+      "copyCreated": "{owner, select, service {Copy created — it now belongs to this service and can be edited independently.} other {Copy created — it now belongs to this product and can be edited independently.}}",
+      "faqAdded": "{owner, select, service {FAQ added to this service} other {FAQ added to this product}}",
+      "faqDeleted": "FAQ deleted"
+    }
+  },
+  "priceEditor": {
+    "hasPrice": "Has a price",
+    "aiCanQuote": "AI can quote the price",
+    "aiCanQuoteHint": "Off keeps the price for your records — it's never spoken on calls.",
+    "priceType": "Price type",
+    "choose": "Choose",
+    "types": {
+      "fixed": "Fixed",
+      "hourly": "Per hour",
+      "daily": "Per day",
+      "weekly": "Per week",
+      "monthly": "Per month",
+      "yearly": "Per year",
+      "range": "Range",
+      "customMessage": "Custom message"
+    },
+    "amountLabels": {
+      "fixed": "Price",
+      "hourly": "Price per hour",
+      "daily": "Price per day",
+      "weekly": "Price per week",
+      "monthly": "Price per month",
+      "yearly": "Price per year"
+    },
+    "minimum": "Minimum",
+    "maximum": "Maximum",
+    "customMessageLabel": "What to say instead of a price",
+    "customMessagePlaceholder": "Quoted after a free inspection."
+  },
+  "viewMode": {
+    "label": "Change view",
+    "table": "Table",
+    "cards": "Cards"
+  },
+  "weeklyHours": {
+    "availableOn": "Available on {day}",
+    "windowStart": "{day} window {number} start",
+    "windowEnd": "{day} window {number} end",
+    "to": "to",
+    "removeWindow": "Remove window",
+    "addWindow": "Add window",
+    "unavailable": "Unavailable"
+  },
+  "basicInfo": {
+    "title": "Basic info",
+    "description": "Contact details, description, location and logo your AI can share.",
+    "extractTitle": "Extract basic info",
+    "extractDescription": "Pull contact details, description, socials and location from your website or a document. You review everything before saving.",
+    "loadError": "Couldn't load your business profile"
+  },
+  "address": {
+    "placeholder": "Start typing an address",
+    "notConfigured": "Address search isn't configured — enter the address manually.",
+    "unavailable": "Address search is temporarily unavailable — enter the address manually.",
+    "searching": "Searching…",
+    "noMatches": "No matches — keep typing or enter it manually."
+  },
+  "businessDetails": {
+    "loadError": "Couldn't load your trading hours",
+    "title": "Business details",
+    "description": "Your business name, timezone and trading hours.",
+    "name": "Business name",
+    "namePlaceholder": "Joe's Plumbing",
+    "timezone": "Timezone",
+    "timezoneHint": "Times across the portal display in this timezone.",
+    "tradingHours": "Trading hours",
+    "tradingHoursHint": "When the business is open — transfers and campaigns set to business hours follow this week.",
+    "toasts": {
+      "saved": "Business details saved"
+    }
+  },
+  "categories": {
+    "placeholder": "Type a category and press Enter",
+    "limitReached": "Category limit reached"
+  },
+  "logo": {
+    "title": "Logo",
+    "description": "JPEG, PNG, WebP or SVG, up to 2 MB.",
+    "alt": "Business logo",
+    "replace": "Replace",
+    "upload": "Upload logo",
+    "removeDialog": {
+      "title": "Remove the logo?",
+      "description": "You can upload a new one at any time."
+    },
+    "toasts": {
+      "invalidType": "Use a JPEG, PNG, WebP or SVG image.",
+      "tooLarge": "The logo must be 2 MB or smaller.",
+      "updated": "Logo updated",
+      "removed": "Logo removed"
+    }
+  },
+  "timezone": {
+    "pick": "Pick a timezone",
+    "searchPlaceholder": "Search timezones…",
+    "empty": "No timezone matches."
+  },
+  "profileForm": {
+    "draft": {
+      "title": "Extracted details filled in",
+      "description": "Review the highlighted values below, adjust anything that's off, then save.",
+      "discard": "Discard draft"
+    },
+    "contact": {
+      "title": "Contact details",
+      "description": "How customers — and your AI — can reach the business.",
+      "email": "Public email",
+      "emailPlaceholder": "hello@yourbusiness.com.au",
+      "phone": "Public phone",
+      "phonePlaceholder": "(02) 5550 1234",
+      "website": "Website",
+      "websitePlaceholder": "https://yourbusiness.com.au"
+    },
+    "about": {
+      "title": "About the business",
+      "description": "What your AI says when callers ask what the business does.",
+      "descriptionPlaceholder": "Tell callers what you do, who you serve, and what makes you the right choice…",
+      "categories": "Categories",
+      "yearFounded": "Year founded",
+      "yearFoundedPlaceholder": "2015",
+      "country": "Country",
+      "currency": "Currency"
+    },
+    "countries": {
+      "IL": "Israel",
+      "AU": "Australia",
+      "NZ": "New Zealand",
+      "GB": "United Kingdom",
+      "US": "United States"
+    },
+    "currencies": {
+      "ILS": "ILS — Israeli new shekel",
+      "AUD": "AUD — Australian dollar",
+      "NZD": "NZD — New Zealand dollar",
+      "GBP": "GBP — British pound",
+      "USD": "USD — US dollar",
+      "EUR": "EUR — Euro"
+    },
+    "socials": {
+      "title": "Social profiles",
+      "description": "Linked profiles your AI can point callers to."
+    },
+    "location": {
+      "title": "Location",
+      "description": "Where you operate — used for directions and travel questions.",
+      "fixed": "Fixed location",
+      "fixedHint": "Customers visit your premises.",
+      "mobile": "Mobile",
+      "mobileHint": "You travel to customers.",
+      "online": "Online only",
+      "onlineHint": "No physical location.",
+      "address": "Address",
+      "landmark": "Landmark (optional)",
+      "landmarkPlaceholder": "Next to the post office",
+      "baseLocation": "Base location",
+      "baseLocationPlaceholder": "Newcastle NSW",
+      "travelRadius": "Travel radius (km)",
+      "travelRadiusPlaceholder": "50"
+    },
+    "toasts": {
+      "saved": "Profile saved"
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "description": "Booking defaults for appointments and callbacks. Members can carry their own overrides.",
+    "loadError": "Couldn't load calendar settings",
+    "intervalMinutes": "{count, plural, one {# minute} other {# minutes}}",
+    "bookingRules": {
+      "title": "Booking rules",
+      "description": "How slots are offered when your AI books for callers.",
+      "slotInterval": "Slot interval",
+      "minNotice": "Minimum notice (minutes)",
+      "minNoticePlaceholder": "120",
+      "minNoticeHint": "2 hours = 120.",
+      "horizon": "Booking horizon (days)",
+      "horizonPlaceholder": "60",
+      "buffer": "Buffer between bookings (minutes)",
+      "bufferPlaceholder": "15",
+      "limitBookings": "Limit bookings per day",
+      "maxPerDay": "Maximum per day",
+      "maxPerDayPlaceholder": "8"
+    },
+    "durations": {
+      "title": "Durations",
+      "description": "Default lengths for AI-booked slots.",
+      "appointment": "Appointment (minutes)",
+      "appointmentPlaceholder": "30",
+      "callback": "Callback (minutes)",
+      "callbackPlaceholder": "15"
+    },
+    "toasts": {
+      "saved": "Calendar settings saved"
+    }
+  },
+  "extraction": {
+    "trigger": "Extract with AI",
+    "running": "Extracting… this can take a minute or two. You can keep this open or cancel.",
+    "sourceUrl": "Website page",
+    "sourceFile": "Document (PDF, DOCX, TXT, MD — up to 10 MB)",
+    "urlPlaceholder": "https://yourbusiness.com.au",
+    "chooseFile": "Choose file",
+    "noFile": "No file chosen",
+    "start": "Start extraction",
+    "errors": {
+      "fileType": "Use a PDF, DOCX, TXT or MD file.",
+      "fileSize": "The file must be 10 MB or smaller.",
+      "failed": "The extraction failed. Try a different source.",
+      "invalidUrl": "Enter a full URL, including https://",
+      "noFile": "Choose a file to extract from."
+    }
+  },
+  "draftReview": {
+    "description": "Untick anything you don't want, or edit a row first. Everything stays editable after adding.",
+    "include": "Include {name}",
+    "added": "Added"
+  },
+  "modules": {
+    "title": "Modules",
+    "description": "Turn features on or off for this business. Each module adds its own screens and gives your AI new abilities on calls.",
+    "notAvailable": {
+      "title": "Not available",
+      "description": "Modules are managed by the business owner and admins."
+    },
+    "on": "On",
+    "off": "Off",
+    "switchAria": "{label} module",
+    "addsTools": "Adds these agent tools",
+    "turnOff": "Turn off",
+    "disableDialog": {
+      "title": "Turn off {label}?",
+      "keeps": "Nothing is deleted — anything already recorded stays, and you can turn {label} back on any time.",
+      "toolsLost": "{count, plural, one {Your AI agents will lose the # tool it adds and be republished automatically.} other {Your AI agents will lose the # tools it adds and be republished automatically.}}",
+      "sidebar": "{label} also disappears from the sidebar for everyone in this business."
+    },
+    "toasts": {
+      "turnedOn": "{label} turned on",
+      "turnedOff": "{label} turned off"
+    }
+  },
+  "moduleSettings": {
+    "billing": {
+      "title": "Billing defaults",
+      "description": "Used whenever a quote or invoice is raised — each document can still override them."
+    },
+    "leadCapture": {
+      "title": "Lead capture",
+      "description": "How leads get logged from your agent's calls."
+    },
+    "jobScheduling": {
+      "title": "Job scheduling",
+      "description": "How job visits get booked, on calls and in the portal."
+    },
+    "tax": {
+      "description": "The default rate applied to new line items on quotes and invoices.",
+      "name": "Tax name",
+      "namePlaceholder": "VAT",
+      "rate": "Rate (%)",
+      "ratePlaceholder": "18",
+      "rateHint": "18% VAT for most Israeli businesses.",
+      "errors": {
+        "rate": "Enter a rate between 0 and 100, like 10 or 12.5",
+        "name": "Give the tax a short name, like VAT"
+      },
+      "save": "Save tax defaults",
+      "toasts": {
+        "saved": "Tax defaults saved"
+      }
+    },
+    "leads": {
+      "title": "Leads",
+      "description": "How leads are captured from inbound calls.",
+      "autoCreate": "Auto-create from inbound calls",
+      "autoCreateHint": "After an inbound call with no open lead for the caller, log a new one automatically. Your agent can always log leads with its create_lead tool.",
+      "save": "Save lead settings",
+      "toasts": {
+        "saved": "Lead settings saved"
+      }
+    },
+    "jobs": {
+      "title": "Jobs",
+      "description": "How job visits get booked.",
+      "allowScheduling": "Let the agent book visits on calls",
+      "allowSchedulingHint": "Your agent offers free slots and books job visits with its check_job_availability and book_job tools. Off = it still logs jobs, but the team confirms the time.",
+      "defaultMinutes": "Default visit length (minutes)",
+      "defaultMinutesHint": "Used when a job has no estimate — for offered slots and booked windows.",
+      "errors": {
+        "minutes": "Enter whole minutes between 1 and 1440"
+      },
+      "save": "Save job settings",
+      "toasts": {
+        "saved": "Job settings saved"
+      }
+    },
+    "quotes": {
+      "title": "Quotes",
+      "description": "Defaults for new quotes.",
+      "validDays": "Validity (days)",
+      "validDaysHint": "How long a sent quote stays open before it expires.",
+      "errors": {
+        "validDays": "Enter a whole number of days between 1 and 365"
+      },
+      "terms": "Default terms",
+      "termsPlaceholder": "Scope of work, exclusions, payment terms…",
+      "termsHint": "Pre-filled on every new quote; editable per quote.",
+      "fromDetails": "From details",
+      "fromDetailsPlaceholder": "Company no. (ח.פ.), trading name, address — shown on the quote footer",
+      "save": "Save quote settings",
+      "toasts": {
+        "saved": "Quote settings saved"
+      }
+    },
+    "invoices": {
+      "title": "Invoices",
+      "description": "Defaults for new invoices.",
+      "netDays": "Payment terms (days)",
+      "netDaysHint": "Sending an invoice sets its due date this many days after issue.",
+      "errors": {
+        "netDays": "Enter a whole number of days between 0 and 365"
+      },
+      "paymentInstructions": "Payment instructions",
+      "paymentInstructionsPlaceholder": "Direct deposit — BSB, account number, reference…",
+      "paymentInstructionsHint": "Pre-filled on every new invoice; editable per invoice.",
+      "fromDetails": "From details",
+      "fromDetailsPlaceholder": "Company no. (ח.פ.), trading name, address — shown on the invoice footer",
+      "save": "Save invoice settings",
+      "toasts": {
+        "saved": "Invoice settings saved"
+      }
+    }
+  },
+  "team": {
+    "title": "Team",
+    "description": "People in your business, their roles and invitations.",
+    "addMember": "Add member",
+    "loadError": "Couldn't load the team",
+    "actionsFor": "Actions for {name}",
+    "resendInvite": "Resend invite",
+    "revokeInvite": "Revoke invite",
+    "inviteToCreate": "Invite to create account",
+    "status": {
+      "accountExists": "Account exists",
+      "invited": "Invited",
+      "inviteExpires": "Invite expires {date}",
+      "noAccount": "No account",
+      "calendarConnected": "Calendar connected",
+      "calendar": "Calendar"
+    },
+    "columns": {
+      "contact": "Contact",
+      "role": "Role"
+    },
+    "removeDialog": {
+      "title": "Remove {name}?",
+      "description": "They lose access to this business. Transfer targets pointing at them stop working.",
+      "keepAppointments": "Keep their future appointments assigned",
+      "unassignAppointments": "Unassign their future appointments"
+    },
+    "revokeDialog": {
+      "title": "Revoke this invitation?",
+      "description": "The link stops working immediately.",
+      "confirm": "Revoke"
+    },
+    "toasts": {
+      "resent": "Invitation re-sent",
+      "removed": "Member removed",
+      "revoked": "Invitation revoked"
+    }
+  },
+  "invite": {
+    "title": "Invite {name}",
+    "description": "They'll get an email link to create their account, connected to this member.",
+    "role": "Role",
+    "chooseRole": "Choose a role",
+    "send": "Send invitation",
+    "toasts": {
+      "sent": "Invitation sent"
+    }
+  },
+  "member": {
+    "editTitle": "Edit member",
+    "addTitle": "Add member",
+    "descriptionLocked": "Name and email are managed by the member's account.",
+    "descriptionEdit": "Directory details for this member.",
+    "descriptionAdd": "Add someone to your team directory — optionally invite them to create a login.",
+    "submitAddInvite": "Add & send invite",
+    "submitAdd": "Add member",
+    "steps": {
+      "details": "Details",
+      "availability": "Availability"
+    },
+    "firstName": "First name",
+    "firstNamePlaceholder": "Sam",
+    "lastName": "Last name",
+    "lastNamePlaceholder": "Rivera",
+    "emailPlaceholder": "sam@yourbusiness.com.au",
+    "phonePlaceholder": "0412 345 678",
+    "position": "Position",
+    "positionPlaceholder": "Site manager",
+    "role": "Role",
+    "roles": {
+      "owner": "Owner",
+      "memberDefault": "Member (default)"
+    },
+    "sendInvite": "Send invite to create account",
+    "sendInviteHint": "They'll get an email link to create their login, connected to this member.",
+    "availability": {
+      "title": "Calling availability",
+      "description": "When your AI can transfer calls to this member.",
+      "inherit": "Business hours",
+      "inheritHint": "Same as your business trading hours.",
+      "custom": "Custom hours",
+      "customHint": "Set specific days and times for this member."
+    },
+    "toasts": {
+      "saved": "Member saved",
+      "added": "Member added",
+      "addedInviteFailed": "Member added, but the invitation couldn't be sent",
+      "retryHint": "Use \"Invite to create account\" on the member to retry.",
+      "addedAndInvited": "Member added and invitation sent"
+    }
+  },
+  "transfers": {
+    "title": "Transfers",
+    "description": "Where and how your AI transfers live calls.",
+    "addTarget": "Add target",
+    "mode": {
+      "title": "Transfer mode",
+      "description": "Applies to every target in this directory — the two styles can't be mixed.",
+      "blind": "Blind",
+      "blindHint": "Connect the caller straight through.",
+      "screened": "Screened",
+      "screenedHint": "The AI briefs the person first, then connects the caller."
+    },
+    "loadError": "Couldn't load transfer targets",
+    "empty": {
+      "title": "Add your first transfer target",
+      "description": "Targets tell your AI who real callers can be handed to, and when."
+    },
+    "columns": {
+      "destination": "Destination",
+      "when": "When",
+      "hours": "Hours"
+    },
+    "memberFallback": "Team member",
+    "overrides": "{number} (overrides {name})",
+    "actionsFor": "Actions for {name}",
+    "switchDialog": {
+      "title": "{mode, select, screened {Switch every target to screened?} other {Switch every target to blind?}}",
+      "description": "This changes how all {count, plural, one {# target} other {# targets}} in this directory transfer.",
+      "confirm": "Switch mode"
+    },
+    "deleteDialog": {
+      "title": "Delete {name}?",
+      "description": "Your AI will no longer transfer calls here."
+    },
+    "toasts": {
+      "deleted": "Transfer target deleted"
+    }
+  },
+  "transferTarget": {
+    "editTitle": "Edit transfer target",
+    "addTitle": "Add transfer target",
+    "submitAdd": "Add target",
+    "steps": {
+      "details": "Details",
+      "availability": "Availability"
+    },
+    "kinds": {
+      "member": "Team member",
+      "memberHint": "Someone on your team list.",
+      "other": "Someone else",
+      "otherHint": "Any other phone number."
+    },
+    "namePlaceholder": "Site manager",
+    "member": "Team member",
+    "alreadyTarget": "Already a target",
+    "phone": "Phone number",
+    "phonePlaceholder": "0412 345 678",
+    "memberPhoneHint": "Prefilled from the team member — edit to override, or clear to use their saved number.",
+    "otherPhoneHint": "Australian numbers only, e.g. 0412 345 678.",
+    "postDial": "Post-dial digits (optional)",
+    "postDialPlaceholder": "w123#",
+    "postDialHint": "Sent after answer — digits, * and #; w waits half a second.",
+    "condition": "When to transfer",
+    "conditionPlaceholder": "The caller asks for a quote on commercial work.",
+    "availability": {
+      "title": "Availability",
+      "description": "When can calls be transferred here?"
+    },
+    "hoursModes": {
+      "member": "Availability Hours",
+      "memberHint": "Only transfer during member availability hours",
+      "inherit": "Business Hours",
+      "inheritHint": "Only transfer during business/trading hours",
+      "custom": "Custom hours",
+      "customHint": "Set specific days and times.",
+      "bypass": "All time",
+      "bypassHint": "Any time, day or night."
+    },
+    "toasts": {
+      "saved": "Transfer target saved",
+      "added": "Transfer target added"
+    }
+  }
+}

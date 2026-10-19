@@ -1,6 +1,7 @@
 "use client";
 
 import { useImperativeHandle, useRef, useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   DownloadIcon,
   PauseIcon,
@@ -62,6 +63,7 @@ export function AudioPlayer({
   const [speedIndex, setSpeedIndex] = useState(0);
   const [failed, setFailed] = useState(false);
   const [downloading, setDownloading] = useState(false);
+  const t = useTranslations("ui");
 
   const total = duration ?? durationHint ?? null;
 
@@ -130,7 +132,7 @@ export function AudioPlayer({
   if (failed) {
     return (
       <p className={cn("text-sm text-muted-foreground", className)}>
-        The recording couldn&apos;t be played. Try reloading the page.
+        {t("audioPlayer.failed")}
       </p>
     );
   }
@@ -169,7 +171,7 @@ export function AudioPlayer({
           variant="ghost"
           size="icon-sm"
           onClick={() => skip(-10)}
-          aria-label="Back 10 seconds"
+          aria-label={t("audioPlayer.back")}
         >
           <RotateCcwIcon />
         </Button>
@@ -179,7 +181,7 @@ export function AudioPlayer({
         variant="outline"
         size="icon-sm"
         onClick={toggle}
-        aria-label={playing ? "Pause recording" : "Play recording"}
+        aria-label={playing ? t("audioPlayer.pause") : t("audioPlayer.play")}
       >
         {playing ? <PauseIcon /> : <PlayIcon />}
       </Button>
@@ -189,7 +191,7 @@ export function AudioPlayer({
           variant="ghost"
           size="icon-sm"
           onClick={() => skip(10)}
-          aria-label="Forward 10 seconds"
+          aria-label={t("audioPlayer.forward")}
         >
           <RotateCwIcon />
         </Button>
@@ -202,7 +204,7 @@ export function AudioPlayer({
         value={Math.min(currentTime, total ?? 0)}
         onChange={(event) => seek(Number(event.target.value))}
         disabled={total === null}
-        aria-label="Seek recording"
+        aria-label={t("audioPlayer.seek")}
         style={{
           backgroundImage: `linear-gradient(to right, var(--color-primary) ${progress}%, var(--color-muted) ${progress}%)`,
         }}
@@ -218,7 +220,7 @@ export function AudioPlayer({
           variant="ghost"
           size="sm"
           onClick={cycleSpeed}
-          aria-label={`Playback speed ${SPEEDS[speedIndex]}x`}
+          aria-label={t("audioPlayer.speed", { speed: SPEEDS[speedIndex] })}
           className="w-11 px-0 text-xs tabular-nums text-muted-foreground"
         >
           {SPEEDS[speedIndex]}×
@@ -231,7 +233,7 @@ export function AudioPlayer({
           size="icon-sm"
           onClick={download}
           disabled={downloading}
-          aria-label="Download recording"
+          aria-label={t("audioPlayer.download")}
         >
           {downloading ? <Spinner /> : <DownloadIcon />}
         </Button>

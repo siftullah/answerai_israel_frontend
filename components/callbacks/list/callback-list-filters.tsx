@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { ListFilterIcon, XIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -58,16 +59,18 @@ function FilterSelect({
   value,
   options,
   onChange,
-  anyLabel = "Any",
+  anyLabel,
 }: {
   id: string;
   label: string;
   value: string;
   options: { value: string; label: string }[];
   onChange: (value: string) => void;
+  /** Omit for the default "Any". */
   anyLabel?: string;
 }) {
-  const items = [{ value: "", label: anyLabel }, ...options];
+  const t = useTranslations("callbacks.filters");
+  const items = [{ value: "", label: anyLabel ?? t("any") }, ...options];
   return (
     <div className="flex flex-col gap-1.5">
       <Label htmlFor={id}>{label}</Label>
@@ -112,7 +115,9 @@ export function CallbackListFilters({
   agents: Agent[] | undefined;
   members: BusinessMember[] | undefined;
 }) {
-  const set = <K extends keyof CallbackFilterState>(key: K, value: CallbackFilterState[K]) =>
+  const t = useTranslations("callbacks");
+  const tc = useTranslations("common");
+  const set =<K extends keyof CallbackFilterState>(key: K, value: CallbackFilterState[K]) =>
     onFiltersChange({ ...filters, [key]: value });
 
   const statuses = tab === "history" ? TERMINAL_CALLBACK_STATUSES : OPEN_CALLBACK_STATUSES;
@@ -126,17 +131,18 @@ export function CallbackListFilters({
   if (filters.agentId) {
     chips.push({
       key: "agentId",
-      label: agents?.find((agent) => agent.id === filters.agentId)?.name ?? "Agent",
+      label: agents?.find((agent) => agent.id === filters.agentId)?.name ?? t("labels.agent"),
     });
   }
   if (filters.assigneeUserId) {
     chips.push({
       key: "assigneeUserId",
       label:
-        assignees.find((member) => member.user?.id === filters.assigneeUserId)?.name ?? "Assignee",
+        assignees.find((member) => member.user?.id === filters.assigneeUserId)?.name ??
+        t("labels.assignee"),
     });
   }
-  if (filters.overdueOnly) chips.push({ key: "overdueOnly", label: "Overdue only" });
+  if (filters.overdueOnly) chips.push({ key: "overdueOnly", label: t("filters.overdueOnly") });
 
   const clear = (key: keyof CallbackFilterState) =>
     onFiltersChange({ ...filters, [key]: EMPTY_CALLBACK_FILTERS[key] } as CallbackFilterState);
@@ -147,8 +153,8 @@ export function CallbackListFilters({
         <Input
           value={search}
           onChange={(event) => onSearchChange(event.target.value)}
-          placeholder="Search topic or number…"
-          aria-label="Search callbacks by topic or phone number"
+          placeholder={t("filters.searchPlaceholder")}
+          aria-label={t("filters.searchAriaLabel")}
         />
         <Popover>
           <PopoverTrigger
@@ -156,20 +162,20 @@ export function CallbackListFilters({
               <Button
                 variant="outline"
                 size="icon"
-                aria-label="Filter callbacks"
+                aria-label={t("filters.filterAriaLabel")}
                 className="relative shrink-0"
               />
             }
           >
             <ListFilterIcon />
             {chips.length > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 size-2 rounded-full bg-primary" />
+              <span className="absolute -top-0.5 -end-0.5 size-2 rounded-full bg-primary" />
             )}
           </PopoverTrigger>
           <PopoverContent align="end" className="flex w-72 flex-col gap-4">
             <FilterSelect
               id="callback-filter-type"
-              label="Type"
+              label={t("labels.type")}
               value={filters.type}
               options={CALLBACK_TYPES.map((type) => ({
                 value: type,
@@ -179,7 +185,7 @@ export function CallbackListFilters({
             />
             <FilterSelect
               id="callback-filter-status"
-              label="Status"
+              label={tc("labels.status")}
               value={filters.status}
               options={statuses.map((status) => ({
                 value: status,
@@ -189,7 +195,7 @@ export function CallbackListFilters({
             />
             <FilterSelect
               id="callback-filter-source"
-              label="Source"
+              label={t("filters.source")}
               value={filters.source}
               options={CALLBACK_SOURCES.map((source) => ({
                 value: source,
@@ -199,14 +205,14 @@ export function CallbackListFilters({
             />
             <FilterSelect
               id="callback-filter-agent"
-              label="Agent"
+              label={t("labels.agent")}
               value={filters.agentId}
               options={(agents ?? []).map((agent) => ({ value: agent.id, label: agent.name }))}
               onChange={(value) => set("agentId", value)}
             />
             <FilterSelect
               id="callback-filter-assignee"
-              label="Assignee"
+              label={t("labels.assignee")}
               value={filters.assigneeUserId}
               options={assignees.map((member) => ({
                 value: member.user?.id ?? "",
@@ -216,7 +222,7 @@ export function CallbackListFilters({
             />
             {tab === "open" && (
               <div className="flex items-center justify-between gap-2">
-                <Label htmlFor="callback-filter-overdue">Overdue only</Label>
+                <Label htmlFor="callback-filter-overdue">{t("filters.overdueOnly")}</Label>
                 <Switch
                   id="callback-filter-overdue"
                   checked={filters.overdueOnly}
@@ -231,12 +237,12 @@ export function CallbackListFilters({
       {chips.length > 0 && (
         <div className="flex flex-wrap items-center gap-1.5">
           {chips.map((chip) => (
-            <Badge key={chip.key} variant="outline" className="h-6 gap-1 pr-1">
+            <Badge key={chip.key} variant="outline" className="h-6 gap-1 pe-1">
               {chip.label}
               <button
                 type="button"
                 onClick={() => clear(chip.key)}
-                aria-label={`Remove ${chip.label} filter`}
+                aria-label={t("filters.removeFilter", { label: chip.label })}
                 className="rounded-full p-0.5 hover:bg-muted"
               >
                 <XIcon className="size-3" />
@@ -249,7 +255,7 @@ export function CallbackListFilters({
             className="h-6 px-2 text-xs"
             onClick={() => onFiltersChange(EMPTY_CALLBACK_FILTERS)}
           >
-            Clear all
+            {t("filters.clearAll")}
           </Button>
         </div>
       )}
