@@ -5,9 +5,10 @@ Needs OPENAI_API_KEY in the environment (or in scripts/i18n/.env, which git igno
 Run with `python3 -I scripts/i18n/translate.py …` from the repo root.
 
 Usage:
-  translate.py glossary                      # build glossary.json (one call per locale)
+  translate.py glossary [--locales he,ar]    # (re)build glossary.json, one call per locale
   translate.py run [--ns a,b] [--locales he,ar] [--force] [--batch 50] [--workers 6]
-  translate.py check                         # re-validate placeholders in he/ar vs en
+  translate.py check [--locales he,ar]       # re-validate placeholders, plural categories and
+                                             # the Arabic register (no tanwin) in he/ar vs en
 
 Incremental: cache/<locale>.json remembers the English source each translation was
 made from; only new or changed strings are sent. Output is written straight into
@@ -48,15 +49,30 @@ LANG = {
     "ar": {
         "name": "Arabic",
         "style": (
-            "Modern Standard Arabic (فصحى) as used in software and business UIs for a Palestinian / Arab-Israeli "
-            "audience. Where regional terminology differs, use the Levantine/Palestinian choice (e.g. شيكل for the "
-            "currency, هاتف/جوّال for phones, موعد for appointment) and avoid Gulf- or Egypt-specific terms. "
-            "No colloquial dialect spelling. Concise UI register: short noun phrases or verbal nouns for buttons "
-            "(حفظ، إلغاء، حذف، إضافة), masculine singular imperative where an instruction addresses the user "
-            "(أدخل، اختر). Use Arabic punctuation (، ؛ ؟). Digits stay Western/Latin (0-9), inserted by code — "
-            "never convert numbers to Eastern Arabic numerals."
+            "Palestinian colloquial Arabic (اللهجة الفلسطينية — the Levantine dialect spoken in Jerusalem, Ramallah "
+            "and the Arab communities inside Israel), written the way a local app, a business WhatsApp message or a "
+            "support chat is written. NOT Modern Standard Arabic (فصحى): no فصحى function words, no فصحى verb "
+            "morphology (no لم/لن/سوف/ليس/لا يوجد, no dual or case endings), no tanwin at all (ً ٌ ٍ — write شكرا, "
+            "حاليا, مثلا, not شكرًا). Dialect forms throughout: شو (not ماذا/ما), هاد/هاي/هدول (not هذا/هذه/هؤلاء), "
+            "بدك (not تريد), كيف, وين (not أين), ليش (not لماذا), هلأ (not الآن), كمان (not أيضا), عشان/منشان (not "
+            "من أجل/لكي), في/ما في (not يوجد/لا يوجد), مش (not ليس/غير), ما + verb for negation, بـ-prefixed present "
+            "(بيرد, بتقدر, منقدر), عم + verb for something in progress (عم يحمّل…, عم نبعت…), شغّال for "
+            "working/running/active, خلص for done, and everyday verbs (حط, شيل, بعت, طلّع, خلّي, جرّب, دخّل, ضيف, "
+            "اختار). Still a concise, professional software UI — not chatty sentences: buttons and labels are short "
+            "noun phrases or bare imperatives (احفظ, الغي, احذف, ضيف, ابعت, جرّب كمان مرة, رجوع), table headers and "
+            "badges are single nouns, instructions address the user in the masculine singular (دخّل, اختار, حط). "
+            "Keep the product/technical vocabulary Palestinians also use in dialect (إعدادات, فاتورة, عرض سعر, حساب, "
+            "إيميل, كلمة السر, رقم, تقويم, موعد, حملة, مكالمة, تحويل, تسجيل الدخول) and the regional words (شيكل for "
+            "the currency, تلفون/جوّال/موبايل for phones, موعد for appointment); avoid Gulf or Egyptian words (عايز, "
+            "إزاي, دلوقتي, ابغى). Brand and product names (AnswerAI, ElevenLabs, Twilio, Stripe, WhatsApp, Google, "
+            "Outlook, Microsoft) stay in Latin script. Use Arabic punctuation (، ؛ ؟). Digits stay Western/Latin "
+            "(0-9), inserted by code — never convert numbers to Eastern Arabic numerals."
         ),
-        "plural": "Arabic ICU plural categories: provide `zero`, `one`, `two`, `few`, `many` and `other`.",
+        "plural": (
+            "Arabic ICU plural categories: provide `zero`, `one`, `two`, `few`, `many` and `other` — all six, every "
+            "time, each branch in the same dialect (e.g. zero {ما في مكالمات} one {مكالمة وحدة} two {مكالمتين} "
+            "few {# مكالمات} many {# مكالمة} other {# مكالمة}); keep `#` for the number."
+        ),
     },
 }
 
@@ -80,8 +96,8 @@ RULES = """Rules — follow every one:
    such as `monthly {monthly}` or `=0 {Add}` must come back with its words translated — only the category name before
    the brace stays English) and keeping `#`; keep every <tag>…</tag> pair with the same tag names (reorder them in the sentence as the grammar
    needs). A literal apostrophe directly before { or } must be written as '' — otherwise use normal apostrophes.
-3. Never translate: the brand "AnswerAI"; other product names (Stripe, Twilio, ElevenLabs, Google, Outlook, Microsoft,
-   SIP); URLs; email addresses; code-like tokens; currency codes (ILS); ICU keywords (plural, select, other, one…).
+3. Never translate: the brand "AnswerAI"; other product names (Stripe, Twilio, ElevenLabs, WhatsApp, Google, Outlook,
+   Microsoft, SIP); URLs; email addresses; code-like tokens; currency codes (ILS); ICU keywords (plural, select, other, one…).
    Keep "DNC" after the translated phrase for "Do not call (DNC)"-style strings.
 4. Match the meaning and tone of the English exactly (a warning stays a warning, a question stays a question). Keep
    the translation about as short as the English — these strings sit in buttons, table headers and badges.
@@ -327,7 +343,64 @@ def signature(s):
     return placeholders_, tags, has_plural, has_select
 
 
-def problems(src, dst):
+# Per-locale register guard. Arabic is Palestinian colloquial: tanwin (ً ٌ ٍ) only
+# occurs in فصحى morphology (شكرًا, جارٍ, تلقائيًا), so its presence means the model
+# drifted back to Modern Standard Arabic. Brand/technical terms are Latin and never
+# carry it, so no allow-list is needed.
+TANWIN_RE = re.compile("[\u064B\u064C\u064D]")
+REGISTER_CHECKS = {"ar": lambda s: ["tanwin (فصحى register)"] if TANWIN_RE.search(s) else []}
+
+# Plural categories every plural block must carry, per locale (CLDR: Arabic has six).
+REQUIRED_PLURAL_CATS = {"ar": {"zero", "one", "two", "few", "many", "other"}}
+
+
+def plural_blocks(s):
+    """Category sets of each top-level plural/selectordinal block in `s`."""
+    out = []
+    i = 0
+    while True:
+        m = PLURAL_OPEN_RE.search(s, i)
+        if not m:
+            return out
+        j = m.end()
+        depth = 1
+        start = j
+        while j < len(s) and depth:
+            depth += {"{": 1, "}": -1}.get(s[j], 0)
+            j += 1
+        body = s[start : j - 1]
+        cats = set()
+        k = 0
+        while k < len(body):
+            bm = re.match(r"\s*(=?\w+)\s*\{", body[k:])
+            if not bm:
+                break
+            cats.add(bm.group(1))
+            c = k + bm.end()
+            d = 1
+            while c < len(body) and d:
+                d += {"{": 1, "}": -1}.get(body[c], 0)
+                c += 1
+            k = c
+        out.append(cats)
+        i = j
+
+
+def locale_problems(loc, dst):
+    issues = []
+    required = REQUIRED_PLURAL_CATS.get(loc)
+    if required:
+        for cats in plural_blocks(dst):
+            missing = required - cats
+            if missing:
+                issues.append(f"plural categories missing: {', '.join(sorted(missing))}")
+    check_register = REGISTER_CHECKS.get(loc)
+    if check_register:
+        issues.extend(check_register(dst))
+    return issues
+
+
+def problems(src, dst, loc=None):
     issues = []
     if not isinstance(dst, str) or not dst.strip():
         return ["empty"]
@@ -357,6 +430,8 @@ def problems(src, dst):
     if splural or sselect:
         for cat in untranslated_branches(src, dst):
             issues.append(f"text inside branch '{cat}' left in English")
+    if loc:
+        issues.extend(locale_problems(loc, dst))
     return issues
 
 
@@ -382,9 +457,10 @@ GLOSSARY_TERMS = [
 ]
 
 
-def build_glossary():
-    glossary = {}
-    for loc, lang in LANG.items():
+def build_glossary(locs):
+    glossary = load_json(GLOSSARY_PATH)
+    for loc in locs:
+        lang = LANG[loc]
         schema = {
             "type": "object",
             "properties": {t: {"type": "string"} for t in GLOSSARY_TERMS},
@@ -395,8 +471,10 @@ def build_glossary():
             f"You are the lead {lang['name']} localizer for a SaaS product.\n{APP_CONTEXT}\n\nStyle: {lang['style']}\n\n"
             "Produce the canonical UI term for each English term below — the single rendering that will be used "
             "consistently across the whole product. Give the bare term only (no explanation), in the form it would "
-            "appear as a menu label. Keep 'AnswerAI' and 'SIP' untranslated. Return a JSON object keyed by the exact "
-            "English term."
+            "appear as a menu label, in exactly the register described under Style: for a dialect that means the "
+            "everyday word people actually use in apps and chats (an established technical/product word counts, a "
+            "formal dictionary rendering does not), with no tanwin. Keep 'AnswerAI' and 'SIP' untranslated. Return "
+            "a JSON object keyed by the exact English term."
         )
         payload = {
             "model": MODEL,
@@ -409,8 +487,12 @@ def build_glossary():
             "max_output_tokens": 20000,
         }
         text, usage = openai_responses(payload)
-        glossary[loc] = json.loads(text)
-        print(f"[glossary:{loc}] {len(glossary[loc])} terms, usage={usage.get('total_tokens')}")
+        terms = json.loads(text)
+        flagged = {t: v for t, v in terms.items() if locale_problems(loc, v)}
+        if flagged:
+            print(f"[glossary:{loc}] {len(flagged)} terms break the register: {json.dumps(flagged, ensure_ascii=False)}")
+        glossary[loc] = terms
+        print(f"[glossary:{loc}] {len(terms)} terms, usage={usage.get('total_tokens')}")
     save_json(GLOSSARY_PATH, glossary)
     print(f"wrote {GLOSSARY_PATH}")
 
@@ -489,7 +571,7 @@ def run(args):
         retry = []
         for key, en in items:
             dst = out.get(key)
-            issues = problems(en, dst) if dst is not None else ["missing"]
+            issues = problems(en, dst, loc) if dst is not None else ["missing"]
             if issues:
                 retry.append((key, en, issues))
             else:
@@ -499,12 +581,12 @@ def run(args):
             note = (
                 "Your previous attempt for this string was rejected: " + "; ".join(issues)
                 + ". Keep every {placeholder}, every <tag>, and the ICU plural/select structure of the English exactly, "
-                + "and translate the words inside every plural/select branch."
+                + "translate the words inside every plural/select branch, and stay in the register described under Style."
             )
             try:
                 out2, usage2 = translate_batch(loc, [(key, en)], glossary, note)
                 dst2 = out2.get(key)
-                issues2 = problems(en, dst2) if dst2 is not None else ["missing"]
+                issues2 = problems(en, dst2, loc) if dst2 is not None else ["missing"]
                 if issues2:
                     failures.append((loc, key, en, dst2, issues2))
                 else:
@@ -568,7 +650,7 @@ def check(args):
                     print(f"MISSING {loc} {ns}.{key}")
                     bad += 1
                     continue
-                issues = problems(val, tr[key])
+                issues = problems(val, tr[key], loc)
                 if issues:
                     print(f"BAD {loc} {ns}.{key}: {issues}\n   en: {val}\n   {loc}: {tr[key]}")
                     bad += 1
@@ -582,7 +664,8 @@ def check(args):
 def main():
     ap = argparse.ArgumentParser()
     sub = ap.add_subparsers(dest="cmd", required=True)
-    sub.add_parser("glossary")
+    g = sub.add_parser("glossary")
+    g.add_argument("--locales", default=",".join(LANG))
     r = sub.add_parser("run")
     r.add_argument("--ns", default="")
     r.add_argument("--locales", default="he,ar")
@@ -593,7 +676,7 @@ def main():
     c.add_argument("--locales", default="he,ar")
     args = ap.parse_args()
     if args.cmd == "glossary":
-        build_glossary()
+        build_glossary(args.locales.split(","))
     elif args.cmd == "run":
         run(args)
     elif args.cmd == "check":

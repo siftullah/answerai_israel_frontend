@@ -1,164 +1,164 @@
 {
   "meta": {
-    "title": "الفواتير"
+    "title": "فواتير"
   },
   "page": {
-    "title": "الفواتير",
-    "description": "أصدر فواتير للأعمال المكتملة وتابع ما تم دفعه."
+    "title": "فواتير",
+    "description": "طلّع فواتير للشغل اللي خلص وتابع شو اندفع."
   },
   "newInvoice": "فاتورة جديدة",
-  "theCustomer": "العميل",
-  "thisContact": "جهة الاتصال هذه",
+  "theCustomer": "الزبون",
+  "thisContact": "جهة الاتصال هاي",
   "tabs": {
     "open": "مفتوح",
-    "overdue": "متأخر السداد",
+    "overdue": "متأخر",
     "paid": "مدفوع"
   },
   "empty": {
     "open": {
-      "title": "لا توجد فواتير مفتوحة",
-      "description": "ستظهر هنا المسودات والفواتير التي تنتظر الدفع."
+      "title": "ما في فواتير مفتوحة",
+      "description": "المسودات والفواتير اللي ناطرة الدفع بتظهر هون."
     },
     "overdue": {
-      "title": "لا توجد فواتير متأخرة السداد",
-      "description": "ستظهر هنا الفواتير التي تجاوزت تاريخ استحقاقها دون سداد."
+      "title": "ما في شي متأخر",
+      "description": "الفواتير اللي بيمر آخر موعد لدفعها وما اندفعت بتظهر هون."
     },
     "paid": {
-      "title": "لا توجد فواتير مدفوعة بعد",
-      "description": "ستظهر هنا الفواتير التي تحددها كمدفوعة."
+      "title": "لسه ما في فواتير مدفوعة",
+      "description": "الفواتير اللي بتعلّمها كمدفوعة بتظهر هون."
     },
     "all": {
-      "title": "لا توجد فواتير بعد",
-      "description": "أصدر فاتورتك الأولى للأعمال المكتملة."
+      "title": "لسه ما في فواتير",
+      "description": "طلّع أول فاتورة إلك للشغل اللي خلص."
     },
     "noMatch": {
-      "title": "لا توجد فواتير مطابقة",
-      "description": "جرّب بحثًا مختلفًا أو أزل بعض عوامل التصفية."
+      "title": "ما في فواتير مطابقة",
+      "description": "جرّب تدوّر على شي تاني أو شيل بعض الفلاتر."
     }
   },
   "stats": {
-    "outstanding": "غير مسدد",
-    "awaitingPayment": "{count, plural, =0 {لا توجد فواتير بانتظار الدفع} zero {لا توجد فواتير بانتظار الدفع} one {{count} فاتورة بانتظار الدفع} two {{count} من الفواتير بانتظار الدفع} few {{count} فواتير بانتظار الدفع} many {{count} فاتورة بانتظار الدفع} other {{count} فاتورة بانتظار الدفع}}",
-    "overdue": "متأخر السداد",
-    "pastDue": "{count, plural, =0 {لا توجد فواتير متأخرة السداد} zero {لا توجد فواتير متأخرة السداد} one {{count} فاتورة متأخرة السداد} two {{count} من الفواتير متأخرة السداد} few {{count} فواتير متأخرة السداد} many {{count} فاتورة متأخرة السداد} other {{count} فاتورة متأخرة السداد}}",
-    "paidThisMonth": "المدفوع هذا الشهر",
-    "paidAllTime": "{count, plural, zero {لا توجد فواتير مدفوعة إجمالًا} one {{count} فاتورة مدفوعة إجمالًا} two {{count} من الفواتير مدفوعة إجمالًا} few {{count} فواتير مدفوعة إجمالًا} many {{count} فاتورة مدفوعة إجمالًا} other {{count} فاتورة مدفوعة إجمالًا}}"
+    "outstanding": "باقي للدفع",
+    "awaitingPayment": "{count, plural, =0 {ما في شي ناطر الدفع} zero {ما في شي ناطر الدفع} one {{count} فاتورة ناطرة الدفع} two {فاتورتين ناطرين الدفع} few {{count} فواتير ناطرة الدفع} many {{count} فاتورة ناطرة الدفع} other {{count} فاتورة ناطرة الدفع}}",
+    "overdue": "متأخر",
+    "pastDue": "{count, plural, =0 {ما في شي فات موعد دفعه} zero {ما في شي فات موعد دفعه} one {{count} فاتورة فات موعد دفعها} two {فاتورتين فات موعد دفعهم} few {{count} فواتير فات موعد دفعها} many {{count} فاتورة فات موعد دفعها} other {{count} فاتورة فات موعد دفعها}}",
+    "paidThisMonth": "مدفوع هالشهر",
+    "paidAllTime": "{count, plural, zero {ما في فواتير مدفوعة بالمجموع} one {{count} فاتورة مدفوعة بالمجموع} two {فاتورتين مدفوعات بالمجموع} few {{count} فواتير مدفوعة بالمجموع} many {{count} فاتورة مدفوعة بالمجموع} other {{count} فاتورة مدفوعة بالمجموع}}"
   },
   "list": {
-    "loadError": "تعذّر تحميل الفواتير",
-    "searchPlaceholder": "بحث بالرقم أو جهة الاتصال…",
-    "searchLabel": "بحث في الفواتير بالرقم أو اسم جهة الاتصال",
-    "filterLabel": "تصفية الفواتير",
+    "loadError": "ما قدرنا نحمّل الفواتير",
+    "searchPlaceholder": "دوّر بالرقم أو جهة الاتصال…",
+    "searchLabel": "دوّر على فواتير بالرقم أو اسم جهة الاتصال",
+    "filterLabel": "فلتر الفواتير",
     "anyStatus": "أي حالة",
-    "removeFilter": "إزالة عامل التصفية {status}"
+    "removeFilter": "شيل فلتر {status}"
   },
   "row": {
-    "draft": "مسودة — لم تُرسل بعد",
-    "due": "تستحق في {date}",
-    "wasDue": "كانت مستحقة في {date}",
-    "paid": "تم الدفع في {date}",
-    "voided": "أُلغيت في {date}"
+    "draft": "مسودة — لسه ما انبعتت",
+    "due": "آخر موعد للدفع {date}",
+    "wasDue": "كان آخر موعد للدفع {date}",
+    "paid": "مدفوع بتاريخ {date}",
+    "voided": "ملغي بتاريخ {date}"
   },
   "labels": {
-    "customer": "العميل",
-    "lineItems": "البنود",
+    "customer": "الزبون",
+    "lineItems": "بنود",
     "type": "النوع",
     "qty": "الكمية",
     "unit": "الوحدة",
     "unitPrice": "سعر الوحدة",
     "amount": "المبلغ",
     "paymentInstructions": "تعليمات الدفع",
-    "setOnSend": "يُحدّد عند الإرسال",
+    "setOnSend": "بيتحدد لما تبعت",
     "taxLine": "{label} ({rate}%)"
   },
   "actions": {
-    "send": "إرسال الفاتورة",
-    "sending": "جارٍ الإرسال…",
-    "markPaid": "تحديد كمدفوع",
-    "duplicate": "إنشاء نسخة",
-    "void": "إبطال",
-    "voidInvoice": "إبطال الفاتورة",
-    "voiding": "جارٍ الإبطال…",
-    "keepInvoice": "الاحتفاظ بالفاتورة",
-    "deleteDraft": "حذف المسودة",
-    "keepDraft": "الاحتفاظ بالمسودة",
-    "createDraft": "إنشاء مسودة",
-    "viewContact": "عرض جهة الاتصال"
+    "send": "ابعت الفاتورة",
+    "sending": "عم نبعت…",
+    "markPaid": "علّم كمدفوع",
+    "duplicate": "اعمل نسخة",
+    "void": "الغي",
+    "voidInvoice": "الغي الفاتورة",
+    "voiding": "عم نلغي…",
+    "keepInvoice": "خلّي الفاتورة",
+    "deleteDraft": "احذف المسودة",
+    "keepDraft": "خلّي المسودة",
+    "createDraft": "اعمل مسودة",
+    "viewContact": "شوف جهة الاتصال"
   },
   "detail": {
-    "back": "جميع الفواتير",
+    "back": "كل الفواتير",
     "noneSelected": {
-      "title": "لم تُحدّد فاتورة",
-      "description": "اختر فاتورة لعرض تفاصيلها."
+      "title": "ما في فاتورة مختارة",
+      "description": "اختار فاتورة عشان تشوف تفاصيلها."
     },
     "notFound": {
-      "title": "الفاتورة غير موجودة",
-      "description": "هذه الفاتورة غير موجودة أو تمت إزالتها."
+      "title": "ما لقينا الفاتورة",
+      "description": "هاي الفاتورة مش موجودة أو انحذفت."
     },
-    "loadError": "تعذّر تحميل هذه الفاتورة",
+    "loadError": "ما قدرنا نحمّل هاي الفاتورة",
     "title": "فاتورة {number}",
     "fromJobBadge": "من {reference}",
     "fields": {
-      "fromJob": "من أمر عمل",
+      "fromJob": "من شغلة",
       "issued": "تاريخ الإصدار",
-      "due": "تاريخ الاستحقاق",
-      "sent": "تاريخ الإرسال",
-      "paid": "تاريخ الدفع",
-      "voided": "تاريخ الإبطال",
+      "due": "آخر موعد للدفع",
+      "sent": "مبعوت",
+      "paid": "مدفوع",
+      "voided": "ملغي",
       "created": "تاريخ الإنشاء"
     }
   },
   "form": {
-    "editTitle": "تعديل الفاتورة {number}",
-    "editDescription": "تبقى المسودات قابلة للتعديل حتى إرسالها.",
-    "newDescription": "أنشئ مسودة، ثم أرسلها عندما تكون جاهزًا.",
+    "editTitle": "عدّل الفاتورة {number}",
+    "editDescription": "بتقدر تعدّل المسودات لحد ما تبعتها.",
+    "newDescription": "اعمل مسودة، وابعتها لما تكون جاهز.",
     "issueDate": "تاريخ الإصدار",
-    "dueDate": "تاريخ الاستحقاق",
-    "dueDateHint": "إذا تُرك فارغًا، يُضبط عند الإرسال بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يوم} few {{days} أيام} many {{days} يومًا} other {{days} يوم}} من تاريخ الإصدار.",
-    "addLine": "إضافة بند",
-    "descriptionPlaceholder": "ما تم إنجازه أو توريده",
+    "dueDate": "آخر موعد للدفع",
+    "dueDateHint": "إذا خليته فاضي، وقت الإرسال بيتحدد بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}} من تاريخ الإصدار.",
+    "addLine": "ضيف بند",
+    "descriptionPlaceholder": "شو انعمل أو اتورّد",
     "lineDescription": "وصف البند {line}",
     "lineType": "نوع البند {line}",
     "lineQuantity": "كمية البند {line}",
     "lineUnitPrice": "سعر الوحدة للبند {line} بالشيكل",
-    "lineTax": "يخضع البند {line} لضريبة {tax}",
-    "removeLine": "إزالة البند {line}",
-    "notesPlaceholder": "تظهر في رسالة الفاتورة الإلكترونية (اختياري)",
+    "lineTax": "البند {line} عليه {tax}",
+    "removeLine": "شيل البند {line}",
+    "notesPlaceholder": "بتظهر بإيميل الفاتورة (اختياري)",
     "paymentInstructionsPlaceholder": "تحويل بنكي — البنك، الفرع، رقم الحساب، المرجع…"
   },
   "sendDialog": {
-    "title": "إرسال الفاتورة {number}",
-    "description": "تُرسل فاتورة بقيمة {amount} إلى {customer} عبر البريد الإلكتروني. {dates}",
-    "datesIssuedDue": "تاريخ الإصدار {issued}، وتاريخ الاستحقاق {due}.",
-    "datesIssuedNoDue": "تاريخ الإصدار {issued}، والاستحقاق بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يوم} few {{days} أيام} many {{days} يومًا} other {{days} يوم}}.",
-    "datesUnset": "سيُضبط تاريخ الإصدار على اليوم وتاريخ الاستحقاق بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يوم} few {{days} أيام} many {{days} يومًا} other {{days} يوم}}.",
-    "emailLabel": "إرسال بالبريد الإلكتروني إلى",
-    "emailHint": "اتركه فارغًا للإرسال إلى {email}.",
-    "invalidEmail": "أدخل عنوان بريد إلكتروني صالحًا",
-    "noEmailError": "ليس لجهة الاتصال هذه بريد إلكتروني — أدخل عنوانًا للإرسال إليه",
-    "noEmailAlert": "لا يوجد عنوان بريد إلكتروني مسجّل لـ {name}. أدخل عنوانًا أعلاه، وإلا فستُعلّم الفاتورة كمرسلة دون إرسال بريد إلكتروني إلى أحد."
+    "title": "ابعت الفاتورة {number}",
+    "description": "بيبعت لـ {customer} فاتورة بقيمة {amount} بالإيميل. {dates}",
+    "datesIssuedDue": "تاريخ الإصدار {issued}، وآخر موعد للدفع {due}.",
+    "datesIssuedNoDue": "تاريخ الإصدار {issued}، وآخر موعد للدفع بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}}.",
+    "datesUnset": "تاريخ الإصدار بيتحدد بتاريخ اليوم، وآخر موعد للدفع بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}}.",
+    "emailLabel": "ابعت على إيميل",
+    "emailHint": "خلّيه فاضي عشان تنبعت على {email}.",
+    "invalidEmail": "دخّل عنوان إيميل صحيح",
+    "noEmailError": "جهة الاتصال هاي ما إلها إيميل — دخّل إيميل عشان نبعت عليه",
+    "noEmailAlert": "ما في عنوان إيميل محفوظ لـ {name}. دخّل إيميل فوق، أو الفاتورة رح تتعلّم كمبعوتة بدون ما تنبعت لحدا بالإيميل."
   },
   "markPaidDialog": {
-    "title": "تعيين الفاتورة {number} كمدفوعة",
-    "description": "يسجّل استلام مبلغ {amount} من {customer}.",
+    "title": "علّم الفاتورة {number} كمدفوعة",
+    "description": "بيسجّل إنك استلمت {amount} من {customer}.",
     "referenceLabel": "مرجع الدفع",
     "referencePlaceholder": "تحويل بنكي #88213",
-    "referenceHint": "اختياري — طريقة استلام الدفعة."
+    "referenceHint": "اختياري — كيف وصلت الدفعة."
   },
   "voidDialog": {
-    "title": "إبطال الفاتورة {number}؟",
-    "description": "لن يُحتسب مبلغ {amount} المستحق على {customer} ضمن المبالغ غير المسددة. تبقى الفاتورة في السجل، لكن لا يمكن إعادة فتحها."
+    "title": "تلغي الفاتورة {number}؟",
+    "description": "مبلغ {amount} اللي على {customer} ما بضل محسوب كمبلغ مش مدفوع. الفاتورة بتضل بالسجل، بس ما بتقدر ترجع تفتحها."
   },
   "deleteDialog": {
-    "title": "حذف المسودة {number}؟",
-    "description": "ستُحذف المسودة وبنودها نهائيًا. لا يمكن التراجع عن هذا الإجراء."
+    "title": "تحذف المسودة {number}؟",
+    "description": "المسودة وبنودها بينحذفوا نهائيا. ما بتقدر تتراجع عن الحذف."
   },
   "toasts": {
-    "draftCreated": "تم إنشاء المسودة {number}",
-    "draftDeleted": "تم حذف المسودة {number}",
-    "updated": "تم تحديث الفاتورة {number}",
-    "sent": "تم إرسال الفاتورة {number}",
-    "markedPaid": "تم تعيين الفاتورة {number} كمدفوعة",
-    "voided": "تم إبطال الفاتورة {number}"
+    "draftCreated": "انعملت المسودة {number}",
+    "draftDeleted": "انحذفت المسودة {number}",
+    "updated": "اتحدّثت الفاتورة {number}",
+    "sent": "انبعتت الفاتورة {number}",
+    "markedPaid": "اتسجّلت الفاتورة {number} كمدفوعة",
+    "voided": "انلغت الفاتورة {number}"
   }
 }

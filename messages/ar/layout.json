@@ -1,57 +1,57 @@
 {
-  "metaDescription": "وكلاء ذكاء اصطناعي صوتيون يجيبون على كل مكالمة لنشاطك التجاري.",
+  "metaDescription": "مساعدين صوتيين أذكياء بيردّوا على كل مكالمة لمصلحتك.",
   "nav": {
     "dashboard": "لوحة التحكم",
     "contacts": "جهات الاتصال",
-    "allContacts": "جميع جهات الاتصال",
-    "dnc": "عدم الاتصال (DNC)",
-    "calls": "المكالمات",
-    "inboundLogs": "سجلات المكالمات الواردة",
-    "outboundLogs": "سجلات المكالمات الصادرة",
-    "callbacks": "مكالمات معاودة الاتصال",
-    "campaigns": "الحملات",
-    "calendar": "التقويم",
-    "appointments": "المواعيد",
-    "leads": "العملاء المحتملون",
-    "quotes": "عروض الأسعار",
-    "jobs": "أوامر العمل",
-    "invoices": "الفواتير",
-    "businessProfile": "ملف النشاط التجاري",
-    "phoneNumbers": "أرقام الهاتف",
-    "agents": "وكلاء الذكاء الاصطناعي",
-    "settings": "الإعدادات",
+    "allContacts": "كل جهات الاتصال",
+    "dnc": "ممنوع الاتصال (DNC)",
+    "calls": "مكالمات",
+    "inboundLogs": "سجل المكالمات الواردة",
+    "outboundLogs": "سجل المكالمات الصادرة",
+    "callbacks": "مكالمات رجعة",
+    "campaigns": "حملات",
+    "calendar": "تقويم",
+    "appointments": "مواعيد",
+    "leads": "عملاء محتملين",
+    "quotes": "عروض أسعار",
+    "jobs": "شغلات",
+    "invoices": "فواتير",
+    "businessProfile": "ملف المصلحة",
+    "phoneNumbers": "أرقام التلفون",
+    "agents": "مساعدين صوتيين أذكياء",
+    "settings": "إعدادات",
     "profile": "الملف الشخصي",
-    "notifications": "الإشعارات",
+    "notifications": "إشعارات",
     "billing": "الفوترة",
-    "plans": "الباقات",
+    "plans": "باقات",
     "overview": "نظرة عامة",
     "knowledgeBase": "قاعدة المعرفة",
-    "basicInfo": "المعلومات الأساسية",
-    "services": "الخدمات",
-    "products": "المنتجات",
-    "faqs": "الأسئلة الشائعة",
-    "policies": "السياسات",
-    "docs": "المستندات",
+    "basicInfo": "معلومات أساسية",
+    "services": "خدمات",
+    "products": "منتجات",
+    "faqs": "أسئلة شائعة",
+    "policies": "سياسات",
+    "docs": "مستندات",
     "operations": "العمليات",
     "team": "الفريق",
-    "transfers": "تحويل المكالمات",
-    "modules": "الوحدات الإضافية"
+    "transfers": "تحويلات المكالمات",
+    "modules": "إضافات"
   },
   "sidebar": {
-    "setupGroup": "إعداد الذكاء الاصطناعي"
+    "setupGroup": "تجهيز المساعد الصوتي الذكي"
   },
   "navUser": {
-    "switchBusiness": "تبديل النشاط التجاري"
+    "switchBusiness": "غيّر المصلحة"
   },
   "sectionNav": {
-    "label": "أقسام ملف النشاط التجاري"
+    "label": "أقسام ملف المصلحة"
   },
   "settingsNav": {
     "label": "أقسام الإعدادات"
   },
   "notFound": {
-    "title": "الصفحة غير موجودة",
-    "description": "الصفحة التي تبحث عنها غير موجودة أو تم نقلها.",
-    "backHome": "العودة إلى AnswerAI"
+    "title": "الصفحة مش موجودة",
+    "description": "الصفحة اللي بتدوّر عليها مش موجودة أو تغيّر مكانها.",
+    "backHome": "رجوع لـ AnswerAI"
   }
 }

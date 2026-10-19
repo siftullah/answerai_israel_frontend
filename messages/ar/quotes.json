@@ -1,235 +1,235 @@
 {
   "meta": {
-    "title": "عروض الأسعار"
+    "title": "عروض أسعار"
   },
   "page": {
-    "title": "عروض الأسعار",
-    "description": "حدّد أسعار الأعمال، وأرسلها للموافقة، وتابع ما يُقبل منها."
+    "title": "عروض أسعار",
+    "description": "سعّر الشغل، وابعت عرض السعر للموافقة، وتابع شو بينقبل."
   },
   "newQuote": "عرض سعر جديد",
-  "theCustomer": "العميل",
-  "thisContact": "جهة الاتصال هذه",
+  "theCustomer": "الزبون",
+  "thisContact": "جهة الاتصال هاي",
   "tabs": {
-    "open": "مفتوح",
-    "expired": "منتهي الصلاحية",
-    "accepted": "مقبول"
+    "open": "مفتوحة",
+    "expired": "خلصت صلاحيتها",
+    "accepted": "مقبولة"
   },
   "empty": {
     "open": {
-      "title": "لا توجد عروض أسعار مفتوحة",
-      "description": "ستظهر هنا المسودات وعروض الأسعار التي تنتظر ردّ العميل."
+      "title": "ما في عروض أسعار مفتوحة",
+      "description": "المسودات وعروض الأسعار اللي بتستنى رد الزبون بتظهر هون."
     },
     "expired": {
-      "title": "لا توجد عروض منتهية الصلاحية",
-      "description": "تظهر هنا عروض الأسعار التي تنتهي دون ردّ — أعد تفعيلها أو قدّم عروضًا جديدة."
+      "title": "ما في عروض خلصت صلاحيتها",
+      "description": "عروض الأسعار اللي بتخلص صلاحيتها بدون رد بتظهر هون — رجّع فعّلها أو سعّرها من جديد."
     },
     "accepted": {
-      "title": "لا توجد عروض أسعار مقبولة بعد",
-      "description": "ستظهر هنا عروض الأسعار التي يقبلها عملاؤك."
+      "title": "لسه ما في عروض أسعار مقبولة",
+      "description": "عروض الأسعار اللي بيوافق عليها زباينك بتظهر هون."
     },
     "all": {
-      "title": "لا توجد عروض أسعار بعد",
-      "description": "حدّد سعر أول أمر عمل وأرسله للعميل لقبوله."
+      "title": "لسه ما في عروض أسعار",
+      "description": "سعّر أول شغلة وابعت عرض السعر للزبون عشان يوافق عليه."
     },
     "noMatch": {
-      "title": "لا توجد عروض أسعار مطابقة",
-      "description": "جرّب بحثًا مختلفًا أو أزل بعض عوامل التصفية."
+      "title": "ما في عروض أسعار مطابقة",
+      "description": "جرّب بحث تاني أو شيل بعض الفلاتر."
     }
   },
   "stats": {
-    "awaitingResponse": "بانتظار الردّ",
-    "withCustomers": "{count, plural, zero {{count} عروض أسعار لدى العملاء} one {{count} عرض سعر لدى العملاء} two {{count} عرضا سعر لدى العملاء} few {{count} عروض أسعار لدى العملاء} many {{count} عرض سعر لدى العملاء} other {{count} عرض سعر لدى العملاء}}",
-    "withCustomersExpiring": "{count, plural, zero {{count} عروض أسعار لدى العملاء} one {{count} عرض سعر لدى العملاء} two {{count} عرضا سعر لدى العملاء} few {{count} عروض أسعار لدى العملاء} many {{count} عرض سعر لدى العملاء} other {{count} عرض سعر لدى العملاء}} · {expiring} تنتهي صلاحيتها قريبًا",
-    "nothingAwaiting": "لا شيء بانتظار الردّ",
-    "acceptedThisMonth": "مقبول هذا الشهر",
-    "acceptedAllTime": "{count, plural, zero {{count} عروض أسعار مقبولة إجمالًا} one {{count} عرض سعر مقبول إجمالًا} two {{count} عرضا سعر مقبولان إجمالًا} few {{count} عروض أسعار مقبولة إجمالًا} many {{count} عرض سعر مقبول إجمالًا} other {{count} عرض سعر مقبول إجمالًا}}",
-    "winRate": "نسبة الفوز",
-    "winRateDetail": "{accepted} من {decided, plural, zero {{decided} عروض أسعار محسومة} one {{decided} عرض سعر محسوم} two {{decided} عرضي سعر محسومين} few {{decided} عروض أسعار محسومة} many {{decided} عرض سعر محسوم} other {{decided} عرض سعر محسوم}}، خلال آخر 90 يومًا",
-    "noDecided": "لا توجد عروض أسعار محسومة خلال آخر 90 يومًا"
+    "awaitingResponse": "بانتظار الرد",
+    "withCustomers": "{count, plural, zero {ما في عروض أسعار عند الزباين} one {عرض سعر واحد عند الزباين} two {عرضين سعر عند الزباين} few {{count} عروض أسعار عند الزباين} many {{count} عرض سعر عند الزباين} other {{count} عرض سعر عند الزباين}}",
+    "withCustomersExpiring": "{count, plural, zero {ما في عروض أسعار عند الزباين} one {عرض سعر واحد عند الزباين} two {عرضين سعر عند الزباين} few {{count} عروض أسعار عند الزباين} many {{count} عرض سعر عند الزباين} other {{count} عرض سعر عند الزباين}} · {expiring} بتخلص صلاحيتها قريب",
+    "nothingAwaiting": "ما في إشي بانتظار الرد",
+    "acceptedThisMonth": "مقبولة هالشهر",
+    "acceptedAllTime": "{count, plural, zero {ما في عروض أسعار انقبلت بالمجمل} one {عرض سعر واحد انقبل بالمجمل} two {عرضين سعر انقبلوا بالمجمل} few {{count} عروض أسعار انقبلت بالمجمل} many {{count} عرض سعر انقبل بالمجمل} other {{count} عرض سعر انقبل بالمجمل}}",
+    "winRate": "نسبة القبول",
+    "winRateDetail": "{accepted} من {decided, plural, zero {{decided} عروض أسعار انحسمت} one {عرض سعر واحد انحسم} two {عرضين سعر انحسموا} few {{decided} عروض أسعار انحسمت} many {{decided} عرض سعر انحسم} other {{decided} عرض سعر انحسم}}، بآخر 90 يوم",
+    "noDecided": "ما في عروض أسعار انحسمت بآخر 90 يوم"
   },
   "list": {
-    "loadError": "تعذّر تحميل عروض الأسعار",
-    "searchPlaceholder": "ابحث بالرقم أو العنوان أو جهة الاتصال…",
-    "searchLabel": "ابحث عن عروض الأسعار بالرقم أو العنوان أو اسم جهة الاتصال",
-    "filterLabel": "تصفية عروض الأسعار",
-    "anyStatus": "أي حالة",
-    "removeFilter": "إزالة عامل التصفية {status}"
+    "loadError": "ما قدرنا نحمّل عروض الأسعار",
+    "searchPlaceholder": "دوّر حسب الرقم، العنوان أو جهة الاتصال…",
+    "searchLabel": "دوّر بعروض الأسعار حسب الرقم، العنوان أو اسم جهة الاتصال",
+    "filterLabel": "فلتر عروض الأسعار",
+    "anyStatus": "كل الحالات",
+    "removeFilter": "شيل فلتر {status}"
   },
   "row": {
-    "callRequest": "طلب عرض سعر من مكالمة — حدّد السعر",
-    "draft": "مسودة — لم تُرسل بعد",
-    "validUntil": "صالح حتى {date}",
+    "callRequest": "طلب عرض سعر من مكالمة — سعّره",
+    "draft": "مسودة — لسه مش مبعوت",
+    "validUntil": "ساري لحد {date}",
     "accepted": "مقبول {date}",
     "declined": "مرفوض {date}",
-    "expired": "منتهي الصلاحية {date}",
-    "voided": "لاغٍ {date}"
+    "expired": "خلصت صلاحيته {date}",
+    "voided": "ملغي {date}"
   },
   "labels": {
-    "customer": "العميل",
+    "customer": "الزبون",
     "lineItems": "البنود",
     "type": "النوع",
     "qty": "الكمية",
     "unit": "الوحدة",
     "unitPrice": "سعر الوحدة",
     "amount": "المبلغ",
-    "validUntil": "صالح حتى",
-    "setOnSend": "يُحدّد عند الإرسال",
+    "validUntil": "ساري لحد",
+    "setOnSend": "بيتحدد وقت الإرسال",
     "terms": "الشروط",
     "internalNotes": "ملاحظات داخلية",
-    "deposit": "دفعة مقدمة",
+    "deposit": "عربون",
     "taxLine": "{label} ({rate}%)"
   },
   "actions": {
-    "send": "إرسال عرض السعر",
-    "sending": "جارٍ الإرسال…",
-    "revive": "إعادة تفعيل وإرسال",
-    "resend": "إعادة إرسال",
-    "resendQuote": "إعادة إرسال عرض السعر",
-    "convertToInvoice": "تحويل إلى فاتورة",
-    "viewInvoice": "عرض الفاتورة",
-    "convertToJob": "تحويل إلى أمر عمل",
-    "viewJob": "عرض أمر العمل",
-    "copyLink": "نسخ الرابط",
-    "markAccepted": "تعيين كمقبول",
-    "markDeclined": "تعيين كمرفوض",
-    "duplicate": "إنشاء نسخة",
-    "void": "إبطال",
-    "voidQuote": "إبطال عرض السعر",
-    "voiding": "جارٍ الإبطال…",
-    "keepQuote": "الاحتفاظ بعرض السعر",
-    "deleteDraft": "حذف المسودة",
-    "keepDraft": "الاحتفاظ بالمسودة",
-    "createDraft": "إنشاء مسودة",
-    "converting": "جارٍ التحويل…",
-    "viewContact": "عرض جهة الاتصال"
+    "send": "ابعت عرض السعر",
+    "sending": "عم نبعت…",
+    "revive": "رجّعه وابعته كمان مرة",
+    "resend": "ابعت كمان مرة",
+    "resendQuote": "ابعت عرض السعر كمان مرة",
+    "convertToInvoice": "حوّل لفاتورة",
+    "viewInvoice": "شوف الفاتورة",
+    "convertToJob": "حوّل لشغلة",
+    "viewJob": "شوف الشغلة",
+    "copyLink": "انسخ الرابط",
+    "markAccepted": "علّم كمقبول",
+    "markDeclined": "علّم كمرفوض",
+    "duplicate": "اعمل نسخة",
+    "void": "الغي",
+    "voidQuote": "الغي عرض السعر",
+    "voiding": "عم نلغي…",
+    "keepQuote": "خلّي عرض السعر",
+    "deleteDraft": "احذف المسودة",
+    "keepDraft": "خلّي المسودة",
+    "createDraft": "اعمل مسودة",
+    "converting": "عم نحوّل…",
+    "viewContact": "شوف جهة الاتصال"
   },
   "detail": {
     "back": "كل عروض الأسعار",
     "noneSelected": {
-      "title": "لم يتم اختيار عرض سعر",
-      "description": "اختر عرض سعر لعرض تفاصيله."
+      "title": "ما في عرض سعر مختار",
+      "description": "اختار عرض سعر عشان تشوف تفاصيله."
     },
     "notFound": {
-      "title": "عرض السعر غير موجود",
-      "description": "عرض السعر هذا غير موجود أو تمت إزالته."
+      "title": "عرض السعر مش موجود",
+      "description": "هاد العرض مش موجود أو انحذف."
     },
-    "loadError": "تعذّر تحميل عرض السعر هذا",
+    "loadError": "ما قدرنا نحمّل عرض السعر هاد",
     "title": "عرض سعر {number}",
     "fromCallBadge": "من مكالمة",
-    "invoicedAsBadge": "صدرت له فاتورة برقم {number}",
-    "jobBadge": "أمر عمل {reference}",
+    "invoicedAsBadge": "انعملت فاتورة برقم {number}",
+    "jobBadge": "شغلة {reference}",
     "fields": {
       "fromLead": "من عميل محتمل",
       "issued": "صادر",
-      "sent": "مرسل",
-      "viewed": "شاهده العميل",
+      "sent": "مبعوت",
+      "viewed": "شافه الزبون",
       "accepted": "مقبول",
-      "acceptedOnline": "عبر الإنترنت من رابط عرض السعر",
-      "acceptedInPortal": "مسجّل في البوابة",
+      "acceptedOnline": "أونلاين من رابط عرض السعر",
+      "acceptedInPortal": "مسجّل بالبوابة",
       "declined": "مرفوض",
-      "voided": "لاغٍ",
-      "created": "تم الإنشاء"
+      "voided": "ملغي",
+      "created": "معمول"
     },
-    "noItemsFromCall": "لا توجد بنود بعد — ورد هذا الطلب من مكالمة. عدّل المسودة لتحديد الأسعار.",
-    "noItems": "لا توجد بنود بعد — عدّل المسودة لإضافتها.",
-    "depositPercent": "دفعة مقدمة ({percent}%)",
-    "internalNotesHint": "لا تظهر للعميل أبدًا."
+    "noItemsFromCall": "لسه ما في بنود — هاد الطلب إجا من مكالمة. عدّل المسودة عشان تحط الأسعار.",
+    "noItems": "لسه ما في بنود — عدّل المسودة عشان تضيفها.",
+    "depositPercent": "عربون ({percent}%)",
+    "internalNotesHint": "ما بتبين للزبون أبدا."
   },
   "form": {
-    "editTitle": "تعديل عرض السعر {number}",
-    "editDescription": "تبقى المسودات قابلة للتعديل حتى إرسالها.",
-    "newDescription": "حدّد تكلفة العمل، ثم أرسل عرض السعر للعميل لقبوله.",
+    "editTitle": "عدّل عرض السعر {number}",
+    "editDescription": "بتقدر تعدّل المسودات لحد ما تبعتها.",
+    "newDescription": "حط سعر الشغل، وبعدين ابعت عرض السعر للزبون عشان يقبله.",
     "title": "العنوان",
-    "titlePlaceholder": "الغرض من عرض السعر، مثل تجديد تمديدات كهرباء المطبخ",
+    "titlePlaceholder": "عرض السعر لشو، مثلا تجديد تمديدات كهربا المطبخ",
     "issueDate": "تاريخ الإصدار",
-    "validUntilHint": "إذا تُرك فارغًا، يُحدّد عند الإرسال بعد {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يومين} few {{days} أيام} many {{days} يومًا} other {{days} يوم}} من تاريخ الإصدار.",
-    "addLine": "إضافة بند",
-    "descriptionPlaceholder": "ما سيتم تنفيذه أو توريده",
+    "validUntilHint": "إذا خليته فاضي، وقت الإرسال بينحط بعد تاريخ الإصدار بـ{days, plural, zero {{days} يوم} one {{days} يوم} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}}.",
+    "addLine": "ضيف بند",
+    "descriptionPlaceholder": "شو رح ينعمل أو يتوفّر",
     "lineDescription": "وصف البند {line}",
     "lineType": "نوع البند {line}",
     "lineQuantity": "كمية البند {line}",
     "lineUnitPrice": "سعر الوحدة للبند {line} بالشيكل",
-    "lineTax": "يخضع البند {line} لضريبة {tax}",
-    "removeLine": "إزالة البند {line}",
+    "lineTax": "بينحسب {tax} على البند {line}",
+    "removeLine": "شيل البند {line}",
     "deposit": {
-      "none": "بدون دفعة مقدمة",
-      "percent": "نسبة من الإجمالي",
+      "none": "بدون دفعة مقدّمة",
+      "percent": "نسبة من المجموع",
       "fixed": "مبلغ ثابت",
-      "percentLabel": "نسبة الدفعة المقدمة",
-      "amountLabel": "مبلغ الدفعة المقدمة",
-      "percentHint": "نسبة مئوية صحيحة من إجمالي عرض السعر.",
-      "amountHint": "المبلغ بالشيكل المستحق لبدء العمل.",
-      "toCommence": "دفعة مقدمة لبدء العمل"
+      "percentLabel": "نسبة الدفعة المقدّمة",
+      "amountLabel": "مبلغ الدفعة المقدّمة",
+      "percentHint": "نسبة مئوية بدون كسور من مجموع عرض السعر.",
+      "amountHint": "مبلغ بالشيكل بيندفع عشان نبلّش.",
+      "toCommence": "دفعة مقدّمة لبدء الشغل"
     },
-    "notesPlaceholder": "تظهر للعميل في عرض السعر (اختياري)",
-    "termsPlaceholder": "نطاق العمل، الاستثناءات، شروط الدفع…",
-    "internalNotesPlaceholder": "حسابات التسعير، تفاصيل المكالمة — لا تظهر للعميل مطلقًا"
+    "notesPlaceholder": "بتظهر للزبون على عرض السعر (اختياري)",
+    "termsPlaceholder": "نطاق الشغل، شو مش مشمول، شروط الدفع…",
+    "internalNotesPlaceholder": "حسابات التسعير، تفاصيل المكالمة — ما بتظهر للزبون أبدا"
   },
   "sendDialog": {
-    "title": "إرسال عرض السعر {number}",
-    "description": "يُرسل إلى {customer} بالبريد الإلكتروني عرض سعر بقيمة {amount} مع رابط لقبوله عبر الإنترنت. {dates}",
-    "datesIssuedValid": "صادر بتاريخ {issued}، وصالح حتى {validUntil}.",
-    "datesIssuedNoValid": "صادر بتاريخ {issued}، وصالح لمدة {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يومين} few {{days} أيام} many {{days} يومًا} other {{days} يوم}} من ذلك التاريخ.",
-    "datesUnset": "سيُعيّن تاريخ الإصدار إلى اليوم، ويبقى عرض السعر صالحًا لمدة {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يومين} few {{days} أيام} many {{days} يومًا} other {{days} يوم}}.",
-    "emailLabel": "إرسال بالبريد الإلكتروني إلى",
-    "emailHint": "اتركه فارغًا للإرسال إلى {email}.",
-    "invalidEmail": "أدخل عنوان بريد إلكتروني صالحًا",
-    "noEmailAlert": "لا يوجد عنوان بريد إلكتروني مسجّل لـ {name}. لا يزال بإمكانك الإرسال — يصبح عرض السعر متاحًا، ويمكنك مشاركة رابطه برسالة نصية أو شخصيًا."
+    "title": "ابعت عرض السعر {number}",
+    "description": "بيبعت لـ{customer} إيميل فيه عرض سعر بمبلغ {amount} مع رابط لقبوله أونلاين. {dates}",
+    "datesIssuedValid": "صادر بتاريخ {issued}، وصالح لغاية {validUntil}.",
+    "datesIssuedNoValid": "صادر بتاريخ {issued}، وصالح لغاية {days, plural, zero {بعده بـ{days} يوم} one {بعده بـ{days} يوم} two {بعده بيومين} few {بعده بـ{days} أيام} many {بعده بـ{days} يوم} other {بعده بـ{days} يوم}}.",
+    "datesUnset": "تاريخ الإصدار رح ينحط بتاريخ اليوم وعرض السعر بيضل صالح لمدة {days, plural, zero {{days} يوم} one {{days} يوم} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}}.",
+    "emailLabel": "ابعت الإيميل لـ",
+    "emailHint": "خلّيه فاضي عشان ينبعت لـ{email}.",
+    "invalidEmail": "دخّل عنوان إيميل صحيح",
+    "noEmailAlert": "ما في عنوان إيميل مسجّل لـ{name}. بتقدر تبعت برضه — عرض السعر بيصير متاح أونلاين وبتشارك رابطه برسالة نصية أو بشكل شخصي."
   },
   "resendDialog": {
-    "reviveTitle": "إعادة تفعيل عرض السعر {number}",
-    "resendTitle": "إعادة إرسال عرض السعر {number}",
-    "reviveDescription": "يعيد عرض السعر إلى العميل مع فترة صلاحية جديدة.",
-    "resendDescription": "يرسل إلى العميل بريدًا إلكترونيًا آخر يتضمن رابط القبول نفسه.",
-    "validUntilPlaceholder": "{days, plural, zero {{days} يوم من اليوم} one {{days} يوم من اليوم} two {{days} يومين من اليوم} few {{days} أيام من اليوم} many {{days} يومًا من اليوم} other {{days} يوم من اليوم}}",
-    "validUntilHint": "إذا تُرك فارغًا، يبقى عرض السعر صالحًا لمدة {days, plural, zero {{days} يوم} one {{days} يوم} two {{days} يومين} few {{days} أيام} many {{days} يومًا} other {{days} يوم}} من اليوم."
+    "reviveTitle": "رجّع فعّل عرض السعر {number}",
+    "resendTitle": "ابعت عرض السعر {number} كمان مرة",
+    "reviveDescription": "بيرجّع عرض السعر للزبون مع فترة صلاحية جديدة.",
+    "resendDescription": "بيبعت للزبون إيميل كمان مع نفس رابط القبول.",
+    "validUntilPlaceholder": "{days, plural, zero {بعد {days} يوم من اليوم} one {بعد {days} يوم من اليوم} two {بعد يومين من اليوم} few {بعد {days} أيام من اليوم} many {بعد {days} يوم من اليوم} other {بعد {days} يوم من اليوم}}",
+    "validUntilHint": "إذا خليته فاضي، عرض السعر بيضل صالح لمدة {days, plural, zero {{days} يوم} one {{days} يوم} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}} من اليوم."
   },
   "acceptDialog": {
-    "title": "تعيين عرض السعر {number} كمقبول؟",
-    "description": "يسجّل قبول {customer} لعرض السعر بقيمة {amount}. يمكنك بعد ذلك تحويله إلى فاتورة.",
-    "descriptionExpired": "يسجّل قبول {customer} لعرض السعر بقيمة {amount} (رغم انتهاء صلاحيته). يمكنك بعد ذلك تحويله إلى فاتورة.",
-    "confirm": "تعيين كمقبول"
+    "title": "تعلّم عرض السعر {number} كمقبول؟",
+    "description": "بيسجّل إن {customer} قبل عرض السعر بمبلغ {amount}. بعدها بتقدر تحوّله لفاتورة.",
+    "descriptionExpired": "بيسجّل إن {customer} قبل عرض السعر بمبلغ {amount} (مع إنه كانت صلاحيته خلصت). بعدها بتقدر تحوّله لفاتورة.",
+    "confirm": "علّم كمقبول"
   },
   "declineDialog": {
-    "title": "تعيين عرض السعر {number} كمرفوض",
-    "description": "يسجّل رفض {customer} لعرض السعر بقيمة {amount}. الرفض نهائي — أنشئ نسخة من عرض السعر لإعادة تسعير العمل.",
+    "title": "علّم عرض السعر {number} كمرفوض",
+    "description": "بيسجّل إن {customer} رفض عرض السعر بمبلغ {amount}. الرفض نهائي — اعمل نسخة من عرض السعر عشان تسعّر الشغل من جديد.",
     "reasonLabel": "السبب",
-    "reasonPlaceholder": "اختار مزوّدًا آخر",
-    "reasonHint": "اختياري — سبب رفض العميل.",
-    "confirm": "تعيين الحالة إلى مرفوض"
+    "reasonPlaceholder": "اختار مزوّد تاني",
+    "reasonHint": "اختياري — ليش الزبون رفض.",
+    "confirm": "حطّه كمرفوض"
   },
   "convertDialog": {
-    "title": "تحويل عرض السعر {number} إلى فاتورة؟",
-    "description": "ينشئ مسودة فاتورة بقيمة {amount} بنفس البنود ونسب الضرائب، جاهزة للمراجعة والإرسال إلى {customer}. يمكن تحويل عرض السعر مرة واحدة فقط.",
-    "confirm": "إنشاء فاتورة"
+    "title": "تحويل عرض السعر {number} لفاتورة؟",
+    "description": "بيعمل مسودة فاتورة بقيمة {amount} بنفس البنود ونسب الضريبة، جاهزة تراجعها وتبعتها لـ{customer}. بتقدر تحوّل عرض السعر مرة وحدة بس.",
+    "confirm": "اعمل فاتورة"
   },
   "convertToJobDialog": {
-    "title": "تحويل عرض السعر {number} إلى أمر عمل؟",
-    "description": "ينشئ أمر عمل بقيمة {amount} (دون الضريبة) بنفس البنود، جاهزًا للجدولة لصالح {customer}. يمكن تحويل عرض السعر مرة واحدة فقط — ويبقى هنا مع سجله.",
-    "confirm": "إنشاء أمر عمل"
+    "title": "تحويل عرض السعر {number} لشغلة؟",
+    "description": "بيعمل شغلة بقيمة {amount} (بدون ضريبة) بنفس البنود، جاهزة تحدّد موعدها لـ{customer}. بتقدر تحوّل عرض السعر مرة وحدة بس — وبيضل هون مع سجله.",
+    "confirm": "اعمل شغلة"
   },
   "voidDialog": {
-    "title": "إبطال عرض السعر {number}؟",
-    "description": "يسحب عرض السعر بقيمة {amount} المقدّم إلى {customer} — ولن يعود بالإمكان قبوله عبر الرابط. يبقى عرض السعر في السجل، لكن لا يمكن إعادة فتحه."
+    "title": "إلغاء عرض السعر {number}؟",
+    "description": "بيسحب عرض السعر بقيمة {amount} لـ{customer} — وما بعود يقدر يقبله من الرابط. عرض السعر بيضل بالسجل بس ما بتقدر تفتحه من جديد."
   },
   "deleteDialog": {
     "title": "حذف المسودة {number}؟",
-    "description": "ستُحذف المسودة وبنودها نهائيًا. لا يمكن التراجع عن هذا الإجراء."
+    "description": "المسودة وبنودها بينحذفوا نهائيا. ما بتقدر تتراجع عن هالخطوة."
   },
   "toasts": {
-    "draftCreated": "تم إنشاء المسودة {number}",
-    "draftDeleted": "تم حذف المسودة {number}",
-    "updated": "تم تحديث عرض السعر {number}",
-    "sent": "تم إرسال عرض السعر {number}",
-    "sentNoEmail": "عرض السعر {number} متاح، لكن لم يُرسل بريد إلكتروني — انسخ الرابط لمشاركته.",
-    "resent": "تمت إعادة إرسال عرض السعر {number}",
-    "resentNoEmail": "عرض السعر {number} متاح مجددًا، لكن لم يُرسل بريد إلكتروني — انسخ الرابط لمشاركته.",
-    "accepted": "تم قبول عرض السعر {number}",
-    "declined": "تم تعيين حالة عرض السعر {number} إلى مرفوض",
-    "voided": "تم إبطال عرض السعر {number}",
-    "convertedToInvoice": "تم إنشاء مسودة الفاتورة {invoice} من عرض السعر {quote}",
-    "convertedToJob": "تم إنشاء {job} من عرض السعر {quote} — حدّد موعده",
-    "linkCopied": "تم نسخ رابط عرض السعر",
-    "copyFailed": "تعذّر النسخ — الرابط ظاهر في متصفحك على {url}"
+    "draftCreated": "انعملت المسودة {number}",
+    "draftDeleted": "انحذفت المسودة {number}",
+    "updated": "تعدّل عرض السعر {number}",
+    "sent": "انبعت عرض السعر {number}",
+    "sentNoEmail": "عرض السعر {number} شغّال، بس ما انبعت إيميل — انسخ الرابط عشان تشاركه.",
+    "resent": "انبعت عرض السعر {number} كمان مرة",
+    "resentNoEmail": "عرض السعر {number} شغّال من جديد، بس ما انبعت إيميل — انسخ الرابط عشان تشاركه.",
+    "accepted": "انقبل عرض السعر {number}",
+    "declined": "صار عرض السعر {number} مرفوض",
+    "voided": "انلغى عرض السعر {number}",
+    "convertedToInvoice": "انعملت مسودة الفاتورة {invoice} من عرض السعر {quote}",
+    "convertedToJob": "انعملت {job} من عرض السعر {quote} — حدّد موعدها",
+    "linkCopied": "اننسخ رابط عرض السعر",
+    "copyFailed": "ما قدرنا ننسخ الرابط — بتلاقيه بالمتصفح على {url}"
   }
 }

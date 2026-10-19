@@ -2,193 +2,193 @@
   "common": {
     "nameRequired": "الاسم مطلوب",
     "firstNameRequired": "الاسم الأول مطلوب",
-    "lastNameRequired": "اسم العائلة مطلوب",
-    "businessNameRequired": "اسم النشاط التجاري مطلوب",
-    "emailInvalid": "أدخل عنوان بريد إلكتروني صالحًا",
-    "urlInvalid": "أدخل رابطًا كاملًا، بما في ذلك https://",
-    "contactRequired": "اختر جهة اتصال",
-    "dateRequired": "اختر تاريخًا",
-    "timeRequired": "اختر وقتًا",
-    "fromNumberRequired": "اختر رقمًا للاتصال منه",
-    "issueDateFirst": "حدّد تاريخ الإصدار أولًا، أو اترك الحقلين ليُملآ عند الإرسال"
+    "lastNameRequired": "اسم العيلة مطلوب",
+    "businessNameRequired": "اسم المصلحة مطلوب",
+    "emailInvalid": "دخّل عنوان إيميل صحيح",
+    "urlInvalid": "دخّل رابط كامل، مع https://",
+    "contactRequired": "اختار جهة اتصال",
+    "dateRequired": "اختار تاريخ",
+    "timeRequired": "اختار وقت",
+    "fromNumberRequired": "اختار رقم تتصل منه",
+    "issueDateFirst": "حط تاريخ إصدار بالأول، أو خلّي التنين فاضيين عشان يتعبّوا وقت الإرسال"
   },
   "phone": {
-    "required": "أدخل رقم هاتف",
-    "invalid": "أدخل رقم هاتف إسرائيليًا، مثل 052-123-4567"
+    "required": "دخّل رقم تلفون",
+    "invalid": "دخّل رقم تلفون إسرائيلي، مثلا 052-123-4567"
   },
   "length": {
-    "name": "اجعل طول الاسم أقل من {max, number} حرفًا",
-    "firstName": "اجعل طول الاسم الأول أقل من {max, number} حرفًا",
-    "lastName": "اجعل طول اسم العائلة أقل من {max, number} حرفًا",
-    "position": "اجعل طول المسمى الوظيفي أقل من {max, number} حرفًا",
-    "company": "اجعل طول اسم الشركة أقل من {max, number} حرفًا",
-    "label": "اجعل طول التسمية أقل من {max, number} حرفًا",
-    "title": "اجعل طول العنوان أقل من {max, number} حرفًا",
-    "description": "اجعل طول الوصف أقل من {max, number} حرفًا",
-    "notes": "اجعل طول الملاحظات أقل من {max, number} حرفًا",
-    "internalNotes": "اجعل طول الملاحظات الداخلية أقل من {max, number} حرفًا",
-    "topic": "اجعل طول الموضوع أقل من {max, number} حرفًا",
-    "reason": "اجعل طول السبب أقل من {max, number} حرفًا",
-    "content": "اجعل طول المحتوى أقل من {max, number} حرفًا",
-    "question": "اجعل طول السؤال أقل من {max, number} حرفًا",
-    "answer": "اجعل طول الإجابة أقل من {max, number} حرفًا",
-    "message": "اجعل طول الرسالة أقل من {max, number} حرفًا",
-    "firstMessage": "اجعل طول الرسالة الأولى أقل من {max, number} حرفًا",
-    "prompt": "اجعل طول تعليمات الوكيل أقل من {max, number} حرفًا",
-    "terms": "اجعل طول الشروط أقل من {max, number} حرفًا",
-    "paymentInstructions": "اجعل طول تعليمات الدفع أقل من {max, number} حرفًا",
-    "url": "اجعل طول الرابط أقل من {max, number} حرفًا",
-    "address": "اجعل طول العنوان أقل من {max, number} حرفًا",
-    "street": "اجعل طول اسم الشارع أقل من {max, number} حرفًا",
-    "suburb": "أدخل اسم مدينة بأقل من {max, number} حرفًا",
-    "state": "اجعل طول اسم الولاية أقل من {max, number} حرفًا",
-    "postcode": "أدخل رمزًا بريديًا بأقل من {max, number} حرفًا",
-    "landmark": "اجعل طول اسم المَعلم أقل من {max, number} حرفًا",
-    "baseLocation": "اجعل طول الموقع الأساسي أقل من {max, number} حرفًا",
-    "generic": "اجعل طول هذا الحقل أقل من {max, number} حرفًا",
-    "rule": "اجعل طول كل قاعدة أقل من {max, number} حرفًا",
-    "category": "يجب ألا يتجاوز طول كل فئة {max, number} حرفًا",
-    "useFewer": "استخدم {max, number} حرفًا أو أقل"
+    "name": "خلّي الاسم أقل من {max, number} حرف",
+    "firstName": "خلّي الاسم الأول أقل من {max, number} حرف",
+    "lastName": "خلّي اسم العيلة أقل من {max, number} حرف",
+    "position": "خلّي المسمّى الوظيفي أقل من {max, number} حرف",
+    "company": "خلّي اسم الشركة أقل من {max, number} حرف",
+    "label": "خلّي التسمية أقل من {max, number} حرف",
+    "title": "خلّي العنوان أقل من {max, number} حرف",
+    "description": "خلّي الوصف أقل من {max, number} حرف",
+    "notes": "خلّي الملاحظات أقل من {max, number} حرف",
+    "internalNotes": "خلّي الملاحظات الداخلية أقل من {max, number} حرف",
+    "topic": "خلّي الموضوع أقل من {max, number} حرف",
+    "reason": "خلّي السبب أقل من {max, number} حرف",
+    "content": "خلّي المحتوى أقل من {max, number} حرف",
+    "question": "خلّي السؤال أقل من {max, number} حرف",
+    "answer": "خلّي الجواب أقل من {max, number} حرف",
+    "message": "خلّي الرسالة أقل من {max, number} حرف",
+    "firstMessage": "خلّي أول رسالة أقل من {max, number} حرف",
+    "prompt": "خلّي تعليمات المساعد أقل من {max, number} حرف",
+    "terms": "خلّي الشروط أقل من {max, number} حرف",
+    "paymentInstructions": "خلّي تعليمات الدفع أقل من {max, number} حرف",
+    "url": "خلّي الرابط أقل من {max, number} حرف",
+    "address": "خلّي العنوان أقل من {max, number} حرف",
+    "street": "خلّي اسم الشارع أقل من {max, number} حرف",
+    "suburb": "خلّي اسم المدينة أقل من {max, number} حرف",
+    "state": "خلّي اسم الولاية أقل من {max, number} حرف",
+    "postcode": "خلّي الرمز البريدي أقل من {max, number} حرف",
+    "landmark": "خلّي المَعلم أقل من {max, number} حرف",
+    "baseLocation": "خلّي الموقع الأساسي أقل من {max, number} حرف",
+    "generic": "خلّي هاد أقل من {max, number} حرف",
+    "rule": "خلّي كل قاعدة أقل من {max, number} حرف",
+    "category": "كل فئة لازم تكون {max, number} حرف أو أقل",
+    "useFewer": "استخدم {max, number} حرف أو أقل"
   },
   "count": {
-    "variables": "بحد أقصى {max, plural, zero {{max} متغيرات} one {{max} متغير} two {{max} متغيرين} few {{max} متغيرات} many {{max} متغيرًا} other {{max} متغير}}",
-    "categories": "بحد أقصى {max, plural, zero {{max} فئات} one {{max} فئة} two {{max} فئتين} few {{max} فئات} many {{max} فئةً} other {{max} فئة}}",
-    "phoneNumbers": "بحد أقصى {max, plural, zero {{max} أرقام هاتف} one {{max} رقم هاتف} two {{max} رقمي هاتف} few {{max} أرقام هاتف} many {{max} رقم هاتف} other {{max} رقم هاتف}}",
-    "emails": "بحد أقصى {max, plural, zero {{max} عناوين بريد إلكتروني} one {{max} عنوان بريد إلكتروني} two {{max} عنواني بريد إلكتروني} few {{max} عناوين بريد إلكتروني} many {{max} عنوان بريد إلكتروني} other {{max} عنوان بريد إلكتروني}}",
-    "tags": "حتى {max, plural, zero {{max} وسوم} one {{max} وسم} two {وسمين ({max})} few {{max} وسوم} many {{max} وسمًا} other {{max} وسم}}",
-    "rules": "حتى {max, plural, zero {{max} قواعد} one {{max} قاعدة} two {قاعدتين ({max})} few {{max} قواعد} many {{max} قاعدة} other {{max} قاعدة}}",
-    "recipients": "حتى {max, plural, zero {{max} مستلمين} one {{max} مستلم} two {مستلمين ({max})} few {{max} مستلمين} many {{max} مستلمًا} other {{max} مستلم}} إجمالًا"
+    "variables": "لحد {max, plural, zero {{max} متغيّرات} one {متغيّر واحد} two {متغيّرين} few {{max} متغيّرات} many {{max} متغيّر} other {{max} متغيّر}}",
+    "categories": "لحد {max, plural, zero {{max} فئات} one {فئة وحدة} two {فئتين} few {{max} فئات} many {{max} فئة} other {{max} فئة}}",
+    "phoneNumbers": "لحد {max, plural, zero {{max} أرقام تلفون} one {رقم تلفون واحد} two {رقمين تلفون} few {{max} أرقام تلفون} many {{max} رقم تلفون} other {{max} رقم تلفون}}",
+    "emails": "لحد {max, plural, zero {{max} عناوين إيميل} one {عنوان إيميل واحد} two {عنوانين إيميل} few {{max} عناوين إيميل} many {{max} عنوان إيميل} other {{max} عنوان إيميل}}",
+    "tags": "لحد {max, plural, zero {{max} وسوم} one {وسم واحد} two {وسمين} few {{max} وسوم} many {{max} وسم} other {{max} وسم}}",
+    "rules": "لحد {max, plural, zero {{max} قواعد} one {قاعدة وحدة} two {قاعدتين} few {{max} قواعد} many {{max} قاعدة} other {{max} قاعدة}}",
+    "recipients": "لحد {max, plural, zero {{max} مستلمين} one {مستلم واحد} two {مستلمين اتنين} few {{max} مستلمين} many {{max} مستلم} other {{max} مستلم}} بالمجموع"
   },
   "range": {
-    "minutes": "بين {min, number} و{max, plural, zero {{max} دقائق} one {{max} دقيقة} two {دقيقتين ({max})} few {{max} دقائق} many {{max} دقيقة} other {{max} دقيقة}}",
-    "minutesWithDays": "بين {min, number} و{max, plural, zero {{max} دقائق} one {{max} دقيقة} two {دقيقتين ({max})} few {{max} دقائق} many {{max} دقيقة} other {{max} دقيقة}} ({days, plural, zero {{days} أيام} one {{days} يوم} two {يومان ({days})} few {{days} أيام} many {{days} يومًا} other {{days} يوم}})",
-    "days": "بين {min, number} و{max, plural, zero {{max} أيام} one {{max} يوم} two {يومين ({max})} few {{max} أيام} many {{max} يومًا} other {{max} يوم}}",
-    "bookings": "بين {min, number} و{max, plural, zero {{max} حجوزات} one {{max} حجز} two {حجزين ({max})} few {{max} حجوزات} many {{max} حجزًا} other {{max} حجز}}"
+    "minutes": "بين {min, number} و{max, plural, zero {{max} دقايق} one {دقيقة وحدة} two {دقيقتين} few {{max} دقايق} many {{max} دقيقة} other {{max} دقيقة}}",
+    "minutesWithDays": "بين {min, number} و{max, plural, zero {{max} دقايق} one {دقيقة وحدة} two {دقيقتين} few {{max} دقايق} many {{max} دقيقة} other {{max} دقيقة}} ({days, plural, zero {{days} أيام} one {يوم واحد} two {يومين} few {{days} أيام} many {{days} يوم} other {{days} يوم}})",
+    "days": "بين {min, number} و{max, plural, zero {{max} أيام} one {يوم واحد} two {يومين} few {{max} أيام} many {{max} يوم} other {{max} يوم}}",
+    "bookings": "بين {min, number} و{max, plural, zero {{max} حجوزات} one {حجز واحد} two {حجزين} few {{max} حجوزات} many {{max} حجز} other {{max} حجز}}"
   },
   "weeklyHours": {
-    "windowRequired": "أضف فترة زمنية واحدة على الأقل ليوم {day, select, monday {الاثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}}",
-    "windowOrder": "يجب أن تنتهي كل فترة بعد بدايتها ({day, select, monday {الاثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}})"
+    "windowRequired": "ضيف فترة وقت وحدة على الأقل ليوم {day, select, monday {الإثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}}",
+    "windowOrder": "كل فترة لازم تخلص بعد ما تبلّش ({day, select, monday {الإثنين} tuesday {الثلاثاء} wednesday {الأربعاء} thursday {الخميس} friday {الجمعة} saturday {السبت} sunday {الأحد} other {{day}}})"
   },
   "auth": {
-    "passwordRequired": "كلمة المرور مطلوبة",
-    "passwordMin": "يجب ألا تقل كلمة المرور عن {min, number} أحرف"
+    "passwordRequired": "لازم تحط كلمة السر",
+    "passwordMin": "كلمة السر لازم تكون {min, number} خانات على الأقل"
   },
   "password": {
-    "currentRequired": "أدخل كلمة المرور الحالية",
-    "min": "{min, number} أحرف على الأقل",
-    "confirmationRequired": "أكّد كلمة المرور الجديدة",
-    "mismatch": "كلمتا المرور غير متطابقتين"
+    "currentRequired": "دخّل كلمة السر الحالية",
+    "min": "{min, number} خانات على الأقل",
+    "confirmationRequired": "أكّد كلمة السر الجديدة",
+    "mismatch": "كلمتين السر مش متطابقات"
   },
   "agent": {
-    "voiceRequired": "اختر صوتًا — لا يمكن لوكيل الذكاء الاصطناعي استقبال المكالمات بدونه.",
-    "variableNameFormat": "أحرف لاتينية صغيرة وأرقام وشرطات سفلية فقط (بحد أقصى {max, number})",
-    "variableNameReserved": "اسم المتغير هذا محجوز",
-    "duplicateVariable": "اسم متغير مكرر",
-    "unknownVariable": "المتغير {token} غير معروف — عرّفه ضمن المتغيرات أو استخدم متغيرًا مدمجًا."
+    "voiceRequired": "اختار صوت — المساعد الصوتي الذكي ما بيقدر يستقبل مكالمات من دونه.",
+    "variableNameFormat": "بس حروف إنجليزية صغيرة، أرقام وشرطات سفلية (بالكتير {max, number})",
+    "variableNameReserved": "اسم المتغيّر هاد محجوز",
+    "duplicateVariable": "اسم المتغيّر مكرر",
+    "unknownVariable": "المتغيّر {token} مش معروف — عرّفه بقسم المتغيّرات أو استخدم متغيّر مدمج."
   },
   "business": {
-    "timezoneRequired": "اختر منطقة زمنية"
+    "timezoneRequired": "اختار منطقة زمنية"
   },
   "businessProfile": {
-    "yearRange": "أدخل سنة بين {min} و{max}",
-    "travelRadiusRange": "أدخل مسافة بين {min} و{max} كم"
+    "yearRange": "دخّل سنة بين {min} و{max}",
+    "travelRadiusRange": "دخّل مسافة بين {min} و{max} كم"
   },
   "call": {
-    "agentRequired": "اختر وكيل ذكاء اصطناعي لإجراء المكالمة",
-    "toNumberRequired": "أدخل الرقم المراد الاتصال به",
-    "variableValueRequired": "أدخل قيمة لهذا المتغير"
+    "agentRequired": "اختار مساعد صوتي ذكي عشان يعمل المكالمة",
+    "toNumberRequired": "دخّل الرقم اللي بدك تتصل فيه",
+    "variableValueRequired": "دخّل قيمة للمتغيّر هاد"
   },
   "callback": {
-    "teamMemberRequired": "اختر عضوًا من الفريق",
-    "outboundAgentRequired": "اختر وكيل ذكاء اصطناعي للمكالمات الصادرة"
+    "teamMemberRequired": "اختار عضو من الفريق",
+    "outboundAgentRequired": "اختار مساعد صوتي ذكي للمكالمات الصادرة"
   },
   "campaign": {
-    "agentRequired": "اختر وكيل ذكاء اصطناعي للمكالمات الصادرة",
-    "callerNumberRequired": "اختر رقم المتصل",
-    "numberRequired": "أدخل عددًا",
-    "wholeNumber": "أعداد صحيحة فقط",
-    "concurrentMin": "{min, plural, zero {{min} مكالمات} one {{min} مكالمة} two {مكالمتان ({min})} few {{min} مكالمات} many {{min} مكالمة} other {{min} مكالمة}} على الأقل في الوقت نفسه",
-    "concurrentMax": "{max, plural, zero {{max} مكالمات} one {{max} مكالمة} two {مكالمتان ({max})} few {{max} مكالمات} many {{max} مكالمة} other {{max} مكالمة}} كحد أقصى في الوقت نفسه",
-    "attemptsMin": "{min, plural, zero {{min} محاولات} one {{min} محاولة} two {محاولتان ({min})} few {{min} محاولات} many {{min} محاولة} other {{min} محاولة}} على الأقل",
-    "attemptsMax": "{max, plural, zero {{max} محاولات} one {{max} محاولة} two {محاولتان ({max})} few {{max} محاولات} many {{max} محاولة} other {{max} محاولة}} كحد أقصى",
-    "retryDelayMin": "{minutes, plural, zero {{minutes} دقائق} one {{minutes} دقيقة} two {دقيقتان ({minutes})} few {{minutes} دقائق} many {{minutes} دقيقة} other {{minutes} دقيقة}} على الأقل بين المحاولات",
-    "retryDelayMax": "{hours, plural, zero {{hours} ساعات} one {{hours} ساعة} two {ساعتان ({hours})} few {{hours} ساعات} many {{hours} ساعة} other {{hours} ساعة}} كحد أقصى بين المحاولات",
-    "startDateRequired": "اختر تاريخ البدء",
-    "startTimeRequired": "اختر وقت البدء",
-    "endDateRequired": "اختر تاريخ الانتهاء",
-    "endTimeRequired": "اختر وقت الانتهاء",
-    "endBeforeStart": "يجب أن تكون النهاية بعد البداية"
+    "agentRequired": "اختار مساعد صوتي ذكي للمكالمات الصادرة",
+    "callerNumberRequired": "اختار رقم المتصل",
+    "numberRequired": "دخّل رقم",
+    "wholeNumber": "بس أعداد صحيحة",
+    "concurrentMin": "على الأقل {min, plural, zero {{min} مكالمات} one {مكالمة وحدة} two {مكالمتين} few {{min} مكالمات} many {{min} مكالمة} other {{min} مكالمة}} بنفس الوقت",
+    "concurrentMax": "بالكتير {max, plural, zero {{max} مكالمات} one {مكالمة وحدة} two {مكالمتين} few {{max} مكالمات} many {{max} مكالمة} other {{max} مكالمة}} بنفس الوقت",
+    "attemptsMin": "على الأقل {min, plural, zero {{min} محاولات} one {محاولة وحدة} two {محاولتين} few {{min} محاولات} many {{min} محاولة} other {{min} محاولة}}",
+    "attemptsMax": "بالكتير {max, plural, zero {{max} محاولات} one {محاولة وحدة} two {محاولتين} few {{max} محاولات} many {{max} محاولة} other {{max} محاولة}}",
+    "retryDelayMin": "على الأقل {minutes, plural, zero {{minutes} دقايق} one {دقيقة وحدة} two {دقيقتين} few {{minutes} دقايق} many {{minutes} دقيقة} other {{minutes} دقيقة}} بين المحاولات",
+    "retryDelayMax": "بالكتير {hours, plural, zero {{hours} ساعات} one {ساعة وحدة} two {ساعتين} few {{hours} ساعات} many {{hours} ساعة} other {{hours} ساعة}} بين المحاولات",
+    "startDateRequired": "اختار تاريخ البداية",
+    "startTimeRequired": "اختار وقت البداية",
+    "endDateRequired": "اختار تاريخ النهاية",
+    "endTimeRequired": "اختار وقت النهاية",
+    "endBeforeStart": "النهاية لازم تكون بعد البداية"
   },
   "contact": {
-    "identityRequired": "أضف اسمًا أو شركة أو رقم هاتف",
-    "primaryRequired": "حدّد عنصرًا واحدًا فقط كأساسي"
+    "identityRequired": "ضيف اسم، شركة أو رقم تلفون",
+    "primaryRequired": "حدّد واحد بس كأساسي"
   },
   "dnc": {
-    "numberRequired": "أدخل الرقم المراد حظره"
+    "numberRequired": "دخّل الرقم اللي بدك تحظره"
   },
   "document": {
-    "textRequired": "ألصق نص المستند",
-    "textTooLong": "هذا النص طويل جدًا",
-    "contentRequired": "يجب أن يتضمن المستند محتوى"
+    "textRequired": "الصق نص المستند",
+    "textTooLong": "هاد النص طويل كتير",
+    "contentRequired": "لازم تحط محتوى بالمستند"
   },
   "faq": {
-    "questionRequired": "السؤال مطلوب",
-    "answerRequired": "الإجابة مطلوبة"
+    "questionRequired": "لازم تحط سؤال",
+    "answerRequired": "لازم تحط جواب"
   },
   "invoice": {
-    "dueBeforeIssue": "لا يمكن أن يسبق تاريخ الاستحقاق تاريخ الإصدار"
+    "dueBeforeIssue": "ما بصير يكون آخر موعد للدفع قبل تاريخ الإصدار"
   },
   "job": {
-    "titleRequired": "أدخل عنوانًا قصيرًا لأمر العمل",
-    "estimatedMinutesRange": "أدخل عددًا صحيحًا من الدقائق بين {min} و{max}",
-    "streetRequired": "أضف عنوان الشارع",
-    "cityRequired": "أضف المدينة"
+    "titleRequired": "حط عنوان قصير للشغلة",
+    "estimatedMinutesRange": "دخّل عدد دقايق بدون كسور بين {min} و{max}",
+    "streetRequired": "ضيف عنوان الشارع",
+    "cityRequired": "ضيف المدينة"
   },
   "knowledge": {
-    "agentScopeRequired": "اختر وكيل ذكاء اصطناعي واحدًا على الأقل",
-    "priceTypeRequired": "اختر طريقة التسعير",
-    "priceRequired": "أدخل سعرًا",
-    "priceMinRequired": "أدخل حدًا أدنى",
-    "priceMaxRequired": "أدخل حدًا أقصى",
-    "priceMaxBelowMin": "يجب ألا يقل عن الحد الأدنى",
-    "priceMessageRequired": "أدخل ما يُقال بدلًا من السعر",
-    "durationUnitRequired": "اختر وحدة",
-    "durationRange": "أدخل مدة بين {min} و{max}"
+    "agentScopeRequired": "اختار مساعد صوتي ذكي واحد عالأقل",
+    "priceTypeRequired": "اختار طريقة التسعير",
+    "priceRequired": "دخّل سعر",
+    "priceMinRequired": "دخّل حد أدنى",
+    "priceMaxRequired": "دخّل حد أقصى",
+    "priceMaxBelowMin": "لازم يكون قد الحد الأدنى أو أكتر",
+    "priceMessageRequired": "دخّل شو ينحكى بدل السعر",
+    "durationUnitRequired": "اختار وحدة",
+    "durationRange": "دخّل مدة بين {min} و{max}"
   },
   "lead": {
-    "titleRequired": "أدخل عنوانًا قصيرًا للعميل المحتمل",
-    "valueInvalid": "أدخل مبلغًا مثل 1500 أو 1500.50"
+    "titleRequired": "حط عنوان قصير للعميل المحتمل",
+    "valueInvalid": "دخّل مبلغ زي 1500 أو 1500.50"
   },
   "lineItem": {
-    "descriptionRequired": "صِف العمل أو القطعة",
-    "quantityInvalid": "أدخل كمية أكبر من صفر",
-    "unitPriceInvalid": "أدخل سعرًا مثل 180 أو 180.50",
-    "itemsRequired": "أضف بندًا واحدًا على الأقل"
+    "descriptionRequired": "اوصف الشغل أو القطعة",
+    "quantityInvalid": "دخّل كمية أكبر من صفر",
+    "unitPriceInvalid": "دخّل سعر زي 180 أو 180.50",
+    "itemsRequired": "ضيف بند واحد عالأقل"
   },
   "member": {
-    "roleRequired": "اختر دورًا"
+    "roleRequired": "اختار دور"
   },
   "phoneNumber": {
-    "nameRequired": "أدخل اسمًا لهذا الرقم",
-    "sipNumberRequired": "أدخل الرقم الذي يحمله خط SIP"
+    "nameRequired": "حط اسم لهاد الرقم",
+    "sipNumberRequired": "دخّل الرقم المرتبط بخط SIP عندك"
   },
   "policy": {
-    "contentRequired": "المحتوى مطلوب"
+    "contentRequired": "لازم تضيف محتوى"
   },
   "quote": {
-    "validUntilBeforeIssue": "لا يمكن أن يسبق تاريخ انتهاء الصلاحية تاريخ الإصدار",
-    "depositPercentRange": "أدخل نسبة مئوية بعدد صحيح بين {min} و{max}",
-    "depositAmountInvalid": "أدخل مبلغًا مثل 250 أو 250.50"
+    "validUntilBeforeIssue": "ما بصير يكون تاريخ انتهاء الصلاحية قبل تاريخ الإصدار",
+    "depositPercentRange": "دخّل نسبة مئوية بدون كسور بين {min} و{max}",
+    "depositAmountInvalid": "دخّل مبلغ زي 250 أو 250.50"
   },
   "recipientRules": {
-    "emailInvalid": "\"{input}\" ليس عنوان بريد إلكتروني صالحًا",
-    "recipientRequired": "اختر مستلمًا واحدًا على الأقل."
+    "emailInvalid": "\"{input}\" مش عنوان إيميل صحيح",
+    "recipientRequired": "اختار مستلم واحد عالأقل."
   },
   "transferTarget": {
-    "conditionRequired": "صِف متى تُحوَّل المكالمات إلى هنا",
-    "postDialDigitsFormat": "أرقام أو * أو # أو w فقط",
-    "memberRequired": "اختر عضوًا في الفريق",
-    "memberPhoneMissing": "لا يوجد رقم محفوظ لهذا العضو — أدخل رقمًا",
-    "memberHoursNeedsMember": "تتطلب ساعات التوفر ربط عضو في الفريق"
+    "conditionRequired": "اوصف إمتى تتحوّل المكالمة لهون",
+    "postDialDigitsFormat": "بس أرقام، *، # أو w",
+    "memberRequired": "اختار عضو من الفريق",
+    "memberPhoneMissing": "هاد العضو ما عنده رقم محفوظ — دخّل رقم",
+    "memberHoursNeedsMember": "ساعات التوفّر بدها عضو فريق مربوط"
   }
 }
