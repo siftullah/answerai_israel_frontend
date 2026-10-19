@@ -10460,7 +10460,7 @@
     "t": "Занято"
   },
   "lib.endReason.canceled": {
-    "en": "Cancelled",
+    "en": "Canceled",
     "t": "Отменено"
   },
   "lib.endReason.failed": {
@@ -13850,5 +13850,61 @@
   "validation.faq.answerRequired": {
     "en": "Answer is required",
     "t": "Укажите ответ"
+  },
+  "calls.status.voicemail": {
+    "en": "Voicemail",
+    "t": "Голосовая почта"
+  },
+  "campaigns.calls.status.voicemail": {
+    "en": "Voicemail",
+    "t": "Голосовая почта"
+  },
+  "businessProfile.profileForm.languages.title": {
+    "en": "Customer languages",
+    "t": "Языки для клиентов"
+  },
+  "businessProfile.profileForm.languages.description": {
+    "en": "What customers read in your emails and hear on your phone lines, whichever language each team member uses in the portal.",
+    "t": "Языки писем клиентам и сообщений на ваших телефонных линиях, независимо от языка портала у каждого участника команды."
+  },
+  "businessProfile.profileForm.languages.customer.label": {
+    "en": "Customer language",
+    "t": "Язык для клиентов"
+  },
+  "businessProfile.profileForm.languages.customer.hint": {
+    "en": "Used for customer-facing emails — appointment confirmations, quotes and invoices.",
+    "t": "Используется в письмах клиентам — подтверждениях встреч, коммерческих предложениях и счетах."
+  },
+  "businessProfile.profileForm.languages.caller.label": {
+    "en": "Phone line language",
+    "t": "Язык телефонной линии"
+  },
+  "businessProfile.profileForm.languages.caller.hint": {
+    "en": "What callers hear from the system's own phone lines — connection failures, transfer messages and the suspension notice.",
+    "t": "Язык сообщений на собственных телефонных линиях системы — об ошибках соединения, переводе звонков и приостановке обслуживания."
+  },
+  "businessProfile.profileForm.languages.readOnly": {
+    "en": "Only owners and admins can change these.",
+    "t": "Изменять эти настройки могут только владельцы и администраторы."
+  },
+  "lib.endReason.voicemail": {
+    "en": "Went to voicemail",
+    "t": "Переведено на голосовую почту"
+  },
+  "lib.endReason.ended_by_agent": {
+    "en": "Agent ended the call",
+    "t": "ИИ-агент завершил звонок"
+  },
+  "lib.endReason.ended_by_caller": {
+    "en": "Caller hung up",
+    "t": "Звонящий повесил трубку"
+  },
+  "lib.endReason.completed": {
+    "en": "Call ended",
+    "t": "Звонок завершён"
+  },
+  "lib.endReason.time_limit": {
+    "en": "Reached the time limit",
+    "t": "Достигнут лимит времени"
   }
 }

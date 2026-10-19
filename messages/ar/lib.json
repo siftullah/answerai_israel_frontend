@@ -1,351 +1,351 @@
 {
-    "datetime": {
-        "today": "اليوم",
-        "yesterday": "مبارح"
-    },
-    "money": {
-        "noPrice": "بدون سعر",
-        "customMessage": "رسالة مخصصة",
-        "priceNotSet": "السعر مش محدد",
-        "perHour": "{price}/ساعة",
-        "perDay": "{price}/يوم",
-        "perWeek": "{price}/أسبوع",
-        "perMonth": "{price}/شهر",
-        "perYear": "{price}/سنة",
-        "duration": {
-            "hours": "{count, plural, zero {{count} ساعات} one {ساعة وحدة} two {ساعتين} few {{count} ساعات} many {{count} ساعة} other {{count} ساعة}}",
-            "days": "{count, plural, zero {{count} أيام} one {يوم واحد} two {يومين} few {{count} أيام} many {{count} يوم} other {{count} يوم}}",
-            "weeks": "{count, plural, zero {{count} أسابيع} one {أسبوع واحد} two {أسبوعين} few {{count} أسابيع} many {{count} أسبوع} other {{count} أسبوع}}",
-            "months": "{count, plural, zero {{count} أشهر} one {شهر واحد} two {شهرين} few {{count} أشهر} many {{count} شهر} other {{count} شهر}}",
-            "years": "{count, plural, zero {{count} سنين} one {سنة وحدة} two {سنتين} few {{count} سنين} many {{count} سنة} other {{count} سنة}}"
-        }
-    },
-    "tax": {
-        "defaultLabel": "ضريبة القيمة المضافة",
-        "line": "ضريبة القيمة المضافة ({rate}%)"
-    },
-    "endReason": {
-        "voicemail": "تم التحويل إلى البريد الصوتي",
-        "ended_by_agent": "أنهى وكيل الذكاء الاصطناعي المكالمة",
-        "ended_by_caller": "أنهى المتصل المكالمة",
-        "transferred": "تحوّلت",
-        "no_answer": "ما في رد",
-        "busy": "مشغول",
-        "canceled": "ملغي",
-        "completed": "انتهت المكالمة",
-        "time_limit": "تم بلوغ الحد الزمني",
-        "failed": "فشل"
-    },
-    "modules": {
-        "appointments": {
-            "label": "مواعيد",
-            "description": "خلّي مساعدك الصوتي الذكي يفحص التقويم ويحجز للمتصلين بأوقات متاحة، وبعدين دير هاي الحجوزات."
-        },
-        "leads": {
-            "label": "عملاء محتملين",
-            "description": "سجّل استفسارات البيع من المكالمات كعملاء محتملين عشان فريقك يتابع معهم بعدين."
-        },
-        "quotes": {
-            "label": "عروض أسعار",
-            "description": "سعّر الشغل، وابعت عروض أسعار بيوافق عليها الزباين أونلاين، وسجّل طلبات عروض الأسعار من المكالمات."
-        },
-        "jobs": {
-            "label": "شغلات",
-            "description": "سجّل الشغلات الميدانية اللي بياخدها مساعدك الصوتي الذكي عالتلفون وحدّد موعد الزيارة."
-        },
-        "invoices": {
-            "label": "فواتير",
-            "description": "طلّع فواتير للشغل اللي خلص وتابع شو اندفع."
-        },
-        "callbacks": {
-            "label": "مكالمات رجعة",
-            "description": "جدول مكالمة رجعة لما مساعدك الصوتي الذكي ما بيقدر يساعد المتصل بنفس الوقت."
-        }
-    },
-    "tools": {
-        "lookup_contact": {
-            "label": "دوّر على المتصل",
-            "description": "افحص إذا المتصل جهة اتصال معروفة ورحّب فيه باسمه."
-        },
-        "save_contact_info": {
-            "label": "احفظ معلومات جهة الاتصال",
-            "description": "احفظ اسم المتصل أو إيميله أو شركته بسجل جهة الاتصال تبعه."
-        },
-        "add_to_dnc": {
-            "label": "طلبات ممنوع الاتصال",
-            "description": "ضيف المتصل لقائمة ممنوع الاتصال لما يطلب."
-        },
-        "get_current_time": {
-            "label": "الوقت هلأ",
-            "description": "احكي قديش الساعة وإذا المصلحة فاتحة هلأ."
-        },
-        "get_call_history": {
-            "label": "سجل المكالمات",
-            "description": "ارجع لمكالمات المتصل السابقة مع أي مساعد صوتي ذكي عندك، مع الملاحظات ونصوص المكالمات."
-        },
-        "schedule_callback": {
-            "label": "جدول مكالمة رجعة",
-            "description": "احجز مكالمة رجعة للمتصل بوقت لاحق حسب طلبه."
-        },
-        "check_availability": {
-            "label": "افحص الأوقات المتاحة",
-            "description": "دوّر على أوقات متاحة للمواعيد عالتقويم."
-        },
-        "book_appointment": {
-            "label": "احجز موعد",
-            "description": "احجز للمتصل موعد بوقت متاح."
-        },
-        "cancel_appointment": {
-            "label": "الغي موعد",
-            "description": "الغي موعد محجوز للمتصل."
-        },
-        "create_lead": {
-            "label": "اعمل عميل محتمل",
-            "description": "سجّل عميل محتمل جديد من المحادثة."
-        },
-        "request_quote": {
-            "label": "اطلب عرض سعر",
-            "description": "سجّل طلب عرض سعر لشغلة المتصل بده يعرف سعرها؛ الفريق بيجهّز العرض بعدين."
-        },
-        "create_job": {
-            "label": "اعمل شغلة",
-            "description": "سجّل طلب شغلة جديدة من المتصل."
-        },
-        "check_job_availability": {
-            "label": "افحص الأوقات المتاحة للشغلات",
-            "description": "دوّر على أوقات متاحة لتحديد زيارة للشغلة."
-        },
-        "book_job": {
-            "label": "احجز شغلة",
-            "description": "احجز زيارة للشغلة بوقت متاح."
-        }
-    },
-    "toolGroups": {
-        "core": "أساسية"
-    },
-    "apiErrors": {
-        "sessionExpired": "انتهت جلستك. سجّل دخولك كمان مرة.",
-        "subscriptionRequired": "لازم يكون عندك اشتراك شغّال.",
-        "forbidden": "ما عندك صلاحية تعمل هيك.",
-        "notFound": "ما لقيناه.",
-        "linkInvalid": "هاد الرابط بطّل صالح.",
-        "tokenExpired": "انتهت صلاحية رمز جلستك. جرّب كمان مرة.",
-        "invalidData": "البيانات اللي دخلتها مش صحيحة.",
-        "tooManyAttempts": "محاولات كتيرة. استنّى دقيقة وجرّب كمان مرة.",
-        "server": "صار في مشكلة من عنا. جرّب كمان مرة.",
-        "generic": "صار في مشكلة. جرّب كمان مرة.",
-        "network": "مشكلة بالشبكة — تأكّد من اتصالك.",
-        "unknown": "صار في مشكلة."
-    },
-    "voices": {
-        "previewFailed": "ما قدرنا نشغّل معاينة الصوت."
-    },
-    "agentTemplates": {
-        "blank": {
-            "label": "ابدأ من الصفر",
-            "description": "مساعد صوتي ذكي فاضي بتجهّزه من الصفر."
-        },
-        "receptionist": {
-            "label": "مساعد استقبال",
-            "description": "بيرد عالمكالمات، بيجاوب عالأسئلة وبيسجّل رسائل."
-        },
-        "appointment_setter": {
-            "label": "منسّق مواعيد",
-            "description": "بيحجز مواعيد للمتصلين، بيفحصها وبيلغيها."
-        },
-        "after_hours": {
-            "label": "بعد ساعات الشغل",
-            "description": "بيرد عالمكالمات برّا ساعات الشغل وبيسجّل التفاصيل."
-        },
-        "outbound_caller": {
-            "label": "مساعد مكالمات صادرة",
-            "description": "بيتصل بجهات الاتصال للحملات ومكالمات الرجعة والمتابعة."
-        },
-        "lead_qualifier": {
-            "label": "تأهيل العملاء المحتملين",
-            "description": "بيتصل بعملاء محتملين جداد، بيقيّم اهتمامهم وبيسجّل التفاصيل."
-        }
-    },
-    "overridableBuiltin": {
-        "contact_name": "اسم جهة الاتصال",
-        "contact_email": "الإيميل الأساسي لجهة الاتصال",
-        "contact_company": "شركة جهة الاتصال",
-        "contact_address": "عنوان جهة الاتصال"
-    },
-    "appointmentStatus": {
-        "scheduled": "مجدول",
-        "confirmed": "مؤكّد",
-        "completed": "خلص",
-        "canceled": "ملغي",
-        "no_show": "ما حضر"
-    },
-    "appointmentSource": {
-        "manual": "يدوي",
-        "agent_call": "حجزه المساعد الصوتي الذكي بمكالمة",
-        "api": "API"
-    },
-    "subscriptionStatus": {
-        "pending": "بالانتظار",
-        "active": "شغّال",
-        "past_due": "متأخر بالدفع",
-        "suspended": "موقوف",
-        "cancelled": "ملغي"
-    },
-    "billingInterval": {
-        "monthly": "شهري",
-        "annual": "سنوي"
-    },
-    "billingChargeStatus": {
-        "pending": "عم ينعالج",
-        "paid": "مدفوع",
-        "failed": "فشل"
-    },
-    "billingChargeType": {
-        "initial": "أول خصم",
-        "renewal": "تجديد",
-        "plan_change": "تغيير الباقة"
-    },
-    "callbackStatus": {
-        "scheduled": "مجدول",
-        "queued": "عم يتصل",
-        "in_progress": "شغّال",
-        "completed": "خلص",
-        "no_answer": "ما ردّ",
-        "failed": "فشل",
-        "canceled": "ملغي"
-    },
-    "callbackType": {
-        "agent": "مساعد صوتي ذكي",
-        "team_member": "عضو بالفريق"
-    },
-    "callbackSource": {
-        "manual": "يدوي",
-        "agent_call": "مكالمة المساعد الصوتي الذكي",
-        "api": "API"
-    },
-    "callbackOutcome": {
-        "reached": "ردّ عالمكالمة",
-        "voicemail": "ترك رسالة صوتية",
-        "no_answer": "ما ردّ",
-        "handled": "اتعالج"
-    },
-    "invoiceStatus": {
-        "draft": "مسودة",
-        "sent": "مبعوت",
-        "paid": "مدفوع",
-        "overdue": "متأخر",
-        "void": "ملغي"
-    },
-    "lineItemKind": {
-        "labour": "أجرة شغل",
-        "material": "مواد"
-    },
-    "jobStatus": {
-        "open": "مفتوح",
-        "scheduled": "مجدول",
-        "in_progress": "شغّال",
-        "completed": "خلص",
-        "canceled": "ملغي"
-    },
-    "jobPriority": {
-        "low": "واطية",
-        "normal": "عادية",
-        "high": "عالية"
-    },
-    "jobSource": {
-        "manual": "انضاف يدوي",
-        "agent_call": "من مكالمة",
-        "api": "عن طريق API",
-        "lead": "محوّل من عميل محتمل",
-        "quote": "محوّل من عرض سعر"
-    },
-    "leadStatus": {
-        "new": "جديد",
-        "contacted": "تواصلنا معه",
-        "qualified": "مؤهّل",
-        "won": "كسبناه",
-        "lost": "خسرناه"
-    },
-    "leadSource": {
-        "manual": "مضاف يدوي",
-        "agent_call": "من مكالمة",
-        "api": "عن طريق API"
-    },
-    "quoteStatus": {
-        "draft": "مسودة",
-        "sent": "مبعوت",
-        "accepted": "مقبول",
-        "declined": "مرفوض",
-        "expired": "خلصت صلاحيته",
-        "void": "ملغي"
-    },
-    "hoursMode": {
-        "inherit": "ساعات الشغل",
-        "member": "الأوقات المتاحة",
-        "custom": "مخصّص",
-        "bypass": "دايما"
-    },
-    "systemRole": {
-        "owner": "صاحب المصلحة",
-        "admin": "مدير",
-        "member": "عضو"
-    },
-    "voiceAccent": {
-        "american": "أمريكية",
-        "australian": "أسترالية",
-        "brazilian": "برازيلية",
-        "british": "بريطانية",
-        "canadian": "كندية",
-        "european": "أوروبية",
-        "gulf": "خليجية",
-        "israeli": "إسرائيلية",
-        "istanbul": "إسطنبول",
-        "lebanese": "لبنانية",
-        "malaysian": "ماليزية",
-        "mexican": "مكسيكية",
-        "modern_standard": "فصحى معاصرة",
-        "new_zealand": "نيوزيلندية",
-        "palestinian": "فلسطينية",
-        "peninsular": "شبه الجزيرة الإيبيرية",
-        "quebec": "كيبيك",
-        "saudi": "سعودية",
-        "seoul": "سيول",
-        "sicilian": "صقلية",
-        "standard": "قياسية",
-        "stockholm": "ستوكهولم"
-    },
-    "voiceDescription": {
-        "liam": "صوت رجّال طبيعي، بنص العمر.",
-        "jack": "صوت رجّال واضح، بأسلوب حكي طبيعي.",
-        "noah": "صوت شب عفوي — الحكي معه سهل.",
-        "william": "صوت رجّال هادي، بأسلوب حكي طبيعي.",
-        "oliver": "صوت رجالي هادي ورايق.",
-        "lachlan": "صوت رجالي عفوي، بأسلوب حكي طبيعي.",
-        "cooper": "صوت رجالي عفوي وودود.",
-        "hudson": "صوت رجالي رايق، بأسلوب حكي طبيعي.",
-        "harrison": "صوت رجالي واثق — ممتاز للسرد.",
-        "mason": "صوت رجالي هادي وموزون — مناسب للسرد.",
-        "riley": "صوت رجالي احترافي ومصقول.",
-        "hunter": "صوت شاب واثق ومليان طاقة.",
-        "jacob": "صوت رجالي دافي وطبيعي.",
-        "olivia": "صوت نسائي ناضج ودافي — طبيعي بالسرد.",
-        "charlotte": "صوت نسائي مشرق وجذّاب.",
-        "amelia": "صوت نسائي احترافي وواضح — ممتاز للشرح.",
-        "isla": "صوت نسائي شبابي وواثق.",
-        "mia": "صوت بنت شابة هادي وناعم.",
-        "chloe": "صوت بنت شابة واثق ومليان حيوية.",
-        "ruby": "صوت نسائي واثق ومعبّر.",
-        "matilda": "صوت نسائي شبابي وحلو.",
-        "zoe": "صوت نسائي راقي وأنيق.",
-        "ella": "صوت بنت شابة عفوي وودود.",
-        "grace": "صوت نسائي هادي وبطمّن.",
-        "sienna": "صوت نسائي لطيف، بأسلوب حكي طبيعي.",
-        "harper": "صوت نسائي عفوي، بأسلوب حكي طبيعي.",
-        "evie": "صوت نسائي رايق، بأسلوب حكي طبيعي.",
-        "hope": "صوت نسائي أمريكي طبيعي وواضح وهادي.",
-        "archer": "صوت رجالي بريطاني هادي، بأسلوب حكي طبيعي.",
-        "jenna": "صوت نسائي كندي دافي وقريب من الناس.",
-        "jenna-nz": "صوت نسائي نيوزيلندي واضح وجذّاب ودافي.",
-        "yochai": "صوت رجالي بالعبرية دافي وطبيعي."
+  "datetime": {
+    "today": "اليوم",
+    "yesterday": "مبارح"
+  },
+  "money": {
+    "noPrice": "بدون سعر",
+    "customMessage": "رسالة مخصصة",
+    "priceNotSet": "السعر مش محدد",
+    "perHour": "{price}/ساعة",
+    "perDay": "{price}/يوم",
+    "perWeek": "{price}/أسبوع",
+    "perMonth": "{price}/شهر",
+    "perYear": "{price}/سنة",
+    "duration": {
+      "hours": "{count, plural, zero {{count} ساعات} one {ساعة وحدة} two {ساعتين} few {{count} ساعات} many {{count} ساعة} other {{count} ساعة}}",
+      "days": "{count, plural, zero {{count} أيام} one {يوم واحد} two {يومين} few {{count} أيام} many {{count} يوم} other {{count} يوم}}",
+      "weeks": "{count, plural, zero {{count} أسابيع} one {أسبوع واحد} two {أسبوعين} few {{count} أسابيع} many {{count} أسبوع} other {{count} أسبوع}}",
+      "months": "{count, plural, zero {{count} أشهر} one {شهر واحد} two {شهرين} few {{count} أشهر} many {{count} شهر} other {{count} شهر}}",
+      "years": "{count, plural, zero {{count} سنين} one {سنة وحدة} two {سنتين} few {{count} سنين} many {{count} سنة} other {{count} سنة}}"
     }
+  },
+  "tax": {
+    "defaultLabel": "ضريبة القيمة المضافة",
+    "line": "ضريبة القيمة المضافة ({rate}%)"
+  },
+  "endReason": {
+    "voicemail": "راحت عالبريد الصوتي",
+    "ended_by_agent": "المساعد الصوتي الذكي سكّر المكالمة",
+    "ended_by_caller": "المتصل سكّر الخط",
+    "transferred": "تحوّلت",
+    "no_answer": "ما في رد",
+    "busy": "مشغول",
+    "canceled": "ملغي",
+    "completed": "خلصت المكالمة",
+    "time_limit": "وصلت للحد الزمني",
+    "failed": "فشل"
+  },
+  "modules": {
+    "appointments": {
+      "label": "مواعيد",
+      "description": "خلّي مساعدك الصوتي الذكي يفحص التقويم ويحجز للمتصلين بأوقات متاحة، وبعدين دير هاي الحجوزات."
+    },
+    "leads": {
+      "label": "عملاء محتملين",
+      "description": "سجّل استفسارات البيع من المكالمات كعملاء محتملين عشان فريقك يتابع معهم بعدين."
+    },
+    "quotes": {
+      "label": "عروض أسعار",
+      "description": "سعّر الشغل، وابعت عروض أسعار بيوافق عليها الزباين أونلاين، وسجّل طلبات عروض الأسعار من المكالمات."
+    },
+    "jobs": {
+      "label": "شغلات",
+      "description": "سجّل الشغلات الميدانية اللي بياخدها مساعدك الصوتي الذكي عالتلفون وحدّد موعد الزيارة."
+    },
+    "invoices": {
+      "label": "فواتير",
+      "description": "طلّع فواتير للشغل اللي خلص وتابع شو اندفع."
+    },
+    "callbacks": {
+      "label": "مكالمات رجعة",
+      "description": "جدول مكالمة رجعة لما مساعدك الصوتي الذكي ما بيقدر يساعد المتصل بنفس الوقت."
+    }
+  },
+  "tools": {
+    "lookup_contact": {
+      "label": "دوّر على المتصل",
+      "description": "افحص إذا المتصل جهة اتصال معروفة ورحّب فيه باسمه."
+    },
+    "save_contact_info": {
+      "label": "احفظ معلومات جهة الاتصال",
+      "description": "احفظ اسم المتصل أو إيميله أو شركته بسجل جهة الاتصال تبعه."
+    },
+    "add_to_dnc": {
+      "label": "طلبات ممنوع الاتصال",
+      "description": "ضيف المتصل لقائمة ممنوع الاتصال لما يطلب."
+    },
+    "get_current_time": {
+      "label": "الوقت هلأ",
+      "description": "احكي قديش الساعة وإذا المصلحة فاتحة هلأ."
+    },
+    "get_call_history": {
+      "label": "سجل المكالمات",
+      "description": "ارجع لمكالمات المتصل السابقة مع أي مساعد صوتي ذكي عندك، مع الملاحظات ونصوص المكالمات."
+    },
+    "schedule_callback": {
+      "label": "جدول مكالمة رجعة",
+      "description": "احجز مكالمة رجعة للمتصل بوقت لاحق حسب طلبه."
+    },
+    "check_availability": {
+      "label": "افحص الأوقات المتاحة",
+      "description": "دوّر على أوقات متاحة للمواعيد عالتقويم."
+    },
+    "book_appointment": {
+      "label": "احجز موعد",
+      "description": "احجز للمتصل موعد بوقت متاح."
+    },
+    "cancel_appointment": {
+      "label": "الغي موعد",
+      "description": "الغي موعد محجوز للمتصل."
+    },
+    "create_lead": {
+      "label": "اعمل عميل محتمل",
+      "description": "سجّل عميل محتمل جديد من المحادثة."
+    },
+    "request_quote": {
+      "label": "اطلب عرض سعر",
+      "description": "سجّل طلب عرض سعر لشغلة المتصل بده يعرف سعرها؛ الفريق بيجهّز العرض بعدين."
+    },
+    "create_job": {
+      "label": "اعمل شغلة",
+      "description": "سجّل طلب شغلة جديدة من المتصل."
+    },
+    "check_job_availability": {
+      "label": "افحص الأوقات المتاحة للشغلات",
+      "description": "دوّر على أوقات متاحة لتحديد زيارة للشغلة."
+    },
+    "book_job": {
+      "label": "احجز شغلة",
+      "description": "احجز زيارة للشغلة بوقت متاح."
+    }
+  },
+  "toolGroups": {
+    "core": "أساسية"
+  },
+  "apiErrors": {
+    "sessionExpired": "انتهت جلستك. سجّل دخولك كمان مرة.",
+    "subscriptionRequired": "لازم يكون عندك اشتراك شغّال.",
+    "forbidden": "ما عندك صلاحية تعمل هيك.",
+    "notFound": "ما لقيناه.",
+    "linkInvalid": "هاد الرابط بطّل صالح.",
+    "tokenExpired": "انتهت صلاحية رمز جلستك. جرّب كمان مرة.",
+    "invalidData": "البيانات اللي دخلتها مش صحيحة.",
+    "tooManyAttempts": "محاولات كتيرة. استنّى دقيقة وجرّب كمان مرة.",
+    "server": "صار في مشكلة من عنا. جرّب كمان مرة.",
+    "generic": "صار في مشكلة. جرّب كمان مرة.",
+    "network": "مشكلة بالشبكة — تأكّد من اتصالك.",
+    "unknown": "صار في مشكلة."
+  },
+  "voices": {
+    "previewFailed": "ما قدرنا نشغّل معاينة الصوت."
+  },
+  "agentTemplates": {
+    "blank": {
+      "label": "ابدأ من الصفر",
+      "description": "مساعد صوتي ذكي فاضي بتجهّزه من الصفر."
+    },
+    "receptionist": {
+      "label": "مساعد استقبال",
+      "description": "بيرد عالمكالمات، بيجاوب عالأسئلة وبيسجّل رسائل."
+    },
+    "appointment_setter": {
+      "label": "منسّق مواعيد",
+      "description": "بيحجز مواعيد للمتصلين، بيفحصها وبيلغيها."
+    },
+    "after_hours": {
+      "label": "بعد ساعات الشغل",
+      "description": "بيرد عالمكالمات برّا ساعات الشغل وبيسجّل التفاصيل."
+    },
+    "outbound_caller": {
+      "label": "مساعد مكالمات صادرة",
+      "description": "بيتصل بجهات الاتصال للحملات ومكالمات الرجعة والمتابعة."
+    },
+    "lead_qualifier": {
+      "label": "تأهيل العملاء المحتملين",
+      "description": "بيتصل بعملاء محتملين جداد، بيقيّم اهتمامهم وبيسجّل التفاصيل."
+    }
+  },
+  "overridableBuiltin": {
+    "contact_name": "اسم جهة الاتصال",
+    "contact_email": "الإيميل الأساسي لجهة الاتصال",
+    "contact_company": "شركة جهة الاتصال",
+    "contact_address": "عنوان جهة الاتصال"
+  },
+  "appointmentStatus": {
+    "scheduled": "مجدول",
+    "confirmed": "مؤكّد",
+    "completed": "خلص",
+    "canceled": "ملغي",
+    "no_show": "ما حضر"
+  },
+  "appointmentSource": {
+    "manual": "يدوي",
+    "agent_call": "حجزه المساعد الصوتي الذكي بمكالمة",
+    "api": "API"
+  },
+  "subscriptionStatus": {
+    "pending": "بالانتظار",
+    "active": "شغّال",
+    "past_due": "متأخر بالدفع",
+    "suspended": "موقوف",
+    "cancelled": "ملغي"
+  },
+  "billingInterval": {
+    "monthly": "شهري",
+    "annual": "سنوي"
+  },
+  "billingChargeStatus": {
+    "pending": "عم ينعالج",
+    "paid": "مدفوع",
+    "failed": "فشل"
+  },
+  "billingChargeType": {
+    "initial": "أول خصم",
+    "renewal": "تجديد",
+    "plan_change": "تغيير الباقة"
+  },
+  "callbackStatus": {
+    "scheduled": "مجدول",
+    "queued": "عم يتصل",
+    "in_progress": "شغّال",
+    "completed": "خلص",
+    "no_answer": "ما ردّ",
+    "failed": "فشل",
+    "canceled": "ملغي"
+  },
+  "callbackType": {
+    "agent": "مساعد صوتي ذكي",
+    "team_member": "عضو بالفريق"
+  },
+  "callbackSource": {
+    "manual": "يدوي",
+    "agent_call": "مكالمة المساعد الصوتي الذكي",
+    "api": "API"
+  },
+  "callbackOutcome": {
+    "reached": "ردّ عالمكالمة",
+    "voicemail": "ترك رسالة صوتية",
+    "no_answer": "ما ردّ",
+    "handled": "اتعالج"
+  },
+  "invoiceStatus": {
+    "draft": "مسودة",
+    "sent": "مبعوت",
+    "paid": "مدفوع",
+    "overdue": "متأخر",
+    "void": "ملغي"
+  },
+  "lineItemKind": {
+    "labour": "أجرة شغل",
+    "material": "مواد"
+  },
+  "jobStatus": {
+    "open": "مفتوح",
+    "scheduled": "مجدول",
+    "in_progress": "شغّال",
+    "completed": "خلص",
+    "canceled": "ملغي"
+  },
+  "jobPriority": {
+    "low": "واطية",
+    "normal": "عادية",
+    "high": "عالية"
+  },
+  "jobSource": {
+    "manual": "انضاف يدوي",
+    "agent_call": "من مكالمة",
+    "api": "عن طريق API",
+    "lead": "محوّل من عميل محتمل",
+    "quote": "محوّل من عرض سعر"
+  },
+  "leadStatus": {
+    "new": "جديد",
+    "contacted": "تواصلنا معه",
+    "qualified": "مؤهّل",
+    "won": "كسبناه",
+    "lost": "خسرناه"
+  },
+  "leadSource": {
+    "manual": "مضاف يدوي",
+    "agent_call": "من مكالمة",
+    "api": "عن طريق API"
+  },
+  "quoteStatus": {
+    "draft": "مسودة",
+    "sent": "مبعوت",
+    "accepted": "مقبول",
+    "declined": "مرفوض",
+    "expired": "خلصت صلاحيته",
+    "void": "ملغي"
+  },
+  "hoursMode": {
+    "inherit": "ساعات الشغل",
+    "member": "الأوقات المتاحة",
+    "custom": "مخصّص",
+    "bypass": "دايما"
+  },
+  "systemRole": {
+    "owner": "صاحب المصلحة",
+    "admin": "مدير",
+    "member": "عضو"
+  },
+  "voiceAccent": {
+    "american": "أمريكية",
+    "australian": "أسترالية",
+    "brazilian": "برازيلية",
+    "british": "بريطانية",
+    "canadian": "كندية",
+    "european": "أوروبية",
+    "gulf": "خليجية",
+    "israeli": "إسرائيلية",
+    "istanbul": "إسطنبول",
+    "lebanese": "لبنانية",
+    "malaysian": "ماليزية",
+    "mexican": "مكسيكية",
+    "modern_standard": "فصحى معاصرة",
+    "new_zealand": "نيوزيلندية",
+    "palestinian": "فلسطينية",
+    "peninsular": "شبه الجزيرة الإيبيرية",
+    "quebec": "كيبيك",
+    "saudi": "سعودية",
+    "seoul": "سيول",
+    "sicilian": "صقلية",
+    "standard": "قياسية",
+    "stockholm": "ستوكهولم"
+  },
+  "voiceDescription": {
+    "liam": "صوت رجّال طبيعي، بنص العمر.",
+    "jack": "صوت رجّال واضح، بأسلوب حكي طبيعي.",
+    "noah": "صوت شب عفوي — الحكي معه سهل.",
+    "william": "صوت رجّال هادي، بأسلوب حكي طبيعي.",
+    "oliver": "صوت رجالي هادي ورايق.",
+    "lachlan": "صوت رجالي عفوي، بأسلوب حكي طبيعي.",
+    "cooper": "صوت رجالي عفوي وودود.",
+    "hudson": "صوت رجالي رايق، بأسلوب حكي طبيعي.",
+    "harrison": "صوت رجالي واثق — ممتاز للسرد.",
+    "mason": "صوت رجالي هادي وموزون — مناسب للسرد.",
+    "riley": "صوت رجالي احترافي ومصقول.",
+    "hunter": "صوت شاب واثق ومليان طاقة.",
+    "jacob": "صوت رجالي دافي وطبيعي.",
+    "olivia": "صوت نسائي ناضج ودافي — طبيعي بالسرد.",
+    "charlotte": "صوت نسائي مشرق وجذّاب.",
+    "amelia": "صوت نسائي احترافي وواضح — ممتاز للشرح.",
+    "isla": "صوت نسائي شبابي وواثق.",
+    "mia": "صوت بنت شابة هادي وناعم.",
+    "chloe": "صوت بنت شابة واثق ومليان حيوية.",
+    "ruby": "صوت نسائي واثق ومعبّر.",
+    "matilda": "صوت نسائي شبابي وحلو.",
+    "zoe": "صوت نسائي راقي وأنيق.",
+    "ella": "صوت بنت شابة عفوي وودود.",
+    "grace": "صوت نسائي هادي وبطمّن.",
+    "sienna": "صوت نسائي لطيف، بأسلوب حكي طبيعي.",
+    "harper": "صوت نسائي عفوي، بأسلوب حكي طبيعي.",
+    "evie": "صوت نسائي رايق، بأسلوب حكي طبيعي.",
+    "hope": "صوت نسائي أمريكي طبيعي وواضح وهادي.",
+    "archer": "صوت رجالي بريطاني هادي، بأسلوب حكي طبيعي.",
+    "jenna": "صوت نسائي كندي دافي وقريب من الناس.",
+    "jenna-nz": "صوت نسائي نيوزيلندي واضح وجذّاب ودافي.",
+    "yochai": "صوت رجالي بالعبرية دافي وطبيعي."
+  }
 }

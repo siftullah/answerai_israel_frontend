@@ -25,15 +25,16 @@
     "line": "НДС ({rate}%)"
   },
   "endReason": {
-    "customer_ended_call": "Звонящий повесил трубку",
-    "agent_ended_call": "ИИ-агент завершил звонок",
+    "voicemail": "Переведено на голосовую почту",
+    "ended_by_agent": "ИИ-агент завершил звонок",
+    "ended_by_caller": "Звонящий повесил трубку",
     "transferred": "Звонок переведён",
-    "no_conversation": "Разговор не состоялся",
     "no_answer": "Нет ответа",
     "busy": "Занято",
     "canceled": "Отменено",
-    "failed": "Сбой",
-    "unknown": "Неизвестно"
+    "completed": "Звонок завершён",
+    "time_limit": "Достигнут лимит времени",
+    "failed": "Сбой"
   },
   "modules": {
     "appointments": {

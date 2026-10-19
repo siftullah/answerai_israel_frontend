@@ -1,178 +1,178 @@
 {
-    "meta": {
-        "inboundLogs": "سجل المكالمات الواردة",
-        "outboundLogs": "سجل المكالمات الصادرة",
-        "call": "مكالمة"
+  "meta": {
+    "inboundLogs": "سجل المكالمات الواردة",
+    "outboundLogs": "سجل المكالمات الصادرة",
+    "call": "مكالمة"
+  },
+  "labels": {
+    "agent": "مساعد صوتي ذكي",
+    "callback": "مكالمة رجعة"
+  },
+  "actions": {
+    "placeCall": "اعمل مكالمة",
+    "placing": "عم يتصل…",
+    "cancelCall": "الغي المكالمة",
+    "viewContact": "شوف جهة الاتصال",
+    "viewTranscript": "شوف نص المكالمة",
+    "otherRecordings": "تسجيلات تانية",
+    "saveNotes": "احفظ الملاحظات"
+  },
+  "toasts": {
+    "callCancelled": "انلغت المكالمة",
+    "callQueued": "المكالمة بالدور — رح يتصل بعد شوي",
+    "notesSaved": "انحفظت الملاحظات"
+  },
+  "status": {
+    "queued": "بالدور",
+    "initiating": "عم يبلّش",
+    "ringing": "عم يرن",
+    "inProgress": "شغّال",
+    "completed": "خلص",
+    "voicemail": "بريد صوتي",
+    "busy": "مشغول",
+    "noAnswer": "ما في رد",
+    "failed": "فشل",
+    "canceled": "ملغي"
+  },
+  "direction": {
+    "inbound": "مكالمة واردة",
+    "outbound": "مكالمة صادرة"
+  },
+  "logs": {
+    "inbound": {
+      "title": "سجل المكالمات الواردة",
+      "description": "كل مكالمة ردّ عليها المساعدين الصوتيين الأذكياء تبعونك — نصوص المكالمات، التسجيلات والنتائج.",
+      "emptyTitle": "لسه ما في مكالمات واردة",
+      "emptyDescription": "أول ما حدا يتصل على واحد من أرقامك، بتظهر المكالمة هون."
     },
-    "labels": {
-        "agent": "مساعد صوتي ذكي",
-        "callback": "مكالمة رجعة"
+    "outbound": {
+      "title": "سجل المكالمات الصادرة",
+      "description": "مكالمات عملها المساعدين الصوتيين الأذكياء تبعونك — مكالمات فردية، مكالمات حملات ومكالمات رجعة.",
+      "emptyTitle": "لسه ما في مكالمات صادرة",
+      "emptyDescription": "اعمل مكالمة والمساعد الصوتي الذكي تبعك رح يتصل ويدير المحادثة."
     },
-    "actions": {
-        "placeCall": "اعمل مكالمة",
-        "placing": "عم يتصل…",
-        "cancelCall": "الغي المكالمة",
-        "viewContact": "شوف جهة الاتصال",
-        "viewTranscript": "شوف نص المكالمة",
-        "otherRecordings": "تسجيلات تانية",
-        "saveNotes": "احفظ الملاحظات"
+    "loadFailed": "ما قدرنا نحمّل المكالمات"
+  },
+  "errors": {
+    "notFoundTitle": "ما لقينا المكالمة",
+    "notFoundMessage": "هاي المكالمة مش موجودة أو انشالت.",
+    "loadFailedTitle": "ما قدرنا نحمّل هاي المكالمة"
+  },
+  "resolver": {
+    "backToLogs": "سجل المكالمات"
+  },
+  "cancelDialog": {
+    "title": "تلغي هاي المكالمة؟",
+    "description": "المكالمة مع {name} لسه ما اتوصلت ورح تتوقف.",
+    "keepCalling": "كمّل الاتصال"
+  },
+  "placeDialog": {
+    "title": "اعمل مكالمة",
+    "description": "المساعد الصوتي الذكي تبعك رح يتصل بالرقم ويدير المحادثة.",
+    "agentPlaceholder": "اختار مساعد صوتي ذكي",
+    "noAgents": "لسه ما في مساعدين صوتيين أذكياء متزامنين للمكالمات الصادرة — اعمل واحد بقسم المساعدين الصوتيين الأذكياء بالأول.",
+    "callFrom": "اتصل من",
+    "numberPlaceholder": "اختار رقم",
+    "noNumbers": "ما في أرقام بتقدر تتصل منها — أرقام SIP للمكالمات الواردة بس، فاشتري رقم من المنصة بالأول.",
+    "numberToCall": "الرقم اللي بدك تتصل عليه",
+    "numberToCallPlaceholder": "052-123-4567",
+    "variablesHint": "هاد المساعد الصوتي الذكي بده قيمة لكل متغيّر تحت. القيم المعبّاية إجت من سجل جهة الاتصال أو من القيمة الافتراضية للمتغيّر، فراجع كل وحدة لهاي المكالمة."
+  },
+  "detail": {
+    "backToList": "كل المكالمات",
+    "emptyTitle": "ما في مكالمة مختارة",
+    "emptyDescription": "اختار مكالمة عشان تشوف تفاصيلها.",
+    "receivedOn": "وصلت على",
+    "calledFrom": "الاتصال من",
+    "started": "بلّشت",
+    "duration": "المدة",
+    "endReason": "سبب نهاية المكالمة",
+    "summary": "ملخّص",
+    "campaignBadge": "حملة: {name}",
+    "recordingLoadFailed": "ما قدرنا نحمّل التسجيل هلأ.",
+    "recordingProcessing": "التسجيل لسه عم يتجهّز — ارجع بعد شوي.",
+    "recordingFailed": "ما قدرنا نسجّل هاي المكالمة.",
+    "recordingDeleted": "هاد التسجيل بطّل متاح."
+  },
+  "live": {
+    "queued": "بالدور — ناطر الاتصال",
+    "initiating": "عم نتصل…",
+    "ringing": "عم يرن…",
+    "inProgress": "المكالمة شغّالة"
+  },
+  "notes": {
+    "description": "ملاحظاتك الخاصة — ما بتنعرض للمتصلين أبدا.",
+    "placeholder": "ضيف ملاحظاتك الخاصة عن هاي المكالمة…",
+    "ariaLabel": "ملاحظات المكالمة"
+  },
+  "extraction": {
+    "title": "التفاصيل المستخرجة",
+    "description": "شو سجّل المساعد الصوتي الذكي وكيف كان تقييمه حسب أهدافه.",
+    "evaluation": "التقييم"
+  },
+  "related": {
+    "title": "انعملت من هاي المكالمة",
+    "description": "سجلات عملها أو خلّصها المساعد الصوتي الذكي خلال هاي المحادثة.",
+    "appointments": "مواعيد",
+    "leads": "عملاء محتملين",
+    "jobs": "شغلات",
+    "invoices": "فواتير",
+    "callbacks": "مكالمات رجعة",
+    "fulfilledCallback": "خلّص مكالمة رجعة كانت مجدولة لـ {date}",
+    "scheduledFor": "مجدول لـ {date}"
+  },
+  "transfer": {
+    "title": "تسجيلات التحويل",
+    "description": "مكالمة الاستشارة والمكالمة الموصولة بهاد التحويل.",
+    "recordingNotReady": "هاد التسجيل لسه مش جاهز.",
+    "consultLoadFailed": "ما قدرنا نحمّل تفاصيل الاستشارة هلأ.",
+    "type": "النوع",
+    "warm": "تحويل مع استشارة",
+    "blind": "تحويل مباشر",
+    "transferredTo": "تحوّلت لـ",
+    "answeredBy": "رد عليها",
+    "at": "بوقت",
+    "outcome": "النتيجة",
+    "relayMessage": "الرسالة اللي وصلت للمتصل",
+    "consultLeg": "مكالمة الاستشارة",
+    "bridgedRecording": "تسجيل المكالمة الموصولة",
+    "state": {
+      "consultPending": "عم يستشير",
+      "accepted": "مقبول",
+      "bridged": "موصول",
+      "declined": "مرفوض",
+      "unavailable": "مش متاح",
+      "cancelled": "ملغي"
     },
-    "toasts": {
-        "callCancelled": "انلغت المكالمة",
-        "callQueued": "المكالمة بالدور — رح يتصل بعد شوي",
-        "notesSaved": "انحفظت الملاحظات"
-    },
-    "status": {
-        "queued": "بالدور",
-        "initiating": "عم يبلّش",
-        "ringing": "عم يرن",
-        "inProgress": "شغّال",
-        "completed": "خلص",
-        "voicemail": "البريد الصوتي",
-        "busy": "مشغول",
-        "noAnswer": "ما في رد",
-        "failed": "فشل",
-        "canceled": "ملغي"
-    },
-    "direction": {
-        "inbound": "مكالمة واردة",
-        "outbound": "مكالمة صادرة"
-    },
-    "logs": {
-        "inbound": {
-            "title": "سجل المكالمات الواردة",
-            "description": "كل مكالمة ردّ عليها المساعدين الصوتيين الأذكياء تبعونك — نصوص المكالمات، التسجيلات والنتائج.",
-            "emptyTitle": "لسه ما في مكالمات واردة",
-            "emptyDescription": "أول ما حدا يتصل على واحد من أرقامك، بتظهر المكالمة هون."
-        },
-        "outbound": {
-            "title": "سجل المكالمات الصادرة",
-            "description": "مكالمات عملها المساعدين الصوتيين الأذكياء تبعونك — مكالمات فردية، مكالمات حملات ومكالمات رجعة.",
-            "emptyTitle": "لسه ما في مكالمات صادرة",
-            "emptyDescription": "اعمل مكالمة والمساعد الصوتي الذكي تبعك رح يتصل ويدير المحادثة."
-        },
-        "loadFailed": "ما قدرنا نحمّل المكالمات"
-    },
-    "errors": {
-        "notFoundTitle": "ما لقينا المكالمة",
-        "notFoundMessage": "هاي المكالمة مش موجودة أو انشالت.",
-        "loadFailedTitle": "ما قدرنا نحمّل هاي المكالمة"
-    },
-    "resolver": {
-        "backToLogs": "سجل المكالمات"
-    },
-    "cancelDialog": {
-        "title": "تلغي هاي المكالمة؟",
-        "description": "المكالمة مع {name} لسه ما اتوصلت ورح تتوقف.",
-        "keepCalling": "كمّل الاتصال"
-    },
-    "placeDialog": {
-        "title": "اعمل مكالمة",
-        "description": "المساعد الصوتي الذكي تبعك رح يتصل بالرقم ويدير المحادثة.",
-        "agentPlaceholder": "اختار مساعد صوتي ذكي",
-        "noAgents": "لسه ما في مساعدين صوتيين أذكياء متزامنين للمكالمات الصادرة — اعمل واحد بقسم المساعدين الصوتيين الأذكياء بالأول.",
-        "callFrom": "اتصل من",
-        "numberPlaceholder": "اختار رقم",
-        "noNumbers": "ما في أرقام بتقدر تتصل منها — أرقام SIP للمكالمات الواردة بس، فاشتري رقم من المنصة بالأول.",
-        "numberToCall": "الرقم اللي بدك تتصل عليه",
-        "numberToCallPlaceholder": "052-123-4567",
-        "variablesHint": "هاد المساعد الصوتي الذكي بده قيمة لكل متغيّر تحت. القيم المعبّاية إجت من سجل جهة الاتصال أو من القيمة الافتراضية للمتغيّر، فراجع كل وحدة لهاي المكالمة."
-    },
-    "detail": {
-        "backToList": "كل المكالمات",
-        "emptyTitle": "ما في مكالمة مختارة",
-        "emptyDescription": "اختار مكالمة عشان تشوف تفاصيلها.",
-        "receivedOn": "وصلت على",
-        "calledFrom": "الاتصال من",
-        "started": "بلّشت",
-        "duration": "المدة",
-        "endReason": "سبب نهاية المكالمة",
-        "summary": "ملخّص",
-        "campaignBadge": "حملة: {name}",
-        "recordingLoadFailed": "ما قدرنا نحمّل التسجيل هلأ.",
-        "recordingProcessing": "التسجيل لسه عم يتجهّز — ارجع بعد شوي.",
-        "recordingFailed": "ما قدرنا نسجّل هاي المكالمة.",
-        "recordingDeleted": "هاد التسجيل بطّل متاح."
-    },
-    "live": {
-        "queued": "بالدور — ناطر الاتصال",
-        "initiating": "عم نتصل…",
-        "ringing": "عم يرن…",
-        "inProgress": "المكالمة شغّالة"
-    },
-    "notes": {
-        "description": "ملاحظاتك الخاصة — ما بتنعرض للمتصلين أبدا.",
-        "placeholder": "ضيف ملاحظاتك الخاصة عن هاي المكالمة…",
-        "ariaLabel": "ملاحظات المكالمة"
-    },
-    "extraction": {
-        "title": "التفاصيل المستخرجة",
-        "description": "شو سجّل المساعد الصوتي الذكي وكيف كان تقييمه حسب أهدافه.",
-        "evaluation": "التقييم"
-    },
-    "related": {
-        "title": "انعملت من هاي المكالمة",
-        "description": "سجلات عملها أو خلّصها المساعد الصوتي الذكي خلال هاي المحادثة.",
-        "appointments": "مواعيد",
-        "leads": "عملاء محتملين",
-        "jobs": "شغلات",
-        "invoices": "فواتير",
-        "callbacks": "مكالمات رجعة",
-        "fulfilledCallback": "خلّص مكالمة رجعة كانت مجدولة لـ {date}",
-        "scheduledFor": "مجدول لـ {date}"
-    },
-    "transfer": {
-        "title": "تسجيلات التحويل",
-        "description": "مكالمة الاستشارة والمكالمة الموصولة بهاد التحويل.",
-        "recordingNotReady": "هاد التسجيل لسه مش جاهز.",
-        "consultLoadFailed": "ما قدرنا نحمّل تفاصيل الاستشارة هلأ.",
-        "type": "النوع",
-        "warm": "تحويل مع استشارة",
-        "blind": "تحويل مباشر",
-        "transferredTo": "تحوّلت لـ",
-        "answeredBy": "رد عليها",
-        "at": "بوقت",
-        "outcome": "النتيجة",
-        "relayMessage": "الرسالة اللي وصلت للمتصل",
-        "consultLeg": "مكالمة الاستشارة",
-        "bridgedRecording": "تسجيل المكالمة الموصولة",
-        "state": {
-            "consultPending": "عم يستشير",
-            "accepted": "مقبول",
-            "bridged": "موصول",
-            "declined": "مرفوض",
-            "unavailable": "مش متاح",
-            "cancelled": "ملغي"
-        },
-        "nextAction": {
-            "takeCallbackMessage": "أخد رسالة لمكالمة رجعة",
-            "askToCallBackLater": "طلب من المتصل يرجع يتصل بعدين",
-            "redirect": "حوّل المتصل",
-            "none": "ما في إجراء متابعة"
-        }
-    },
-    "transcript": {
-        "title": "نص المكالمة",
-        "caller": "المتصل",
-        "loadFailed": "ما قدرنا نحمّل نص المكالمة هلأ.",
-        "empty": "ما انعمل نص لهاي المكالمة.",
-        "playFrom": "شغّل التسجيل من {time}"
-    },
-    "filters": {
-        "searchPlaceholder": "دوّر على اسم، رقم أو حكي بالمكالمة…",
-        "searchAriaLabel": "دوّر بالمكالمات حسب الاسم، الرقم، الملخص أو نص المكالمة",
-        "filterAriaLabel": "فلتر ورتّب المكالمات",
-        "any": "الكل",
-        "sortByDate": "رتّب حسب التاريخ",
-        "newestFirst": "الأحدث بالأول",
-        "oldestFirst": "الأقدم بالأول",
-        "phoneNumber": "رقم التلفون",
-        "numberFallback": "رقم",
-        "period": "الفترة",
-        "today": "اليوم",
-        "lastDays": "{count, plural, zero {آخر {count} يوم} one {آخر {count} يوم} two {آخر {count} يوم} few {آخر {count} أيام} many {آخر {count} يوم} other {آخر {count} يوم}}",
-        "hasRecording": "في تسجيل",
-        "removeFilter": "شيل فلتر {label}",
-        "clearAll": "شيل الكل"
+    "nextAction": {
+      "takeCallbackMessage": "أخد رسالة لمكالمة رجعة",
+      "askToCallBackLater": "طلب من المتصل يرجع يتصل بعدين",
+      "redirect": "حوّل المتصل",
+      "none": "ما في إجراء متابعة"
     }
+  },
+  "transcript": {
+    "title": "نص المكالمة",
+    "caller": "المتصل",
+    "loadFailed": "ما قدرنا نحمّل نص المكالمة هلأ.",
+    "empty": "ما انعمل نص لهاي المكالمة.",
+    "playFrom": "شغّل التسجيل من {time}"
+  },
+  "filters": {
+    "searchPlaceholder": "دوّر على اسم، رقم أو حكي بالمكالمة…",
+    "searchAriaLabel": "دوّر بالمكالمات حسب الاسم، الرقم، الملخص أو نص المكالمة",
+    "filterAriaLabel": "فلتر ورتّب المكالمات",
+    "any": "الكل",
+    "sortByDate": "رتّب حسب التاريخ",
+    "newestFirst": "الأحدث بالأول",
+    "oldestFirst": "الأقدم بالأول",
+    "phoneNumber": "رقم التلفون",
+    "numberFallback": "رقم",
+    "period": "الفترة",
+    "today": "اليوم",
+    "lastDays": "{count, plural, zero {آخر {count} يوم} one {آخر {count} يوم} two {آخر {count} يوم} few {آخر {count} أيام} many {آخر {count} يوم} other {آخر {count} يوم}}",
+    "hasRecording": "في تسجيل",
+    "removeFilter": "شيل فلتر {label}",
+    "clearAll": "شيل الكل"
+  }
 }

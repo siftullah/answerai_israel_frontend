@@ -170,6 +170,7 @@
       "ringing": "Идёт вызов",
       "in_progress": "В процессе",
       "completed": "Завершено",
+      "voicemail": "Голосовая почта",
       "busy": "Занято",
       "no_answer": "Нет ответа",
       "failed": "Не удалось",
@@ -243,8 +244,7 @@
       "unnamedContact": "Контакт без имени",
       "attemptsOf": "{attempts} из {max}",
       "company": "Компания",
-      "address": "Адрес",
-      "voicemailOutcome": "Голосовая почта"
+      "address": "Адрес"
     },
     "retryDialog": {
       "titleSingle": "Повторить звонок на {phone}?",
