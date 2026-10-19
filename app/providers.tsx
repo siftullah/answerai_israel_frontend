@@ -18,6 +18,7 @@ const ZOD_LOCALES: Record<Locale, () => { localeError: z.core.$ZodErrorMap }> = 
   en: z.locales.en,
   he: z.locales.he,
   ar: z.locales.ar,
+  ru: z.locales.ru,
 };
 
 export function Providers({ children }: { children: React.ReactNode }) {

@@ -17,10 +17,12 @@ export function formatOffset(t0Secs: number): string {
 
 /**
  * Display locale for every date and time formatter follows the UI language
- * (i18n/config intlLocales): en-IL / he-IL / ar-PS, all with Latin digits
- * and no bidi marks (the same reasoning as lib/money.ts). Every language uses
- * the 12-hour clock with the locale's own am/pm marker ("5:05 pm", "5:05 PM",
- * "5:05 م"), and dates always spell the month out — never 19/10/2026.
+ * (i18n/config intlLocales): en-IL / he-IL / ar-PS / ru-RU, all with Latin
+ * digits and no bidi marks (the same reasoning as lib/money.ts). Every language
+ * uses the 12-hour clock with the locale's own am/pm marker ("5:05 pm",
+ * "5:05 PM", "5:05 م"; ru-RU has no Cyrillic marker and renders "5:05 PM"),
+ * and dates always spell the month out — never 19/10/2026 (ru-RU abbreviates
+ * to "19 окт. 2026 г.").
  */
 const HOUR12 = true;
 

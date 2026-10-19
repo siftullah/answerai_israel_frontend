@@ -1,9 +1,9 @@
 /**
- * Locale registry. The UI ships in English, Hebrew and Arabic; the chosen
+ * Locale registry. The UI ships in English, Hebrew, Arabic and Russian; the chosen
  * locale lives in a cookie (no URL prefix — every route is tenant-scoped and
  * client-rendered, so locale routing would only add redirects).
  */
-export const locales = ["en", "he", "ar"] as const;
+export const locales = ["en", "he", "ar", "ru"] as const;
 export type Locale = (typeof locales)[number];
 
 export const defaultLocale: Locale = "en";
@@ -30,15 +30,17 @@ export const localeNames: Record<Locale, string> = {
   en: "English",
   he: "עברית",
   ar: "العربية",
+  ru: "Русский",
 };
 
 /**
  * BCP 47 tags for Intl date/number formatters. Latin digits in every locale
- * (ar-PS defaults to Arabic-Indic digits) so money and date columns stay
- * tabular and match the API's "₪1,500.00" rendering.
+ * (ar-PS defaults to Arabic-Indic digits; ru-RU is Latin already) so money and
+ * date columns stay tabular and match the API's "₪1,500.00" rendering.
  */
 export const intlLocales: Record<Locale, string> = {
   en: "en-IL",
   he: "he-IL",
   ar: "ar-PS-u-nu-latn",
+  ru: "ru-RU",
 };

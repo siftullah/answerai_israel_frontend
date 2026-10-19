@@ -8,7 +8,7 @@ import {
   type DayButton,
   type Locale,
 } from "react-day-picker"
-import { ar, enGB, he } from "date-fns/locale"
+import { ar, enGB, he, ru } from "date-fns/locale"
 import { useLocale, useTranslations } from "next-intl"
 
 import { cn } from "@/lib/utils"
@@ -18,7 +18,7 @@ import { Button, buttonVariants } from "@/components/ui/button"
 import { ChevronLeftIcon, ChevronRightIcon, ChevronDownIcon } from "lucide-react"
 
 /** date-fns locale per UI language — the DayPicker default when the caller passes none. */
-const DATE_FNS_LOCALES: Record<UiLocale, Locale> = { en: enGB, he, ar }
+const DATE_FNS_LOCALES: Record<UiLocale, Locale> = { en: enGB, he, ar, ru }
 
 function Calendar({
   className,
@@ -28,7 +28,7 @@ function Calendar({
   buttonVariant = "ghost",
   locale,
   // Israeli week: Sunday first in every language (date-fns' ar locale would
-  // start on Saturday and enGB on Monday).
+  // start on Saturday, enGB and ru on Monday).
   weekStartsOn = 0,
   formatters,
   labels,
