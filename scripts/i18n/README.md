@@ -20,15 +20,37 @@ OPENAI_API_KEY=… python3 -I scripts/i18n/translate.py run
   the English each translation was made from). `--ns a,b` limits namespaces, `--locales he,ar,ru`
   (the default) picks languages, `--force` redoes all.
 - Model: `gpt-6.1-sol` with medium reasoning, batched with a strict JSON schema; `glossary.json`
-  keeps terminology consistent (rebuild it with `translate.py glossary` only if the product
-  vocabulary changes, then `run --force`; `glossary --locales ru` rebuilds one language and
-  keeps the others).
+  keeps terminology consistent (rebuild it with `translate.py glossary [--locales ar]` only if the
+  product vocabulary or a language's register changes, then `run --force`; `--locales` leaves the
+  other languages' glossary entries untouched).
 - Every result is validated: placeholders, `<tags>`, plural/select structure must match the
-  English, and Russian plural blocks must carry `one`, `few`, `many` and `other`; rejected
-  strings are retried once and otherwise reported.
-- `python3 -I scripts/i18n/translate.py check` re-validates the committed files.
+  English, Russian plural blocks must carry `one`, `few`, `many` and `other`, Arabic plurals must
+  carry all six CLDR categories, and the Arabic register guard below must pass; rejected strings
+  are retried once with the complaint and otherwise reported.
+- `python3 -I scripts/i18n/translate.py check` re-validates the committed files with the same
+  rules.
 - Arabic plural branches use `{count}` instead of ICU `#` so digits stay Latin (the script
   rewrites them).
+
+## Language registers
+
+The register of each language is the `style` note in `LANG` in `translate.py`; the glossary and
+every batch are generated from it.
+
+- **Hebrew**: modern Israeli Hebrew, the register of Israeli SaaS UIs.
+- **Arabic**: Palestinian colloquial Arabic (Levantine, as spoken in Jerusalem, Ramallah and the
+  Arab communities inside Israel) — not Modern Standard Arabic. Dialect function words and verbs
+  (شو، هاد/هاي، بدك، وين، ليش، هلأ، كمان، عشان/منشان، في/ما في، مش، عم + verb, بـ-present), no
+  tanwin, no فصحى verb morphology, but still a concise UI register: buttons and labels are short
+  noun phrases or bare imperatives, not chatty sentences. Brand names, product/technical terms,
+  شيكل/₪, placeholders, ICU structure and Latin digits are unchanged.
+
+  **Register guard**: tanwin (ً ٌ ٍ) only appears in فصحى morphology, so `translate.py` rejects
+  any Arabic value containing it (the batch is retried with the complaint) and `translate.py check`
+  reports every committed value that still has one as `BAD … tanwin (فصحى register)`. Latin brand
+  and technical terms never carry tanwin, so there is no allow-list. If a legitimate exception ever
+  turns up, add it to `REGISTER_CHECKS["ar"]` in `translate.py` rather than editing the Arabic
+  by hand — Arabic and Hebrew values are never hand-written.
 
 ## Checking keys in code
 

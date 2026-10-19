@@ -1,53 +1,53 @@
 {
   "breadcrumb": {
-    "label": "مسار التنقل"
+    "label": "مسار التنقّل"
   },
   "sidebar": {
     "title": "الشريط الجانبي",
-    "description": "يعرض الشريط الجانبي على الجوّال.",
-    "toggle": "إظهار أو إخفاء الشريط الجانبي"
+    "description": "بيعرِض الشريط الجانبي على الجوّال.",
+    "toggle": "افتح أو سكّر الشريط الجانبي"
   },
   "command": {
     "title": "لوحة الأوامر",
-    "description": "ابحث عن أمر لتنفيذه…"
+    "description": "دوّر على أمر تشغّله…"
   },
   "datePicker": {
-    "placeholder": "اختر تاريخًا",
-    "clear": "مسح التاريخ"
+    "placeholder": "اختار تاريخ",
+    "clear": "شيل التاريخ"
   },
   "calendar": {
-    "nextMonth": "انتقل إلى الشهر التالي",
-    "previousMonth": "انتقل إلى الشهر السابق",
-    "chooseMonth": "اختر الشهر",
-    "chooseYear": "اختر السنة",
+    "nextMonth": "روح للشهر الجاي",
+    "previousMonth": "روح للشهر اللي فات",
+    "chooseMonth": "اختار الشهر",
+    "chooseYear": "اختار السنة",
     "weekNumberHeader": "رقم الأسبوع",
     "weekNumber": "الأسبوع {number}",
     "dayToday": "اليوم، {date}",
-    "daySelected": "{date}، محدد",
-    "dayTodaySelected": "اليوم، {date}، محدد"
+    "daySelected": "{date}، مختار",
+    "dayTodaySelected": "اليوم، {date}، مختار"
   },
   "chipInput": {
-    "limitReached": "تم بلوغ الحد الأقصى",
-    "remove": "إزالة {item}"
+    "limitReached": "وصلت للحد",
+    "remove": "شيل {item}"
   },
   "spinner": {
-    "loading": "جارٍ التحميل"
+    "loading": "عم يحمّل"
   },
   "passwordInput": {
-    "show": "إظهار كلمة المرور",
-    "hide": "إخفاء كلمة المرور"
+    "show": "فرجي كلمة السر",
+    "hide": "خبّي كلمة السر"
   },
   "audioPlayer": {
-    "failed": "تعذر تشغيل التسجيل. حاول إعادة تحميل الصفحة.",
-    "back": "رجوع 10 ثوانٍ",
-    "forward": "تقديم 10 ثوانٍ",
-    "play": "تشغيل التسجيل",
-    "pause": "إيقاف التسجيل مؤقتًا",
-    "seek": "الانتقال إلى موضع في التسجيل",
+    "failed": "ما قدرنا نشغّل التسجيل. جرّب تحمّل الصفحة من جديد.",
+    "back": "رجّع 10 ثواني",
+    "forward": "قدّم 10 ثواني",
+    "play": "شغّل التسجيل",
+    "pause": "وقّف التسجيل مؤقتا",
+    "seek": "تنقّل بالتسجيل",
     "speed": "سرعة التشغيل {speed}x",
-    "download": "تنزيل التسجيل"
+    "download": "نزّل التسجيل"
   },
   "unsavedChanges": {
-    "title": "تغييرات غير محفوظة"
+    "title": "تغييرات مش محفوظة"
   }
 }
