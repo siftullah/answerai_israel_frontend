@@ -4,7 +4,9 @@ The portal ships in English, Hebrew, Arabic and Russian. English is the source o
 every user-facing string lives in `messages/en/<namespace>.json` (one namespace per
 area of the app) and components read it with next-intl (`useTranslations("<namespace>")`;
 non-React modules use `rt()` / `labelMap()` from `lib/i18n`). The active language is a
-cookie (`NEXT_LOCALE`) set by the language picker; `i18n/request.ts` resolves it.
+cookie (`NEXT_LOCALE`) set by the language picker; `i18n/request.ts` resolves it, and a visitor
+without the cookie gets Hebrew (`defaultLocale` in `i18n/config.ts`; the browser's Accept-Language
+is not consulted).
 
 `messages/he/*.json`, `messages/ar/*.json` and `messages/ru/*.json` are generated — do not hand-edit them
 (edit the English, re-run the translator). Keys missing in a translation fall back to

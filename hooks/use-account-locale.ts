@@ -18,7 +18,7 @@ let applied = false;
  * Opens the portal in the account's language. The language picker stores a
  * signed-in user's choice on their account (and the sign-up forms the language
  * they registered in), so on a device whose cookie says otherwise — a new
- * phone, a browser that negotiated from Accept-Language — the first
+ * phone still on the Hebrew default — the first
  * authenticated render switches to it. Later switches run the other way
  * (picker → account), so this never fires again to fight them. The API's
  * locale set (en/he/ar/ru) matches the UI's; isLocale() still guards against

@@ -1,12 +1,24 @@
 /**
  * Locale registry. The UI ships in English, Hebrew, Arabic and Russian; the chosen
  * locale lives in a cookie (no URL prefix — every route is tenant-scoped and
- * client-rendered, so locale routing would only add redirects).
+ * client-rendered, so locale routing would only add redirects). Without the
+ * cookie the portal opens in Hebrew; English is the source the translations
+ * fall back to.
  */
 export const locales = ["en", "he", "ar", "ru"] as const;
 export type Locale = (typeof locales)[number];
 
-export const defaultLocale: Locale = "en";
+/**
+ * Language a visitor without a cookie gets, sign-in and sign-up included.
+ * Hebrew rather than the browser's Accept-Language: the portal serves Israeli
+ * businesses, whose browsers are routinely left in English, so that header
+ * says little. The picker and a signed-in user's account language (PATCH /me,
+ * useAccountLocale) take over from here.
+ */
+export const defaultLocale: Locale = "he";
+
+/** English is the source of truth; every other bundle is merged over it. */
+export const sourceLocale: Locale = "en";
 
 /** Cookie read by i18n/request.ts and written by the language picker. */
 export const LOCALE_COOKIE = "NEXT_LOCALE";

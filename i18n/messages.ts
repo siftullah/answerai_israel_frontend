@@ -1,4 +1,4 @@
-import { defaultLocale, type Locale } from "./config";
+import { sourceLocale, type Locale } from "./config";
 
 /**
  * Messages are split by namespace: messages/<locale>/<namespace>.json. Each
@@ -32,8 +32,8 @@ function deepMerge(base: Messages, override: Messages): Messages {
 }
 
 export async function loadMessages(locale: Locale): Promise<Messages> {
-  const base = (await loaders[defaultLocale]()).default;
-  if (locale === defaultLocale) return base;
+  const base = (await loaders[sourceLocale]()).default;
+  if (locale === sourceLocale) return base;
   const localized = (await loaders[locale]()).default;
   return deepMerge(base, localized);
 }
